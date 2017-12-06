@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "Microsoft.NETCore.UniversalWindowsPlatform": "6.0.4",
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
     "WriteableBitmapEx": "1.5.1"
   },
   "frameworks": {
