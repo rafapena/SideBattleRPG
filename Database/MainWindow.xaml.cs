@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data.SQLite;
 
 namespace Database
 {
@@ -24,5 +25,24 @@ namespace Database
         {
             InitializeComponent();
         }
+    }
+
+    public static class SQLDB<B> //where B : BaseObject
+    {
+        public static SQLiteConnection db = new SQLiteConnection("URI=file://C:/Users/User/GC_RPG_DB.db");
+        public static List<B> DBList;
+
+        /*public static void CreateTable()
+        {
+            db.Open();
+            string tableCommand = "CREATE TABLE IF NOT " +
+                "EXISTS MyTable (Primary_Key INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "Text_Entry NVARCHAR(2048) NULL);"; //+
+                                                    //"DROP TABLE IF EXISTS MyTable;";
+            SQLiteCommand createTable = new SQLiteCommand(tableCommand, db);
+            createTable.ExecuteReader();
+            db.Close();
+            DBList = new List<B>();
+        }*/
     }
 }

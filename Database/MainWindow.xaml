@@ -8,9 +8,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Viewbox>
-        <Grid>
-            <TextBlock Text="Database" TextAlignment="Center"/>
-            <controls:NavBar/>
-        </Grid>
+        <StackPanel>
+            <controls:NavBar x:Name="header"/>
+            <controls:TableList HorizontalAlignment="Left" x:Name="classIds"/>
+        </StackPanel>
     </Viewbox>
 </Window>

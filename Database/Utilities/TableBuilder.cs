@@ -25,12 +25,12 @@ namespace Database.Utilities
     public static class TableBuilder
     {
         public delegate void Function(object sender, RoutedEventArgs e);
-        public delegate void Function<L>(object sender, RoutedEventArgs e);
+        public delegate void Function<B>(object sender, RoutedEventArgs e);
 
-        public static bool TableSetup<L>(Grid targetGrid, List<string> columns, Grid targetSorter = null, List<string> sorters = null, int initIndex = 0, Function sortFunc = null)
+        public static bool TableSetup<B>(Grid targetGrid, List<string> columns, Grid targetSorter = null, List<string> sorters = null, int initIndex = 0, Function sortFunc = null)
         {
             //Grid setup
-            AddSorter<L>(targetSorter, sorters, initIndex, sortFunc);
+            AddSorter<B>(targetSorter, sorters, initIndex, sortFunc);
             if (targetGrid == null) return false;
             targetGrid.Children.Clear();
             targetGrid.RowDefinitions.Clear();
@@ -57,7 +57,7 @@ namespace Database.Utilities
             return true;
         }
 
-        private static void AddSorter<L>(Grid targetSorter, List<string> sortOptions, int initIndex, Function sortFunc)
+        private static void AddSorter<B>(Grid targetSorter, List<string> sortOptions, int initIndex, Function sortFunc)
         {
             //Layout
             try
@@ -77,7 +77,7 @@ namespace Database.Utilities
             def.AddRange(sortOptions);
             targetSorter.Children.Add(TextBlock("Sort by: ", 0, 0));
             targetSorter.Children.Add(ComboBox(targetSorter.Name + "SELECTION", def, initIndex, 0, 1));
-            targetSorter.Children.Add(Button("Sort", sortFunc, "#0099bb", typeof(L).Name[0], 0, 2));
+            targetSorter.Children.Add(Button("Sort", sortFunc, "#0099bb", typeof(B).Name[0], 0, 2));
         }
 
         public static void Indexer(Grid g, int index)
@@ -149,19 +149,19 @@ namespace Database.Utilities
             picture.Source = img;
             return picture;
         }
-        private static async void GetImage(byte[] data, int w, int h)
+        private static void GetImage(byte[] data, int w, int h)//async void GetImage(byte[] data, int w, int h)
         {
             //loadedImage = data == null ? null : await BytesToImage(data, w, h);
         }
 
-        public static ComboBox ComboBox<L>(string name, List<L> list, int initIndex, int rowNum, int colNum, Function changed = null)
+        public static ComboBox ComboBox<B>(string name, List<B> list, int initIndex, int rowNum, int colNum, Function changed = null)
         {
             var newComboBox = ComboBox(name, list, initIndex, changed);
             newComboBox.SetValue(Grid.RowProperty, rowNum);
             newComboBox.SetValue(Grid.ColumnProperty, colNum);
             return newComboBox;
         }
-        public static ComboBox ComboBox<L>(string name, List<L> list, int initIndex, Function changed = null)
+        public static ComboBox ComboBox<B>(string name, List<B> list, int initIndex, Function changed = null)
         {
             if (list == null) return new ComboBox();
             var newComboBox = new ComboBox();

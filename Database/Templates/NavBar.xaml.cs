@@ -23,21 +23,12 @@ namespace Database.Templates
         public NavBar()
         {
             InitializeComponent();
-            /*SqliteConnection db = new SqliteConnection("FileName=file:///C:/Users/User/Documents/GC%20RPG/Database/GC_RPG_DB.db");
-            db.Open();
-            string tableCommand = "CREATE TABLE IF NOT " +
-                "EXISTS MyTable (Primary_Key INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "Text_Entry NVARCHAR(2048) NULL)";
-            SqliteCommand createTable = new SqliteCommand(tableCommand, db);
-            createTable.ExecuteReader();
-            db.Close();*/
         }
 
         private void SetupFromClick()
         {
-
+            MessageBox.Show("Hello World");
         }
-
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// -- Click Functions --

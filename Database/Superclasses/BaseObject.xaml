@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Database.Superclasses.BaseObject"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Database.Superclasses"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <StackPanel Orientation="Horizontal" Background="white">
+        
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Name</TextBlock>
+                <TextBox x:Name="nameBox"></TextBox>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Created</TextBlock>
+                <TextBlock x:Name="createdText"></TextBlock>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Updated</TextBlock>
+                <TextBlock x:Name="updatedText"></TextBlock>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel>
+            <Image x:Name="imageBox"></Image>
+        </StackPanel>
+        
+    </StackPanel>
+</UserControl>

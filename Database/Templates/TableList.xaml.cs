@@ -20,9 +20,25 @@ namespace Database.Templates
     /// </summary>
     public partial class TableList : UserControl
     {
+        //public List<B> TheList { get; private set; }
+
         public TableList()
         {
             InitializeComponent();
+            CreateTable();
+        }
+
+        public void CreateTable()
+        {
+            for (int i=0; i<200; i++)
+            {
+                CreateButton(i);
+            }
+        }
+
+        public void CreateButton(int ListID)
+        {
+
         }
     }
 }
