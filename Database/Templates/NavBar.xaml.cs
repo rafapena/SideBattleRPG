@@ -13,7 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
-using Database.Superclasses;
+using System.Collections;
+using Database.Utilities;
+using Database.Tables;
 
 namespace Database.Templates
 {
@@ -27,18 +29,17 @@ namespace Database.Templates
             InitializeComponent();
         }
 
-        private void SetupFromClick()
+        private void SetupFromClick(string tableType)
         {
-            /*SQLDB<BaseObjectControl>.db.Open();
-            string tableCommand = "CREATE TABLE IF NOT " +
-                "EXISTS MyTable (Primary_Key INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "Text_Entry NVARCHAR(2048) NULL);"; //+
-                                                    //"DROP TABLE IF EXISTS MyTable;";
-            SQLiteCommand createTable = new SQLiteCommand(tableCommand, db);
-            createTable.ExecuteReader();
-            SQLDB<BaseObjectControl>.Close();
-            DBList = new List<B>();*/
-            //MessageBox.Show("Hello World");
+            //SQLDB.Command("SELECT Name FROM THIS");
+            ArrayList list = SQLDB.GetTables(tableType);
+            string msg = "";
+            foreach (string i in list)
+            {
+                msg += i + "\n";
+            }
+            //MessageBox.Show("Selected: " + tableType);
+            MessageBox.Show(msg);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,82 +48,83 @@ namespace Database.Templates
 
         private void GoToAchievements(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("Achievements");
+            //Application.Current.MainWindow.Navigate(typeof(Player));
         }
 
         private void GoToAnimations(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("Animations");
         }
 
         private void GoToClasses(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("Classes");
         }
 
         private void GoToEnemies(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("Enemies");
         }
 
         private void GoToEnemyGroups(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("EnemyGroups");
         }
 
         private void GoToEnvironments(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("Environments");
         }
 
         private void GoToEvents(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("Events");
         }
 
         private void GoToItems(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("Items");
+        }
+
+        private void GoToOtherLists(object sender, EventArgs e)
+        {
+            //SetupFromClick();
         }
 
         private void GoToPassiveSkills(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("PassiveSkills");
         }
 
         private void GoToPlatforms(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("Platforms");
         }
 
         private void GoToPlayers(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("Players");
         }
 
         private void GoToProjectiles(object sender, EventArgs e)
         {
-            SetupFromClick();
-        }
-
-        private void GoTos(object sender, EventArgs e)
-        {
-            SetupFromClick();
+            SetupFromClick("Projectiles");
         }
 
         private void GoToSkills(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("Skills");
         }
 
         private void GoToStates(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("States");
         }
 
         private void GoToWeapons(object sender, EventArgs e)
         {
-            SetupFromClick();
+            SetupFromClick("Weapons");
         }
 
     }

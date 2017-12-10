@@ -8,20 +8,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Viewbox>
-        <StackPanel>
-        
-            <controls:NavBar x:Name="Header"/>
-            
-            <StackPanel Orientation="Horizontal">
-                <controls:TableList HorizontalAlignment="Left" x:Name="ClassIds"/>
-
-                <StackPanel x:Name="DataTables">
-                    
-                </StackPanel>
-            </StackPanel>
-            
-            <controls:Footer x:Name="Footer"/>
-        
-        </StackPanel>
+        <controls:NavBar x:Name="Header"/>
     </Viewbox>
 </Window>

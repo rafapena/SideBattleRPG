@@ -129,12 +129,6 @@
   <ItemGroup>
     <Folder Include="DBClasses\" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GameUtilities\GameUtilities.csproj">
-      <Project>{55ae7c36-8bce-4820-b4f5-4aa2f13b0737}</Project>
-      <Name>GameUtilities</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
