@@ -20,7 +20,7 @@ namespace GameUtilities
 {
     public static class ImageManager
     {
-        private static async Task<WriteableBitmap> StockImage(string path)
+        /*private static async Task<WriteableBitmap> StockImage(string path)
         {
             var uri = new Uri(path, UriKind.RelativeOrAbsolute);
             var storageFile = await StorageFile.GetFileFromApplicationUriAsync(uri);
@@ -93,7 +93,7 @@ namespace GameUtilities
                 subImageWidth = Width / GridWidth;
                 subImageHeight = Height / GridHeight;
             }
-        }
+        }*/
 
     }
 }

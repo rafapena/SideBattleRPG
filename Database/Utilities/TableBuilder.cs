@@ -19,6 +19,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 //using System.Windows;
+//using static GameUtilities.ImageManager;
 
 namespace Database.Utilities
 {

@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="Database.Templates.BaseObjectControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Database.Templates"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="White">
+    <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Name</TextBlock>
+                <TextBox x:Name="NameInput" Margin="5,0,0,0" Width="50"></TextBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Created</TextBlock>
+                <TextBlock x:Name="CreatedText"></TextBlock>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Updated</TextBlock>
+                <TextBlock x:Name="UpdatedText"></TextBlock>
+            </StackPanel>
+
+            <TextBlock>Description</TextBlock>
+            <TextBox x:Name="DescriptionInput" Width="100" Height="50" TextWrapping = "Wrap" AcceptsReturn = "True" ScrollViewer.VerticalScrollBarVisibility = "Visible"></TextBox>
+        </StackPanel>
+
+        <StackPanel Margin="10,0,0,0">
+            <Image x:Name="ImageInput" Width="60" Height="70"></Image>
+            <Button x:Name="BrowseImage" Content="Browse" Margin="0,5,0,0"></Button>
+        </StackPanel>
+
+    </StackPanel>
+</UserControl>

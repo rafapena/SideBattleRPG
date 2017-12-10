@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data.SQLite;
+using Database.Superclasses;
 
 namespace Database.Templates
 {
@@ -27,7 +29,16 @@ namespace Database.Templates
 
         private void SetupFromClick()
         {
-            MessageBox.Show("Hello World");
+            /*SQLDB<BaseObjectControl>.db.Open();
+            string tableCommand = "CREATE TABLE IF NOT " +
+                "EXISTS MyTable (Primary_Key INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "Text_Entry NVARCHAR(2048) NULL);"; //+
+                                                    //"DROP TABLE IF EXISTS MyTable;";
+            SQLiteCommand createTable = new SQLiteCommand(tableCommand, db);
+            createTable.ExecuteReader();
+            SQLDB<BaseObjectControl>.Close();
+            DBList = new List<B>();*/
+            //MessageBox.Show("Hello World");
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

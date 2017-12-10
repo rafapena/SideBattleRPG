@@ -13,21 +13,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Database.Superclasses
+namespace Database.Templates
 {
     /// <summary>
     /// Interaction logic for BaseObject.xaml
     /// </summary>
-    public partial class BaseObject : UserControl
+    public partial class BaseObjectControl : Database.Superclasses.BaseObject
     {
         public int Id { get; protected set; }
-        public new string Name { get; protected set; }
+        public string Name { get; protected set; }
         public string Description { get; protected set; }
         public string Created { get; protected set; }
         public string Updated { get; protected set; }
         public byte[] Image { get; protected set; }
 
-        public BaseObject()
+        public BaseObjectControl()
         {
             InitializeComponent();
         }

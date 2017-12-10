@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using System.Reflection;
+using Windows.UI.Xaml;
+using Windows.UI.Popups;
 
 namespace GameUtilities
 {
@@ -18,16 +21,16 @@ namespace GameUtilities
 
         public static async void Alert(string message)
         {
-            var dialog = new Windows.UI.Popups.MessageDialog(message);
-            dialog.Commands.Add(new Windows.UI.Popups.UICommand("OK"));
+            var dialog = new MessageDialog(message);
+            dialog.Commands.Add(new UICommand("OK"));
             await dialog.ShowAsync();
         }
 
         public static async void Confirm(string header, string message, Action yes, Action no = null, Action cancel = null)
         {
-            var dialog = new Windows.UI.Popups.MessageDialog(message, header);
-            dialog.Commands.Add(new Windows.UI.Popups.UICommand("Yes") { Id = 0 });
-            dialog.Commands.Add(new Windows.UI.Popups.UICommand("No") { Id = 1 });
+            var dialog = new MessageDialog(message, header);
+            dialog.Commands.Add(new UICommand("Yes") { Id = 0 });
+            dialog.Commands.Add(new UICommand("No") { Id = 1 });
 
             if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile")
             {
@@ -61,23 +64,23 @@ namespace GameUtilities
         public static void Print(string message) { System.Diagnostics.Debug.WriteLine(message); }
         public static void Print() { Print("00000"); }
 
-        public static void Print<T>(T[] arr)
+        public static void Print<B>(B[] arr)
         {
             string p = "ARRAY => ";
             foreach (var x in arr) p += Convert.ToString(x) + " ";
             Print(p);
         }
-        public static void Print<T>(List<T> arr)
+        public static void Print<B>(List<B> arr)
         {
             string p = "LIST => ";
             foreach (var x in arr) p += Convert.ToString(x) + " ";
             Print(p);
         }
 
-        public static List<T> CloneList<T>(List<T> original)
+        public static List<B> CloneList<B>(List<B> original)
         {
-            List<T> clone = new List<T>(original.Count);
-            foreach (T elmt in original) clone.Add(elmt);
+            List<B> clone = new List<B>(original.Count);
+            foreach (B elmt in original) clone.Add(elmt);
             clone.TrimExcess();
             return clone;
         }

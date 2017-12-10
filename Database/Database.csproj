@@ -16,6 +16,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -60,6 +61,7 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.106.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Net" />
     <Reference Include="System.Runtime.WindowsRuntime.UI.Xaml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -86,8 +88,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Superclasses\BaseObject.xaml.cs">
-      <DependentUpon>BaseObject.xaml</DependentUpon>
+    <Compile Include="Superclasses\BaseObject.cs" />
+    <Compile Include="Templates\BaseObjectControl.xaml.cs">
+      <DependentUpon>BaseObjectControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\Footer.xaml.cs">
+      <DependentUpon>Footer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Templates\NavBar.xaml.cs">
       <DependentUpon>NavBar.xaml</DependentUpon>
@@ -108,7 +114,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Superclasses\BaseObject.xaml">
+    <Page Include="Templates\BaseObjectControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\Footer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -151,6 +161,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tables\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GameUtilities\GameUtilities.csproj">
+      <Project>{55ae7c36-8bce-4820-b4f5-4aa2f13b0737}</Project>
+      <Name>GameUtilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.106.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.106.0\build\net451\System.Data.SQLite.Core.targets')" />

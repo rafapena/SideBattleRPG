@@ -27,14 +27,15 @@ namespace Database
         }
     }
 
-    public static class SQLDB<B> //where B : BaseObject
+    public static class SQLDB<B> where B : Superclasses.BaseObject
     {
         public static SQLiteConnection db = new SQLiteConnection("URI=file://C:/Users/User/GC_RPG_DB.db");
         public static List<B> DBList;
 
-        /*public static void CreateTable()
+        public static void RetrieveContents()
         {
             db.Open();
+            DBList = new List<B>();
             string tableCommand = "CREATE TABLE IF NOT " +
                 "EXISTS MyTable (Primary_Key INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "Text_Entry NVARCHAR(2048) NULL);"; //+
@@ -42,7 +43,14 @@ namespace Database
             SQLiteCommand createTable = new SQLiteCommand(tableCommand, db);
             createTable.ExecuteReader();
             db.Close();
-            DBList = new List<B>();
-        }*/
+        }
+
+        public static void Command(string sqlCommand)
+        {
+            db.Open();
+            SQLiteCommand command = new SQLiteCommand(sqlCommand, db);
+            command.ExecuteReader();
+            db.Close();
+        }
     }
 }
