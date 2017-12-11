@@ -62,7 +62,6 @@ namespace Database.Templates
             SQLDB.CurrentId = (int)(sender as Button).Tag;
             switch (SQLDB.CurrentTable)
             {
-                case "Class": Read<BattlerClass>(); break;
                 case "Player": Read<Player>(); break;
             }
         }
@@ -72,7 +71,6 @@ namespace Database.Templates
             SQLDB.CurrentId = 0;
             switch (SQLDB.CurrentTable)
             {
-                case "Class": InitializeNew<BattlerClass>(); break;
                 case "Player": InitializeNew<Player>(); break;
             }
         }

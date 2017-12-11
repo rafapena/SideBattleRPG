@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Database.Templates"
              mc:Ignorable="d" 
-             d:DesignHeight="20" d:DesignWidth="300">
-    <StackPanel Orientation="Horizontal">
+             d:DesignHeight="30" d:DesignWidth="300">
+    <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
         <StackPanel.Resources>
             <Style TargetType="Button">
                 <Setter Property="Margin" Value="10 0 0 0"/>

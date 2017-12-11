@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="150">
     <StackPanel>
         <TextBlock x:Name="Title" FontWeight="Bold" FontSize="16"/>
-        <Button Height="20" Width="100" Content="Insert New" Click="InitializeNew" Margin="0 10 20 10" Background="#afa"/>
+        <Button Height="20" Width="100" Content="Insert New" Click="InitializeNew" Margin="0 0 20 10" Background="#afa"/>
         <ScrollViewer Height="300" Width="100">
 
             <Grid x:Name="Objects" ScrollViewer.CanContentScroll="True"/>

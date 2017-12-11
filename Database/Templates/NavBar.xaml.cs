@@ -42,7 +42,7 @@ namespace Database.Templates
 
         private void GoToClasses(object sender, EventArgs e)
         {
-            Application.Current.MainWindow.Content = new BattlerClass();
+            //Application.Current.MainWindow.Content = new BattlerClass();
         }
 
         private void GoToEnemies(object sender, EventArgs e)

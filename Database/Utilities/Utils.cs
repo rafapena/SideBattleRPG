@@ -4,36 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Database.Utilities
 {
     class Utils
     {
-        /*public static async void Alert(string message)
+        public static bool Confirm(string title, string message)
         {
-            var dialog = new MessageDialog(message);
-            dialog.Commands.Add(new UICommand("OK"));
-            await dialog.ShowAsync();
+            return MessageBox.Show(title, message, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
         }
-
-        public static async void Confirm(string header, string message, Action yes, Action no = null, Action cancel = null)
-        {
-            var dialog = new MessageDialog(message, header);
-            dialog.Commands.Add(new UICommand("Yes") { Id = 0 });
-            dialog.Commands.Add(new UICommand("No") { Id = 1 });
-
-            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile")
-            {
-                dialog.Commands.Add(new Windows.UI.Popups.UICommand("Cancel") { Id = 2 });
-            }
-            dialog.DefaultCommandIndex = 0;
-            dialog.CancelCommandIndex = 1;
-
-            var result = await dialog.ShowAsync();
-            if (result.Label == "Yes") yes?.Invoke();
-            else if (result.Label == "No") no?.Invoke();
-            else cancel?.Invoke();
-        }*/
 
         private static Regex PNOneHundred = new Regex(@"^[-]?(100|\d{1,2})$", RegexOptions.IgnoreCase);
         private static Regex oneHundred = new Regex(@"^(100|\d{1,2})$", RegexOptions.IgnoreCase);

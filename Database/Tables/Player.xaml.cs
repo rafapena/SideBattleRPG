@@ -26,7 +26,7 @@ namespace Database.Tables
         {
             InitializeComponent();
             SQLDB.CurrentTable = "Player";
-            ObjectList.SetupTable("Players");
+            ObjectList.SetupTable(SQLDB.CurrentTable + "s");
             InitializeNew();
         }
 
@@ -37,6 +37,7 @@ namespace Database.Tables
 
         public void Copy()
         {
+            if (!Utils.Confirm("Are you sure?", "Cloning " + SQLDB.CurrentTable)) return;
             Base.Copy();
         }
 
@@ -49,6 +50,7 @@ namespace Database.Tables
 
         public void Delete()
         {
+            if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentTable)) return;
             Base.Delete();
             SQLDB.Command("DELETE FROM Players WHERE Player_ID = " + SQLDB.CurrentId.ToString());
         }

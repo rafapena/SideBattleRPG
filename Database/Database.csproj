@@ -82,11 +82,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Tables\BattlerClass.xaml.cs">
-      <DependentUpon>BattlerClass.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Tables\Player.xaml.cs">
       <DependentUpon>Player.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tables\_GenericTemplate.xaml.cs">
+      <DependentUpon>_GenericTemplate.xaml</DependentUpon>
     </Compile>
     <Compile Include="Templates\BaseObject.xaml.cs">
       <DependentUpon>BaseObject.xaml</DependentUpon>
@@ -99,6 +99,9 @@
     </Compile>
     <Compile Include="Templates\TableList.xaml.cs">
       <DependentUpon>TableList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\_GenericTemplate.xaml.cs">
+      <DependentUpon>_GenericTemplate.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utilities\ObjectOperations.cs" />
     <Compile Include="Utilities\SQLDB.cs" />
@@ -116,11 +119,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Tables\BattlerClass.xaml">
+    <Page Include="Tables\Player.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tables\Player.xaml">
+    <Page Include="Tables\_GenericTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -137,6 +140,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Templates\TableList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\_GenericTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

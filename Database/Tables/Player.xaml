@@ -11,20 +11,25 @@
     <Viewbox>
         <StackPanel>
             <template:NavBar x:Name="Header"/>
-
             <StackPanel Orientation="Horizontal">
                 <template:TableList x:Name="ObjectList"/>
                 <StackPanel Orientation="Vertical">
-                    <template:BaseObject x:Name="Base"/>
-                    <StackPanel x:Name="ObjectContent">
 
-                        <!-- Insert here -->
+                    <TabControl>
+                        <TabItem Header="General">
+                            <template:BaseObject x:Name="Base"/>
+                        </TabItem>
 
-                    </StackPanel>
+                        <TabItem Header="Tab2">
+                        </TabItem>
+
+                        <TabItem Header="Tab3">
+                        </TabItem>
+                    </TabControl>
+
                     <template:Footer x:Name="BottomButtons"/>
                 </StackPanel>
             </StackPanel>
-
         </StackPanel>
     </Viewbox>
 </Page>

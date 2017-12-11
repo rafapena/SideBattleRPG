@@ -5,19 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Database.Templates"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
-             Background="White">
+             d:DesignHeight="300"
+             Background="White" Width="375">
     <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
 
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <TextBlock>Name</TextBlock>
-                <TextBox x:Name="NameInput" Margin="5,0,0,0" Width="65"></TextBox>
+                <TextBox x:Name="NameInput" Margin="5,0,0,0" Width="120"></TextBox>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="0 0 5 0">Created:</TextBlock>
-                <TextBlock x:Name="CreatedText"></TextBlock>
+                <TextBlock Margin="0 0 5 0"><Run Text="Created:"/></TextBlock>
+                <TextBlock x:Name="CreatedText"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
@@ -26,14 +26,16 @@
             </StackPanel>
 
             <TextBlock>Description</TextBlock>
-            <TextBox x:Name="DescriptionInput" Width="100" Height="50" TextWrapping = "Wrap" AcceptsReturn = "True" ScrollViewer.VerticalScrollBarVisibility = "Visible"></TextBox>
+            <TextBox x:Name="DescriptionInput" Width="250" Height="80"
+                     TextWrapping = "Wrap" AcceptsReturn = "True" ScrollViewer.VerticalScrollBarVisibility = "Visible"/>
         </StackPanel>
 
         <StackPanel Margin="10,0,0,0">
             <Border BorderThickness="0.5" BorderBrush="Black">
-                <Image x:Name="ImageInput" Width="60" Height="70"></Image>
+                <Image x:Name="ImageInput" Width="100" Height="120"></Image>
             </Border>
             <Button x:Name="BrowseImage" Content="Browse" Margin="0,5,0,0"></Button>
         </StackPanel>
+
     </StackPanel>
 </UserControl>

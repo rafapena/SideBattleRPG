@@ -53,7 +53,6 @@ namespace Database.Templates
         {
             switch (SQLDB.CurrentTable)
             {
-                case "Class": Deleted<BattlerClass>(); break;
                 case "Player": Deleted<Player>(); break;
             }
         }
@@ -62,7 +61,6 @@ namespace Database.Templates
         {
             switch (SQLDB.CurrentTable)
             {
-                case "Class": Auto<BattlerClass>(); break;
                 case "Player": Auto<Player>(); break;
             }
         }
@@ -71,7 +69,6 @@ namespace Database.Templates
         {
             switch (SQLDB.CurrentTable)
             {
-                case "Class": Copied<BattlerClass>(); break;
                 case "Player": Copied<Player>(); break;
             }
         }
@@ -80,7 +77,6 @@ namespace Database.Templates
         {
             switch (SQLDB.CurrentTable)
             {
-                case "Class": Created<BattlerClass>(); break;
                 case "Player": Created<Player>(); break;
             }
         }
@@ -89,7 +85,6 @@ namespace Database.Templates
         {
             switch (SQLDB.CurrentTable)
             {
-                case "Class": Updated<BattlerClass>(); break;
                 case "Player": Updated<Player>(); break;
             }
         }
