@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data.SQLite;
 using Database.Utilities;
 
 namespace Database.Templates
@@ -21,7 +22,7 @@ namespace Database.Templates
     /// </summary>
     public partial class BaseObject : UserControl, ObjectOperations
     {
-        public int Id { get; set; }
+        public int BaseObjectId { get; set; }
 
         public BaseObject()
         {
@@ -30,7 +31,8 @@ namespace Database.Templates
 
         public void InitializeNew()
         {
-            Id = 0;
+            SQLDB.CurrentId = 0;
+            BaseObjectId = 0;
             NameInput.Text = "";
             DescriptionInput.Text = "";
             CreatedText.Text = "";
@@ -54,41 +56,51 @@ namespace Database.Templates
 
         public void Create()
         {
-            Utilities.SQLDB.Command(
+            SQLDB.Command(
                 "INSERT INTO BasObjects (Name, Description) VALUES (" +
                  NameInput.Text + ", " +
                  DescriptionInput.Text + ");"
             );
         }
 
-        public void Read(int id)
+        public void Read()
         {
-            Id = 0;
-            NameInput.Text = "";
-            DescriptionInput.Text = "";
-            CreatedText.Text = "";
-            UpdatedText.Text = string.Format("{0:d}", UpdatedText.Text);
-            ImageInput.Source = null;
+            SQLDB.db.Open();
+            SQLiteCommand command = new SQLiteCommand(
+                "SELECT * FROM BaseObjects WHERE " + SQLDB.CurrentTable + "ID = " + SQLDB.CurrentId.ToString(),
+                SQLDB.db);
+            SQLiteDataReader reader = command.ExecuteReader();
+            reader.Read();
+            BaseObjectId = reader.GetInt32(0);
+            NameInput.Text = reader.GetString(1);
+            DescriptionInput.Text = reader.GetString(2);
+            ImageInput.Source = null; //reader.GetBlob(3, false);
+            CreatedText.Text = string.Format("{0:d}", reader.GetDateTime(4));
+            UpdatedText.Text = string.Format("{0:d}", reader.GetDateTime(5));
+            SQLDB.db.Close();
         }
 
         public void Update()
         {
-            Utilities.SQLDB.Command(
+            SQLDB.Command(
                 "UPDATE BaseObjects SET " +
                 "Name = " + NameInput.Text + ", " +
                 "Description = " + DescriptionInput.Text + " " +
-                "WHERE BaseObject_ID = " + Id + ")"
+                "WHERE BaseObject_ID = " + BaseObjectId + ")"
             );
         }
 
         public void Delete()
         {
-
+            SQLDB.Command(
+                "DELETE FROM BaseObjects " +
+                "WHERE BaseObject_ID = " + BaseObjectId + ")"
+            );
         }
 
         public void Copy()
         {
-
+            Create();
         }
     }
 }

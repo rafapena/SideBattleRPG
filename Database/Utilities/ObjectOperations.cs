@@ -12,7 +12,7 @@ namespace Database.Utilities
         void Automate();
         string GetErrors();
         void Create();
-        void Read(int id);
+        void Read();
         void Update();
         void Delete();
         void Copy();

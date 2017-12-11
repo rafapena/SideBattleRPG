@@ -24,48 +24,54 @@ namespace Database.Tables
         public BattlerClass()
         {
             InitializeComponent();
-            ObjectList.SetupTable("Class", "Classes");
-            BottomButtons.SetupFooter("Class");
+            SQLDB.CurrentTable = "Class";
+            ObjectList.SetupTable("Classes");
+            InitializeNew();
         }
 
         public void Automate()
         {
-            throw new NotImplementedException();
+            Base.Automate();
         }
 
         public void Copy()
         {
-            throw new NotImplementedException();
+            Base.Copy();
         }
 
         public void Create()
         {
-            MessageBox.Show("CREATED BattlerClass");
+            string err = GetErrors();
+            if (err != "") { MessageBox.Show("Could Not Update due to the following:\n\n"); return; }
+            Base.Create();
         }
 
         public void Delete()
         {
-            throw new NotImplementedException();
+            Base.Delete();
         }
 
         public string GetErrors()
         {
-            throw new NotImplementedException();
+            string err = Base.GetErrors();
+            return err;
         }
 
         public void InitializeNew()
         {
-            throw new NotImplementedException();
+            Base.InitializeNew();
+            BottomButtons.InitializeNewSettings();
         }
 
-        public void Read(int id)
+        public void Read()
         {
-            throw new NotImplementedException();
+            Base.Read();
+            BottomButtons.ReadSettings();
         }
 
         public void Update()
         {
-            throw new NotImplementedException();
+            Base.Update();
         }
     }
 }

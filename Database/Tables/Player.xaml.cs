@@ -14,7 +14,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
 using Database.Utilities;
-using static Database.Utilities.SQLDB;
 
 namespace Database.Tables
 {
@@ -26,52 +25,55 @@ namespace Database.Tables
         public Player()
         {
             InitializeComponent();
-            ObjectList.SetupTable("Player", "Players");
-            BottomButtons.SetupFooter("Player");
+            SQLDB.CurrentTable = "Player";
+            ObjectList.SetupTable("Players");
+            InitializeNew();
         }
 
         public void Automate()
         {
-            throw new NotImplementedException();
+            Base.Automate();
         }
 
         public void Copy()
         {
-            throw new NotImplementedException();
+            Base.Copy();
         }
 
         public void Create()
         {
-            MessageBox.Show("CREATE Player");
+            string err = GetErrors();
+            if (err != "") { MessageBox.Show("Could Not Update due to the following:\n\n"); return; }
+            Base.Create();
         }
 
         public void Delete()
         {
-            throw new NotImplementedException();
+            Base.Delete();
+            SQLDB.Command("DELETE FROM Players WHERE Player_ID = " + SQLDB.CurrentId.ToString());
         }
 
         public string GetErrors()
         {
-            throw new NotImplementedException();
+            string err = Base.GetErrors();
+            return err;
         }
 
         public void InitializeNew()
         {
-            MessageBox.Show("init Player");
+            Base.InitializeNew();
+            BottomButtons.InitializeNewSettings();
         }
 
-        public void Read(int id)
+        public void Read()
         {
-            /*db.Open();
-            SQLiteCommand command = new SQLiteCommand(
-                "SELECT * FROM " + CurrentTableNamePl + " WHERE " + CurrentTableName + "_ID = " + (int)(sender as Button).Tag, db);
-            SQLiteDataReader reader = command.ExecuteReader();
-            db.Close();*/
+            Base.Read();
+            BottomButtons.ReadSettings();
         }
 
         public void Update()
         {
-            throw new NotImplementedException();
+            Base.Update();
         }
     }
 }

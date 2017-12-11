@@ -29,7 +29,6 @@ namespace Database.Utilities
             targetGrid.RowDefinitions.Clear();
             targetGrid.ColumnDefinitions.Clear();
             targetGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            targetGrid.ColumnDefinitions.Add(new ColumnDefinition());
             if (columns != null)
             {
                 //Title

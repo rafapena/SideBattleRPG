@@ -14,8 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
 using Database.Tables;
+using Database.Utilities;
 using static Database.Utilities.TableBuilder;
-using static Database.Utilities.SQLDB;
 
 namespace Database.Templates
 {
@@ -24,34 +24,31 @@ namespace Database.Templates
     /// </summary>
     public partial class TableList : UserControl
     {
-        public string CurrentTableName { get; private set; }
-        public string CurrentTableNamePl { get; private set; }
-
         public TableList()
         {
             InitializeComponent();
         }
 
-        public void SetupTable(string tableType, string tableTypePlural)
+        public void SetupTable(string currentTablePl)
         {
-            CurrentTableName = tableType;
-            CurrentTableNamePl = tableTypePlural;
-            Title.Text = CurrentTableNamePl;
+            Title.Text = currentTablePl;
             TableSetup(Objects);
             int iterations = 0;
-            db.Open();
+            SQLDB.db.Open();
             SQLiteCommand command = new SQLiteCommand(
-                "SELECT * FROM BaseObjects JOIN " + CurrentTableNamePl + " WHERE " + CurrentTableName + "ID = " + CurrentTableName + "_ID", db);
+                "SELECT * FROM BaseObjects JOIN " + currentTablePl + " " +
+                "WHERE " + SQLDB.CurrentTable + "ID = " + SQLDB.CurrentTable + "_ID " +
+                "ORDER BY Name ASC", SQLDB.db);
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read()) CreateRow(Objects, iterations++, reader);
-            db.Close();
+            SQLDB.db.Close();
         }
 
         public void CreateRow(Grid table, int rowNum, SQLiteDataReader reader)
         {
             table.RowDefinitions.Add(new RowDefinition());
-            table.Children.Add(TextBlock(rowNum+1, rowNum, 0));
-            Button b = Button((string)reader["Name"], Read, "#dddddd", int.Parse(reader[CurrentTableName + "_ID"].ToString()), rowNum, 1);
+            Button b = Button((string)reader["Name"], Read, "#dddddd", int.Parse(reader[SQLDB.CurrentTable + "_ID"].ToString()), rowNum, 0);
+            b.HorizontalAlignment = HorizontalAlignment.Left;
             b.Margin = Margin(0,0,5,0);
             table.Children.Add(b);
         }
@@ -62,30 +59,25 @@ namespace Database.Templates
 
         public void Read(object sender, EventArgs e)
         {
-            int id = (int)(sender as Button).Tag;
-            switch (CurrentTableName)
+            SQLDB.CurrentId = (int)(sender as Button).Tag;
+            switch (SQLDB.CurrentTable)
             {
-                case "Class": Read<BattlerClass>(sender, e, id); break;
-                case "Player": Read<Player>(sender, e, id); break;
+                case "Class": Read<BattlerClass>(); break;
+                case "Player": Read<Player>(); break;
             }
         }
 
         public void InitializeNew(object sender, EventArgs e)
         {
-            switch (CurrentTableName)
+            SQLDB.CurrentId = 0;
+            switch (SQLDB.CurrentTable)
             {
-                case "Class": InitializeNew<BattlerClass>(sender, e); break;
-                case "Player": InitializeNew<Player>(sender, e); break;
+                case "Class": InitializeNew<BattlerClass>(); break;
+                case "Player": InitializeNew<Player>(); break;
             }
         }
 
-        private void Read<P>(object sender, EventArgs e, int id) where P : Page, Utilities.ObjectOperations
-        {
-            (Application.Current.MainWindow.Content as P).Read(id);
-        }
-        private void InitializeNew<P>(object sender, EventArgs e) where P : Page, Utilities.ObjectOperations
-        {
-            (Application.Current.MainWindow.Content as P).InitializeNew();
-        }
+        private void Read<P>() where P : Page, Utilities.ObjectOperations { (Application.Current.MainWindow.Content as P).Read(); }
+        private void InitializeNew<P>() where P : Page, Utilities.ObjectOperations { (Application.Current.MainWindow.Content as P).InitializeNew(); }
     }
 }

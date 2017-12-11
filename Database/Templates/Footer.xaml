@@ -13,10 +13,10 @@
             </Style>
         </StackPanel.Resources>
 
-        <Button Content="Delete" Click="Deleted" Background="#faa"/>
-        <Button Content="Auto" Click="Copied"/>
-        <Button Content="Copy" Click="Copied"/>
-        <Button Content="Create" Click="Created" Background="#afa"/>
-        <Button Content="Update" Click="Updated"/>
+        <Button Content="Delete" x:Name="DeleteButton" Click="Deleted" Background="#faa"/>
+        <Button Content="Auto" x:Name="AutoButton" Click="Copied"/>
+        <Button Content="Copy" x:Name="CopyButton" Click="Copied"/>
+        <Button Content="Create" x:Name="CreateButton" Click="Created" Background="#afa"/>
+        <Button Content="Update" x:Name="UpdateButton" Click="Updated"/>
     </StackPanel>
 </UserControl>

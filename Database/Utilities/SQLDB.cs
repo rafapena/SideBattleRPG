@@ -12,6 +12,8 @@ namespace Database.Utilities
     public static class SQLDB
     {
         public static SQLiteConnection db = new SQLiteConnection("URI=file://C:/Users/User/GC_RPG_DB.db");
+        public static string CurrentTable; 
+        public static int CurrentId;
 
         public static void Command(string sqlCommand)
         {

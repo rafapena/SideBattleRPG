@@ -12,8 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Database.Utilities;
 using Database.Tables;
+using Database.Utilities;
 
 namespace Database.Templates
 {
@@ -21,91 +21,83 @@ namespace Database.Templates
     /// Interaction logic for Footer.xaml
     /// </summary>
     public partial class Footer : UserControl
-    {
-        public string CurrentTableName { get; private set; }
-        public string UpdateVisibility { get; set; }
-        public string CreateVisibility { get; set; }
-        public string DeleteVisibiliy { get; set; }
-        public string CopyVisibility { get; set; }
-
+    {   
         public Footer()
         {
             InitializeComponent();
         }
 
-        public void SetupFooter(string tableType)
+        public void InitializeNewSettings()
         {
-            CurrentTableName = tableType;
+            DeleteButton.Visibility = Visibility.Collapsed;
+            AutoButton.Visibility = Visibility.Visible;
+            CopyButton.Visibility = Visibility.Collapsed;
+            CreateButton.Visibility = Visibility.Visible;
+            UpdateButton.Visibility = Visibility.Collapsed;
         }
+
+        public void ReadSettings()
+        {
+            DeleteButton.Visibility = Visibility.Visible;
+            AutoButton.Visibility = Visibility.Collapsed;
+            CopyButton.Visibility = Visibility.Visible;
+            CreateButton.Visibility = Visibility.Collapsed;
+            UpdateButton.Visibility = Visibility.Visible;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Trigger Setup and Trigger Page Functions --
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public void Deleted(object sender, EventArgs e)
         {
-            switch (CurrentTableName)
+            switch (SQLDB.CurrentTable)
             {
-                case "Class": Deleted<BattlerClass>(sender, e); break;
-                case "Player": Deleted<Player>(sender, e); break;
+                case "Class": Deleted<BattlerClass>(); break;
+                case "Player": Deleted<Player>(); break;
             }
         }
 
         public void Auto(object sender, EventArgs e)
         {
-            switch (CurrentTableName)
+            switch (SQLDB.CurrentTable)
             {
-                case "Class": Auto<BattlerClass>(sender, e); break;
-                case "Player": Auto<Player>(sender, e); break;
+                case "Class": Auto<BattlerClass>(); break;
+                case "Player": Auto<Player>(); break;
             }
         }
 
         public void Copied(object sender, EventArgs e)
         {
-            switch (CurrentTableName)
+            switch (SQLDB.CurrentTable)
             {
-                case "Class": Copied<BattlerClass>(sender, e); break;
-                case "Player": Copied<Player>(sender, e); break;
+                case "Class": Copied<BattlerClass>(); break;
+                case "Player": Copied<Player>(); break;
             }
         }
 
         public void Created(object sender, EventArgs e)
         {
-            switch (CurrentTableName)
+            switch (SQLDB.CurrentTable)
             {
-                case "Class": Created<BattlerClass>(sender, e); break;
-                case "Player": Created<Player>(sender, e); break;
+                case "Class": Created<BattlerClass>(); break;
+                case "Player": Created<Player>(); break;
             }
         }
 
         public void Updated(object sender, EventArgs e)
         {
-            switch (CurrentTableName)
+            switch (SQLDB.CurrentTable)
             {
-                case "Class": Updated<BattlerClass>(sender, e); break;
-                case "Player": Updated<Player>(sender, e); break;
+                case "Class": Updated<BattlerClass>(); break;
+                case "Player": Updated<Player>(); break;
             }
         }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// -- Trigger Page Functions --
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private void Deleted<P>(object sender, EventArgs e) where P : Page, ObjectOperations
-        {
-            (Application.Current.MainWindow.Content as P).Delete();
-        }
-        private void Copied<P>(object sender, EventArgs e) where P : Page, ObjectOperations
-        {
-            (Application.Current.MainWindow.Content as P).Copy();
-        }
-        private void Auto<P>(object sender, EventArgs e) where P : Page, ObjectOperations
-        {
-            (Application.Current.MainWindow.Content as P).Automate();
-        }
-        private void Created<P>(object sender, EventArgs e) where P : Page, ObjectOperations
-        {
-            (Application.Current.MainWindow.Content as P).Create();
-        }
-        private void Updated<P>(object sender, EventArgs e) where P : Page, ObjectOperations
-        {
-            (Application.Current.MainWindow.Content as P).Update();
-        }
+        
+        private void Deleted<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Delete(); }
+        private void Copied<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Copy(); }
+        private void Auto<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Automate(); }
+        private void Created<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Create(); }
+        private void Updated<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Update(); }
     }
 }
