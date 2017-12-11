@@ -29,102 +29,101 @@ namespace Database.Templates
             InitializeComponent();
         }
 
-        private void SetupFromClick(string tableType)
+        private void SetupFromClick<P>(Button sender, string tableType, P page) where P : Page
         {
-            //SQLDB.Command("SELECT Name FROM THIS");
+            SQLDB.CurrentTableName = (string)sender.Content;
+            Application.Current.MainWindow.Content = page;
             ArrayList list = SQLDB.GetTables(tableType);
             string msg = "";
             foreach (string i in list)
             {
                 msg += i + "\n";
             }
-            //MessageBox.Show("Selected: " + tableType);
             MessageBox.Show(msg);
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// -- Click Functions --
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         private void GoToAchievements(object sender, EventArgs e)
         {
-            SetupFromClick("Achievements");
-            //Application.Current.MainWindow.Navigate(typeof(Player));
+            //SetupFromClick(sender as Button, "Achievements");
         }
 
         private void GoToAnimations(object sender, EventArgs e)
         {
-            SetupFromClick("Animations");
+            //SetupFromClick(sender as Button, "Animations");
         }
 
         private void GoToClasses(object sender, EventArgs e)
         {
-            SetupFromClick("Classes");
+            SetupFromClick(sender as Button, "Classes", new BattlerClass());
         }
 
         private void GoToEnemies(object sender, EventArgs e)
         {
-            SetupFromClick("Enemies");
+            //SetupFromClick(sender as Button, "Enemies");
         }
 
         private void GoToEnemyGroups(object sender, EventArgs e)
         {
-            SetupFromClick("EnemyGroups");
+            //SetupFromClick(sender as Button, "EnemyGroups");
         }
 
         private void GoToEnvironments(object sender, EventArgs e)
         {
-            SetupFromClick("Environments");
+            //SetupFromClick(sender as Button, "Environments");
         }
 
         private void GoToEvents(object sender, EventArgs e)
         {
-            SetupFromClick("Events");
+            //SetupFromClick(sender as Button, "Events");
         }
 
         private void GoToItems(object sender, EventArgs e)
         {
-            SetupFromClick("Items");
+            //SetupFromClick(sender as Button, "Items");
         }
 
         private void GoToOtherLists(object sender, EventArgs e)
         {
-            //SetupFromClick();
+            //SetupFromClick(sender as Button, );
         }
 
         private void GoToPassiveSkills(object sender, EventArgs e)
         {
-            SetupFromClick("PassiveSkills");
+            //SetupFromClick(sender as Button, "PassiveSkills");
         }
 
         private void GoToPlatforms(object sender, EventArgs e)
         {
-            SetupFromClick("Platforms");
+            //SetupFromClick(sender as Button, "Platforms");
         }
 
         private void GoToPlayers(object sender, EventArgs e)
         {
-            SetupFromClick("Players");
+            SetupFromClick(sender as Button, "Players", new Player());
         }
 
         private void GoToProjectiles(object sender, EventArgs e)
         {
-            SetupFromClick("Projectiles");
+            //SetupFromClick(sender as Button, "Projectiles");
         }
 
         private void GoToSkills(object sender, EventArgs e)
         {
-            SetupFromClick("Skills");
+            //SetupFromClick(sender as Button, "Skills");
         }
 
         private void GoToStates(object sender, EventArgs e)
         {
-            SetupFromClick("States");
+            //SetupFromClick(sender as Button, "States");
         }
 
         private void GoToWeapons(object sender, EventArgs e)
         {
-            SetupFromClick("Weapons");
+            //SetupFromClick(sender as Button, "Weapons");
         }
 
     }

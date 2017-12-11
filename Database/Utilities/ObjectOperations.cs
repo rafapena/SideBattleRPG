@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Database.Utilities
 {
-    interface ObjectOperations
+    public interface ObjectOperations
     {
         void InitializeNew();
         void Automate();

@@ -17,11 +17,11 @@ using Database.Utilities;
 namespace Database.Tables
 {
     /// <summary>
-    /// Interaction logic for Player.xaml
+    /// Interaction logic for BattlerClass.xaml
     /// </summary>
-    public partial class Player : Page, ObjectOperations
+    public partial class BattlerClass : Page, ObjectOperations
     {
-        public Player()
+        public BattlerClass()
         {
             InitializeComponent();
         }
@@ -38,7 +38,7 @@ namespace Database.Tables
 
         public void Create()
         {
-            MessageBox.Show("CREATE Player");
+            MessageBox.Show("CREATED BattlerClass");
         }
 
         public void Delete()

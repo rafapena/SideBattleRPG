@@ -5,8 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Database.Templates"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
-    </Grid>
+             d:DesignHeight="20" d:DesignWidth="300"
+             Background="#eef">
+    <StackPanel Orientation="Horizontal">
+        <StackPanel.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="10 0 0 0"/>
+            </Style>
+        </StackPanel.Resources>
+
+        <Button Content="Delete" Click="Deleted" Background="#faa"/>
+        <Button Content="Copy" Click="Copied"/>
+        <Button Content="Create" Click="Created" Background="#afa"/>
+        <Button Content="Update" Click="Updated"/>
+    </StackPanel>
 </UserControl>
