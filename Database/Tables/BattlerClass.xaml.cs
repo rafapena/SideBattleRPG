@@ -24,6 +24,8 @@ namespace Database.Tables
         public BattlerClass()
         {
             InitializeComponent();
+            ObjectList.SetupTable("Class", "Classes");
+            BottomButtons.SetupFooter("Class");
         }
 
         public void Automate()
@@ -56,7 +58,7 @@ namespace Database.Tables
             throw new NotImplementedException();
         }
 
-        public void Read()
+        public void Read(int id)
         {
             throw new NotImplementedException();
         }

@@ -24,6 +24,7 @@
                     <template:Footer x:Name="BottomButtons"/>
                 </StackPanel>
             </StackPanel>
+            
         </StackPanel>
     </Viewbox>
 </Page>

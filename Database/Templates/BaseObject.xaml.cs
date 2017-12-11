@@ -61,7 +61,7 @@ namespace Database.Templates
             );
         }
 
-        public void Read()
+        public void Read(int id)
         {
             Id = 0;
             NameInput.Text = "";

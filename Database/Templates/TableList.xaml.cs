@@ -12,6 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data.SQLite;
+using Database.Tables;
+using static Database.Utilities.TableBuilder;
+using static Database.Utilities.SQLDB;
 
 namespace Database.Templates
 {
@@ -20,25 +24,68 @@ namespace Database.Templates
     /// </summary>
     public partial class TableList : UserControl
     {
-        //public List<B> TheList { get; private set; }
+        public string CurrentTableName { get; private set; }
+        public string CurrentTableNamePl { get; private set; }
 
         public TableList()
         {
             InitializeComponent();
-            CreateTable();
         }
 
-        public void CreateTable()
+        public void SetupTable(string tableType, string tableTypePlural)
         {
-            for (int i = 0; i < 200; i++)
+            CurrentTableName = tableType;
+            CurrentTableNamePl = tableTypePlural;
+            Title.Text = CurrentTableNamePl;
+            TableSetup(Objects);
+            int iterations = 0;
+            db.Open();
+            SQLiteCommand command = new SQLiteCommand(
+                "SELECT * FROM BaseObjects JOIN " + CurrentTableNamePl + " WHERE " + CurrentTableName + "ID = " + CurrentTableName + "_ID", db);
+            SQLiteDataReader reader = command.ExecuteReader();
+            while (reader.Read()) CreateRow(Objects, iterations++, reader);
+            db.Close();
+        }
+
+        public void CreateRow(Grid table, int rowNum, SQLiteDataReader reader)
+        {
+            table.RowDefinitions.Add(new RowDefinition());
+            table.Children.Add(TextBlock(rowNum+1, rowNum, 0));
+            Button b = Button((string)reader["Name"], Read, "#dddddd", int.Parse(reader[CurrentTableName + "_ID"].ToString()), rowNum, 1);
+            b.Margin = Margin(0,0,5,0);
+            table.Children.Add(b);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Trigger Setup and Trigger Page Functions --
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void Read(object sender, EventArgs e)
+        {
+            int id = (int)(sender as Button).Tag;
+            switch (CurrentTableName)
             {
-                CreateButton(i);
+                case "Class": Read<BattlerClass>(sender, e, id); break;
+                case "Player": Read<Player>(sender, e, id); break;
             }
         }
 
-        public void CreateButton(int ListID)
+        public void InitializeNew(object sender, EventArgs e)
         {
+            switch (CurrentTableName)
+            {
+                case "Class": InitializeNew<BattlerClass>(sender, e); break;
+                case "Player": InitializeNew<Player>(sender, e); break;
+            }
+        }
 
+        private void Read<P>(object sender, EventArgs e, int id) where P : Page, Utilities.ObjectOperations
+        {
+            (Application.Current.MainWindow.Content as P).Read(id);
+        }
+        private void InitializeNew<P>(object sender, EventArgs e) where P : Page, Utilities.ObjectOperations
+        {
+            (Application.Current.MainWindow.Content as P).InitializeNew();
         }
     }
 }

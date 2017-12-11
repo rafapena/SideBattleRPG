@@ -14,7 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
 using System.Collections;
-using Database.Utilities;
+using static Database.Utilities.Utils;
+using static Database.Utilities.SQLDB;
 using Database.Tables;
 
 namespace Database.Templates
@@ -29,23 +30,6 @@ namespace Database.Templates
             InitializeComponent();
         }
 
-        private void SetupFromClick<P>(Button sender, string tableType, P page) where P : Page
-        {
-            SQLDB.CurrentTableName = (string)sender.Content;
-            Application.Current.MainWindow.Content = page;
-            ArrayList list = SQLDB.GetTables(tableType);
-            string msg = "";
-            foreach (string i in list)
-            {
-                msg += i + "\n";
-            }
-            MessageBox.Show(msg);
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// -- Click Functions --
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         private void GoToAchievements(object sender, EventArgs e)
         {
             //SetupFromClick(sender as Button, "Achievements");
@@ -58,7 +42,7 @@ namespace Database.Templates
 
         private void GoToClasses(object sender, EventArgs e)
         {
-            SetupFromClick(sender as Button, "Classes", new BattlerClass());
+            Application.Current.MainWindow.Content = new BattlerClass();
         }
 
         private void GoToEnemies(object sender, EventArgs e)
@@ -103,7 +87,7 @@ namespace Database.Templates
 
         private void GoToPlayers(object sender, EventArgs e)
         {
-            SetupFromClick(sender as Button, "Players", new Player());
+            Application.Current.MainWindow.Content = new Player();
         }
 
         private void GoToProjectiles(object sender, EventArgs e)

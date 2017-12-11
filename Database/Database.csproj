@@ -102,6 +102,7 @@
     </Compile>
     <Compile Include="Utilities\ObjectOperations.cs" />
     <Compile Include="Utilities\SQLDB.cs" />
+    <Compile Include="Utilities\TableBuilder.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

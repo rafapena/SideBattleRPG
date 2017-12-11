@@ -12,7 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data.SQLite;
 using Database.Utilities;
+using static Database.Utilities.SQLDB;
 
 namespace Database.Tables
 {
@@ -24,6 +26,8 @@ namespace Database.Tables
         public Player()
         {
             InitializeComponent();
+            ObjectList.SetupTable("Player", "Players");
+            BottomButtons.SetupFooter("Player");
         }
 
         public void Automate()
@@ -53,12 +57,16 @@ namespace Database.Tables
 
         public void InitializeNew()
         {
-            throw new NotImplementedException();
+            MessageBox.Show("init Player");
         }
 
-        public void Read()
+        public void Read(int id)
         {
-            throw new NotImplementedException();
+            /*db.Open();
+            SQLiteCommand command = new SQLiteCommand(
+                "SELECT * FROM " + CurrentTableNamePl + " WHERE " + CurrentTableName + "_ID = " + (int)(sender as Button).Tag, db);
+            SQLiteDataReader reader = command.ExecuteReader();
+            db.Close();*/
         }
 
         public void Update()
