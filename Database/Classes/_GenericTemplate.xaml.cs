@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using System.Data.SQLite;
 using Database.Utilities;
 
-namespace Database.Tables
+namespace Database.Classes
 {
     /// <summary>
     /// Interaction logic for _GenericTemplate.xaml
@@ -25,8 +25,7 @@ namespace Database.Tables
         public _GenericTemplate()
         {
             InitializeComponent();
-            SQLDB.CurrentTable = "InsertTableName";
-            ObjectList.SetupTable(SQLDB.CurrentTable + "s");
+            ObjectList.SetupTable(SQLDB.CurrentTable + "s", FooterButtons);
             InitializeNew();
         }
 
@@ -38,36 +37,37 @@ namespace Database.Tables
 
         public void Copy()
         {
+            string err = ValidateInputs();
+            if (err != "") { MessageBox.Show("Could not copy due to the following:\n\n" + err); return; }
             if (!Utils.Confirm("Are you sure?", "Cloning " + SQLDB.CurrentTable)) return;
             Base.Copy();
-            SQLDB.db.Open();
             //Insert Here
-            SQLDB.db.Close();
+            MessageBox.Show("Cloning successful");
         }
 
         public void Create()
         {
-            string err = GetErrors();
-            if (err != "") { MessageBox.Show("Could Not Update due to the following:\n\n"); return; }
+            string err = ValidateInputs();
+            if (err != "") { MessageBox.Show("Could not create due to the following:\n\n" + err); return; }
             Base.Create();
-            SQLDB.db.Open();
             //Insert Here
-            SQLDB.db.Close();
+            MessageBox.Show("Creating successful");
+            InitializeNew();
         }
 
         public void Delete()
         {
             if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentTable)) return;
             Base.Delete();
-            SQLDB.Command("DELETE FROM InsertTableName WHERE InsertTableName_ID = " + SQLDB.CurrentId.ToString());
-            SQLDB.db.Open();
-            //Insert Here
-            SQLDB.db.Close();
+            SQLDB.Command("DELETE FROM " + SQLDB.CurrentTable + "s WHERE " + SQLDB.CurrentTable + "_ID = " + SQLDB.CurrentId.ToString());
+            MessageBox.Show("Deleting successful");
+            InitializeNew();
         }
 
-        public string GetErrors()
+        public string ValidateInputs()
         {
-            string err = Base.GetErrors();
+            SQLDB.AddParameters(new SQLiteParameter[] { });
+            string err = Base.ValidateInputs();
             //Insert Here
             return err;
         }
@@ -76,24 +76,29 @@ namespace Database.Tables
         {
             Base.InitializeNew();
             //Insert Here
-            BottomButtons.InitializeNewSettings();
         }
 
         public void Read()
         {
             Base.Read();
-            SQLDB.db.Open();
-            //Insert Here
-            SQLDB.db.Close();
-            BottomButtons.ReadSettings();
+            using (var conn = SQLDB.DB())
+            {
+                conn.Open();
+                using (var reader = SQLDB.Retrieve("", conn))
+                {
+                    // Insert Here
+                }
+                conn.Close();
+            }
         }
 
         public void Update()
         {
+            string err = ValidateInputs();
+            if (err != "") { MessageBox.Show("Could not update due to the following:\n\n" + err); return; }
             Base.Update();
-            SQLDB.db.Open();
             //Insert Here
-            SQLDB.db.Close();
+            MessageBox.Show("Updating successful");
         }
     }
 }

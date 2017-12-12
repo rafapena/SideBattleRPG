@@ -12,10 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Database.Tables;
+using Database.Classes;
 using Database.Utilities;
 
-namespace Database.Templates
+namespace Database.BaseControls
 {
     /// <summary>
     /// Interaction logic for Footer.xaml
@@ -27,7 +27,7 @@ namespace Database.Templates
             InitializeComponent();
         }
 
-        public void InitializeNewSettings()
+        public void ApplyInitializeNewSettings()
         {
             DeleteButton.Visibility = Visibility.Collapsed;
             AutoButton.Visibility = Visibility.Visible;
@@ -36,7 +36,7 @@ namespace Database.Templates
             UpdateButton.Visibility = Visibility.Collapsed;
         }
 
-        public void ReadSettings()
+        public void ApplyReadSettings()
         {
             DeleteButton.Visibility = Visibility.Visible;
             AutoButton.Visibility = Visibility.Collapsed;
@@ -57,11 +57,11 @@ namespace Database.Templates
             }
         }
 
-        public void Auto(object sender, EventArgs e)
+        public void Automated(object sender, EventArgs e)
         {
             switch (SQLDB.CurrentTable)
             {
-                case "Player": Auto<Player>(); break;
+                case "Player": Automated<Player>(); break;
             }
         }
 
@@ -91,7 +91,7 @@ namespace Database.Templates
         
         private void Deleted<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Delete(); }
         private void Copied<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Copy(); }
-        private void Auto<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Automate(); }
+        private void Automated<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Automate(); }
         private void Created<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Create(); }
         private void Updated<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Update(); }
     }

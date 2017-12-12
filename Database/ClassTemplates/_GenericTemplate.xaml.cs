@@ -15,13 +15,15 @@ using System.Windows.Shapes;
 using System.Data.SQLite;
 using Database.Utilities;
 
-namespace Database.Templates
+namespace Database.ClassTemplates
 {
     /// <summary>
     /// Interaction logic for _GenericTemplate.xaml
     /// </summary>
     public partial class _GenericTemplate : UserControl
     {
+        public SQLiteParameter[] Inputs;
+
         public int _GenericTemplateId { get; set; }
 
         public _GenericTemplate()
@@ -41,8 +43,9 @@ namespace Database.Templates
             // Insert Here
         }
 
-        public string GetErrors()
+        public string ValidateInputs()
         {
+            SQLDB.AddParameters(new SQLiteParameter[] { });
             string err = "";
             // Insert Here
             return err;
@@ -58,15 +61,16 @@ namespace Database.Templates
 
         public void Read()
         {
-            SQLDB.db.Open();
-            SQLiteCommand command = new SQLiteCommand(
-                "SELECT * FROM _GenericTemplates WHERE " + SQLDB.CurrentTable + "ID = " + SQLDB.CurrentId.ToString(),
-                SQLDB.db);
-            SQLiteDataReader reader = command.ExecuteReader();
-            reader.Read();
-            _GenericTemplateId = reader.GetInt32(0);
-            // Insert Here
-            SQLDB.db.Close();
+            using (var conn = SQLDB.DB())
+            {
+                conn.Open();
+                using (var reader = SQLDB.Retrieve("SELECT * FROM _GenericTemplates WHERE " + SQLDB.CurrentTable + "ID = " + SQLDB.CurrentId.ToString(), conn))
+                {
+                    _GenericTemplateId = reader.GetInt32(0);
+                    // Insert Here
+                }
+                conn.Close();
+            }
         }
 
         public void Update()
@@ -79,10 +83,7 @@ namespace Database.Templates
 
         public void Delete()
         {
-            SQLDB.Command(
-                "DELETE FROM BaseObjects WHERE _GenericTemplate_ID = " + _GenericTemplateId + ";"
-                // Insert Here
-            );
+            SQLDB.Command("DELETE FROM _GenericTemplates WHERE _GenericTemplate_ID = " + _GenericTemplateId + ";");
         }
 
         public void Copy()

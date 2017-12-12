@@ -13,43 +13,52 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
-using Database.Tables;
+using Database.Classes;
 using Database.Utilities;
 using static Database.Utilities.TableBuilder;
 
-namespace Database.Templates
+namespace Database.BaseControls
 {
     /// <summary>
     /// Interaction logic for TableList.xaml
     /// </summary>
     public partial class TableList : UserControl
     {
+        private Footer LinkedFooter { get; set; }
+
         public TableList()
         {
             InitializeComponent();
         }
 
-        public void SetupTable(string currentTablePl)
+        public void SetupTable(string currentTablePl, Footer link)
         {
+            LinkedFooter = link;
+            LinkedFooter.ApplyInitializeNewSettings();
             Title.Text = currentTablePl;
-            TableSetup(Objects);
+            TableSetup(RowsTable);
             int iterations = 0;
-            SQLDB.db.Open();
-            SQLiteCommand command = new SQLiteCommand(
-                "SELECT * FROM BaseObjects JOIN " + currentTablePl + " " +
-                "WHERE " + SQLDB.CurrentTable + "ID = " + SQLDB.CurrentTable + "_ID " +
-                "ORDER BY Name ASC", SQLDB.db);
-            SQLiteDataReader reader = command.ExecuteReader();
-            while (reader.Read()) CreateRow(Objects, iterations++, reader);
-            SQLDB.db.Close();
+            using (var conn = SQLDB.DB())
+            {
+                conn.Open();
+                SQLiteCommand command = new SQLiteCommand(
+                    "SELECT * FROM BaseObjects JOIN " + currentTablePl + " " +
+                    "WHERE " + SQLDB.CurrentTable + "ID = " + SQLDB.CurrentTable + "_ID " +
+                    "ORDER BY Name ASC", conn);
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read()) CreateRow(RowsTable, iterations++, reader);
+                }
+                conn.Close();
+            }
         }
 
         public void CreateRow(Grid table, int rowNum, SQLiteDataReader reader)
         {
             table.RowDefinitions.Add(new RowDefinition());
             Button b = Button((string)reader["Name"], Read, "#dddddd", int.Parse(reader[SQLDB.CurrentTable + "_ID"].ToString()), rowNum, 0);
-            b.HorizontalAlignment = HorizontalAlignment.Left;
             b.Margin = Margin(0,0,5,0);
+            b.Width = 70;
             table.Children.Add(b);
         }
 
@@ -64,6 +73,7 @@ namespace Database.Templates
             {
                 case "Player": Read<Player>(); break;
             }
+            LinkedFooter.ApplyReadSettings();
         }
 
         public void InitializeNew(object sender, EventArgs e)
@@ -73,6 +83,7 @@ namespace Database.Templates
             {
                 case "Player": InitializeNew<Player>(); break;
             }
+            LinkedFooter.ApplyInitializeNewSettings();
         }
 
         private void Read<P>() where P : Page, Utilities.ObjectOperations { (Application.Current.MainWindow.Content as P).Read(); }

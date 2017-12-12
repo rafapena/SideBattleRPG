@@ -14,11 +14,10 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
 using System.Collections;
-using static Database.Utilities.Utils;
-using static Database.Utilities.SQLDB;
-using Database.Tables;
+using Database.Utilities;
+using Database.Classes;
 
-namespace Database.Templates
+namespace Database.BaseControls
 {
     /// <summary>
     /// Interaction logic for NavBar.xaml
@@ -30,84 +29,91 @@ namespace Database.Templates
             InitializeComponent();
         }
 
+        private void SetUpFromClick<P>(string currentTable) where P : Page, new()
+        {
+            if (SQLDB.CurrentTable == currentTable) return;
+            SQLDB.CurrentTable = currentTable;
+            Application.Current.MainWindow.Content = new P();
+        }
+
         private void GoToAchievements(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, "Achievements");
+            //SetUpFromClick(); Achievement();
         }
 
         private void GoToAnimations(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, "Animations");
+            //SetUpFromClick(); Animations();
         }
 
         private void GoToClasses(object sender, EventArgs e)
         {
-            //Application.Current.MainWindow.Content = new BattlerClass();
+            //SetUpFromClick(); BattlerClass();
         }
 
         private void GoToEnemies(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, "Enemies");
+            //SetUpFromClick(); Enemies();
         }
 
         private void GoToEnemyGroups(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, "EnemyGroups");
+            //SetUpFromClick(); EnemyGroups();
         }
 
         private void GoToEnvironments(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, "Environments");
+            //SetUpFromClick(); Environments();
         }
 
         private void GoToEvents(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, "Events");
+            //SetUpFromClick(); Events();
         }
 
         private void GoToItems(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, "Items");
+            //SetUpFromClick(); Items();
         }
 
         private void GoToOtherLists(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, );
+            //SetUpFromClick(); ();
         }
 
         private void GoToPassiveSkills(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, "PassiveSkills");
+            //SetUpFromClick(); PassiveSkill();
         }
 
         private void GoToPlatforms(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, "Platforms");
+            //SetUpFromClick(); Platform()
         }
 
         private void GoToPlayers(object sender, EventArgs e)
         {
-            Application.Current.MainWindow.Content = new Player();
+            SetUpFromClick<Player>("Player");
         }
 
         private void GoToProjectiles(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, "Projectiles");
+            //SetUpFromClick(); Projectiles();
         }
 
         private void GoToSkills(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, "Skills");
+            //SetUpFromClick(); Skill();
         }
 
         private void GoToStates(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, "States");
+            //SetUpFromClick(); State();
         }
 
         private void GoToWeapons(object sender, EventArgs e)
         {
-            //SetupFromClick(sender as Button, "Weapons");
+            //SetUpFromClick(); Weapon();
         }
 
     }

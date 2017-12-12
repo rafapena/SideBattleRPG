@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="Database.Templates.Footer"
+﻿<UserControl x:Class="Database.BaseControls.Footer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Database.Templates"
+             xmlns:local="clr-namespace:Database.BaseControls"
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="300">
     <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
@@ -14,7 +14,7 @@
         </StackPanel.Resources>
 
         <Button Content="Delete" x:Name="DeleteButton" Click="Deleted" Background="#faa"/>
-        <Button Content="Auto" x:Name="AutoButton" Click="Copied"/>
+        <Button Content="Auto" x:Name="AutoButton" Click="Automated"/>
         <Button Content="Copy" x:Name="CopyButton" Click="Copied"/>
         <Button Content="Create" x:Name="CreateButton" Click="Created" Background="#afa"/>
         <Button Content="Update" x:Name="UpdateButton" Click="Updated"/>

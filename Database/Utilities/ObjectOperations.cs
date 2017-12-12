@@ -10,7 +10,7 @@ namespace Database.Utilities
     {
         void InitializeNew();
         void Automate();
-        string GetErrors();
+        string ValidateInputs();
         void Create();
         void Read();
         void Update();

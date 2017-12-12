@@ -1,17 +1,17 @@
-﻿<UserControl x:Class="Database.Templates.TableList"
+﻿<UserControl x:Class="Database.BaseControls.TableList"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Database.Templates"
+             xmlns:local="clr-namespace:Database.BaseControls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="150">
-    <StackPanel>
-        <TextBlock x:Name="Title" FontWeight="Bold" FontSize="16"/>
-        <Button Height="20" Width="100" Content="Insert New" Click="InitializeNew" Margin="0 0 20 10" Background="#afa"/>
+    <StackPanel Margin="0 0 5 0">
+        <TextBlock x:Name="Title" FontWeight="Bold" FontSize="16" Margin="0 0 0 2"/>
+        <Button Height="20" Width="80" Content="Add New" Click="InitializeNew" Margin="0 0 20 10" Background="#afa"/>
         <ScrollViewer Height="300" Width="100">
 
-            <Grid x:Name="Objects" ScrollViewer.CanContentScroll="True"/>
+            <Grid x:Name="RowsTable" ScrollViewer.CanContentScroll="True"/>
 
         </ScrollViewer>
     </StackPanel>

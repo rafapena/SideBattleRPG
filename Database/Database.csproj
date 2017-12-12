@@ -82,31 +82,35 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Tables\Player.xaml.cs">
+    <Compile Include="Classes\Player.xaml.cs">
       <DependentUpon>Player.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tables\_GenericTemplate.xaml.cs">
+    <Compile Include="Classes\_GenericTemplate.xaml.cs">
       <DependentUpon>_GenericTemplate.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Templates\BaseObject.xaml.cs">
+    <Compile Include="ClassTemplates\BaseObject.xaml.cs">
       <DependentUpon>BaseObject.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Templates\Footer.xaml.cs">
+    <Compile Include="BaseControls\Footer.xaml.cs">
       <DependentUpon>Footer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Templates\NavBar.xaml.cs">
+    <Compile Include="BaseControls\NavBar.xaml.cs">
       <DependentUpon>NavBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Templates\TableList.xaml.cs">
+    <Compile Include="BaseControls\TableList.xaml.cs">
       <DependentUpon>TableList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Templates\_GenericTemplate.xaml.cs">
+    <Compile Include="ClassTemplates\_GenericTemplate.xaml.cs">
       <DependentUpon>_GenericTemplate.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utilities\ObjectOperations.cs" />
     <Compile Include="Utilities\SQLDB.cs" />
     <Compile Include="Utilities\TableBuilder.cs" />
     <Compile Include="Utilities\Utils.cs" />
+    <Page Include="Classes\Player.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -119,31 +123,27 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Tables\Player.xaml">
+    <Page Include="Classes\_GenericTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tables\_GenericTemplate.xaml">
+    <Page Include="ClassTemplates\BaseObject.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Templates\BaseObject.xaml">
+    <Page Include="BaseControls\Footer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Templates\Footer.xaml">
+    <Page Include="BaseControls\NavBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Templates\NavBar.xaml">
+    <Page Include="BaseControls\TableList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Templates\TableList.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Templates\_GenericTemplate.xaml">
+    <Page Include="ClassTemplates\_GenericTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
