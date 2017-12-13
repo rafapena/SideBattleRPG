@@ -15,6 +15,6 @@ namespace Database.Utilities
         void Read();
         void Update();
         void Delete();
-        void Copy();
+        void Clone();
     }
 }

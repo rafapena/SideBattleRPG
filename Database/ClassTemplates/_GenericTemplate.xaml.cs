@@ -20,75 +20,52 @@ namespace Database.ClassTemplates
     /// <summary>
     /// Interaction logic for _GenericTemplate.xaml
     /// </summary>
-    public partial class _GenericTemplate : UserControl
+    public partial class _GenericTemplate : _ClassTemplateOperations
     {
-        public SQLiteParameter[] Inputs;
-
-        public int _GenericTemplateId { get; set; }
-
         public _GenericTemplate()
         {
             InitializeComponent();
+            ClassTemplateTable = "_GenericTemplate";    // PLURAL For Type
+            ClassTemplateType = "_GenericTemplate";
         }
 
-        public void InitializeNew()
+        protected override void OnInitializeNew()
         {
-            SQLDB.CurrentId = 0;
-            _GenericTemplateId = 0;
-            // Insert Here
+            //attr1Input.Text = "";
+            //attr2Image.Source = null;
         }
 
-        public void Automate()
+        public override void Automate()
         {
-            // Insert Here
+            //attr1Input.Text = "This";
+            //attr2Input.Text = "0";
         }
 
-        public string ValidateInputs()
+        public override string ValidateInputs()
         {
-            SQLDB.AddParameters(new SQLiteParameter[] { });
+            SQLDB.AddParameters(new SQLiteParameter[] {
+                //new SQLiteParameter("@attr1", attr1Input.Text),
+                //new SQLiteParameter("@attr2", attr2Input.Text)
+            });
             string err = "";
-            // Insert Here
+            //if (!Util.InRequiredLength(Util.CutSpaces(attr1Input.Text))) err += "attr1 needs to have 1 to 16 characters";
             return err;
         }
 
-        public void Create()
+        protected override string[] OnCreate()
         {
-            SQLDB.Command(
-                "INSERT INTO _GenericTemplates () VALUES ();"
-                // Insert Here
-            );
+            return new string[] { "attr1, attr2", "@attr1, @attr2" };
         }
 
-        public void Read()
+        protected override void OnRead(SQLiteDataReader reader)
         {
-            using (var conn = SQLDB.DB())
-            {
-                conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM _GenericTemplates WHERE " + SQLDB.CurrentTable + "ID = " + SQLDB.CurrentId.ToString(), conn))
-                {
-                    _GenericTemplateId = reader.GetInt32(0);
-                    // Insert Here
-                }
-                conn.Close();
-            }
+            //attr1Input.Text = reader.GetInt32(N);
+            //attr2Input.Text = reader.GetString(N);
         }
 
-        public void Update()
+        protected override string OnUpdate()
         {
-            SQLDB.Command(
-                "UPDATE _GenericTemplates SET WHERE _GenericTemplate_ID = " + _GenericTemplateId + ";"
-                // Insert Here
-            );
-        }
-
-        public void Delete()
-        {
-            SQLDB.Command("DELETE FROM _GenericTemplates WHERE _GenericTemplate_ID = " + _GenericTemplateId + ";");
-        }
-
-        public void Copy()
-        {
-            Create();
+            return "attr1 = @attr1, attr2 = @attr2";
         }
     }
 }

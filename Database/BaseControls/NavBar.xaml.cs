@@ -29,9 +29,10 @@ namespace Database.BaseControls
             InitializeComponent();
         }
 
-        private void SetUpFromClick<P>(string currentTable) where P : Page, new()
+        private void SetUpFromClick<P>(string currentClass, string currentTable) where P : Page, new()
         {
-            if (SQLDB.CurrentTable == currentTable) return;
+            if (SQLDB.CurrentClass == currentClass) return;
+            SQLDB.CurrentClass = currentClass;
             SQLDB.CurrentTable = currentTable;
             Application.Current.MainWindow.Content = new P();
         }
@@ -93,7 +94,7 @@ namespace Database.BaseControls
 
         private void GoToPlayers(object sender, EventArgs e)
         {
-            SetUpFromClick<Player>("Player");
+            SetUpFromClick<Player>("Player", "Players");
         }
 
         private void GoToProjectiles(object sender, EventArgs e)

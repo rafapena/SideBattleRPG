@@ -15,7 +15,7 @@
 
         <Button Content="Delete" x:Name="DeleteButton" Click="Deleted" Background="#faa"/>
         <Button Content="Auto" x:Name="AutoButton" Click="Automated"/>
-        <Button Content="Copy" x:Name="CopyButton" Click="Copied"/>
+        <Button Content="Clone" x:Name="CloneButton" Click="Cloned"/>
         <Button Content="Create" x:Name="CreateButton" Click="Created" Background="#afa"/>
         <Button Content="Update" x:Name="UpdateButton" Click="Updated"/>
     </StackPanel>

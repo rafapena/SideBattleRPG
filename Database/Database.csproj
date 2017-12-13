@@ -82,6 +82,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\_ClassOperations.cs" />
     <Compile Include="Classes\Player.xaml.cs">
       <DependentUpon>Player.xaml</DependentUpon>
     </Compile>
@@ -100,6 +101,7 @@
     <Compile Include="BaseControls\TableList.xaml.cs">
       <DependentUpon>TableList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ClassTemplates\_ClassTemplateOperations.cs" />
     <Compile Include="ClassTemplates\_GenericTemplate.xaml.cs">
       <DependentUpon>_GenericTemplate.xaml</DependentUpon>
     </Compile>

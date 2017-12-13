@@ -20,33 +20,30 @@ namespace Database.ClassTemplates
     /// <summary>
     /// Interaction logic for BaseObject.xaml
     /// </summary>
-    public partial class BaseObject : UserControl, ObjectOperations
+    public partial class BaseObject : _ClassTemplateOperations
     {
-        public int BaseObjectId { get; set; }
-
         public BaseObject()
         {
             InitializeComponent();
+            ClassTemplateTable = "BaseObjects";
+            ClassTemplateType = "BaseObject";
         }
 
-        public void InitializeNew()
+        protected override void OnInitializeNew()
         {
-            SQLDB.CurrentId = 0;
-            BaseObjectId = 0;
             NameInput.Text = "";
             DescriptionInput.Text = "";
-            CreatedText.Text = "";
-            UpdatedText.Text = "";
             ImageInput.Source = null;
         }
 
-        public void Automate()
+        public override void Automate()
         {
             NameInput.Text = "Generic Name";
             DescriptionInput.Text = "Description";
+            ImageInput.Source = null;
         }
 
-        public string ValidateInputs()
+        public override string ValidateInputs()
         {
             SQLDB.AddParameters(new SQLiteParameter[]
             {
@@ -59,42 +56,24 @@ namespace Database.ClassTemplates
             return err;
         }
 
-        public void Create()
+        protected override string[] OnCreate()
         {
-            SQLDB.Command("INSERT INTO BaseObjects (Name, Description) VALUES (@Name, @Description);");
+            return new string[] { "Name, Description", "@Name, @Description" };
         }
 
-        public void Read()
+        protected override void OnRead(SQLiteDataReader reader)
         {
-            using (var conn = SQLDB.DB())
-            {
-                conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM BaseObjects WHERE " + SQLDB.CurrentTable + "ID = " + SQLDB.CurrentId.ToString(), conn))
-                {
-                    BaseObjectId = reader.GetInt32(0);
-                    NameInput.Text = reader.GetString(1);
-                    DescriptionInput.Text = reader.GetString(2);
-                    ImageInput.Source = null; //reader.GetBlob(3, false);
-                    CreatedText.Text = string.Format("{0:d}", reader.GetDateTime(4));
-                    UpdatedText.Text = string.Format("{0:d}", reader.GetDateTime(5));
-                }
-                conn.Close();
-            }
+            ClassTemplateId = reader.GetInt32(0);
+            NameInput.Text = reader.GetString(1);
+            DescriptionInput.Text = reader.GetString(2);
+            ImageInput.Source = null; //reader.GetBlob(3, false);
+            CreatedText.Text = string.Format("{0:d}", reader.GetDateTime(4));
+            UpdatedText.Text = string.Format("{0:d}", reader.GetDateTime(5));
         }
 
-        public void Update()
+        protected override string OnUpdate()
         {
-            SQLDB.Command("UPDATE BaseObjects SET Name = @Name, Description = @Description WHERE BaseObject_ID = " + BaseObjectId.ToString() + ";");
-        }
-
-        public void Delete()
-        {
-            SQLDB.Command("DELETE FROM BaseObjects WHERE BaseObject_ID = " + BaseObjectId + ")");
-        }
-
-        public void Copy()
-        {
-            Create();
+            return "Name = @Name, Description = @Description";
         }
     }
 }

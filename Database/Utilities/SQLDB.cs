@@ -13,6 +13,7 @@ namespace Database.Utilities
     public static class SQLDB
     {
         public static SQLiteParameter[] Inputs { get; private set; }
+        public static string CurrentClass = "";
         public static string CurrentTable = "";
         public static int CurrentId = 0;
 
@@ -24,14 +25,11 @@ namespace Database.Utilities
         public static SQLiteDataReader Retrieve(string sqlCommand, SQLiteConnection currentTransaction)
         {
             SQLiteCommand command = new SQLiteCommand(sqlCommand, currentTransaction);
-            SQLiteDataReader reader = command.ExecuteReader();
-            reader.Read();
-            return reader;
+            return command.ExecuteReader();
         }
 
         public static void AddParameters(SQLiteParameter[] InputsList)
         {
-            Inputs = null;
             Inputs = InputsList;
         }
 

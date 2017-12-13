@@ -31,21 +31,21 @@ namespace Database.BaseControls
             InitializeComponent();
         }
 
-        public void SetupTable(string currentTablePl, Footer link)
+        public void SetupTable(Footer link)
         {
             LinkedFooter = link;
             LinkedFooter.ApplyInitializeNewSettings();
-            Title.Text = currentTablePl;
+            Title.Text = SQLDB.CurrentTable;
             TableSetup(RowsTable);
             int iterations = 0;
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                SQLiteCommand command = new SQLiteCommand(
-                    "SELECT * FROM BaseObjects JOIN " + currentTablePl + " " +
-                    "WHERE " + SQLDB.CurrentTable + "ID = " + SQLDB.CurrentTable + "_ID " +
-                    "ORDER BY Name ASC", conn);
-                using (SQLiteDataReader reader = command.ExecuteReader())
+                string query =
+                    "SELECT * FROM BaseObjects JOIN " + SQLDB.CurrentTable + " " +
+                    "WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentClass + "_ID " +
+                    "ORDER BY Name ASC";
+                using (SQLiteDataReader reader = SQLDB.Retrieve(query, conn))
                 {
                     while (reader.Read()) CreateRow(RowsTable, iterations++, reader);
                 }
@@ -56,8 +56,8 @@ namespace Database.BaseControls
         public void CreateRow(Grid table, int rowNum, SQLiteDataReader reader)
         {
             table.RowDefinitions.Add(new RowDefinition());
-            Button b = Button((string)reader["Name"], Read, "#dddddd", int.Parse(reader[SQLDB.CurrentTable + "_ID"].ToString()), rowNum, 0);
-            b.Margin = Margin(0,0,5,0);
+            Button b = Button((string)reader["Name"], Read, "#dddddd", int.Parse(reader[SQLDB.CurrentClass + "_ID"].ToString()), rowNum, 0);
+            b.Margin = Margin(0, 0, 5, 0);
             b.Width = 70;
             table.Children.Add(b);
         }
@@ -69,7 +69,7 @@ namespace Database.BaseControls
         public void Read(object sender, EventArgs e)
         {
             SQLDB.CurrentId = (int)(sender as Button).Tag;
-            switch (SQLDB.CurrentTable)
+            switch (SQLDB.CurrentClass)
             {
                 case "Player": Read<Player>(); break;
             }
@@ -79,14 +79,14 @@ namespace Database.BaseControls
         public void InitializeNew(object sender, EventArgs e)
         {
             SQLDB.CurrentId = 0;
-            switch (SQLDB.CurrentTable)
+            switch (SQLDB.CurrentClass)
             {
                 case "Player": InitializeNew<Player>(); break;
             }
             LinkedFooter.ApplyInitializeNewSettings();
         }
 
-        private void Read<P>() where P : Page, Utilities.ObjectOperations { (Application.Current.MainWindow.Content as P).Read(); }
-        private void InitializeNew<P>() where P : Page, Utilities.ObjectOperations { (Application.Current.MainWindow.Content as P).InitializeNew(); }
+        private void Read<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).Read(); }
+        private void InitializeNew<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).InitializeNew(); }
     }
 }

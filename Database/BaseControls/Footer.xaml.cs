@@ -31,7 +31,7 @@ namespace Database.BaseControls
         {
             DeleteButton.Visibility = Visibility.Collapsed;
             AutoButton.Visibility = Visibility.Visible;
-            CopyButton.Visibility = Visibility.Collapsed;
+            CloneButton.Visibility = Visibility.Collapsed;
             CreateButton.Visibility = Visibility.Visible;
             UpdateButton.Visibility = Visibility.Collapsed;
         }
@@ -40,7 +40,7 @@ namespace Database.BaseControls
         {
             DeleteButton.Visibility = Visibility.Visible;
             AutoButton.Visibility = Visibility.Collapsed;
-            CopyButton.Visibility = Visibility.Visible;
+            CloneButton.Visibility = Visibility.Visible;
             CreateButton.Visibility = Visibility.Collapsed;
             UpdateButton.Visibility = Visibility.Visible;
         }
@@ -51,7 +51,7 @@ namespace Database.BaseControls
 
         public void Deleted(object sender, EventArgs e)
         {
-            switch (SQLDB.CurrentTable)
+            switch (SQLDB.CurrentClass)
             {
                 case "Player": Deleted<Player>(); break;
             }
@@ -59,23 +59,23 @@ namespace Database.BaseControls
 
         public void Automated(object sender, EventArgs e)
         {
-            switch (SQLDB.CurrentTable)
+            switch (SQLDB.CurrentClass)
             {
                 case "Player": Automated<Player>(); break;
             }
         }
 
-        public void Copied(object sender, EventArgs e)
+        public void Cloned(object sender, EventArgs e)
         {
-            switch (SQLDB.CurrentTable)
+            switch (SQLDB.CurrentClass)
             {
-                case "Player": Copied<Player>(); break;
+                case "Player": Cloned<Player>(); break;
             }
         }
 
         public void Created(object sender, EventArgs e)
         {
-            switch (SQLDB.CurrentTable)
+            switch (SQLDB.CurrentClass)
             {
                 case "Player": Created<Player>(); break;
             }
@@ -83,16 +83,16 @@ namespace Database.BaseControls
 
         public void Updated(object sender, EventArgs e)
         {
-            switch (SQLDB.CurrentTable)
+            switch (SQLDB.CurrentClass)
             {
                 case "Player": Updated<Player>(); break;
             }
         }
         
-        private void Deleted<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Delete(); }
-        private void Copied<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Copy(); }
-        private void Automated<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Automate(); }
-        private void Created<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Create(); }
-        private void Updated<P>() where P : Page, ObjectOperations { (Application.Current.MainWindow.Content as P).Update(); }
+        private void Deleted<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).Delete(); }
+        private void Cloned<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).Clone(); }
+        private void Automated<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).Automate(); }
+        private void Created<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).Create(); }
+        private void Updated<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).Update(); }
     }
 }

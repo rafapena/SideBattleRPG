@@ -20,85 +20,67 @@ namespace Database.Classes
     /// <summary>
     /// Interaction logic for _GenericTemplate.xaml
     /// </summary>
-    public partial class _GenericTemplate : Page, ObjectOperations
+    public partial class _GenericTemplate : _ClassOperations
     {
         public _GenericTemplate()
         {
             InitializeComponent();
-            ObjectList.SetupTable(SQLDB.CurrentTable + "s", FooterButtons);
+            ObjectList.SetupTable(FooterButtons);
             InitializeNew();
         }
 
-        public void Automate()
+        public override void InitializeNew()
+        {
+            Base.InitializeNew();
+            //attr1Input.Text = "";
+            //attr2Image.Source = null;
+        }
+
+        public override void Automate()
         {
             Base.Automate();
-            //Insert Here
+            //attr1Input.Text = "This";
+            //attr2Input.Text = "0";
         }
 
-        public void Copy()
+        public override string ValidateInputs()
         {
-            string err = ValidateInputs();
-            if (err != "") { MessageBox.Show("Could not copy due to the following:\n\n" + err); return; }
-            if (!Utils.Confirm("Are you sure?", "Cloning " + SQLDB.CurrentTable)) return;
-            Base.Copy();
-            //Insert Here
-            MessageBox.Show("Cloning successful");
-        }
-
-        public void Create()
-        {
-            string err = ValidateInputs();
-            if (err != "") { MessageBox.Show("Could not create due to the following:\n\n" + err); return; }
-            Base.Create();
-            //Insert Here
-            MessageBox.Show("Creating successful");
-            InitializeNew();
-        }
-
-        public void Delete()
-        {
-            if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentTable)) return;
-            Base.Delete();
-            SQLDB.Command("DELETE FROM " + SQLDB.CurrentTable + "s WHERE " + SQLDB.CurrentTable + "_ID = " + SQLDB.CurrentId.ToString());
-            MessageBox.Show("Deleting successful");
-            InitializeNew();
-        }
-
-        public string ValidateInputs()
-        {
-            SQLDB.AddParameters(new SQLiteParameter[] { });
+            SQLDB.AddParameters(new SQLiteParameter[] {
+                //new SQLiteParameter("@attr1", attr1Input.Text),
+                //new SQLiteParameter("@attr2", attr2Input.Text)
+            });
             string err = Base.ValidateInputs();
-            //Insert Here
+            //if (!Util.InRequiredLength(Util.CutSpaces(attr1))) err += "attr1 needs to have 1 to 16 characters";
             return err;
         }
 
-        public void InitializeNew()
+        protected override void OnCreate()
         {
-            Base.InitializeNew();
-            //Insert Here
+            Base.Create();
+            SQLCreate(new string[]{ "attr1, attr2", "@attr1, @attr2" });
         }
 
-        public void Read()
+        protected override void OnRead(SQLiteDataReader reader)
         {
             Base.Read();
-            using (var conn = SQLDB.DB())
-            {
-                conn.Open();
-                using (var reader = SQLDB.Retrieve("", conn))
-                {
-                    // Insert Here
-                }
-                conn.Close();
-            }
+            //attr1Input.Text = reader.GetInt32(N);
+            //attr2Input.Text = reader.GetString(N);
         }
 
-        public void Update()
+        protected override void OnUpdate()
         {
-            string err = ValidateInputs();
-            if (err != "") { MessageBox.Show("Could not update due to the following:\n\n" + err); return; }
             Base.Update();
-            //Insert Here
-            MessageBox.Show("Updating successful");
+            SQLUpdate("attr1 = @attr1, attr2 = @attr2");
+        }
+
+        protected override void OnDelete()
+        {
+            Base.Delete();
+        }
+
+        protected override void OnClone()
+        {
+            Base.Clone();
         }
     }
 }
