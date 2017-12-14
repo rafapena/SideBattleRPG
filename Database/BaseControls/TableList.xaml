@@ -6,13 +6,15 @@
              xmlns:local="clr-namespace:Database.BaseControls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="150">
-    <StackPanel Margin="0 0 5 0">
-        <TextBlock x:Name="Title" FontWeight="Bold" FontSize="16" Margin="0 0 0 2"/>
-        <Button Height="20" Width="80" Content="Add New" Click="InitializeNew" Margin="0 0 20 10" Background="#afa"/>
-        <ScrollViewer Height="300" Width="100">
+    <StackPanel Margin="5 0 5 5" Width="120">
 
-            <Grid x:Name="RowsTable" ScrollViewer.CanContentScroll="True"/>
+        <TextBlock x:Name="Title" FontWeight="Bold" FontSize="14" Margin="0 0 0 3" HorizontalAlignment="Center"/>
+        <TextBlock x:Name="Count" FontSize="8" Margin="0 0 0 2" HorizontalAlignment="Center"/>
+        <Button x:Name="AddNew" Height="20" Width="80" Content="Add New" Click="InitializeNew" HorizontalAlignment="Center"/>
 
+        <ScrollViewer Margin="0 5 0 0" Height="250">
+            <Grid x:Name="RowsTable" ScrollViewer.CanContentScroll="True" VerticalAlignment="Top"/>
         </ScrollViewer>
+        
     </StackPanel>
 </UserControl>

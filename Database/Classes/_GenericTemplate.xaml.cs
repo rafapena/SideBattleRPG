@@ -58,7 +58,9 @@ namespace Database.Classes
         protected override void OnCreate()
         {
             Base.Create();
-            SQLCreate(new string[] { "attr1, attr2, BaseObjectID", "@attr1, @attr2, " + Base.ClassTemplateId.ToString() });
+            SQLCreate(new string[] {
+                "attr1, attr2, BaseObjectID",
+                "@attr1, @attr2, " + Base.ClassTemplateId.ToString() });
         }
 
         protected override void OnRead(SQLiteDataReader reader)

@@ -24,35 +24,80 @@ namespace Database.BaseControls
     /// </summary>
     public partial class TableList : UserControl
     {
+        private Button CurrentlySelected;
+        private const string StandardButtonColor = "#dddddd";
+        private const string HighlightedButtonColor = "#888888";
+        private const string StandardNewColor = "#aaffaa";
+        private const string HighlightedNewColor = "#558855";
+
         public TableList()
         {
             InitializeComponent();
         }
 
-        public void SetupTable(Footer link)
+        public void SetupTable(bool keepHighlightedButton)
         {
+            AddNew.Background = Color(StandardNewColor);
             Title.Text = SQLDB.CurrentTable;
+            CurrentlySelected = null;
             TableSetup(RowsTable);
-            int iterations = 0;
+            int count = 0;
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
                 string query = "SELECT * FROM BaseObjects JOIN " + SQLDB.CurrentTable + " WHERE BaseObject_ID = BaseObjectID ORDER BY Name";
                 using (SQLiteDataReader reader = SQLDB.Retrieve(query, conn))
                 {
-                    while (reader.Read()) CreateRow(RowsTable, iterations++, reader);
+                    if (keepHighlightedButton) while (reader.Read()) CreateRowWithHighlighted(reader, RowsTable, count++);
+                    else while (reader.Read()) CreateRow(reader, RowsTable, count++);
                 }
+                Count.Text = "Total: " + count;
                 conn.Close();
             }
         }
 
-        public void CreateRow(Grid table, int rowNum, SQLiteDataReader reader)
+        private void CreateRow(SQLiteDataReader reader, Grid table, int rowNum)
+        {
+            Button b = Button((string)reader["Name"], Read, StandardButtonColor, int.Parse(reader[SQLDB.CurrentClass + "_ID"].ToString()), rowNum, 0);
+            CreateRow(table, b);
+        }
+
+        private void CreateRowWithHighlighted(SQLiteDataReader reader, Grid table, int rowNum)
+        {
+            int currId = int.Parse(reader[SQLDB.CurrentClass + "_ID"].ToString());
+            Button b = null;
+            if (SQLDB.CurrentId == currId)
+            {
+                b = Button((string)reader["Name"], Read, HighlightedButtonColor, currId, rowNum, 0);
+                CurrentlySelected = b;
+            }
+            else b = Button((string)reader["Name"], Read, StandardButtonColor, currId, rowNum, 0);
+            CreateRow(table, b);
+        }
+
+        private void CreateRow(Grid table, Button b)
         {
             table.RowDefinitions.Add(new RowDefinition());
-            Button b = Button((string)reader["Name"], Read, "#dddddd", int.Parse(reader[SQLDB.CurrentClass + "_ID"].ToString()), rowNum, 0);
-            b.Margin = Margin(0, 0, 5, 0);
-            b.Width = 70;
+            b.HorizontalAlignment = HorizontalAlignment.Left;
+            b.HorizontalContentAlignment = HorizontalAlignment.Left;
+            b.Width = 100;
+            b.Height = 20;
             table.Children.Add(b);
+        }
+
+        // -- HIGHLIGHT ADD NEW
+
+        public void HighlightButton(Button current)
+        {
+            if (CurrentlySelected != null) CurrentlySelected.Background = Color(StandardButtonColor);
+            current.Background = Color(HighlightedButtonColor);
+            CurrentlySelected = current;
+        }
+
+        public void RemoveButtonHighlight()
+        {
+            if (CurrentlySelected != null) CurrentlySelected.Background = Color(StandardButtonColor);
+            AddNew.Background = Color(HighlightedNewColor);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +106,10 @@ namespace Database.BaseControls
 
         public void Read(object sender, EventArgs e)
         {
-            SQLDB.CurrentId = (int)(sender as Button).Tag;
+            Button b = sender as Button;
+            SQLDB.CurrentId = (int)b.Tag;
+            HighlightButton(b);
+            AddNew.Background = Color(StandardNewColor);
             switch (SQLDB.CurrentClass)
             {
                 case "Achievement": Read<Achievement>(); break;
@@ -71,7 +119,6 @@ namespace Database.BaseControls
 
         public void InitializeNew(object sender, EventArgs e)
         {
-            SQLDB.CurrentId = 0;
             switch (SQLDB.CurrentClass)
             {
                 case "Achievement": InitializeNew<Achievement>(); break;

@@ -28,7 +28,6 @@ namespace Database.Utilities
             targetGrid.Children.Clear();
             targetGrid.RowDefinitions.Clear();
             targetGrid.ColumnDefinitions.Clear();
-            targetGrid.ColumnDefinitions.Add(new ColumnDefinition());
             if (columns != null)
             {
                 //Title
@@ -46,6 +45,7 @@ namespace Database.Utilities
                 }
                 targetGrid.Children.Add(Border("#0000000", 1, 0, 2, 1, columns.Length));
             }
+            else targetGrid.ColumnDefinitions.Add(new ColumnDefinition());
             return true;
         }
 

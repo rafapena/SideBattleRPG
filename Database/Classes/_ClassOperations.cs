@@ -30,9 +30,10 @@ namespace Database.Classes
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {
-            LinkedTableList.SetupTable(LinkedFooter);
+            LinkedTableList.SetupTable(false);
             SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
             LinkedFooter.ApplyInitializeNewSettings();
+            LinkedTableList.RemoveButtonHighlight();
             OnInitializeNew();
         }
         
@@ -46,7 +47,7 @@ namespace Database.Classes
             {
                 OnCreate();
                 MessageBox.Show("Creating successful");
-                LinkedTableList.SetupTable(LinkedFooter);
+                LinkedTableList.SetupTable(true);
                 LinkedFooter.ApplyReadSettings();
             }
             SQLDB.ClearParameters();
@@ -83,7 +84,7 @@ namespace Database.Classes
             {
                 OnUpdate();
                 MessageBox.Show("Updating successful");
-                LinkedTableList.SetupTable(LinkedFooter);
+                LinkedTableList.SetupTable(true);
             }
             SQLDB.ClearParameters();
         }
@@ -108,6 +109,7 @@ namespace Database.Classes
         {
             if (!Utils.Confirm("Are you sure?\nThe un-updated changes will be discarded", "Cloning " + SQLDB.CurrentClass)) return;
             LinkedFooter.ApplyInitializeNewSettings();
+            LinkedTableList.RemoveButtonHighlight();
             SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
             OnClone();
             MessageBox.Show("Cloning successful\nThe cloned " + SQLDB.CurrentClass + " can now be created");

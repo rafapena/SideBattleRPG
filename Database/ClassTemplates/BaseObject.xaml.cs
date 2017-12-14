@@ -58,6 +58,8 @@ namespace Database.ClassTemplates
 
         protected override string[] OnCreate()
         {
+            CreatedText.Text = string.Format("{0:MM-dd-yyyy H:mm}", DateTime.Now);
+            UpdatedText.Text = string.Format("{0:MM-dd-yyyy H:mm}", DateTime.Now);
             return new string[] { "Name, Description", "@Name, @Description" };
         }
 
@@ -67,13 +69,21 @@ namespace Database.ClassTemplates
             NameInput.Text = reader.GetString(1);
             DescriptionInput.Text = reader.GetString(2);
             ImageInput.Source = null; //reader.GetBlob(3, false);
-            CreatedText.Text = string.Format("{0:d}", reader.GetDateTime(4));
-            UpdatedText.Text = string.Format("{0:d}", reader.GetDateTime(5));
+            CreatedText.Text = string.Format("{0:MM-dd-yyyy H:mm}", reader.GetDateTime(4));
+            UpdatedText.Text = string.Format("{0:MM-dd-yyyy H:mm}", reader.GetDateTime(5));
         }
 
         protected override string OnUpdate()
         {
+            UpdatedText.Text = string.Format("{0:MM-dd-yyyy H:mm}", DateTime.Now);
             return "Name = @Name, Description = @Description";
+        }
+
+        public new void Clone()
+        {
+            base.Clone();
+            CreatedText.Text = "";
+            UpdatedText.Text = "";
         }
     }
 }
