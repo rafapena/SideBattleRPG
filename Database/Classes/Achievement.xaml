@@ -1,5 +1,5 @@
 ﻿<base:_ClassOperations
-    x:Class="Database.Classes.Player"
+    x:Class="Database.Classes.Achievement"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,7 +9,7 @@
     xmlns:template="clr-namespace:Database.ClassTemplates"
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="300"
-    Title="Player">
+    Title="Achievement">
     <Viewbox>
         <StackPanel>
             <control:NavBar x:Name="Header"/>
@@ -22,15 +22,16 @@
                             <template:BaseObject x:Name="Base" Margin="5,5,5,5"/>
                         </TabItem>
 
-                        <TabItem Header="Tab2">
+                        <TabItem Header="Other">
                             <StackPanel Margin="5,5,5,5">
-                                <!-- Insert here -->
-                            </StackPanel>
-                        </TabItem>
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <TextBlock Text="Level:"/>
+                                    <TextBox x:Name="LevelInput" Margin="8,0,0,0" Width="30"/>
+                                </StackPanel>
 
-                        <TabItem Header="Tab3">
-                            <StackPanel Margin="5,5,5,5">
-                                <!-- Insert here -->
+                                <TextBlock Text="Hidden Message:"/>
+                                <TextBox x:Name="HiddenMessageInput" Width="250" Height="80"
+                                         TextWrapping = "Wrap" AcceptsReturn = "True" ScrollViewer.VerticalScrollBarVisibility = "Visible"/>
                             </StackPanel>
                         </TabItem>
                     </TabControl>

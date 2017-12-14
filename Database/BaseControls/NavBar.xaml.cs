@@ -39,7 +39,7 @@ namespace Database.BaseControls
 
         private void GoToAchievements(object sender, EventArgs e)
         {
-            //SetUpFromClick(); Achievement();
+            SetUpFromClick<Achievement>("Achievement", "Achievements");
         }
 
         private void GoToAnimations(object sender, EventArgs e)

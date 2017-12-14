@@ -19,21 +19,20 @@ namespace Database.ClassTemplates
 {
     public abstract class _ClassTemplateOperations : UserControl, ObjectOperations
     {
-        public string ClassTemplateTable { get; set; }
-        public string ClassTemplateType { get; set; }
-        public int ClassTemplateId { get; set; }
+        protected string ClassTemplateTable { get; set; }
+        protected string ClassTemplateType { get; set; }
+        public int ClassTemplateId { get; protected set; }
+
+        public abstract void Automate();
+        public abstract string ValidateInputs();
 
 
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {
-            ClassTemplateId = 0;
+            ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
             OnInitializeNew();
         }
-
-
-        public abstract void Automate();
-        public abstract string ValidateInputs();
 
 
         protected abstract string[] OnCreate();
@@ -45,12 +44,17 @@ namespace Database.ClassTemplates
 
 
         protected abstract void OnRead(SQLiteDataReader reader);
+        public void Read(SQLiteDataReader reader)
+        {
+            ClassTemplateId = int.Parse(reader[ClassTemplateType + "ID"].ToString());
+            Read();
+        }
         public void Read()
         {
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + ClassTemplateTable + " WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId.ToString(), conn))
+                using (var reader = SQLDB.Retrieve("SELECT * FROM " + ClassTemplateTable + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString(), conn))
                 {
                     reader.Read();
                     ClassTemplateId = reader.GetInt32(0);
@@ -70,13 +74,13 @@ namespace Database.ClassTemplates
 
         public void Delete()
         {
-            SQLDB.Command("DELETE FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentClass + "_ID = " + ClassTemplateId + ";");
+            SQLDB.Command("DELETE FROM " + ClassTemplateTable + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
         }
 
 
         public void Clone()
         {
-            Create();
+            ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
         }
     }
 }

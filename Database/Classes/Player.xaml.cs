@@ -25,46 +25,58 @@ namespace Database.Classes
         public Player()
         {
             InitializeComponent();
-            ObjectList.SetupTable(FooterButtons);
+            LinkedTableList = ObjectList;
+            LinkedFooter = FooterButtons;
             InitializeNew();
         }
 
-        public override void InitializeNew()
+        protected override void OnInitializeNew()
         {
             Base.InitializeNew();
+            //attr1Input.Text = "";
+            //attr2Image.Source = null;
         }
 
         public override void Automate()
         {
             Base.Automate();
+            //attr1Input.Text = "This";
+            //attr2Input.Text = "0";
         }
 
         public override string ValidateInputs()
         {
-            SQLDB.AddParameters(new SQLiteParameter[] { });
+            SQLDB.AddParameters(new SQLiteParameter[] {
+                //new SQLiteParameter("@attr1", attr1Input.Text),
+                //new SQLiteParameter("@attr2", attr2Input.Text)
+            });
             string err = Base.ValidateInputs();
-            //Insert Here
+            //if (!Utils.InRequiredLength(Utils.CutSpaces(attr1))) err += "attr1 needs to have 1 to 16 characters";
             return err;
         }
 
         protected override void OnCreate()
         {
             Base.Create();
-        }
-
-        protected override void OnDelete()
-        {
-            Base.Delete();
+            SQLCreate(new string[] { "BaseObjectID", Base.ClassTemplateId.ToString() });
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            Base.Read();
+            Base.Read(reader);
+            //attr1Input.Text = reader.GetInt32(N);
+            //attr2Input.Text = reader.GetString(N);
         }
 
         protected override void OnUpdate()
         {
             Base.Update();
+            //SQLUpdate("attr1 = @attr1, attr2 = @attr2");
+        }
+
+        protected override void OnDelete()
+        {
+            Base.Delete();
         }
 
         protected override void OnClone()

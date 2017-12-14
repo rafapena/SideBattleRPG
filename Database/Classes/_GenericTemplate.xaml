@@ -19,15 +19,19 @@
 
                     <TabControl>
                         <TabItem Header="General">
-                            <template:BaseObject x:Name="Base"/>
+                            <template:BaseObject x:Name="Base" Margin="5,5,5,5"/>
                         </TabItem>
                         
                         <TabItem Header="Tab2">
-                            <!-- Insert here -->
+                            <StackPanel Margin="5,5,5,5">
+                                <!-- Insert here -->
+                            </StackPanel>
                         </TabItem>
 
                         <TabItem Header="Tab3">
-                            <!-- Insert here -->
+                            <StackPanel Margin="5,5,5,5">
+                                <!-- Insert here -->
+                            </StackPanel>
                         </TabItem>
                     </TabControl>
 

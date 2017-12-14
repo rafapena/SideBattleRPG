@@ -13,13 +13,13 @@ namespace Database.Utilities
     public static class SQLDB
     {
         public static SQLiteParameter[] Inputs { get; private set; }
-        public static string CurrentClass = "";
-        public static string CurrentTable = "";
-        public static int CurrentId = 0;
+        public static string CurrentClass { get; set; }
+        public static string CurrentTable { get; set; }
+        public static int CurrentId { get; set; }
 
         public static SQLiteConnection DB()
         {
-            return new SQLiteConnection("URI=file://C:/Users/User/GC_RPG_DB.db");
+            return new SQLiteConnection(@"data source=C:\Users\User\GC_RPG_DB.db; Version=3; foreign keys=true");
         }
 
         public static SQLiteDataReader Retrieve(string sqlCommand, SQLiteConnection currentTransaction)
@@ -30,7 +30,13 @@ namespace Database.Utilities
 
         public static void AddParameters(SQLiteParameter[] InputsList)
         {
-            Inputs = InputsList;
+            if (Inputs != null && Inputs.Length > 0) InputsList.CopyTo(Inputs, 0);
+            else Inputs = InputsList;
+        }
+
+        public static void ClearParameters()
+        {
+            if (Inputs != null) Inputs = null;
         }
 
         public static void Command(string sqlCommand)
@@ -42,17 +48,30 @@ namespace Database.Utilities
                 {
                     try
                     {
-                        if (Inputs != null)
-                        {
-                            comm.Parameters.AddRange(Inputs);
-                            Inputs = null;
-                        }
+                        if (Inputs != null && Inputs.Length > 0) comm.Parameters.AddRange(Inputs);
+                        comm.CommandType = CommandType.Text;
                         comm.ExecuteNonQuery();
                     }
                     catch (Exception e) { MessageBox.Show("Something went wrong:\n" + e.Message); }
                 }
                 conn.Close();
             }
+        }
+
+        public static int GetMaxIdFromTable(string table, string type)
+        {
+            int maxId = 0;
+            using (var conn = DB())
+            {
+                conn.Open();
+                using (var comm = new SQLiteCommand("SELECT MAX(" + type + "_ID) FROM " + table, conn))
+                {
+                    try { maxId = (int)((long)comm.ExecuteScalar()) + 1; }
+                    catch (InvalidCastException) { maxId = 1; }
+                }
+                conn.Close();
+            }
+            return maxId;
         }
     }
 }

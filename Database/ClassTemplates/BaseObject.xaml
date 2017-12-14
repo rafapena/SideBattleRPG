@@ -8,25 +8,25 @@
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="375"
     Background="White">
-    <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+    <StackPanel Orientation="Horizontal">
 
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <TextBlock>Name</TextBlock>
-                <TextBox x:Name="NameInput" Margin="5,0,0,0" Width="120"></TextBox>
+                <TextBlock Text="Name:"/>
+                <TextBox x:Name="NameInput" Margin="8,0,0,4" Width="120"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="0 0 5 0"><Run Text="Created:"/></TextBlock>
-                <TextBlock x:Name="CreatedText"/>
+                <TextBlock Text="Created:"/>
+                <TextBlock x:Name="CreatedText" Margin="8,0,0,4" Width="120"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="0 0 5 0">Updated:</TextBlock>
-                <TextBlock x:Name="UpdatedText"></TextBlock>
+                <TextBlock Text="Updated:"/>
+                <TextBlock x:Name="UpdatedText" Margin="8,0,0,4" Width="120"/>
             </StackPanel>
 
-            <TextBlock>Description</TextBlock>
+            <TextBlock Text="Description:"/>
             <TextBox x:Name="DescriptionInput" Width="250" Height="80"
                      TextWrapping = "Wrap" AcceptsReturn = "True" ScrollViewer.VerticalScrollBarVisibility = "Visible"/>
         </StackPanel>

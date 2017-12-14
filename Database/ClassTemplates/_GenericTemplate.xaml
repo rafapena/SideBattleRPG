@@ -7,10 +7,10 @@
     xmlns:base="clr-namespace:Database.ClassTemplates"
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="300">
-    <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+    <StackPanel Orientation="Horizontal">
 
         <StackPanel>
-            <TextBlock>Insert Content Here</TextBlock>
+            <TextBlock Text="Insert content here"/>
         </StackPanel>
 
     </StackPanel>

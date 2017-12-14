@@ -53,6 +53,7 @@ namespace Database.BaseControls
         {
             switch (SQLDB.CurrentClass)
             {
+                case "Achievement": Deleted<Achievement>(); break;
                 case "Player": Deleted<Player>(); break;
             }
         }
@@ -61,6 +62,7 @@ namespace Database.BaseControls
         {
             switch (SQLDB.CurrentClass)
             {
+                case "Achievement": Automated<Achievement>(); break;
                 case "Player": Automated<Player>(); break;
             }
         }
@@ -69,6 +71,7 @@ namespace Database.BaseControls
         {
             switch (SQLDB.CurrentClass)
             {
+                case "Achievement": Cloned<Achievement>(); break;
                 case "Player": Cloned<Player>(); break;
             }
         }
@@ -77,6 +80,7 @@ namespace Database.BaseControls
         {
             switch (SQLDB.CurrentClass)
             {
+                case "Achievement": Created<Achievement>(); break;
                 case "Player": Created<Player>(); break;
             }
         }
@@ -85,6 +89,7 @@ namespace Database.BaseControls
         {
             switch (SQLDB.CurrentClass)
             {
+                case "Achievement": Updated<Achievement>(); break;
                 case "Player": Updated<Player>(); break;
             }
         }

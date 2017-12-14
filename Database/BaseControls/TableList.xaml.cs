@@ -24,8 +24,6 @@ namespace Database.BaseControls
     /// </summary>
     public partial class TableList : UserControl
     {
-        private Footer LinkedFooter { get; set; }
-
         public TableList()
         {
             InitializeComponent();
@@ -33,18 +31,13 @@ namespace Database.BaseControls
 
         public void SetupTable(Footer link)
         {
-            LinkedFooter = link;
-            LinkedFooter.ApplyInitializeNewSettings();
             Title.Text = SQLDB.CurrentTable;
             TableSetup(RowsTable);
             int iterations = 0;
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                string query =
-                    "SELECT * FROM BaseObjects JOIN " + SQLDB.CurrentTable + " " +
-                    "WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentClass + "_ID " +
-                    "ORDER BY Name ASC";
+                string query = "SELECT * FROM BaseObjects JOIN " + SQLDB.CurrentTable + " WHERE BaseObject_ID = BaseObjectID ORDER BY Name";
                 using (SQLiteDataReader reader = SQLDB.Retrieve(query, conn))
                 {
                     while (reader.Read()) CreateRow(RowsTable, iterations++, reader);
@@ -71,9 +64,9 @@ namespace Database.BaseControls
             SQLDB.CurrentId = (int)(sender as Button).Tag;
             switch (SQLDB.CurrentClass)
             {
+                case "Achievement": Read<Achievement>(); break;
                 case "Player": Read<Player>(); break;
             }
-            LinkedFooter.ApplyReadSettings();
         }
 
         public void InitializeNew(object sender, EventArgs e)
@@ -81,9 +74,9 @@ namespace Database.BaseControls
             SQLDB.CurrentId = 0;
             switch (SQLDB.CurrentClass)
             {
+                case "Achievement": InitializeNew<Achievement>(); break;
                 case "Player": InitializeNew<Player>(); break;
             }
-            LinkedFooter.ApplyInitializeNewSettings();
         }
 
         private void Read<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).Read(); }

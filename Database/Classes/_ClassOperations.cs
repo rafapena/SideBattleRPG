@@ -13,23 +13,43 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
+using Database.BaseControls;
 using Database.Utilities;
 
 namespace Database.Classes
 {
     public abstract class _ClassOperations : Page, ObjectOperations
     {
-        public abstract void InitializeNew();
+        public TableList LinkedTableList { get; set; }
+        public Footer LinkedFooter { get; set; }
+
         public abstract void Automate();
         public abstract string ValidateInputs();
 
 
+        protected abstract void OnInitializeNew();
+        public void InitializeNew()
+        {
+            LinkedTableList.SetupTable(LinkedFooter);
+            SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
+            LinkedFooter.ApplyInitializeNewSettings();
+            OnInitializeNew();
+        }
+        
+
         protected abstract void OnCreate();
         public void Create()
         {
-            OnCreate();
-            MessageBox.Show("Creating successful");
-            InitializeNew();
+            string err = ValidateInputs();
+            if (err != "") MessageBox.Show("Could not update due to the following:\n\n" + err);
+            else
+            {
+                OnCreate();
+                MessageBox.Show("Creating successful");
+                LinkedTableList.SetupTable(LinkedFooter);
+                LinkedFooter.ApplyReadSettings();
+            }
+            SQLDB.ClearParameters();
         }
         protected void SQLCreate(string[] text)
         {
@@ -40,10 +60,11 @@ namespace Database.Classes
         protected abstract void OnRead(SQLiteDataReader reader);
         public void Read()
         {
+            LinkedFooter.ApplyReadSettings();
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + SQLDB.CurrentTable, conn))
+                using (var reader = SQLDB.Retrieve("SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString(), conn))
                 {
                     reader.Read();
                     OnRead(reader);
@@ -57,9 +78,14 @@ namespace Database.Classes
         public void Update()
         {
             string err = ValidateInputs();
-            if (err != "") { MessageBox.Show("Could not update due to the following:\n\n" + err); return; }
-            OnUpdate();
-            MessageBox.Show("Updating successful");
+            if (err != "") MessageBox.Show("Could not update due to the following:\n\n" + err);
+            else
+            {
+                OnUpdate();
+                MessageBox.Show("Updating successful");
+                LinkedTableList.SetupTable(LinkedFooter);
+            }
+            SQLDB.ClearParameters();
         }
         protected void SQLUpdate(string input)
         {
@@ -72,7 +98,6 @@ namespace Database.Classes
         {
             if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentClass)) return;
             OnDelete();
-            SQLDB.Command("DELETE FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString());
             MessageBox.Show("Deleting successful");
             InitializeNew();
         }
@@ -81,11 +106,11 @@ namespace Database.Classes
         protected abstract void OnClone();
         public void Clone()
         {
-            string err = ValidateInputs();
-            if (err != "") { MessageBox.Show("Could not copy due to the following:\n\n" + err); return; }
-            if (!Utils.Confirm("Are you sure?", "Cloning " + SQLDB.CurrentClass)) return;
+            if (!Utils.Confirm("Are you sure?\nThe un-updated changes will be discarded", "Cloning " + SQLDB.CurrentClass)) return;
+            LinkedFooter.ApplyInitializeNewSettings();
+            SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
             OnClone();
-            MessageBox.Show("Cloning successful");
+            MessageBox.Show("Cloning successful\nThe cloned " + SQLDB.CurrentClass + " can now be created");
         }
     }
 }

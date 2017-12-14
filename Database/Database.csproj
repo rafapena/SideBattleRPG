@@ -86,6 +86,9 @@
     <Compile Include="Classes\Player.xaml.cs">
       <DependentUpon>Player.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\Achievement.xaml.cs">
+      <DependentUpon>Achievement.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Classes\_GenericTemplate.xaml.cs">
       <DependentUpon>_GenericTemplate.xaml</DependentUpon>
     </Compile>
@@ -110,6 +113,10 @@
     <Compile Include="Utilities\TableBuilder.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Page Include="Classes\Player.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Classes\Achievement.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

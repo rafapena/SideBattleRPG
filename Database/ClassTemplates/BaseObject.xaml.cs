@@ -51,7 +51,7 @@ namespace Database.ClassTemplates
                 new SQLiteParameter("@Description", DescriptionInput.Text)
             });
             string err = "";
-            if (!Utils.InRequiredLength(Utils.CutSpaces(NameInput.Text))) err += "Name must have 1 to 16 characters";
+            if (!Utils.InRequiredLength(Utils.CutSpaces(NameInput.Text))) err += "Name must have 1 to 16 characters\n";
             if (Utils.CutSpaces(DescriptionInput.Text) == "") DescriptionInput.Text = "N/A";
             return err;
         }

@@ -18,11 +18,11 @@ using Database.Utilities;
 namespace Database.Classes
 {
     /// <summary>
-    /// Interaction logic for _GenericTemplate.xaml
+    /// Interaction logic for Achievement.xaml
     /// </summary>
-    public partial class _GenericTemplate : _ClassOperations
+    public partial class Achievement : _ClassOperations
     {
-        public _GenericTemplate()
+        public Achievement()
         {
             InitializeComponent();
             LinkedTableList = ObjectList;
@@ -33,45 +33,46 @@ namespace Database.Classes
         protected override void OnInitializeNew()
         {
             Base.InitializeNew();
-            //attr1Input.Text = "";
-            //attr2Image.Source = null;
+            LevelInput.Text = "";
+            HiddenMessageInput.Text = "";
         }
 
         public override void Automate()
         {
             Base.Automate();
-            //attr1Input.Text = "This";
-            //attr2Input.Text = "0";
+            LevelInput.Text = "1";
+            HiddenMessageInput.Text = "Insert Text Here";
         }
 
         public override string ValidateInputs()
         {
             SQLDB.AddParameters(new SQLiteParameter[] {
-                //new SQLiteParameter("@attr1", attr1Input.Text),
-                //new SQLiteParameter("@attr2", attr2Input.Text)
+                new SQLiteParameter("@Level", LevelInput.Text),
+                new SQLiteParameter("@HiddenMessage", HiddenMessageInput.Text)
             });
             string err = Base.ValidateInputs();
-            //if (!Utils.InRequiredLength(Utils.CutSpaces(attr1))) err += "attr1 needs to have 1 to 16 characters";
+            if (!Utils.PosInt(LevelInput.Text)) err += "Level must be a positive integer\n";
+            if (Utils.CutSpaces(HiddenMessageInput.Text) == "") HiddenMessageInput.Text = "N/A";
             return err;
         }
 
         protected override void OnCreate()
         {
+            SQLCreate(new string[]{ "Level, HiddenMessage", "@Level, @HiddenMessage" });
             Base.Create();
-            SQLCreate(new string[] { "attr1, attr2, BaseObjectID", "@attr1, @attr2, " + Base.ClassTemplateId.ToString() });
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            Base.Read(reader);
-            //attr1Input.Text = reader.GetInt32(N);
-            //attr2Input.Text = reader.GetString(N);
+            Base.Read();
+            LevelInput.Text = reader.GetString(1);
+            HiddenMessageInput.Text = reader.GetString(2);
         }
 
         protected override void OnUpdate()
         {
+            SQLUpdate("Level = @Level, HiddenMessage = @HiddenMessage");
             Base.Update();
-            SQLUpdate("attr1 = @attr1, attr2 = @attr2");
         }
 
         protected override void OnDelete()
