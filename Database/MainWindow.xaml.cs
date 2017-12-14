@@ -13,9 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-// TEST INPUT SANITIZING
-// DATABASE LOCKED PROBLEM WHEN WRITING
-
 namespace Database
 {
     /// <summary>

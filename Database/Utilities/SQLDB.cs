@@ -12,7 +12,7 @@ namespace Database.Utilities
 {
     public static class SQLDB
     {
-        public static SQLiteParameter[] Inputs { get; private set; }
+        public static SQLiteParameter[] Inputs { get; set; }
         public static string CurrentClass { get; set; }
         public static string CurrentTable { get; set; }
         public static int CurrentId { get; set; }
@@ -26,17 +26,6 @@ namespace Database.Utilities
         {
             SQLiteCommand command = new SQLiteCommand(sqlCommand, currentTransaction);
             return command.ExecuteReader();
-        }
-
-        public static void AddParameters(SQLiteParameter[] InputsList)
-        {
-            if (Inputs != null && Inputs.Length > 0) InputsList.CopyTo(Inputs, 0);
-            else Inputs = InputsList;
-        }
-
-        public static void ClearParameters()
-        {
-            if (Inputs != null) Inputs = null;
         }
 
         public static void Command(string sqlCommand)
@@ -60,7 +49,7 @@ namespace Database.Utilities
 
         public static int GetMaxIdFromTable(string table, string type)
         {
-            int maxId = 0;
+            int maxId;
             using (var conn = DB())
             {
                 conn.Open();

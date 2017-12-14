@@ -46,33 +46,37 @@ namespace Database.Classes
 
         public override string ValidateInputs()
         {
-            SQLDB.AddParameters(new SQLiteParameter[] {
-                new SQLiteParameter("@Level", LevelInput.Text),
-                new SQLiteParameter("@HiddenMessage", HiddenMessageInput.Text)
-            });
             string err = Base.ValidateInputs();
             if (!Utils.PosInt(LevelInput.Text)) err += "Level must be a positive integer\n";
             if (Utils.CutSpaces(HiddenMessageInput.Text) == "") HiddenMessageInput.Text = "N/A";
             return err;
         }
 
+        public override void ParameterizeInputs()
+        {
+            SQLDB.Inputs = new SQLiteParameter[] {
+                new SQLiteParameter("@Level", LevelInput.Text),
+                new SQLiteParameter("@HiddenMessage", HiddenMessageInput.Text)
+            };
+        }
+
         protected override void OnCreate()
         {
-            SQLCreate(new string[]{ "Level, HiddenMessage", "@Level, @HiddenMessage" });
             Base.Create();
+            SQLCreate(new string[] { "Level, HiddenMessage, BaseObjectID", "@Level, @HiddenMessage, " + Base.ClassTemplateId });
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            Base.Read();
-            LevelInput.Text = reader.GetString(1);
+            Base.Read(reader);
+            LevelInput.Text = reader.GetInt32(1).ToString();
             HiddenMessageInput.Text = reader.GetString(2);
         }
 
         protected override void OnUpdate()
         {
-            SQLUpdate("Level = @Level, HiddenMessage = @HiddenMessage");
             Base.Update();
+            SQLUpdate("Level = @Level, HiddenMessage = @HiddenMessage");
         }
 
         protected override void OnDelete()

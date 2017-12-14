@@ -43,13 +43,17 @@ namespace Database.ClassTemplates
 
         public override string ValidateInputs()
         {
-            SQLDB.AddParameters(new SQLiteParameter[] {
-                //new SQLiteParameter("@attr1", attr1Input.Text),
-                //new SQLiteParameter("@attr2", attr2Input.Text)
-            });
             string err = "";
             //if (!Util.InRequiredLength(Util.CutSpaces(attr1Input.Text))) err += "attr1 needs to have 1 to 16 characters";
             return err;
+        }
+
+        public override void ParameterizeInputs()
+        {
+            SQLDB.Inputs = new SQLiteParameter[] {
+                //new SQLiteParameter("@attr1", attr1Input.Text),
+                //new SQLiteParameter("@attr2", attr2Input.Text)
+            };
         }
 
         protected override string[] OnCreate()
@@ -59,7 +63,7 @@ namespace Database.ClassTemplates
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            //attr1Input.Text = reader.GetInt32(N);
+            //attr1Input.Text = reader.GetInt32(N).ToString();
             //attr2Input.Text = reader.GetString(N);
         }
 

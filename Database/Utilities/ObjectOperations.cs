@@ -8,9 +8,10 @@ namespace Database.Utilities
 {
     public interface ObjectOperations
     {
+        void InitializeNew();
         void Automate();
         string ValidateInputs();
-        void InitializeNew();
+        void ParameterizeInputs();
         void Create();
         void Read();
         void Update();

@@ -45,15 +45,19 @@ namespace Database.ClassTemplates
 
         public override string ValidateInputs()
         {
-            SQLDB.AddParameters(new SQLiteParameter[]
-            {
-                new SQLiteParameter("@Name", NameInput.Text),
-                new SQLiteParameter("@Description", DescriptionInput.Text)
-            });
             string err = "";
             if (!Utils.InRequiredLength(Utils.CutSpaces(NameInput.Text))) err += "Name must have 1 to 16 characters\n";
             if (Utils.CutSpaces(DescriptionInput.Text) == "") DescriptionInput.Text = "N/A";
             return err;
+        }
+
+        public override void ParameterizeInputs()
+        {
+            SQLDB.Inputs = new SQLiteParameter[]
+            {
+                new SQLiteParameter("@Name", NameInput.Text),
+                new SQLiteParameter("@Description", DescriptionInput.Text)
+            };
         }
 
         protected override string[] OnCreate()

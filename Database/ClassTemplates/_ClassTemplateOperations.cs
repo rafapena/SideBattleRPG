@@ -23,9 +23,6 @@ namespace Database.ClassTemplates
         protected string ClassTemplateType { get; set; }
         public int ClassTemplateId { get; protected set; }
 
-        public abstract void Automate();
-        public abstract string ValidateInputs();
-
 
         protected abstract void OnInitializeNew();
         public void InitializeNew()
@@ -35,11 +32,18 @@ namespace Database.ClassTemplates
         }
 
 
+        public abstract void Automate();
+        public abstract string ValidateInputs();
+        public abstract void ParameterizeInputs();
+
+
         protected abstract string[] OnCreate();
         public void Create()
         {
+            ParameterizeInputs();
             string[] text = OnCreate();
             SQLDB.Command("INSERT INTO " + ClassTemplateTable + " (" + text[0] + ") VALUES (" + text[1] + ");");
+            SQLDB.Inputs = null;
         }
 
 
@@ -68,7 +72,9 @@ namespace Database.ClassTemplates
         protected abstract string OnUpdate();
         public void Update()
         {
+            ParameterizeInputs();
             SQLDB.Command("UPDATE " + ClassTemplateTable + " SET " + OnUpdate() + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
+            SQLDB.Inputs = null;
         }
 
 

@@ -23,9 +23,6 @@ namespace Database.Classes
         public TableList LinkedTableList { get; set; }
         public Footer LinkedFooter { get; set; }
 
-        public abstract void Automate();
-        public abstract string ValidateInputs();
-
 
         protected abstract void OnInitializeNew();
         public void InitializeNew()
@@ -36,7 +33,12 @@ namespace Database.Classes
             LinkedTableList.RemoveButtonHighlight();
             OnInitializeNew();
         }
-        
+
+
+        public abstract void Automate();
+        public abstract string ValidateInputs();
+        public abstract void ParameterizeInputs();
+
 
         protected abstract void OnCreate();
         public void Create()
@@ -50,11 +52,12 @@ namespace Database.Classes
                 LinkedTableList.SetupTable(true);
                 LinkedFooter.ApplyReadSettings();
             }
-            SQLDB.ClearParameters();
         }
         protected void SQLCreate(string[] text)
         {
+            ParameterizeInputs();
             SQLDB.Command("INSERT INTO " + SQLDB.CurrentTable + " (" + text[0] + ") VALUES (" + text[1] + ");");
+            SQLDB.Inputs = null;
         }
 
 
@@ -85,12 +88,14 @@ namespace Database.Classes
                 OnUpdate();
                 MessageBox.Show("Updating successful");
                 LinkedTableList.SetupTable(true);
+                SQLDB.Inputs = null;
             }
-            SQLDB.ClearParameters();
         }
         protected void SQLUpdate(string input)
         {
+            ParameterizeInputs();
             SQLDB.Command("UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString() + ";");
+            SQLDB.Inputs = null;
         }
 
 
@@ -107,12 +112,12 @@ namespace Database.Classes
         protected abstract void OnClone();
         public void Clone()
         {
-            if (!Utils.Confirm("Are you sure?\nThe un-updated changes will be discarded", "Cloning " + SQLDB.CurrentClass)) return;
+            if (!Utils.Confirm("Are you sure?\nThe un-updated changes will be discarded", "Copying over to new " + SQLDB.CurrentClass)) return;
             LinkedFooter.ApplyInitializeNewSettings();
             LinkedTableList.RemoveButtonHighlight();
             SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
             OnClone();
-            MessageBox.Show("Cloning successful\nThe cloned " + SQLDB.CurrentClass + " can now be created");
+            MessageBox.Show("The contents have cloned to the new " + SQLDB.CurrentClass + "\nand can now be created");
         }
     }
 }

@@ -46,13 +46,17 @@ namespace Database.Classes
 
         public override string ValidateInputs()
         {
-            SQLDB.AddParameters(new SQLiteParameter[] {
-                //new SQLiteParameter("@attr1", attr1Input.Text),
-                //new SQLiteParameter("@attr2", attr2Input.Text)
-            });
             string err = Base.ValidateInputs();
             //if (!Utils.InRequiredLength(Utils.CutSpaces(attr1))) err += "attr1 needs to have 1 to 16 characters";
             return err;
+        }
+
+        public override void ParameterizeInputs()
+        {
+            SQLDB.Inputs = new SQLiteParameter[] {
+                //new SQLiteParameter("@attr1", attr1Input.Text),
+                //new SQLiteParameter("@attr2", attr2Input.Text)
+            };
         }
 
         protected override void OnCreate()
