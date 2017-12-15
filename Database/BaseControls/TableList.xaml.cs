@@ -16,6 +16,7 @@ using System.Data.SQLite;
 using Database.Classes;
 using Database.Utilities;
 using static Database.Utilities.TableBuilder;
+using System.Reflection;
 
 namespace Database.BaseControls
 {
@@ -116,23 +117,12 @@ namespace Database.BaseControls
             SQLDB.CurrentId = (int)b.Tag;
             HighlightButton(b);
             AddNew.Background = Color(StandardNewColor);
-            switch (SQLDB.CurrentClass)
-            {
-                case "Achievement": Read<Achievement>(); break;
-                case "Player": Read<Player>(); break;
-            }
+            (Application.Current.MainWindow.Content as _ClassOperations).Read();
         }
 
         public void InitializeNew(object sender, EventArgs e)
         {
-            switch (SQLDB.CurrentClass)
-            {
-                case "Achievement": InitializeNew<Achievement>(); break;
-                case "Player": InitializeNew<Player>(); break;
-            }
+            (Application.Current.MainWindow.Content as _ClassOperations).InitializeNew();
         }
-
-        private void Read<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).Read(); }
-        private void InitializeNew<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).InitializeNew(); }
     }
 }

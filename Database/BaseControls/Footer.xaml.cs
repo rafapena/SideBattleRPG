@@ -51,53 +51,27 @@ namespace Database.BaseControls
 
         public void Deleted(object sender, EventArgs e)
         {
-            switch (SQLDB.CurrentClass)
-            {
-                case "Achievement": Deleted<Achievement>(); break;
-                case "Player": Deleted<Player>(); break;
-            }
+            (Application.Current.MainWindow.Content as _ClassOperations).Delete();
         }
 
         public void Automated(object sender, EventArgs e)
         {
-            switch (SQLDB.CurrentClass)
-            {
-                case "Achievement": Automated<Achievement>(); break;
-                case "Player": Automated<Player>(); break;
-            }
+            (Application.Current.MainWindow.Content as _ClassOperations).Automate();
         }
 
         public void Cloned(object sender, EventArgs e)
         {
-            switch (SQLDB.CurrentClass)
-            {
-                case "Achievement": Cloned<Achievement>(); break;
-                case "Player": Cloned<Player>(); break;
-            }
+            (Application.Current.MainWindow.Content as _ClassOperations).Clone();
         }
 
         public void Created(object sender, EventArgs e)
         {
-            switch (SQLDB.CurrentClass)
-            {
-                case "Achievement": Created<Achievement>(); break;
-                case "Player": Created<Player>(); break;
-            }
+            (Application.Current.MainWindow.Content as _ClassOperations).Create();
         }
 
         public void Updated(object sender, EventArgs e)
         {
-            switch (SQLDB.CurrentClass)
-            {
-                case "Achievement": Updated<Achievement>(); break;
-                case "Player": Updated<Player>(); break;
-            }
+            (Application.Current.MainWindow.Content as _ClassOperations).Update();
         }
-        
-        private void Deleted<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).Delete(); }
-        private void Cloned<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).Clone(); }
-        private void Automated<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).Automate(); }
-        private void Created<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).Create(); }
-        private void Updated<P>() where P : _ClassOperations { (Application.Current.MainWindow.Content as P).Update(); }
     }
 }

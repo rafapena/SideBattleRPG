@@ -29,22 +29,17 @@ namespace Database.BaseControls
             InitializeComponent();
         }
 
-        private void SetUpFromClick<P>(string currentClass, string currentTable) where P : Page, new()
+        private void SetUpFromClick<P>(string currentTable) where P : Page, new()
         {
-            if (SQLDB.CurrentClass == currentClass) return;
-            SQLDB.CurrentClass = currentClass;
+            if (SQLDB.CurrentTable == currentTable) return;
             SQLDB.CurrentTable = currentTable;
+            SQLDB.CurrentClass = typeof(P).Name;
             Application.Current.MainWindow.Content = new P();
         }
 
         private void GoToAchievements(object sender, EventArgs e)
         {
-            SetUpFromClick<Achievement>("Achievement", "Achievements");
-        }
-
-        private void GoToAnimations(object sender, EventArgs e)
-        {
-            //SetUpFromClick(); Animations();
+            SetUpFromClick<Achievement>("Achievements");
         }
 
         private void GoToClasses(object sender, EventArgs e)
@@ -89,12 +84,12 @@ namespace Database.BaseControls
 
         private void GoToPlatforms(object sender, EventArgs e)
         {
-            //SetUpFromClick(); Platform()
+            //SetUpFromClick<Platforms>("Platforms", "Players");
         }
 
         private void GoToPlayers(object sender, EventArgs e)
         {
-            SetUpFromClick<Player>("Player", "Players");
+            SetUpFromClick<Player>("Players");
         }
 
         private void GoToProjectiles(object sender, EventArgs e)

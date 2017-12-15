@@ -20,16 +20,15 @@
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name = "achievementsButton"  Content = "Achievements" Click = "GoToAchievements"/>
-            <Button x:Name = "animationsButton" Content = "Animations" Click = "GoToAnimations"/>
             <Button x:Name = "classesButton" Content = "Classes" Click = "GoToClasses"/>
             <Button x:Name = "enemiesButton" Content = "Enemies" Click = "GoToEnemies"/>
             <Button x:Name = "enemyGroupsButton" Content = "Enemy Groups" Click = "GoToEnemyGroups"/>
             <Button x:Name = "environmentsButton"  Content = "Environments" Click = "GoToEnvironments"/>
             <Button x:Name = "eventsButton" Content = "Events" Click = "GoToEvents"/>
+            <Button x:Name = "itemsButton" Content = "Items" Click = "GoToItems"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button x:Name = "itemsButton" Content = "Items" Click = "GoToItems"/>
             <Button x:Name = "otherListsButton" Content = "Other Lists" Click = "GoToOtherLists"/>
             <Button x:Name = "passiveSkillsButton" Content = "Passive Skills" Click = "GoToPassiveSkills"/>
             <Button x:Name = "platformssButton" Content = "Platforms" Click = "GoToPlatforms"/>
