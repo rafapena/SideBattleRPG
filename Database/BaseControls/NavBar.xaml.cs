@@ -74,7 +74,10 @@ namespace Database.BaseControls
 
         private void GoToOtherLists(object sender, EventArgs e)
         {
-            //SetUpFromClick(); ();
+            if (SQLDB.CurrentTable == "") return;
+            SQLDB.CurrentTable = "";
+            SQLDB.CurrentClass = "";
+            Application.Current.MainWindow.Content = new ClassesUnstructured.OtherLists();
         }
 
         private void GoToPassiveSkills(object sender, EventArgs e)

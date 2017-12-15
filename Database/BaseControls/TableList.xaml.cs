@@ -111,7 +111,7 @@ namespace Database.BaseControls
         /// -- Trigger Setup and Trigger Page Functions --
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public void Read(object sender, EventArgs e)
+        private void Read(object sender, EventArgs e)
         {
             Button b = sender as Button;
             SQLDB.CurrentId = (int)b.Tag;
@@ -120,7 +120,7 @@ namespace Database.BaseControls
             (Application.Current.MainWindow.Content as _ClassOperations).Read();
         }
 
-        public void InitializeNew(object sender, EventArgs e)
+        private void InitializeNew(object sender, EventArgs e)
         {
             (Application.Current.MainWindow.Content as _ClassOperations).InitializeNew();
         }

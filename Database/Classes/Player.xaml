@@ -24,15 +24,11 @@
                         </TabItem>
 
                         <TabItem Header="Rates">
-                            <StackPanel Margin="5,5,5,5">
-                                <tables:Rates x:Name="Rates"/>
-                            </StackPanel>
+                            <!--<tables:ClassWithNum x:Name="Rates" Margin="5,5,5,5"/>-->
                         </TabItem>
 
                         <TabItem Header="Tab3">
-                            <StackPanel Margin="5,5,5,5">
-                                <!-- Insert here -->
-                            </StackPanel>
+                            <!--<template:Statistics x:Name="Stats" Margin="5,5,5,5"/>-->
                         </TabItem>
                     </TabControl>
 

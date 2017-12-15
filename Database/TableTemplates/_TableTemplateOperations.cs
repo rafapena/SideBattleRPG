@@ -26,6 +26,8 @@ namespace Database.TableTemplates
 {
     public abstract class _TableTemplateOperations : UserControl, ObjectOperations
     {
+        public string TableTitle { get; protected set; }
+        public Grid Table { get; set; }
         protected string ClassTemplateTable { get; set; }
         protected string ClassTemplateType { get; set; }
         public int ClassTemplateId { get; protected set; }
@@ -35,6 +37,11 @@ namespace Database.TableTemplates
 
 
         protected abstract void OnInitializeNew();
+        public void InitializeNew(string title)
+        {
+            TableTitle = title;
+            InitializeNew();
+        }
         public void InitializeNew()
         {
             //ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
@@ -60,12 +67,12 @@ namespace Database.TableTemplates
         protected abstract void OnRead(SQLiteDataReader reader);
         public void Read(SQLiteDataReader reader)
         {
-            ClassTemplateId = int.Parse(reader[ClassTemplateType + "ID"].ToString());
+            //ClassTemplateId = int.Parse(reader[ClassTemplateType + "ID"].ToString());
             Read();
         }
         public void Read()
         {
-            using (var conn = SQLDB.DB())
+            /*using (var conn = SQLDB.DB())
             {
                 conn.Open();
                 using (var reader = SQLDB.Retrieve("SELECT * FROM " + ClassTemplateTable + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString(), conn))
@@ -75,7 +82,7 @@ namespace Database.TableTemplates
                     OnRead(reader);
                 }
                 conn.Close();
-            }
+            }*/
         }
 
 

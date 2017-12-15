@@ -20,9 +20,9 @@ namespace Database.TableTemplates
     /// <summary>
     /// Interaction logic for GenericTable.xaml
     /// </summary>
-    public partial class Rates : _TableTemplateOperations
+    public partial class SingleText : _TableTemplateOperations
     {
-        public Rates()
+        public SingleText()
         {
             InitializeComponent();
         }
@@ -39,8 +39,7 @@ namespace Database.TableTemplates
 
         protected override void OnInitializeNew()
         {
-            //attr1Input.Text = "";
-            //attr2Image.Source = null;
+            Title.Text = TableTitle;
         }
 
         public override void Automate()

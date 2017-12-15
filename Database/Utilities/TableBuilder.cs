@@ -21,7 +21,7 @@ namespace Database.Utilities
     {
         public delegate void Function(object sender, RoutedEventArgs e);
 
-        public static bool TableSetup(Grid targetGrid, string[] columns=null, Function addFunc=null)
+        public static bool TableSetup(Grid targetGrid, string[] columns=null)
         {
             //Grid setup
             if (targetGrid == null) return false;

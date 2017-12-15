@@ -24,14 +24,14 @@ using Database.Utilities;
  * Event Control Flow
 */
 
-namespace Database.Classes
+namespace Database.ClassesUnstructured
 {
     public abstract class _ClassUnstructuredOperations : Page, ObjectOperations
     {
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {
-            SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
+            //SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
             OnInitializeNew();
         }
 

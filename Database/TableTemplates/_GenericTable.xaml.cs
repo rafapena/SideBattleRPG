@@ -39,8 +39,7 @@ namespace Database.TableTemplates
 
         protected override void OnInitializeNew()
         {
-            //attr1Input.Text = "";
-            //attr2Image.Source = null;
+            Title.Text = TableTitle;
         }
 
         public override void Automate()

@@ -49,27 +49,27 @@ namespace Database.BaseControls
         /// -- Trigger Setup and Trigger Page Functions --
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public void Deleted(object sender, EventArgs e)
+        private void Deleted(object sender, EventArgs e)
         {
             (Application.Current.MainWindow.Content as _ClassOperations).Delete();
         }
 
-        public void Automated(object sender, EventArgs e)
+        private void Automated(object sender, EventArgs e)
         {
             (Application.Current.MainWindow.Content as _ClassOperations).Automate();
         }
 
-        public void Cloned(object sender, EventArgs e)
+        private void Cloned(object sender, EventArgs e)
         {
             (Application.Current.MainWindow.Content as _ClassOperations).Clone();
         }
 
-        public void Created(object sender, EventArgs e)
+        private void Created(object sender, EventArgs e)
         {
             (Application.Current.MainWindow.Content as _ClassOperations).Create();
         }
 
-        public void Updated(object sender, EventArgs e)
+        private void Updated(object sender, EventArgs e)
         {
             (Application.Current.MainWindow.Content as _ClassOperations).Update();
         }

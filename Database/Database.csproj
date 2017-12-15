@@ -82,6 +82,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ClassesUnstructured\OtherLists.xaml.cs">
+      <DependentUpon>OtherLists.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ClassesUnstructured\_ClassUnstructuredOperations.cs" />
     <Compile Include="Classes\_ClassOperations.cs" />
     <Compile Include="Classes\Player.xaml.cs">
@@ -109,8 +112,8 @@
     <Compile Include="ClassTemplates\_GenericClassTemplate.xaml.cs">
       <DependentUpon>_GenericClassTemplate.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TableTemplates\Rates.xaml.cs">
-      <DependentUpon>Rates.xaml</DependentUpon>
+    <Compile Include="TableTemplates\SingleText.xaml.cs">
+      <DependentUpon>SingleText.xaml</DependentUpon>
     </Compile>
     <Compile Include="TableTemplates\_GenericTable.xaml.cs">
       <DependentUpon>_GenericTable.xaml</DependentUpon>
@@ -120,6 +123,10 @@
     <Compile Include="Utilities\SQLDB.cs" />
     <Compile Include="Utilities\TableBuilder.cs" />
     <Compile Include="Utilities\Utils.cs" />
+    <Page Include="ClassesUnstructured\OtherLists.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Classes\Player.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -164,7 +171,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TableTemplates\Rates.xaml">
+    <Page Include="TableTemplates\SingleText.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
