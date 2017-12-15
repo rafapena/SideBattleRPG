@@ -16,25 +16,28 @@ using System.Data.SQLite;
 using Database.Utilities;
 
 /*
- * BaseObjects
- * Tools
- * States
- * Stats: Trigger large or small
+ * Single string column
+ * Single ComboBox
+ * TwoNums: ComboBox of class objects + Positive integer input
+ * Single Enemies for Enemy Groups (LOTS of content)
 */
 
-namespace Database.ClassTemplates
+namespace Database.TableTemplates
 {
-    public abstract class _ClassTemplateOperations : UserControl, ObjectOperations
+    public abstract class _TableTemplateOperations : UserControl, ObjectOperations
     {
         protected string ClassTemplateTable { get; set; }
         protected string ClassTemplateType { get; set; }
         public int ClassTemplateId { get; protected set; }
+        
+        public abstract void AddRow(object sender, RoutedEventArgs e);
+        public abstract void RemoveRow(object sender, RoutedEventArgs e);
 
 
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {
-            ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
+            //ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
             OnInitializeNew();
         }
 

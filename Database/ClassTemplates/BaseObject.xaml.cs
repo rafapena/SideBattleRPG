@@ -33,6 +33,8 @@ namespace Database.ClassTemplates
         {
             NameInput.Text = "";
             DescriptionInput.Text = "";
+            CreatedText.Text = "";
+            UpdatedText.Text = "";
             ImageInput.Source = null;
         }
 
@@ -40,7 +42,6 @@ namespace Database.ClassTemplates
         {
             NameInput.Text = "Generic Name";
             DescriptionInput.Text = "Description";
-            ImageInput.Source = null;
         }
 
         public override string ValidateInputs()

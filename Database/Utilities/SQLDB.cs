@@ -19,7 +19,7 @@ namespace Database.Utilities
 
         public static SQLiteConnection DB()
         {
-            return new SQLiteConnection(@"data source=C:\Users\User\GC_RPG_DB.db; Version=3; foreign keys=true");
+            return new SQLiteConnection(@"data source=C:\Users\User\GC_RPG_DB.db; Version=3; foreign keys=true;");
         }
 
         public static SQLiteDataReader Retrieve(string sqlCommand, SQLiteConnection currentTransaction)

@@ -34,21 +34,21 @@ namespace Database.Classes
         {
             Base.InitializeNew();
             LevelInput.Text = "";
-            HiddenMessageInput.Text = "";
+            HintInput.Text = "";
         }
 
         public override void Automate()
         {
             Base.Automate();
             LevelInput.Text = "1";
-            HiddenMessageInput.Text = "Insert Text Here";
+            HintInput.Text = "Insert Text Here";
         }
 
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();
             if (!Utils.PosInt(LevelInput.Text)) err += "Level must be a positive integer\n";
-            if (Utils.CutSpaces(HiddenMessageInput.Text) == "") HiddenMessageInput.Text = "N/A";
+            if (Utils.CutSpaces(HintInput.Text) == "") HintInput.Text = "N/A";
             return err;
         }
 
@@ -56,27 +56,27 @@ namespace Database.Classes
         {
             SQLDB.Inputs = new SQLiteParameter[] {
                 new SQLiteParameter("@Level", LevelInput.Text),
-                new SQLiteParameter("@HiddenMessage", HiddenMessageInput.Text)
+                new SQLiteParameter("@Hint", HintInput.Text)
             };
         }
 
         protected override void OnCreate()
         {
             Base.Create();
-            SQLCreate(new string[] { "Level, HiddenMessage, BaseObjectID", "@Level, @HiddenMessage, " + Base.ClassTemplateId });
+            SQLCreate(new string[] { "Level, Hint, BaseObjectID", "@Level, @Hint, " + Base.ClassTemplateId });
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
             Base.Read(reader);
             LevelInput.Text = reader.GetInt32(1).ToString();
-            HiddenMessageInput.Text = reader.GetString(2);
+            HintInput.Text = reader.GetString(2);
         }
 
         protected override void OnUpdate()
         {
             Base.Update();
-            SQLUpdate("Level = @Level, HiddenMessage = @HiddenMessage");
+            SQLUpdate("Level = @Level, Hint = @Hint");
         }
 
         protected override void OnDelete()

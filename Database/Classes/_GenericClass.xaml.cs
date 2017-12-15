@@ -18,11 +18,11 @@ using Database.Utilities;
 namespace Database.Classes
 {
     /// <summary>
-    /// Interaction logic for Player.xaml
+    /// Interaction logic for _GenericTemplate.xaml
     /// </summary>
-    public partial class Player : _ClassOperations
+    public partial class _GenericClass : _ClassOperations
     {
-        public Player()
+        public _GenericClass()
         {
             InitializeComponent();
             LinkedTableList = ObjectList;
@@ -33,57 +33,61 @@ namespace Database.Classes
         protected override void OnInitializeNew()
         {
             Base.InitializeNew();
-            //Rates.InitializeNew();
+            //attr1Input.Text = "";
+            //attr2Image.Source = null;
         }
 
         public override void Automate()
         {
             Base.Automate();
-            //Rates.Automate();
+            //attr1Input.Text = "This";
+            //attr2Input.Text = "0";
         }
 
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();
-            //err += Rates.ValidateInputs();
+            //if (!Utils.InRequiredLength(Utils.CutSpaces(attr1))) err += "attr1 needs to have 1 to 16 characters";
             return err;
         }
 
         public override void ParameterizeInputs()
         {
-            SQLDB.Inputs = null;
+            SQLDB.Inputs = new SQLiteParameter[] {
+                //new SQLiteParameter("@attr1", attr1Input.Text),
+                //new SQLiteParameter("@attr2", attr2Input.Text)
+            };
         }
 
         protected override void OnCreate()
         {
             Base.Create();
-            //Rates.Create();
-            SQLCreate(new string[] { "BaseObjectID", Base.ClassTemplateId.ToString() });
-            // -- RATES
+            SQLCreate(new string[] {
+                "attr1, attr2, BaseObjectID",
+                "@attr1, @attr2, " + Base.ClassTemplateId.ToString() });
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
             Base.Read(reader);
-            //Rates.Read(reader);
+            //attr1Input.Text = reader.GetInt32(N).ToString();
+            //attr2Input.Text = reader.GetString(N);
         }
 
         protected override void OnUpdate()
         {
             Base.Update();
-            //Rates.Update();
+            SQLUpdate("attr1 = @attr1, attr2 = @attr2");
         }
 
         protected override void OnDelete()
         {
             Base.Delete();
-            //Rates.Delete();
         }
 
         protected override void OnClone()
         {
             Base.Clone();
-            //Rates.Clone();
         }
     }
 }

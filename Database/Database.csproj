@@ -82,6 +82,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ClassesUnstructured\_ClassUnstructuredOperations.cs" />
     <Compile Include="Classes\_ClassOperations.cs" />
     <Compile Include="Classes\Player.xaml.cs">
       <DependentUpon>Player.xaml</DependentUpon>
@@ -89,8 +90,8 @@
     <Compile Include="Classes\Achievement.xaml.cs">
       <DependentUpon>Achievement.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes\_GenericTemplate.xaml.cs">
-      <DependentUpon>_GenericTemplate.xaml</DependentUpon>
+    <Compile Include="Classes\_GenericClass.xaml.cs">
+      <DependentUpon>_GenericClass.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClassTemplates\BaseObject.xaml.cs">
       <DependentUpon>BaseObject.xaml</DependentUpon>
@@ -105,9 +106,16 @@
       <DependentUpon>TableList.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClassTemplates\_ClassTemplateOperations.cs" />
-    <Compile Include="ClassTemplates\_GenericTemplate.xaml.cs">
-      <DependentUpon>_GenericTemplate.xaml</DependentUpon>
+    <Compile Include="ClassTemplates\_GenericClassTemplate.xaml.cs">
+      <DependentUpon>_GenericClassTemplate.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TableTemplates\Rates.xaml.cs">
+      <DependentUpon>Rates.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TableTemplates\_GenericTable.xaml.cs">
+      <DependentUpon>_GenericTable.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TableTemplates\_TableTemplateOperations.cs" />
     <Compile Include="Utilities\ObjectOperations.cs" />
     <Compile Include="Utilities\SQLDB.cs" />
     <Compile Include="Utilities\TableBuilder.cs" />
@@ -132,7 +140,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Classes\_GenericTemplate.xaml">
+    <Page Include="Classes\_GenericClass.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -152,7 +160,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ClassTemplates\_GenericTemplate.xaml">
+    <Page Include="ClassTemplates\_GenericClassTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TableTemplates\Rates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TableTemplates\_GenericTable.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

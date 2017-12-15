@@ -29,8 +29,8 @@
                                     <TextBox x:Name="LevelInput" Margin="8,0,0,0" Width="30"/>
                                 </StackPanel>
 
-                                <TextBlock Text="Hidden Message:"/>
-                                <TextBox x:Name="HiddenMessageInput" Width="250" Height="80"
+                                <TextBlock Text="Hint:"/>
+                                <TextBox x:Name="HintInput" Width="250" Height="80"
                                          TextWrapping = "Wrap" AcceptsReturn = "True" ScrollViewer.VerticalScrollBarVisibility = "Visible"/>
                             </StackPanel>
                         </TabItem>

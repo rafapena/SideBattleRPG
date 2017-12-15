@@ -16,21 +16,22 @@ using System.Data.SQLite;
 using Database.BaseControls;
 using Database.Utilities;
 
+/*
+ * OtherLists
+ * Skill/Tool Animations
+ * Skill/Tools Animation Combos
+ * State Animations
+ * Event Control Flow
+*/
+
 namespace Database.Classes
 {
-    public abstract class _ClassOperations : Page, ObjectOperations
+    public abstract class _ClassUnstructuredOperations : Page, ObjectOperations
     {
-        public TableList LinkedTableList { get; set; }
-        public Footer LinkedFooter { get; set; }
-
-
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {
-            LinkedTableList.SetupTable(false);
             SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
-            LinkedFooter.ApplyInitializeNewSettings();
-            LinkedTableList.RemoveButtonHighlight();
             OnInitializeNew();
         }
 
@@ -49,8 +50,6 @@ namespace Database.Classes
             {
                 OnCreate();
                 MessageBox.Show("Creating successful");
-                LinkedTableList.SetupTable(true);
-                LinkedFooter.ApplyReadSettings();
             }
         }
         protected void SQLCreate(string[] text)
@@ -64,7 +63,6 @@ namespace Database.Classes
         protected abstract void OnRead(SQLiteDataReader reader);
         public void Read()
         {
-            LinkedFooter.ApplyReadSettings();
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
@@ -87,7 +85,6 @@ namespace Database.Classes
             {
                 OnUpdate();
                 MessageBox.Show("Updating successful");
-                LinkedTableList.SetupTable(true);
                 SQLDB.Inputs = null;
             }
         }
@@ -113,8 +110,6 @@ namespace Database.Classes
         public void Clone()
         {
             if (!Utils.Confirm("Are you sure?\nAny un-updated changes will be discarded", "Cloning over to new " + SQLDB.CurrentClass)) return;
-            LinkedFooter.ApplyInitializeNewSettings();
-            LinkedTableList.RemoveButtonHighlight();
             SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
             OnClone();
             MessageBox.Show("The contents have been cloned to a new\n" + SQLDB.CurrentClass + " and can now be created");

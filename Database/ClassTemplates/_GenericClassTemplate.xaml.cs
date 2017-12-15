@@ -15,39 +15,36 @@ using System.Windows.Shapes;
 using System.Data.SQLite;
 using Database.Utilities;
 
-namespace Database.Classes
+namespace Database.ClassTemplates
 {
     /// <summary>
     /// Interaction logic for _GenericTemplate.xaml
     /// </summary>
-    public partial class _GenericTemplate : _ClassOperations
+    public partial class _GenericClassTemplate : _ClassTemplateOperations
     {
-        public _GenericTemplate()
+        public _GenericClassTemplate()
         {
             InitializeComponent();
-            LinkedTableList = ObjectList;
-            LinkedFooter = FooterButtons;
-            InitializeNew();
+            ClassTemplateTable = "_GenericClassTemplate";    // PLURAL For Type
+            ClassTemplateType = "_GenericClassTemplate";
         }
 
         protected override void OnInitializeNew()
         {
-            Base.InitializeNew();
             //attr1Input.Text = "";
             //attr2Image.Source = null;
         }
 
         public override void Automate()
         {
-            Base.Automate();
             //attr1Input.Text = "This";
             //attr2Input.Text = "0";
         }
 
         public override string ValidateInputs()
         {
-            string err = Base.ValidateInputs();
-            //if (!Utils.InRequiredLength(Utils.CutSpaces(attr1))) err += "attr1 needs to have 1 to 16 characters";
+            string err = "";
+            //if (!Util.InRequiredLength(Util.CutSpaces(attr1Input.Text))) err += "attr1 needs to have 1 to 16 characters";
             return err;
         }
 
@@ -59,35 +56,20 @@ namespace Database.Classes
             };
         }
 
-        protected override void OnCreate()
+        protected override string[] OnCreate()
         {
-            Base.Create();
-            SQLCreate(new string[] {
-                "attr1, attr2, BaseObjectID",
-                "@attr1, @attr2, " + Base.ClassTemplateId.ToString() });
+            return new string[] { "attr1, attr2", "@attr1, @attr2" };
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            Base.Read(reader);
             //attr1Input.Text = reader.GetInt32(N).ToString();
             //attr2Input.Text = reader.GetString(N);
         }
 
-        protected override void OnUpdate()
+        protected override string OnUpdate()
         {
-            Base.Update();
-            SQLUpdate("attr1 = @attr1, attr2 = @attr2");
-        }
-
-        protected override void OnDelete()
-        {
-            Base.Delete();
-        }
-
-        protected override void OnClone()
-        {
-            Base.Clone();
+            return "attr1 = @attr1, attr2 = @attr2";
         }
     }
 }

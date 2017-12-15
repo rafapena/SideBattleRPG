@@ -7,6 +7,7 @@
     xmlns:base="clr-namespace:Database.Classes"
     xmlns:control="clr-namespace:Database.BaseControls"
     xmlns:template="clr-namespace:Database.ClassTemplates"
+    xmlns:tables="clr-namespace:Database.TableTemplates"
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="300"
     Title="Player">
@@ -22,9 +23,9 @@
                             <template:BaseObject x:Name="Base" Margin="5,5,5,5"/>
                         </TabItem>
 
-                        <TabItem Header="Tab2">
+                        <TabItem Header="Rates">
                             <StackPanel Margin="5,5,5,5">
-                                <!-- Insert here -->
+                                <tables:Rates x:Name="Rates"/>
                             </StackPanel>
                         </TabItem>
 

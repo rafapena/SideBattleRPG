@@ -15,18 +15,26 @@ using System.Windows.Shapes;
 using System.Data.SQLite;
 using Database.Utilities;
 
-namespace Database.ClassTemplates
+namespace Database.TableTemplates
 {
     /// <summary>
-    /// Interaction logic for _GenericTemplate.xaml
+    /// Interaction logic for GenericTable.xaml
     /// </summary>
-    public partial class _GenericTemplate : _ClassTemplateOperations
+    public partial class _GenericTable : _TableTemplateOperations
     {
-        public _GenericTemplate()
+        public _GenericTable()
         {
             InitializeComponent();
-            ClassTemplateTable = "_GenericTemplate";    // PLURAL For Type
-            ClassTemplateType = "_GenericTemplate";
+        }
+
+        public override void AddRow(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("ADDED");
+        }
+
+        public override void RemoveRow(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("REMOVED");
         }
 
         protected override void OnInitializeNew()
