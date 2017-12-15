@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
 using Database.Utilities;
+using static Database.Utilities.TableBuilder;
 
 namespace Database.TableTemplates
 {
@@ -27,19 +28,22 @@ namespace Database.TableTemplates
             InitializeComponent();
         }
 
-        public override void AddRow(object sender, RoutedEventArgs e)
+        public new void AddRow(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("ADDED");
+            base.AddRow(sender, e);
+            // Insert here
         }
 
-        public override void RemoveRow(object sender, RoutedEventArgs e)
+        public new void RemoveRow(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("REMOVED");
+            // Insert here
+            base.RemoveRow(sender, e);
         }
 
         protected override void OnInitializeNew()
         {
             Title.Text = TableTitle;
+            Table = TableList;
         }
 
         public override void Automate()

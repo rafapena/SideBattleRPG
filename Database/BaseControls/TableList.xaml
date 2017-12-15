@@ -13,7 +13,16 @@
         <Button x:Name="AddNew" Height="20" Width="80" Content="Add New" Click="InitializeNew" HorizontalAlignment="Center"/>
 
         <ScrollViewer Margin="0 5 0 0" Height="250">
-            <Grid x:Name="RowsTable" ScrollViewer.CanContentScroll="True" VerticalAlignment="Top"/>
+            <Grid x:Name="RowsTable" ScrollViewer.CanContentScroll="True" VerticalAlignment="Top">
+                <Grid.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        <Setter Property="Width" Value="100"/>
+                        <Setter Property="Height" Value="20"/>
+                    </Style>
+                </Grid.Resources>
+            </Grid>
         </ScrollViewer>
         
     </StackPanel>

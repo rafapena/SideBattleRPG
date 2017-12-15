@@ -34,10 +34,11 @@ namespace Database.Utilities
                 {
                     targetGrid.ColumnDefinitions.Add(new ColumnDefinition());
                     TextBlock t = TextBlock(columns[i], 0, i);
+                    t.Margin = Margin(2,2,2,2);
                     t.HorizontalAlignment = HorizontalAlignment.Center;
                     targetGrid.Children.Add(t);
                 }
-                targetGrid.Children.Add(Border("#0000000", 1, 0, 2, 1, columns.Length));
+                targetGrid.Children.Add(Border("#0000000", 1, 0, 0, 1, columns.Length));
             }
             else targetGrid.ColumnDefinitions.Add(new ColumnDefinition());
             return true;

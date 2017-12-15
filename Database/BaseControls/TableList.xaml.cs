@@ -64,7 +64,8 @@ namespace Database.BaseControls
         private void CreateRow(SQLiteDataReader reader, Grid table, int rowNum)
         {
             Button b = Button((string)reader["Name"], Read, StandardButtonColor, int.Parse(reader[SQLDB.CurrentClass + "_ID"].ToString()), rowNum, 0);
-            CreateRow(table, b);
+            table.RowDefinitions.Add(new RowDefinition());
+            table.Children.Add(b);
         }
 
         private void CreateRowWithHighlighted(SQLiteDataReader reader, Grid table, int rowNum)
@@ -77,16 +78,7 @@ namespace Database.BaseControls
                 CurrentlySelected = b;
             }
             else b = Button((string)reader["Name"], Read, StandardButtonColor, currId, rowNum, 0);
-            CreateRow(table, b);
-        }
-
-        private void CreateRow(Grid table, Button b)
-        {
             table.RowDefinitions.Add(new RowDefinition());
-            b.HorizontalAlignment = HorizontalAlignment.Left;
-            b.HorizontalContentAlignment = HorizontalAlignment.Left;
-            b.Width = 100;
-            b.Height = 20;
             table.Children.Add(b);
         }
 

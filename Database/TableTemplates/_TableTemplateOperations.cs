@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
 using Database.Utilities;
+using static Database.Utilities.TableBuilder;
 
 /*
  * Single string column
@@ -27,25 +28,36 @@ namespace Database.TableTemplates
     public abstract class _TableTemplateOperations : UserControl, ObjectOperations
     {
         public string TableTitle { get; protected set; }
+        public string[] Columns { get; set; }
         public Grid Table { get; set; }
+
         protected string ClassTemplateTable { get; set; }
         protected string ClassTemplateType { get; set; }
         public int ClassTemplateId { get; protected set; }
         
-        public abstract void AddRow(object sender, RoutedEventArgs e);
-        public abstract void RemoveRow(object sender, RoutedEventArgs e);
+        public void AddRow(object sender, RoutedEventArgs e)
+        {
+            Table.RowDefinitions.Add(new RowDefinition());
+        }
+
+        public void RemoveRow(object sender, RoutedEventArgs e)
+        {
+            //Table.RowDefinitions.Remove(RowNumberByRowDefinition);
+        }
 
 
         protected abstract void OnInitializeNew();
-        public void InitializeNew(string title)
+        public void InitializeNew(string title, string[] columns=null)
         {
             TableTitle = title;
+            Columns = columns;
             InitializeNew();
         }
         public void InitializeNew()
         {
             //ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
             OnInitializeNew();
+            TableSetup(Table, Columns);
         }
 
 
