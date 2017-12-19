@@ -21,16 +21,16 @@ namespace Database.Utilities
     {
         public delegate void Function(object sender, RoutedEventArgs e);
 
-        public static bool TableSetup(Grid targetGrid, string[] columns=null)
+        public static bool TableSetup(Grid targetGrid, List<string> columns=null)
         {
             //Grid setup
             if (targetGrid == null) return false;
             targetGrid.Children.Clear();
             targetGrid.RowDefinitions.Clear();
             targetGrid.ColumnDefinitions.Clear();
-            if (columns != null && columns.Length > 0)
+            if (columns != null && columns.Count > 0)
             {
-                for (int i = 0; i < columns.Length; i++)
+                for (int i = 0; i < columns.Count; i++)
                 {
                     targetGrid.ColumnDefinitions.Add(new ColumnDefinition());
                     TextBlock t = TextBlock(columns[i], 0, i);
@@ -38,7 +38,8 @@ namespace Database.Utilities
                     t.HorizontalAlignment = HorizontalAlignment.Center;
                     targetGrid.Children.Add(t);
                 }
-                targetGrid.Children.Add(Border("#0000000", 1, 0, 0, 1, columns.Length));
+                targetGrid.Children.Add(Border("#0000000", 1, 0, 0, 1, columns.Count));
+                targetGrid.RowDefinitions.Add(new RowDefinition());
             }
             else targetGrid.ColumnDefinitions.Add(new ColumnDefinition());
             return true;

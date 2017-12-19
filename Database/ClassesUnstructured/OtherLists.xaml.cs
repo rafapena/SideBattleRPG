@@ -29,9 +29,12 @@ namespace Database.ClassesUnstructured
 
         protected override void OnInitializeNew()
         {
-            Elements.InitializeNew("Elements");
-            WeaponTypes.InitializeNew("Weapon Types");
-            SkillTypes.InitializeNew("Skill Types");
+            List<string> cols = new List<string> { "Name" };
+            List<string> inputs = new List<string> { "Name" };
+            Elements.InitializeNew("Elements", cols, inputs, 200);
+            WeaponTypes.InitializeNew("Weapon Types", cols, inputs, 200);
+            SkillTypes.InitializeNew("Skill Types", cols, inputs, 150);
+            ToolFormulas.InitializeNew("Tool Formulas", cols, inputs, 150);
         }
 
         public override void Automate()
@@ -39,6 +42,7 @@ namespace Database.ClassesUnstructured
             Elements.Automate();
             WeaponTypes.Automate();
             SkillTypes.Automate();
+            ToolFormulas.Automate();
         }
 
         public override string ValidateInputs()
@@ -46,6 +50,7 @@ namespace Database.ClassesUnstructured
             string err = Elements.ValidateInputs();
             err += WeaponTypes.ValidateInputs();
             err += SkillTypes.ValidateInputs();
+            err += ToolFormulas.ValidateInputs();
             return err;
         }
 
@@ -54,6 +59,7 @@ namespace Database.ClassesUnstructured
             Elements.ParameterizeInputs();
             WeaponTypes.ParameterizeInputs();
             SkillTypes.ParameterizeInputs();
+            ToolFormulas.ParameterizeInputs();
         }
         
         protected override void OnCreate()
@@ -61,6 +67,7 @@ namespace Database.ClassesUnstructured
             Elements.Create();
             WeaponTypes.Create();
             SkillTypes.Create();
+            ToolFormulas.Create();
         }
 
         protected override void OnRead(SQLiteDataReader reader)
@@ -68,6 +75,7 @@ namespace Database.ClassesUnstructured
             Elements.Read(reader);
             WeaponTypes.Read(reader);
             SkillTypes.Read(reader);
+            ToolFormulas.Read(reader);
         }
 
         protected override void OnDelete()
@@ -75,13 +83,19 @@ namespace Database.ClassesUnstructured
             Elements.Delete();
             WeaponTypes.Delete();
             SkillTypes.Delete();
+            ToolFormulas.Delete();
         }
 
+        private void Updated(object sender, RoutedEventArgs e)
+        {
+            Update();
+        }
         protected override void OnUpdate()
         {
             Elements.Update();
             WeaponTypes.Update();
             SkillTypes.Update();
+            ToolFormulas.Update();
         }
 
         protected override void OnClone()
@@ -89,6 +103,7 @@ namespace Database.ClassesUnstructured
             Elements.Clone();
             WeaponTypes.Clone();
             SkillTypes.Clone();
+            ToolFormulas.Clone();
         }
     }
 }

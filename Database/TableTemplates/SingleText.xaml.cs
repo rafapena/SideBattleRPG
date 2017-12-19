@@ -30,19 +30,17 @@ namespace Database.TableTemplates
 
         public new void AddRow(object sender, RoutedEventArgs e)
         {
+            if (Inputs == null) return;
             base.AddRow(sender, e);
-            // Insert here
-        }
-
-        public new void RemoveRow(object sender, RoutedEventArgs e)
-        {
-            // Insert here
-            base.RemoveRow(sender, e);
+            TextBox t = TextBox(Inputs[0] + Count, "", Count, 1);
+            RegisterName(Inputs[0] + Count, t);
+            Table.Children.Add(t);
         }
 
         protected override void OnInitializeNew()
         {
             Title.Text = TableTitle;
+            Scroller.Height = ScrollerHeight;
             Table = TableList;
         }
 

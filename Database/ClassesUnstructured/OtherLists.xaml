@@ -5,21 +5,32 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:base="clr-namespace:Database.ClassesUnstructured"
+    xmlns:control="clr-namespace:Database.BaseControls"
     xmlns:table="clr-namespace:Database.TableTemplates"
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="300"
     Title="OtherLists">
     <Viewbox>
-        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
-            <StackPanel.Resources>
-                <Style TargetType="table:SingleText">
-                    <Setter Property="Margin" Value="10 10 10 10"/>
-                </Style>
-            </StackPanel.Resources>
+        <StackPanel>
 
-            <table:SingleText x:Name="Elements"/>
-            <table:SingleText x:Name="WeaponTypes"/>
-            <table:SingleText x:Name="SkillTypes"/>
+            <control:NavBar/>
+            <TextBlock Text="Other Lists" FontWeight="Bold" FontSize="20" HorizontalAlignment="Center"/>
+
+            <StackPanel Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="table:SingleText">
+                        <Setter Property="VerticalAlignment" Value="Top"/>
+                        <Setter Property="Margin" Value="10 10 10 10"/>
+                    </Style>
+                </StackPanel.Resources>
+
+                <table:SingleText x:Name="Elements"/>
+                <table:SingleText x:Name="WeaponTypes"/>
+                <table:SingleText x:Name="SkillTypes"/>
+                <table:SingleText x:Name="ToolFormulas"/>
+
+            </StackPanel>
+            <Button Content="Update" Click="Updated" HorizontalAlignment="Right" Margin="10 5 10 5"/>
 
         </StackPanel>
     </Viewbox>

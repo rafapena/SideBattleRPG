@@ -27,9 +27,12 @@ namespace Database.TableTemplates
 {
     public abstract class _TableTemplateOperations : UserControl, ObjectOperations
     {
-        public string TableTitle { get; protected set; }
-        public string[] Columns { get; set; }
         public Grid Table { get; set; }
+        public List<string> Columns { get; set; }
+        public List<string> Inputs { get; set; }
+        public string TableTitle { get; protected set; }
+        public int ScrollerHeight { get; protected set; }
+        public int Count { get; set; }
 
         protected string ClassTemplateTable { get; set; }
         protected string ClassTemplateType { get; set; }
@@ -37,20 +40,45 @@ namespace Database.TableTemplates
         
         public void AddRow(object sender, RoutedEventArgs e)
         {
+            Count++;
             Table.RowDefinitions.Add(new RowDefinition());
+            TextBlock t = TextBlock(Count, Count, 0);
+            t.Name = "INDEX" + Count;
+            RegisterName(t.Name, t);
+            t.HorizontalAlignment = HorizontalAlignment.Center;
+            Table.Children.Add(t);
         }
 
-        public void RemoveRow(object sender, RoutedEventArgs e)
+        protected void RemoveRow(object sender, RoutedEventArgs e)
         {
-            //Table.RowDefinitions.Remove(RowNumberByRowDefinition);
+            if (Count <= 0) return;
+            TextBlock t = (TextBlock)FindName("INDEX" + Count);
+            Table.Children.Remove(t);
+            UnregisterName(t.Name);
+            for (int i = 0; i < Inputs.Count; i++)
+            {
+                string name = Inputs[i] + Count;
+                UIElement uie = (UIElement)FindName(name);
+                Table.Children.Remove(uie);
+                UnregisterName(name);
+            }
+            Table.RowDefinitions.RemoveAt(Count);
+            Count--;
         }
-
 
         protected abstract void OnInitializeNew();
-        public void InitializeNew(string title, string[] columns=null)
+        public void InitializeNew(string title, List<string> columns=null, List<string> inputs=null, int scrollerHeight=100)
         {
             TableTitle = title;
-            Columns = columns;
+            ScrollerHeight = scrollerHeight;
+            if (columns != null && columns.Count > 0)
+            {
+                Columns = new List<string>();
+                Columns.Add("#");
+                Columns.AddRange(columns);
+            }
+            Inputs = inputs;
+            Count = 0;
             InitializeNew();
         }
         public void InitializeNew()
@@ -69,6 +97,8 @@ namespace Database.TableTemplates
         protected abstract string[] OnCreate();
         public void Create()
         {
+            string err = ValidateInputs();
+            if (err != "") 
             ParameterizeInputs();
             string[] text = OnCreate();
             SQLDB.Command("INSERT INTO " + ClassTemplateTable + " (" + text[0] + ") VALUES (" + text[1] + ");");
@@ -95,6 +125,7 @@ namespace Database.TableTemplates
                 }
                 conn.Close();
             }*/
+            //Count = Table.RowDefinitions.Count - 1;
         }
 
 
