@@ -26,13 +26,16 @@ namespace Database.TableTemplates
         public _GenericTable()
         {
             InitializeComponent();
+            TableTemplateTable = "_GenericTables";
+            TableTemplateType = "_GenericTable";
         }
 
         public new void AddRow(object sender, RoutedEventArgs e)
         {
             if (Inputs == null) return;
             base.AddRow(sender, e);
-            // Insert here
+            //InputElements[Count - 1].Add(TextBox(Inputs[0] + Count, "", Count, 1));
+            AddRangeToTable();
         }
 
         protected override void OnInitializeNew()
@@ -44,39 +47,63 @@ namespace Database.TableTemplates
 
         public override void Automate()
         {
-            //attr1Input.Text = "This";
-            //attr2Input.Text = "0";
+            for (int i = 0; i < Count; i++)
+            {
+                // Insert and modify
+                string text = Utils.CutSpaces(((TextBox)InputElements[i][0]).Text);
+                if (text == "") ((TextBox)InputElements[i][0]).Text = (i + Count * 2).ToString();
+            }
         }
 
         public override string ValidateInputs()
         {
             string err = "";
-            //if (!Util.InRequiredLength(Util.CutSpaces(attr1Input.Text))) err += "attr1 needs to have 1 to 16 characters";
+            for (int i = 0; i < Count; i++)
+            {
+                // Insert and modify
+                if (Utils.CutSpaces(((TextBox)InputElements[i][0]).Text) != "") continue;
+                err += "Inputs in " + TableTitle + " cannot be empty\n";
+                break;
+            }
             return err;
         }
 
         public override void ParameterizeInputs()
         {
-            SQLDB.Inputs = new SQLiteParameter[] {
-                //new SQLiteParameter("@attr1", attr1Input.Text),
-                //new SQLiteParameter("@attr2", attr2Input.Text)
-            };
+            SQLDB.Inputs = new SQLiteParameter[Count*Inputs.Count];
+            for (int i = 0; i < Count; i++)
+            {
+                // Insert and modify
+                SQLDB.Inputs[i] = new SQLiteParameter("@attr1" + i, ((TextBox)InputElements[i][0]).Text);
+            }
         }
 
-        protected override string[] OnCreate()
+        protected override void OnCreate()
         {
-            return new string[] { "attr1, attr2", "@attr1, @attr2" };
+            int prevCount = SQLDB.GetScalar("SELECT COUNT(*) FROM " + TableTemplateTable);
+            for (int i = prevCount; i < Count; i++)
+                SQLDB.Command("INSERT INTO " + TableTemplateTable + " () VALUES () ");
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            //attr1Input.Text = reader.GetInt32(N).ToString();
-            //attr2Input.Text = reader.GetString(N);
+            InputElements[Count - 1].Add(TextBox(Inputs[0] + Count, reader.GetString(3), Count, 1));
         }
 
-        protected override string OnUpdate()
+        protected override void OnUpdate()
         {
-            return "attr1 = @attr1, attr2 = @attr2";
+            int prevCount = SQLDB.GetScalar("SELECT COUNT(*) FROM " + TableTemplateTable + " WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId);
+            if (Count > prevCount) // Add undercharge
+            {
+                for (int i = prevCount; i < Count; i++)
+                    SQLDB.Command("INSERT INTO " + TableTemplateTable + " (" + SQLDB.CurrentClass + "ID) VALUES (" + SQLDB.CurrentId + ");");
+            }
+            else if (Count < prevCount) // Delete overcharge
+            {
+                SQLDB.Command("DELETE FROM " + TableTemplateTable + " WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId + " AND ;");
+            }
+            for (int i = 0; i < Count; i++) // Update rows that are still intact
+                SQLDB.Command("UPDATE " + TableTemplateTable + " SET attr1 = @attr1" + i.ToString() + " WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId + " AND ;");
         }
     }
 }

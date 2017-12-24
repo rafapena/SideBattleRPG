@@ -30,14 +30,16 @@ namespace Database.TableTemplates
         public Grid Table { get; set; }
         public List<string> Columns { get; set; }
         public List<string> Inputs { get; set; }
+        public List<List<UIElement>> InputElements { get; set; }
+
         public string TableTitle { get; protected set; }
         public int ScrollerHeight { get; protected set; }
         public int Count { get; set; }
 
-        protected string ClassTemplateTable { get; set; }
-        protected string ClassTemplateType { get; set; }
-        public int ClassTemplateId { get; protected set; }
-        
+        protected string TableTemplateTable { get; set; }
+        protected string TableTemplateType { get; set; }
+        public int TableTemplateId { get; protected set; }
+
         public void AddRow(object sender, RoutedEventArgs e)
         {
             Count++;
@@ -47,6 +49,7 @@ namespace Database.TableTemplates
             RegisterName(t.Name, t);
             t.HorizontalAlignment = HorizontalAlignment.Center;
             Table.Children.Add(t);
+            InputElements.Add(new List<UIElement>());
         }
 
         protected void RemoveRow(object sender, RoutedEventArgs e)
@@ -62,12 +65,23 @@ namespace Database.TableTemplates
                 Table.Children.Remove(uie);
                 UnregisterName(name);
             }
+            InputElements.RemoveAt(InputElements.Count-1);
             Table.RowDefinitions.RemoveAt(Count);
             Count--;
         }
 
+        protected void AddRangeToTable()
+        {
+            int row = Count - 1;
+            for (int i = 0; i < Inputs.Count; i++)
+            {
+                RegisterName(Inputs[i] + Count, InputElements[row][i]);
+                Table.Children.Add(InputElements[row][i]);
+            }
+        }
+
         protected abstract void OnInitializeNew();
-        public void InitializeNew(string title, List<string> columns=null, List<string> inputs=null, int scrollerHeight=100)
+        public void InitializeNew(string title, List<string> columns=null, List<string> inputs = null, int scrollerHeight=100)
         {
             TableTitle = title;
             ScrollerHeight = scrollerHeight;
@@ -78,12 +92,13 @@ namespace Database.TableTemplates
                 Columns.AddRange(columns);
             }
             Inputs = inputs;
+            InputElements = new List<List<UIElement>>();
             Count = 0;
             InitializeNew();
         }
-        public void InitializeNew()
+        public virtual void InitializeNew()
         {
-            //ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
+            TableTemplateId = SQLDB.GetMaxIdFromTable(TableTemplateTable, TableTemplateType);
             OnInitializeNew();
             TableSetup(Table, Columns);
         }
@@ -94,14 +109,11 @@ namespace Database.TableTemplates
         public abstract void ParameterizeInputs();
 
 
-        protected abstract string[] OnCreate();
+        protected abstract void OnCreate();
         public void Create()
         {
-            string err = ValidateInputs();
-            if (err != "") 
             ParameterizeInputs();
-            string[] text = OnCreate();
-            SQLDB.Command("INSERT INTO " + ClassTemplateTable + " (" + text[0] + ") VALUES (" + text[1] + ");");
+            OnCreate();
             SQLDB.Inputs = null;
         }
 
@@ -109,44 +121,44 @@ namespace Database.TableTemplates
         protected abstract void OnRead(SQLiteDataReader reader);
         public void Read(SQLiteDataReader reader)
         {
-            //ClassTemplateId = int.Parse(reader[ClassTemplateType + "ID"].ToString());
+            if (Inputs == null) return;
+            TableTemplateId = int.Parse(reader[TableTemplateType + "ID"].ToString());
             Read();
         }
-        public void Read()
+        public virtual void Read()
         {
-            /*using (var conn = SQLDB.DB())
+            AddRow(null, null);
+            using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + ClassTemplateTable + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString(), conn))
+                using (var reader = SQLDB.Retrieve("SELECT * FROM " + TableTemplateTable + " WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId.ToString(), conn))
                 {
-                    reader.Read();
-                    ClassTemplateId = reader.GetInt32(0);
-                    OnRead(reader);
+                    while (reader.Read()) OnRead(reader);
                 }
                 conn.Close();
-            }*/
-            //Count = Table.RowDefinitions.Count - 1;
+            }
+            AddRangeToTable();
         }
 
 
-        protected abstract string OnUpdate();
+        protected abstract void OnUpdate();
         public void Update()
         {
             ParameterizeInputs();
-            SQLDB.Command("UPDATE " + ClassTemplateTable + " SET " + OnUpdate() + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
+            OnUpdate();
             SQLDB.Inputs = null;
         }
 
 
         public void Delete()
         {
-            SQLDB.Command("DELETE FROM " + ClassTemplateTable + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
+            SQLDB.Command("DELETE FROM " + TableTemplateTable + " WHERE " + TableTemplateType + "_ID = " + TableTemplateId.ToString() + ";");
         }
 
 
         public void Clone()
         {
-            ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
+            TableTemplateId = SQLDB.GetMaxIdFromTable(TableTemplateTable, TableTemplateType);
         }
     }
 }

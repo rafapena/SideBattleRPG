@@ -47,6 +47,22 @@ namespace Database.Utilities
             }
         }
 
+        public static int GetScalar(string sqlCommand)
+        {
+            int val = 0;
+            using (var conn = DB())
+            {
+                conn.Open();
+                using (var comm = new SQLiteCommand(sqlCommand, conn))
+                {
+                    try { val = (int)((long)comm.ExecuteScalar()); }
+                    catch (Exception e) { MessageBox.Show("Could not convert into a scalar:\n" + e.Message); }
+                }
+                conn.Close();
+            }
+            return val;
+        }
+
         public static int GetMaxIdFromTable(string table, string type)
         {
             int maxId;
