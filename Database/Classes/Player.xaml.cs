@@ -33,18 +33,22 @@ namespace Database.Classes
         protected override void OnInitializeNew()
         {
             Base.InitializeNew();
+            NatStats.InitializeNew();
             //Rates.InitializeNew();
+            NatStats.CustomName = "NaturalStats";
         }
 
         public override void Automate()
         {
             Base.Automate();
+            NatStats.Automate();
             //Rates.Automate();
         }
 
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();
+            err += NatStats.ValidateInputs();
             //err += Rates.ValidateInputs();
             return err;
         }
@@ -57,32 +61,38 @@ namespace Database.Classes
         protected override void OnCreate()
         {
             Base.Create();
-            //Rates.Create();
-            SQLCreate(new string[] { "BaseObjectID", Base.ClassTemplateId.ToString() });
-            // -- RATES
+            NatStats.Create();
+            SQLCreate(new string[] {
+                "BaseObjectID, NaturalStats",
+                Base.ClassTemplateId.ToString() + ", " + NatStats.ClassTemplateId.ToString()
+            });
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
             Base.Read(reader);
+            NatStats.Read(reader);
             //Rates.Read(reader);
         }
 
         protected override void OnUpdate()
         {
             Base.Update();
+            NatStats.Update();
             //Rates.Update();
         }
 
         protected override void OnDelete()
         {
             Base.Delete();
+            NatStats.Delete();
             //Rates.Delete();
         }
 
         protected override void OnClone()
         {
             Base.Clone();
+            NatStats.Clone();
             //Rates.Clone();
         }
     }

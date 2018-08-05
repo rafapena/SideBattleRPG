@@ -27,8 +27,8 @@
                             <!--<tables:ClassWithNum x:Name="Rates" Margin="5,5,5,5"/>-->
                         </TabItem>
 
-                        <TabItem Header="Tab3">
-                            <!--<template:Statistics x:Name="Stats" Margin="5,5,5,5"/>-->
+                        <TabItem Header="Natural Stats">
+                            <template:StatsBoost x:Name="NatStats" Margin="5,5,5,5"/>
                         </TabItem>
                     </TabControl>
 

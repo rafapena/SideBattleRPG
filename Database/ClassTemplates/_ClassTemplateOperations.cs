@@ -16,10 +16,11 @@ using System.Data.SQLite;
 using Database.Utilities;
 
 /*
- * BaseObjects
- * Tools
- * States
- * Stats: Trigger large or small
+ * BaseObjects <-- superclass for almost everything
+ * Tools <-- Superclass for skills, items, and weapons
+ * States <-- Superclass for passive skills
+ * StatsBoost <-- Classes with additive/product based stats
+ * StatsScale <-- Classes with 1 to 8 stat scale
 */
 
 namespace Database.ClassTemplates
@@ -28,12 +29,14 @@ namespace Database.ClassTemplates
     {
         protected string ClassTemplateTable { get; set; }
         protected string ClassTemplateType { get; set; }
+        public string CustomName { get; set; }
         public int ClassTemplateId { get; protected set; }
 
 
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {
+            CustomName = ClassTemplateType + "ID";
             ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
             OnInitializeNew();
         }
@@ -57,7 +60,7 @@ namespace Database.ClassTemplates
         protected abstract void OnRead(SQLiteDataReader reader);
         public void Read(SQLiteDataReader reader)
         {
-            ClassTemplateId = int.Parse(reader[ClassTemplateType + "ID"].ToString());
+            ClassTemplateId = int.Parse(reader[CustomName].ToString());
             Read();
         }
         public void Read()

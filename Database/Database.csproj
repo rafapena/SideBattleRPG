@@ -109,6 +109,9 @@
       <DependentUpon>TableList.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClassTemplates\_ClassTemplateOperations.cs" />
+    <Compile Include="ClassTemplates\StatsBoost.xaml.cs">
+      <DependentUpon>StatsBoost.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ClassTemplates\_GenericClassTemplate.xaml.cs">
       <DependentUpon>_GenericClassTemplate.xaml</DependentUpon>
     </Compile>
@@ -132,6 +135,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Classes\Achievement.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ClassTemplates\StatsBoost.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
