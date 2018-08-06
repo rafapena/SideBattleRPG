@@ -113,7 +113,7 @@ namespace Database.TableTemplates
             }
             else if (Count < prevCount) // Delete overcharge
             {
-                SQLDB.Command("DELETE FROM " + TableTemplateTable + " WHERE ListType = " + ListType + " AND SingleListID > " + Count.ToString());
+                SQLDB.Command("DELETE FROM " + TableTemplateTable + " WHERE ListType = " + ListType + " AND SingleListID >= " + Count.ToString());
             }
             for (int i = 0; i < Count; i++) // Update rows that are still intact
                 SQLDB.Command("UPDATE " + TableTemplateTable + " SET Name = @Name" + i.ToString() + " WHERE ListType = " + ListType + " AND SingleListID = " + i.ToString() + ";");

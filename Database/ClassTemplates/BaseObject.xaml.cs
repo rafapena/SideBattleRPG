@@ -83,12 +83,5 @@ namespace Database.ClassTemplates
             UpdatedText.Text = string.Format("{0:MM-dd-yyyy H:mm}", DateTime.Now);
             return "Name = @Name, Description = @Description";
         }
-
-        public new void Clone()
-        {
-            base.Clone();
-            CreatedText.Text = "";
-            UpdatedText.Text = "";
-        }
     }
 }

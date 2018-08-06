@@ -16,7 +16,7 @@ using System.Data.SQLite;
 using Database.Utilities;
 
 /*
- * BaseObjects <-- superclass for almost everything
+ * BaseObjects <-- Superclass for almost everything
  * Tools <-- Superclass for skills, items, and weapons
  * States <-- Superclass for passive skills
  * StatsMod <-- Classes with additive/product based stats

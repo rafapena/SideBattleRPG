@@ -33,8 +33,8 @@ namespace Database.ClassesUnstructured
             List<string> inputs = new List<string> { "Name" };
             Elements.InitializeNew("Elements", cols, inputs, 200);
             WeaponTypes.InitializeNew("Weapon Types", cols, inputs, 200);
-            SkillTypes.InitializeNew("Skill Types", cols, inputs, 150);
-            ToolFormulas.InitializeNew("Tool Formulas", cols, inputs, 150);
+            SkillTypes.InitializeNew("Skill Types", cols, inputs, 200);
+            ToolFormulas.InitializeNew("Tool Formulas", cols, inputs, 200);
             Elements.ListType = "0";
             WeaponTypes.ListType = "1";
             SkillTypes.ListType = "2";
