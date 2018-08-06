@@ -19,7 +19,7 @@ using Database.Utilities;
  * BaseObjects <-- superclass for almost everything
  * Tools <-- Superclass for skills, items, and weapons
  * States <-- Superclass for passive skills
- * StatsBoost <-- Classes with additive/product based stats
+ * StatsMod <-- Classes with additive/product based stats
  * StatsScale <-- Classes with 1 to 8 stat scale
 */
 

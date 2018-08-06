@@ -18,11 +18,11 @@ using Database.Utilities;
 namespace Database.ClassTemplates
 {
     /// <summary>
-    /// Interaction logic for _StatsBoost.xaml
+    /// Interaction logic for _StatsMod.xaml
     /// </summary>
-    public partial class StatsBoost : _ClassTemplateOperations
+    public partial class StatsMod : _ClassTemplateOperations
     {
-        public StatsBoost()
+        public StatsMod()
         {
             InitializeComponent();
             ClassTemplateTable = "Stats";

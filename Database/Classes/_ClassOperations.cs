@@ -44,13 +44,13 @@ namespace Database.Classes
         public void Create()
         {
             string err = ValidateInputs();
-            if (err != "") MessageBox.Show("Could not update due to the following:\n\n" + err);
+            if (err != "") MessageBox.Show("Could not create " + SQLDB.CurrentClass + ":\n\n" + err);
             else
             {
                 OnCreate();
-                MessageBox.Show("Creating successful");
                 LinkedTableList.SetupTable(true);
                 LinkedFooter.ApplyReadSettings();
+                MessageBox.Show(SQLDB.CurrentClass + " created");
             }
         }
         protected void SQLCreate(string[] text)
@@ -82,13 +82,13 @@ namespace Database.Classes
         public void Update()
         {
             string err = ValidateInputs();
-            if (err != "") MessageBox.Show("Could not update due to the following:\n\n" + err);
+            if (err != "") MessageBox.Show("Could not update " + SQLDB.CurrentClass + ":\n\n" + err);
             else
             {
                 OnUpdate();
-                MessageBox.Show("Updating successful");
                 LinkedTableList.SetupTable(true);
                 SQLDB.Inputs = null;
+                MessageBox.Show(SQLDB.CurrentClass + " updated");
             }
         }
         protected void SQLUpdate(string input)
@@ -104,7 +104,7 @@ namespace Database.Classes
         {
             if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentClass)) return;
             OnDelete();
-            MessageBox.Show("Deleting successful");
+            MessageBox.Show(SQLDB.CurrentClass + " deleted");
             InitializeNew();
         }
 
@@ -112,12 +112,16 @@ namespace Database.Classes
         protected abstract void OnClone();
         public void Clone()
         {
-            if (!Utils.Confirm("Are you sure?\nAny un-updated changes will be discarded", "Cloning over to new " + SQLDB.CurrentClass)) return;
-            LinkedFooter.ApplyInitializeNewSettings();
-            LinkedTableList.RemoveButtonHighlight();
-            SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
-            OnClone();
-            MessageBox.Show("The contents have been cloned to a new\n" + SQLDB.CurrentClass + " and can now be created");
+            string err = ValidateInputs();
+            if (err != "") MessageBox.Show("Could not clone " + SQLDB.CurrentClass + ":\n\n" + err);
+            else
+            {
+                SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
+                OnClone();
+                OnCreate();
+                LinkedTableList.SetupTable(true);
+                MessageBox.Show(SQLDB.CurrentClass + " cloned");
+            }
         }
     }
 }

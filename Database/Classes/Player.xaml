@@ -28,7 +28,7 @@
                         </TabItem>
 
                         <TabItem Header="Natural Stats">
-                            <template:StatsBoost x:Name="NatStats" Margin="5,5,5,5"/>
+                            <template:StatsMod x:Name="NatStats" Margin="5,5,5,5"/>
                         </TabItem>
                     </TabControl>
 
