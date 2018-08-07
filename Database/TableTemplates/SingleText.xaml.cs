@@ -39,6 +39,7 @@ namespace Database.TableTemplates
             AddRangeToTable();
         }
 
+        // InitializeNew() applies different conventions to TableTemplateOperations
         public override void InitializeNew()
         {
             OnInitializeNew();
@@ -79,9 +80,9 @@ namespace Database.TableTemplates
         }
 
         protected override void OnCreate()
-        {
-        }
+        {   /* Does nothing: only exists to follow the abstract function protocol */ }
 
+        // Read() applies different conventions to TableTemplateOperations
         public override void Read()
         {
             using (var conn = SQLDB.DB())
@@ -94,7 +95,6 @@ namespace Database.TableTemplates
                 conn.Close();
             }
         }
-
         protected override void OnRead(SQLiteDataReader reader)
         {
             if (Inputs == null) return;

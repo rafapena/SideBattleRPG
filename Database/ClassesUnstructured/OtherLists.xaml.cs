@@ -31,18 +31,14 @@ namespace Database.ClassesUnstructured
         {
             List<string> cols = new List<string> { "Name" };
             List<string> inputs = new List<string> { "Name" };
-            Elements.InitializeNew("Elements", cols, inputs, 200);
-            WeaponTypes.InitializeNew("Weapon Types", cols, inputs, 200);
-            SkillTypes.InitializeNew("Skill Types", cols, inputs, 200);
-            ToolFormulas.InitializeNew("Tool Formulas", cols, inputs, 200);
             Elements.ListType = "0";
             WeaponTypes.ListType = "1";
             SkillTypes.ListType = "2";
             ToolFormulas.ListType = "3";
-            Elements.Read();
-            WeaponTypes.Read();
-            SkillTypes.Read();
-            ToolFormulas.Read();
+            Elements.InitializeNew("Elements", cols, inputs, 200);
+            WeaponTypes.InitializeNew("Weapon Types", cols, inputs, 200);
+            SkillTypes.InitializeNew("Skill Types", cols, inputs, 200);
+            ToolFormulas.InitializeNew("Tool Formulas", cols, inputs, 200);
         }
 
         private void Automated(object sender, RoutedEventArgs e)

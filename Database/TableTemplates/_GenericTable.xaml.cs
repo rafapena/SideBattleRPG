@@ -49,9 +49,9 @@ namespace Database.TableTemplates
         {
             for (int i = 0; i < Count; i++)
             {
+                //((TextBox)InputElements[i][0]).Text = (i + Count * 2).ToString();
+                //((TextBox)InputElements[i][1]).Text = (i + Count * 2).ToString();
                 // Insert and modify
-                string text = Utils.CutSpaces(((TextBox)InputElements[i][0]).Text);
-                if (text == "") ((TextBox)InputElements[i][0]).Text = (i + Count * 2).ToString();
             }
         }
 
@@ -60,7 +60,6 @@ namespace Database.TableTemplates
             string err = "";
             for (int i = 0; i < Count; i++)
             {
-                // Insert and modify
                 if (Utils.CutSpaces(((TextBox)InputElements[i][0]).Text) != "") continue;
                 err += "Inputs in " + TableTitle + " cannot be empty\n";
                 break;
@@ -70,11 +69,13 @@ namespace Database.TableTemplates
 
         public override void ParameterizeInputs()
         {
-            SQLDB.Inputs = new SQLiteParameter[Count*Inputs.Count];
-            for (int i = 0; i < Count; i++)
+            int size = Count * Inputs.Count;
+            SQLDB.Inputs = new SQLiteParameter[size];
+            for (int i = 0; i < size; i += Inputs.Count)
             {
+                //SQLDB.Inputs[i] = new SQLiteParameter("@attr1" + i, ((TextBox)InputElements[i][0]).Text);
+                //SQLDB.Inputs[i+1] = new SQLiteParameter("@attr2" + i, ((TextBox)InputElements[i][1]).Text);
                 // Insert and modify
-                SQLDB.Inputs[i] = new SQLiteParameter("@attr1" + i, ((TextBox)InputElements[i][0]).Text);
             }
         }
 
@@ -87,7 +88,10 @@ namespace Database.TableTemplates
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            InputElements[Count - 1].Add(TextBox(Inputs[0] + Count, reader.GetString(3), Count, 1));
+            if (Inputs == null) return;
+            base.AddRow(null, null);
+            //InputElements[Count - 1].Add(TextBox(Inputs[0] + Count, reader.GetString(3), Count, 1));
+            AddRangeToTable();
         }
 
         protected override void OnUpdate()

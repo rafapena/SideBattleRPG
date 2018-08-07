@@ -95,6 +95,7 @@ namespace Database.TableTemplates
             InputElements = new List<List<UIElement>>();
             Count = 0;
             InitializeNew();
+            Read();
         }
         public virtual void InitializeNew()
         {

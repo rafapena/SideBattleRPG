@@ -64,20 +64,22 @@ namespace Database.ClassTemplates
         public override string ValidateInputs()
         {
             string err = "";
-            string message1 = " inputs must be between -3 and 3, inclusively\n";
-            string message2 = " inputs must be an integer between -100 and 100, inclusively\n";
-            if (!Utils.N3ToP3Float(HPInput.Text)) err += "MaxHP" + message1;
-            if (!Utils.N3ToP3Float(LukInput.Text)) err += "Luck" + message1;
-            if (!Utils.N3ToP3Float(AtkInput.Text)) err += "Attack" + message1;
-            if (!Utils.N3ToP3Float(DefInput.Text)) err += "Defense" + message1;
-            if (!Utils.N3ToP3Float(MapInput.Text)) err += "Magic Power" + message1;
-            if (!Utils.N3ToP3Float(MarInput.Text)) err += "Magic Resistance" + message1;
-            if (!Utils.N3ToP3Float(SpdInput.Text)) err += "Speed" + message1;
-            if (!Utils.N3ToP3Float(TecInput.Text)) err += "Technique" + message1;
-            if (!Utils.N100ToP100(AccInput.Text)) err += "Accuracy" + message2;
-            if (!Utils.N100ToP100(EvaInput.Text)) err += "Evasion" + message2;
-            if (!Utils.N100ToP100(CrtInput.Text)) err += "Critical Rate" + message2;
-            if (!Utils.N100ToP100(CevInput.Text)) err += "Crit Evade Rate" + message2;
+            bool err1 = false;
+            bool err2 = false;
+            if (!Utils.N3ToP3Float(HPInput.Text)) err1 = true;
+            else if (!Utils.N3ToP3Float(LukInput.Text)) err1 = true;
+            else if (!Utils.N3ToP3Float(AtkInput.Text)) err1 = true;
+            else if (!Utils.N3ToP3Float(DefInput.Text)) err1 = true;
+            else if (!Utils.N3ToP3Float(MapInput.Text)) err1 = true;
+            else if (!Utils.N3ToP3Float(MarInput.Text)) err1 = true;
+            else if (!Utils.N3ToP3Float(SpdInput.Text)) err1 = true;
+            else if (!Utils.N3ToP3Float(TecInput.Text)) err1 = true;
+            if (!Utils.N100ToP100(AccInput.Text)) err2 = true;
+            else if (!Utils.N100ToP100(EvaInput.Text)) err2 = true;
+            else if (!Utils.N100ToP100(CrtInput.Text)) err2 = true;
+            else if (!Utils.N100ToP100(CevInput.Text)) err2 = true;
+            if (err1) err += "All of the 8 stats, on top, must be within -3 and 3\n";
+            if (err2) err += "All of the 4 stats, at the bottom, be an integer within -100 and 100\n";
             return err;
         }
 

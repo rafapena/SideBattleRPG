@@ -109,10 +109,15 @@ namespace Database.ClassesUnstructured
         protected abstract void OnClone();
         public void Clone()
         {
-            if (!Utils.Confirm("Are you sure?\nAny un-updated changes will be discarded", "Cloning over to new " + SQLDB.CurrentClass)) return;
-            SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
-            OnClone();
-            MessageBox.Show("The contents have been cloned to a new\n" + SQLDB.CurrentClass + " and can now be created");
+            string err = ValidateInputs();
+            if (err != "") MessageBox.Show("Could not clone " + SQLDB.CurrentClass + ":\n\n" + err);
+            else
+            {
+                SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
+                OnClone();
+                OnCreate();
+                MessageBox.Show(SQLDB.CurrentClass + " cloned");
+            }
         }
     }
 }
