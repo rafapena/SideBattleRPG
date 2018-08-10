@@ -118,6 +118,9 @@
     <Compile Include="TableTemplates\SingleText.xaml.cs">
       <DependentUpon>SingleText.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TableTemplates\SingleComboBox.xaml.cs">
+      <DependentUpon>SingleComboBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TableTemplates\_GenericTable.xaml.cs">
       <DependentUpon>_GenericTable.xaml</DependentUpon>
     </Compile>
@@ -179,6 +182,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TableTemplates\SingleText.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TableTemplates\SingleComboBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

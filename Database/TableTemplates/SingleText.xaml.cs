@@ -23,7 +23,6 @@ namespace Database.TableTemplates
         public SingleText()
         {
             InitializeComponent();
-            TableTemplateTable = "TypesLists";
         }
 
         protected override void OnAddRow()
@@ -72,17 +71,19 @@ namespace Database.TableTemplates
         {
             return "ListType = '" + TableTitle + "'";
         }
-        protected override string OnUpdateAddRow(int i)
+        protected override string[] OnUpdateAddRow(int i)
         {
-            return "(ListType, List_ID, Name) VALUES ('" + TableTitle + "', " + i.ToString() + ", @Name" + i.ToString() + ");";
+            return new string[] { "ListType, List_ID, Name",
+                "'" + TableTitle + "', " + i.ToString() + ", @Name" + i.ToString() };
         }
         protected override string OnUpdateRemovedRowCondition()
         {
             return "ListType = '" + TableTitle + "' AND List_ID >= " + Count.ToString() + ";";
         }
-        protected override string OnUpdateRow(int i)
+        protected override string[] OnUpdateRow(int i)
         {
-            return "Name = @Name" + i.ToString() + " WHERE ListType = '" + TableTitle + "' AND List_ID = " + i.ToString() + ";";
+            return new string[] { "Name = @Name" + i.ToString(),
+                "ListType = '" + TableTitle + "' AND List_ID = " + i.ToString() };
         }
     }
 }

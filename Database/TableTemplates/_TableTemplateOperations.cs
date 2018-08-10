@@ -28,7 +28,7 @@ namespace Database.TableTemplates
     public abstract class _TableTemplateOperations : UserControl, ObjectOperations
     {
         public Grid Table { get; set; }
-        public List<string> Columns { get; set; }
+        public List<string> ColumnNames { get; set; }
         public List<string> Inputs { get; set; }
         public List<List<UIElement>> InputElements { get; set; }
 
@@ -84,21 +84,23 @@ namespace Database.TableTemplates
         }
 
         protected abstract void OnInitializeNew();
-        public void InitializeNew(string title, List<string> columns=null, List<string> inputs = null, int scrollerHeight=100)
+        public void InitializeNew(string tableName, string title,
+            List<string> columnNames=null, List<string> inputs = null, int scrollerHeight=100)
         {
+            TableTemplateTable = tableName;
             TableTitle = title;
             ScrollerHeight = scrollerHeight;
-            if (columns != null && columns.Count > 0)
+            if (columnNames != null && columnNames.Count > 0)
             {
-                Columns = new List<string>();
-                Columns.Add("#");
-                Columns.AddRange(columns);
+                ColumnNames = new List<string>();
+                ColumnNames.Add("#");
+                ColumnNames.AddRange(columnNames);
             }
             Inputs = inputs;
             InputElements = new List<List<UIElement>>();
             Count = 0;
             OnInitializeNew();
-            TableSetup(Table, Columns);
+            TableSetup(Table, ColumnNames);
             Read();
         }
         // Use the function above instead
@@ -131,12 +133,23 @@ namespace Database.TableTemplates
         public void Create()
         {
             ParameterizeInputs();
-            for (int i = 0; i < Count; i++) SQLDB.Command("INSERT INTO " + TableTemplateTable + " " + OnUpdateAddRow(i));
+            CreateRows(0);
             SQLDB.Inputs = null;
+        }
+        private void CreateRows(int startingI)
+        {
+            for (int i = startingI; i < Count; i++)
+            {
+                string[] str = OnUpdateAddRow(i);
+                SQLDB.Command("INSERT INTO " + TableTemplateTable + " (" + str[0] + ") VALUES (" + str[1] + ");");
+            }
         }
 
 
-        protected abstract string OnReadCondition();
+        protected virtual string OnReadCondition()
+        {
+            return SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId.ToString();
+        }
         protected abstract void OnRead(SQLiteDataReader reader);
         public void Read()
         {
@@ -158,17 +171,25 @@ namespace Database.TableTemplates
         }
 
 
-        protected abstract string OnUpdateCountCondition();
-        protected abstract string OnUpdateAddRow(int i);
+        protected virtual string OnUpdateCountCondition()
+        {
+            return SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId;
+        }
+        protected abstract string[] OnUpdateAddRow(int i);
         protected abstract string OnUpdateRemovedRowCondition();
-        protected abstract string OnUpdateRow(int i);
+        protected abstract string[] OnUpdateRow(int i);
+
         public void Update()
         {
             ParameterizeInputs();
             int prevCount = SQLDB.GetScalar("SELECT COUNT(*) FROM " + TableTemplateTable + " WHERE " + OnUpdateCountCondition());
-            if (Count > prevCount) for (int i = prevCount; i < Count; i++) SQLDB.Command("INSERT INTO " + TableTemplateTable + " " + OnUpdateAddRow(i));
+            if (Count > prevCount) CreateRows(prevCount);
             if (Count < prevCount) SQLDB.Command("DELETE FROM " + TableTemplateTable + " WHERE " + OnUpdateRemovedRowCondition());
-            for (int i = 0; i < Count; i++) SQLDB.Command("UPDATE " + TableTemplateTable + " SET " + OnUpdateRow(i));
+            for (int i = 0; i < Count; i++)
+            {
+                string[] str = OnUpdateRow(i);
+                SQLDB.Command("UPDATE " + TableTemplateTable + " SET " + str[0] + " WHERE " + str[1]);
+            }
             SQLDB.Inputs = null;
         }
 
