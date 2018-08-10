@@ -17,9 +17,6 @@ using Database.Utilities;
 
 namespace Database.ClassTemplates
 {
-    /// <summary>
-    /// Interaction logic for _GenericTemplate.xaml
-    /// </summary>
     public partial class _GenericClassTemplate : _ClassTemplateOperations
     {
         public _GenericClassTemplate()

@@ -53,10 +53,10 @@ namespace Database.Classes
                 MessageBox.Show(SQLDB.CurrentClass + " created");
             }
         }
-        protected void SQLCreate(string[] text)
+        protected void SQLCreate(string attributes, string inputs)
         {
             ParameterizeInputs();
-            SQLDB.Command("INSERT INTO " + SQLDB.CurrentTable + " (" + text[0] + ") VALUES (" + text[1] + ");");
+            SQLDB.Command("INSERT INTO " + SQLDB.CurrentTable + " (" + attributes + ") VALUES (" + inputs + ");");
             SQLDB.Inputs = null;
         }
 

@@ -37,9 +37,9 @@ namespace Database.TableTemplates
         public int Count { get; set; }
 
         protected string TableTemplateTable { get; set; }
-        protected string TableTemplateType { get; set; }
-        public int TableTemplateId { get; protected set; }
 
+
+        protected abstract void OnAddRow();
         public void AddRow(object sender, RoutedEventArgs e)
         {
             Count++;
@@ -50,6 +50,9 @@ namespace Database.TableTemplates
             t.HorizontalAlignment = HorizontalAlignment.Center;
             Table.Children.Add(t);
             InputElements.Add(new List<UIElement>());
+            if (sender == null || Inputs == null) return;
+            OnAddRow();
+            AddRangeToTable();
         }
 
         protected void RemoveRow(object sender, RoutedEventArgs e)
@@ -94,72 +97,89 @@ namespace Database.TableTemplates
             Inputs = inputs;
             InputElements = new List<List<UIElement>>();
             Count = 0;
-            InitializeNew();
-            Read();
-        }
-        public virtual void InitializeNew()
-        {
-            TableTemplateId = SQLDB.GetMaxIdFromTable(TableTemplateTable, TableTemplateType);
             OnInitializeNew();
             TableSetup(Table, Columns);
+            Read();
+        }
+        // Use the function above instead
+        public virtual void InitializeNew() {}
+
+
+        protected abstract void OnAutomate(int i);
+        public void Automate()
+        {
+            for (int i = 0; i < Count; i++) OnAutomate(i);
+        }
+
+        protected abstract string OnValidateInputs(int i);
+        public string ValidateInputs()
+        {
+            string err = "";
+            for (int i = 0; i < Count; i++) err += OnValidateInputs(i);
+            return err;
+        }
+
+        protected abstract void OnParameterizeInputs(int i);
+        public void ParameterizeInputs()
+        {
+            int size = Count * Inputs.Count;
+            SQLDB.Inputs = new SQLiteParameter[size];
+            for (int i = 0; i < size; i += Inputs.Count) OnParameterizeInputs(i);
         }
 
 
-        public abstract void Automate();
-        public abstract string ValidateInputs();
-        public abstract void ParameterizeInputs();
-
-
-        protected abstract void OnCreate();
         public void Create()
         {
             ParameterizeInputs();
-            OnCreate();
+            for (int i = 0; i < Count; i++) SQLDB.Command("INSERT INTO " + TableTemplateTable + " " + OnUpdateAddRow(i));
             SQLDB.Inputs = null;
         }
 
 
+        protected abstract string OnReadCondition();
         protected abstract void OnRead(SQLiteDataReader reader);
-        public void Read(SQLiteDataReader reader)
+        public void Read()
         {
             if (Inputs == null) return;
-            TableTemplateId = int.Parse(reader[TableTemplateType + "ID"].ToString());
-            Read();
-        }
-        public virtual void Read()
-        {
-            AddRow(null, null);
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + TableTemplateTable + " WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId.ToString(), conn))
+                using (var reader = SQLDB.Retrieve("SELECT * FROM " + TableTemplateTable + " WHERE " + OnReadCondition(), conn))
                 {
-                    while (reader.Read()) OnRead(reader);
+                    while (reader.Read())
+                    {
+                        AddRow(null, null);
+                        OnRead(reader);
+                        AddRangeToTable();
+                    }
                 }
                 conn.Close();
             }
-            AddRangeToTable();
         }
 
 
-        protected abstract void OnUpdate();
+        protected abstract string OnUpdateCountCondition();
+        protected abstract string OnUpdateAddRow(int i);
+        protected abstract string OnUpdateRemovedRowCondition();
+        protected abstract string OnUpdateRow(int i);
         public void Update()
         {
             ParameterizeInputs();
-            OnUpdate();
+            int prevCount = SQLDB.GetScalar("SELECT COUNT(*) FROM " + TableTemplateTable + " WHERE " + OnUpdateCountCondition());
+            if (Count > prevCount) for (int i = prevCount; i < Count; i++) SQLDB.Command("INSERT INTO " + TableTemplateTable + " " + OnUpdateAddRow(i));
+            if (Count < prevCount) SQLDB.Command("DELETE FROM " + TableTemplateTable + " WHERE " + OnUpdateRemovedRowCondition());
+            for (int i = 0; i < Count; i++) SQLDB.Command("UPDATE " + TableTemplateTable + " SET " + OnUpdateRow(i));
             SQLDB.Inputs = null;
         }
 
 
         public void Delete()
         {
-            SQLDB.Command("DELETE FROM " + TableTemplateTable + " WHERE " + TableTemplateType + "_ID = " + TableTemplateId.ToString() + ";");
+            SQLDB.Command("DELETE FROM " + TableTemplateTable + " WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId + ";");
         }
 
 
-        public void Clone()
-        {
-            TableTemplateId = SQLDB.GetMaxIdFromTable(TableTemplateTable, TableTemplateType);
-        }
+        // Not needed: No ID to keep track of and is only implemented here (Create() from ClassOperations handles everything)
+        public void Clone() { }
     }
 }

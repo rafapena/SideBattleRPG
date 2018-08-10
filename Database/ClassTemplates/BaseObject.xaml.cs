@@ -17,9 +17,6 @@ using Database.Utilities;
 
 namespace Database.ClassTemplates
 {
-    /// <summary>
-    /// Interaction logic for BaseObject.xaml
-    /// </summary>
     public partial class BaseObject : _ClassTemplateOperations
     {
         public BaseObject()

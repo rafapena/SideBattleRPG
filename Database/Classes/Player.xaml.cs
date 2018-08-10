@@ -17,9 +17,6 @@ using Database.Utilities;
 
 namespace Database.Classes
 {
-    /// <summary>
-    /// Interaction logic for Player.xaml
-    /// </summary>
     public partial class Player : _ClassOperations
     {
         public Player()
@@ -62,10 +59,7 @@ namespace Database.Classes
         {
             Base.Create();
             NatStats.Create();
-            SQLCreate(new string[] {
-                "BaseObjectID, NaturalStats",
-                Base.ClassTemplateId.ToString() + ", " + NatStats.ClassTemplateId.ToString()
-            });
+            SQLCreate("BaseObjectID, NaturalStats", Base.ClassTemplateId.ToString() + ", " + NatStats.ClassTemplateId.ToString());
         }
 
         protected override void OnRead(SQLiteDataReader reader)

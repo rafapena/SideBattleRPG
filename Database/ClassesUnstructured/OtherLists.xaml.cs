@@ -16,9 +16,6 @@ using System.Windows.Shapes;
 
 namespace Database.ClassesUnstructured
 {
-    /// <summary>
-    /// Interaction logic for OtherLists.xaml
-    /// </summary>
     public partial class OtherLists : _ClassUnstructuredOperations
     {
         public OtherLists()
@@ -31,10 +28,6 @@ namespace Database.ClassesUnstructured
         {
             List<string> cols = new List<string> { "Name" };
             List<string> inputs = new List<string> { "Name" };
-            Elements.ListType = "0";
-            WeaponTypes.ListType = "1";
-            SkillTypes.ListType = "2";
-            ToolFormulas.ListType = "3";
             Elements.InitializeNew("Elements", cols, inputs, 200);
             WeaponTypes.InitializeNew("Weapon Types", cols, inputs, 200);
             SkillTypes.InitializeNew("Skill Types", cols, inputs, 200);
@@ -80,10 +73,10 @@ namespace Database.ClassesUnstructured
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            Elements.Read(reader);
-            WeaponTypes.Read(reader);
-            SkillTypes.Read(reader);
-            ToolFormulas.Read(reader);
+            Elements.Read();
+            WeaponTypes.Read();
+            SkillTypes.Read();
+            ToolFormulas.Read();
         }
 
         protected override void OnDelete()

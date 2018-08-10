@@ -18,33 +18,19 @@ using static Database.Utilities.TableBuilder;
 
 namespace Database.TableTemplates
 {
-    /// <summary>
-    /// Interaction logic for GenericTable.xaml
-    /// </summary>
     public partial class SingleText : _TableTemplateOperations
     {
-        public string ListType { get; set; }
-
         public SingleText()
         {
             InitializeComponent();
             TableTemplateTable = "TypesLists";
         }
 
-        public new void AddRow(object sender, RoutedEventArgs e)
+        protected override void OnAddRow()
         {
-            if (Inputs == null) return;
-            base.AddRow(sender, e);
             InputElements[Count - 1].Add(TextBox(Inputs[0] + Count, "", Count, 1));
-            AddRangeToTable();
         }
-
-        // InitializeNew() applies different conventions to TableTemplateOperations
-        public override void InitializeNew()
-        {
-            OnInitializeNew();
-            TableSetup(Table, Columns);
-        }
+        
         protected override void OnInitializeNew()
         {
             Title.Text = TableTitle;
@@ -52,71 +38,51 @@ namespace Database.TableTemplates
             Table = TableList;
         }
 
-        public override void Automate()
+        protected override void OnAutomate(int i)
         {
-            for (int i = 0; i < Count; i++)
-            {
-                string text = Utils.CutSpaces(((TextBox)InputElements[i][0]).Text);
-                if (text == "") ((TextBox)InputElements[i][0]).Text = (i + Count*2).ToString();
-            }
+            string text = Utils.CutSpaces(((TextBox)InputElements[i][0]).Text);
+            if (text == "") ((TextBox)InputElements[i][0]).Text = (i + Count*2).ToString();
         }
 
-        public override string ValidateInputs()
+        protected override string OnValidateInputs(int i)
         {
-            string err = "";
-            for (int i = 0; i < Count; i++)
-            {
-                if (Utils.CutSpaces(((TextBox)InputElements[i][0]).Text) != "") continue;
-                err += "Inputs in " + TableTitle + " cannot be empty\n";
-                break;
-            }
-            return err;
+            string input = ((TextBox)InputElements[i][0]).Text;
+            string text = "";
+            if (Utils.CutSpaces(input) == "") text += "Inputs in " + TableTitle + " cannot be empty\n";
+            if (input.Length >= 20) text += "Inputs must have 20 characters or less";
+            return text;
         }
 
-        public override void ParameterizeInputs()
+        protected override void OnParameterizeInputs(int i)
         {
-            SQLDB.Inputs = new SQLiteParameter[Count*Inputs.Count];
-            for (int i = 0; i < Count; i++) SQLDB.Inputs[i] = new SQLiteParameter("@Name"+i, ((TextBox)InputElements[i][0]).Text);
+            SQLDB.Inputs[i] = new SQLiteParameter("@Name"+i, ((TextBox)InputElements[i][0]).Text);
         }
 
-        protected override void OnCreate()
-        {   /* Does nothing: only exists to follow the abstract function protocol */ }
-
-        // Read() applies different conventions to TableTemplateOperations
-        public override void Read()
+        
+        protected override string OnReadCondition()
         {
-            using (var conn = SQLDB.DB())
-            {
-                conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + TableTemplateTable + " WHERE ListType = " + ListType + " ORDER BY SingleListID ASC", conn))
-                {
-                    while (reader.Read()) OnRead(reader);
-                }
-                conn.Close();
-            }
+            return "ListType = '" + TableTitle + "' ORDER BY List_ID ASC";
         }
         protected override void OnRead(SQLiteDataReader reader)
         {
-            if (Inputs == null) return;
-            base.AddRow(null, null);
-            InputElements[Count - 1].Add(TextBox(Inputs[0] + Count, reader.GetString(3), Count, 1));
-            AddRangeToTable();
+            InputElements[Count - 1].Add(TextBox(Inputs[0] + Count, reader.GetString(2), Count, 1));
         }
 
-        protected override void OnUpdate()
+        protected override string OnUpdateCountCondition()
         {
-            int prevCount = SQLDB.GetScalar("SELECT COUNT(*) FROM " + TableTemplateTable + " WHERE ListType = " + ListType);
-            if (Count > prevCount) // Add undercharge
-            {
-                for (int i = prevCount; i < Count; i++)
-                    SQLDB.Command("INSERT INTO " + TableTemplateTable + " (ListType, SingleListID, Name) VALUES (" + ListType + ", " + i.ToString() + ", @Name" + i.ToString() + ");");
-            }
-            else if (Count < prevCount) // Delete overcharge
-            {
-                SQLDB.Command("DELETE FROM " + TableTemplateTable + " WHERE ListType = " + ListType + " AND SingleListID >= " + Count.ToString());
-            }
-            for (int i = 0; i < Count; i++) // Update rows that are still intact
-                SQLDB.Command("UPDATE " + TableTemplateTable + " SET Name = @Name" + i.ToString() + " WHERE ListType = " + ListType + " AND SingleListID = " + i.ToString() + ";");
+            return "ListType = '" + TableTitle + "'";
+        }
+        protected override string OnUpdateAddRow(int i)
+        {
+            return "(ListType, List_ID, Name) VALUES ('" + TableTitle + "', " + i.ToString() + ", @Name" + i.ToString() + ");";
+        }
+        protected override string OnUpdateRemovedRowCondition()
+        {
+            return "ListType = '" + TableTitle + "' AND List_ID >= " + Count.ToString() + ";";
+        }
+        protected override string OnUpdateRow(int i)
+        {
+            return "Name = @Name" + i.ToString() + " WHERE ListType = '" + TableTitle + "' AND List_ID = " + i.ToString() + ";";
         }
     }
 }

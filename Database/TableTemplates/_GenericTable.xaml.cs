@@ -18,24 +18,19 @@ using static Database.Utilities.TableBuilder;
 
 namespace Database.TableTemplates
 {
-    /// <summary>
-    /// Interaction logic for GenericTable.xaml
-    /// </summary>
     public partial class _GenericTable : _TableTemplateOperations
     {
         public _GenericTable()
         {
             InitializeComponent();
             TableTemplateTable = "_GenericTables";
-            TableTemplateType = "_GenericTable";
         }
 
-        public new void AddRow(object sender, RoutedEventArgs e)
+        protected override void OnAddRow()
         {
-            if (Inputs == null) return;
-            base.AddRow(sender, e);
-            //InputElements[Count - 1].Add(TextBox(Inputs[0] + Count, "", Count, 1));
-            AddRangeToTable();
+            int latest = Count - 1;
+            //InputElements[latest].Add(TextBox(Inputs[0] + Count, "", Count, 1));
+            //InputElements[latest].Add(TextBox(Inputs[1] + Count, "", Count, 1));
         }
 
         protected override void OnInitializeNew()
@@ -45,69 +40,51 @@ namespace Database.TableTemplates
             Scroller.Height = ScrollerHeight;
         }
 
-        public override void Automate()
+        protected override void OnAutomate(int i)
         {
-            for (int i = 0; i < Count; i++)
-            {
-                //((TextBox)InputElements[i][0]).Text = (i + Count * 2).ToString();
-                //((TextBox)InputElements[i][1]).Text = (i + Count * 2).ToString();
-                // Insert and modify
-            }
+            //((TextBox)InputElements[i][0]).Text = (i + Count * 2).ToString();
+            //((TextBox)InputElements[i][1]).Text = (i + Count * 2).ToString();
         }
 
-        public override string ValidateInputs()
+        protected override string OnValidateInputs(int i)
         {
             string err = "";
-            for (int i = 0; i < Count; i++)
-            {
-                if (Utils.CutSpaces(((TextBox)InputElements[i][0]).Text) != "") continue;
-                err += "Inputs in " + TableTitle + " cannot be empty\n";
-                break;
-            }
+            if (Utils.CutSpaces(((TextBox)InputElements[i][0]).Text) == "") err += "Inputs in " + TableTitle + " cannot be empty\n";
             return err;
         }
 
-        public override void ParameterizeInputs()
+        protected override void OnParameterizeInputs(int i)
         {
-            int size = Count * Inputs.Count;
-            SQLDB.Inputs = new SQLiteParameter[size];
-            for (int i = 0; i < size; i += Inputs.Count)
-            {
-                //SQLDB.Inputs[i] = new SQLiteParameter("@attr1" + i, ((TextBox)InputElements[i][0]).Text);
-                //SQLDB.Inputs[i+1] = new SQLiteParameter("@attr2" + i, ((TextBox)InputElements[i][1]).Text);
-                // Insert and modify
-            }
+            //SQLDB.Inputs[i] = new SQLiteParameter("@attr1" + i, ((TextBox)InputElements[i][0]).Text);
+            //SQLDB.Inputs[i+1] = new SQLiteParameter("@attr2" + i, ((TextBox)InputElements[i][1]).Text);
         }
 
-        protected override void OnCreate()
+        protected override string OnReadCondition()
         {
-            int prevCount = SQLDB.GetScalar("SELECT COUNT(*) FROM " + TableTemplateTable);
-            for (int i = prevCount; i < Count; i++)
-                SQLDB.Command("INSERT INTO " + TableTemplateTable + " () VALUES () ");
+            return SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId.ToString();
         }
-
         protected override void OnRead(SQLiteDataReader reader)
         {
-            if (Inputs == null) return;
-            base.AddRow(null, null);
-            //InputElements[Count - 1].Add(TextBox(Inputs[0] + Count, reader.GetString(3), Count, 1));
-            AddRangeToTable();
+            int latest = Count - 1;
+            //InputElements[latest].Add(TextBox(Inputs[0]+Count, reader.GetString(3), Count, 1));
+            //InputElements[latest].Add(TextBox(Inputs[1]+Count, reader.GetString(4), Count, 2));
         }
 
-        protected override void OnUpdate()
+        protected override string OnUpdateCountCondition()
         {
-            int prevCount = SQLDB.GetScalar("SELECT COUNT(*) FROM " + TableTemplateTable + " WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId);
-            if (Count > prevCount) // Add undercharge
-            {
-                for (int i = prevCount; i < Count; i++)
-                    SQLDB.Command("INSERT INTO " + TableTemplateTable + " (" + SQLDB.CurrentClass + "ID) VALUES (" + SQLDB.CurrentId + ");");
-            }
-            else if (Count < prevCount) // Delete overcharge
-            {
-                SQLDB.Command("DELETE FROM " + TableTemplateTable + " WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId + " AND ;");
-            }
-            for (int i = 0; i < Count; i++) // Update rows that are still intact
-                SQLDB.Command("UPDATE " + TableTemplateTable + " SET attr1 = @attr1" + i.ToString() + " WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId + " AND ;");
+            return SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId;
+        }
+        protected override string OnUpdateAddRow(int i)
+        {
+            return "(" + SQLDB.CurrentClass + "ID) VALUES (" + SQLDB.CurrentId + ");";
+        }
+        protected override string OnUpdateRemovedRowCondition()
+        {
+            return SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId + " AND ;";
+        }
+        protected override string OnUpdateRow(int i)
+        {
+            return "attr1 = @attr1" + i.ToString() + " WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId + " AND ;";
         }
     }
 }

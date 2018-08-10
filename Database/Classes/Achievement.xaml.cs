@@ -17,9 +17,6 @@ using Database.Utilities;
 
 namespace Database.Classes
 {
-    /// <summary>
-    /// Interaction logic for Achievement.xaml
-    /// </summary>
     public partial class Achievement : _ClassOperations
     {
         public Achievement()
@@ -63,7 +60,7 @@ namespace Database.Classes
         protected override void OnCreate()
         {
             Base.Create();
-            SQLCreate(new string[] { "Level, Hint, BaseObjectID", "@Level, @Hint, " + Base.ClassTemplateId });
+            SQLCreate("Level, Hint, BaseObjectID", "@Level, @Hint, " + Base.ClassTemplateId);
         }
 
         protected override void OnRead(SQLiteDataReader reader)

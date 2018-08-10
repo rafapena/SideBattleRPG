@@ -17,9 +17,6 @@ using Database.Utilities;
 
 namespace Database.Classes
 {
-    /// <summary>
-    /// Interaction logic for _GenericTemplate.xaml
-    /// </summary>
     public partial class _GenericClass : _ClassOperations
     {
         public _GenericClass()
@@ -62,9 +59,7 @@ namespace Database.Classes
         protected override void OnCreate()
         {
             Base.Create();
-            SQLCreate(new string[] {
-                "attr1, attr2, BaseObjectID",
-                "@attr1, @attr2, " + Base.ClassTemplateId.ToString() });
+            SQLCreate("attr1, attr2, BaseObjectID", "@attr1, @attr2, " + Base.ClassTemplateId.ToString());
         }
 
         protected override void OnRead(SQLiteDataReader reader)

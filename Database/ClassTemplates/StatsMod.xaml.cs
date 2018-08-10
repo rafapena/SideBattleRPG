@@ -17,9 +17,6 @@ using Database.Utilities;
 
 namespace Database.ClassTemplates
 {
-    /// <summary>
-    /// Interaction logic for _StatsMod.xaml
-    /// </summary>
     public partial class StatsMod : _ClassTemplateOperations
     {
         public StatsMod()
