@@ -45,11 +45,16 @@ namespace Database.ClassTemplates
         public abstract void Automate();
         public abstract string ValidateInputs();
         public abstract void ParameterizeInputs();
+        public void ParameterizeInput(string parameterized, string input)
+        {
+            SQLDB.Inputs.Add(new SQLiteParameter(parameterized, input));
+        }
 
 
         protected abstract string[] OnCreate();
         public void Create()
         {
+            SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
             string[] text = OnCreate();
             SQLDB.Command("INSERT INTO " + ClassTemplateTable + " (" + text[0] + ") VALUES (" + text[1] + ");");
@@ -82,6 +87,7 @@ namespace Database.ClassTemplates
         protected abstract string OnUpdate();
         public void Update()
         {
+            SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
             SQLDB.Command("UPDATE " + ClassTemplateTable + " SET " + OnUpdate() + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
             SQLDB.Inputs = null;

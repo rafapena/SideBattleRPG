@@ -50,10 +50,8 @@ namespace Database.Classes
 
         public override void ParameterizeInputs()
         {
-            SQLDB.Inputs = new SQLiteParameter[] {
-                //new SQLiteParameter("@attr1", attr1Input.Text),
-                //new SQLiteParameter("@attr2", attr2Input.Text)
-            };
+            //ParamterizeInput("@attr1", attr1Input.Text);
+            //ParamterizeInput("@attr2", attr2Input.Text);
         }
 
         protected override void OnCreate()

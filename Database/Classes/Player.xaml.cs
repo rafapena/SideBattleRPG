@@ -50,15 +50,13 @@ namespace Database.Classes
             return err;
         }
 
-        public override void ParameterizeInputs()
-        {
-            SQLDB.Inputs = null;
-        }
+        public override void ParameterizeInputs() { }
 
         protected override void OnCreate()
         {
             Base.Create();
             NatStats.Create();
+            //Rates.Create();
             SQLCreate("BaseObjectID, NaturalStats", Base.ClassTemplateId.ToString() + ", " + NatStats.ClassTemplateId.ToString());
         }
 

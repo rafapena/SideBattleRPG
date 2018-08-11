@@ -54,8 +54,8 @@ namespace Database.TableTemplates
 
         protected override void OnParameterizeInputs(int i)
         {
-            //SQLDB.Inputs[i] = new SQLiteParameter("@attr1" + i, ((TextBox)InputElements[i][0]).Text);
-            //SQLDB.Inputs[i+1] = new SQLiteParameter("@attr2" + i, ((TextBox)InputElements[i][1]).Text);
+            //ParameterizeInputs("@attr1" + i, ((TextBox)InputElements[i][0]).Text);
+            //ParameterizeInputs("@attr2" + i, ((TextBox)InputElements[i][1]).Text);
         }
 
         protected override void OnRead(SQLiteDataReader reader)

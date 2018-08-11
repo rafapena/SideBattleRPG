@@ -12,7 +12,7 @@ namespace Database.Utilities
 {
     public static class SQLDB
     {
-        public static SQLiteParameter[] Inputs { get; set; }
+        public static List<SQLiteParameter> Inputs { get; set; }
         public static string CurrentClass { get; set; }
         public static string CurrentTable { get; set; }
         public static int CurrentId { get; set; }
@@ -37,7 +37,7 @@ namespace Database.Utilities
                 {
                     try
                     {
-                        if (Inputs != null && Inputs.Length > 0) comm.Parameters.AddRange(Inputs);
+                        if (Inputs != null && Inputs.Count > 0) comm.Parameters.AddRange(Inputs.ToArray());
                         comm.CommandType = CommandType.Text;
                         comm.ExecuteNonQuery();
                     }

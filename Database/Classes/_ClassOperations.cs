@@ -38,6 +38,10 @@ namespace Database.Classes
         public abstract void Automate();
         public abstract string ValidateInputs();
         public abstract void ParameterizeInputs();
+        public void ParameterizeInput(string parameterized, string input)
+        {
+            SQLDB.Inputs.Add(new SQLiteParameter(parameterized, input));
+        }
 
 
         protected abstract void OnCreate();
@@ -55,6 +59,7 @@ namespace Database.Classes
         }
         protected void SQLCreate(string attributes, string inputs)
         {
+            SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
             SQLDB.Command("INSERT INTO " + SQLDB.CurrentTable + " (" + attributes + ") VALUES (" + inputs + ");");
             SQLDB.Inputs = null;
@@ -93,6 +98,7 @@ namespace Database.Classes
         }
         protected void SQLUpdate(string input)
         {
+            SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
             SQLDB.Command("UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString() + ";");
             SQLDB.Inputs = null;

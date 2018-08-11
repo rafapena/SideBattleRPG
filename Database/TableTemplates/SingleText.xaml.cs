@@ -54,7 +54,7 @@ namespace Database.TableTemplates
 
         protected override void OnParameterizeInputs(int i)
         {
-            SQLDB.Inputs[i] = new SQLiteParameter("@Name"+i, ((TextBox)InputElements[i][0]).Text);
+            ParameterizeInput("@Name" + i, ((TextBox)InputElements[i][0]).Text);
         }
 
         

@@ -39,6 +39,10 @@ namespace Database.ClassesUnstructured
         public abstract void Automate();
         public abstract string ValidateInputs();
         public abstract void ParameterizeInputs();
+        public void ParameterizeInput(string parameterized, string input)
+        {
+            SQLDB.Inputs.Add(new SQLiteParameter(parameterized, input));
+        }
 
 
         protected abstract void OnCreate();

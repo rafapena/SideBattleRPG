@@ -12,6 +12,7 @@ namespace Database.Utilities
         void Automate();
         string ValidateInputs();
         void ParameterizeInputs();
+        void ParameterizeInput(string parameterized, string input);
         void Create();
         void Read();
         void Update();

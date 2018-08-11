@@ -51,11 +51,8 @@ namespace Database.ClassTemplates
 
         public override void ParameterizeInputs()
         {
-            SQLDB.Inputs = new SQLiteParameter[]
-            {
-                new SQLiteParameter("@Name", NameInput.Text),
-                new SQLiteParameter("@Description", DescriptionInput.Text)
-            };
+            ParameterizeInput("@Name", NameInput.Text);
+            ParameterizeInput("@Description", DescriptionInput.Text);
         }
 
         protected override string[] OnCreate()

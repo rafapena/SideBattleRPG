@@ -20,7 +20,8 @@ namespace Database.TableTemplates
 {
     public partial class SingleComboBox : _TableTemplateOperations
     {
-        private List<String> OptionsList { get; set; }
+        private List<int> OptionsListIds { get; set; }
+        private List<string> OptionsListNames { get; set; }
 
         public SingleComboBox()
         {
@@ -29,7 +30,7 @@ namespace Database.TableTemplates
 
         protected override void OnAddRow()
         {
-            InputElements[Count - 1].Add(TextBox(Inputs[0] + Count, "", Count, 1));
+            InputElements[Count - 1].Add(ComboBox(TableTemplateTable, OptionsListNames, 0, Count, 0));
         }
 
         protected override void OnInitializeNew()
@@ -37,6 +38,8 @@ namespace Database.TableTemplates
             Title.Text = TableTitle;
             Table = TableList;
             Scroller.Height = ScrollerHeight;
+            //OptionsListIds = ;
+            //OptionsListNames = ;
         }
 
         protected override void OnAutomate(int i) { }
@@ -53,9 +56,11 @@ namespace Database.TableTemplates
         }
         protected override void OnParameterizeInputs(int i) { }
 
+
         protected override void OnRead(SQLiteDataReader reader)
         {
-            InputElements[Count - 1].Add(TextBox(Inputs[0]+Count, reader.GetString(3), Count, 1));
+            int landingIndex = 0;  // Something to do with 'reader'
+            InputElements[Count - 1].Add(ComboBox(TableTemplateTable, OptionsListNames, landingIndex, Count, 0));
         }
 
         protected override string[] OnUpdateAddRow(int i)

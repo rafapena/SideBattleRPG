@@ -103,8 +103,7 @@ namespace Database.TableTemplates
             TableSetup(Table, ColumnNames);
             Read();
         }
-        // Use the function above instead
-        public virtual void InitializeNew() {}
+        public virtual void InitializeNew() { }     // Use the function above instead
 
 
         protected abstract void OnAutomate(int i);
@@ -125,13 +124,17 @@ namespace Database.TableTemplates
         public void ParameterizeInputs()
         {
             int size = Count * Inputs.Count;
-            SQLDB.Inputs = new SQLiteParameter[size];
             for (int i = 0; i < size; i += Inputs.Count) OnParameterizeInputs(i);
+        }
+        public void ParameterizeInput(string parameterized, string input)
+        {
+            SQLDB.Inputs.Add(new SQLiteParameter(parameterized, input));
         }
 
 
         public void Create()
         {
+            SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
             CreateRows(0);
             SQLDB.Inputs = null;
@@ -178,9 +181,9 @@ namespace Database.TableTemplates
         protected abstract string[] OnUpdateAddRow(int i);
         protected abstract string OnUpdateRemovedRowCondition();
         protected abstract string[] OnUpdateRow(int i);
-
         public void Update()
         {
+            SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
             int prevCount = SQLDB.GetScalar("SELECT COUNT(*) FROM " + TableTemplateTable + " WHERE " + OnUpdateCountCondition());
             if (Count > prevCount) CreateRows(prevCount);
@@ -198,9 +201,8 @@ namespace Database.TableTemplates
         {
             SQLDB.Command("DELETE FROM " + TableTemplateTable + " WHERE " + SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId + ";");
         }
-
-
-        // Not needed: No ID to keep track of and is only implemented here (Create() from ClassOperations handles everything)
+        
+        // Not needed: No ID to keep track of and is only implemented here (Create() and OnUpdateAddRow handle everything)
         public void Clone() { }
     }
 }
