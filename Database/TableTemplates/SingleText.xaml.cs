@@ -58,9 +58,9 @@ namespace Database.TableTemplates
         }
 
         
-        protected override string OnReadCondition()
+        protected override string[] OnReadCommands()
         {
-            return "ListType = '" + TableTitle + "' ORDER BY List_ID ASC";
+            return new string[] { TableTemplateTable, "ListType = '" + TableTitle + "' ORDER BY List_ID ASC" };
         }
         protected override void OnRead(SQLiteDataReader reader)
         {

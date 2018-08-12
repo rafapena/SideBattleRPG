@@ -17,16 +17,19 @@ namespace Database.Utilities
         public static string CurrentTable { get; set; }
         public static int CurrentId { get; set; }
 
+
         public static SQLiteConnection DB()
         {
             return new SQLiteConnection(@"data source=C:\Users\User\GC_RPG_DB.db; Version=3; foreign keys=true;");
         }
+
 
         public static SQLiteDataReader Retrieve(string sqlCommand, SQLiteConnection currentTransaction)
         {
             SQLiteCommand command = new SQLiteCommand(sqlCommand, currentTransaction);
             return command.ExecuteReader();
         }
+
 
         public static void Command(string sqlCommand)
         {
@@ -47,6 +50,7 @@ namespace Database.Utilities
             }
         }
 
+
         public static int GetScalar(string sqlCommand)
         {
             int val = 0;
@@ -62,6 +66,7 @@ namespace Database.Utilities
             }
             return val;
         }
+
 
         public static int GetMaxIdFromTable(string table, string type)
         {

@@ -27,11 +27,10 @@ namespace Database.ClassesUnstructured
         protected override void OnInitializeNew()
         {
             List<string> columnNames = new List<string> { "Name" };
-            List<string> inputs = new List<string> { "Name" };
-            Elements.InitializeNew("TypesLists", "Elements", columnNames, inputs, 200);
-            WeaponTypes.InitializeNew("TypesLists", "Weapon Types", columnNames, inputs, 200);
-            SkillTypes.InitializeNew("TypesLists", "Skill Types", columnNames, inputs, 200);
-            ToolFormulas.InitializeNew("TypesLists", "Tool Formulas", columnNames, inputs, 200);
+            Elements.InitializeNew("", "TypesLists", "Elements", columnNames, 200);
+            WeaponTypes.InitializeNew("", "TypesLists", "Weapon Types", columnNames, 200);
+            SkillTypes.InitializeNew("", "TypesLists", "Skill Types", columnNames, 200);
+            ToolFormulas.InitializeNew("", "TypesLists", "Tool Formulas", columnNames, 200);
         }
 
         private void Automated(object sender, RoutedEventArgs e)

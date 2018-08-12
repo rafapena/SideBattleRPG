@@ -11,14 +11,21 @@
         <StackPanel Margin="5 5 5 5">
 
             <TextBlock x:Name="Title" Height="20" Margin="0 0 0 2" HorizontalAlignment="Left"/>
-            <Button Content="Add" Click="AddRow" Background="#afa" Width="50" Height="20" HorizontalAlignment="Left"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button Content="Add" Click="AddRow" Background="#afa" Width="50" Height="20"/>
+                <Button Content="Remove" Click="RemoveRow" Background="#faa" Width="50" Height="20"/>
+            </StackPanel>
+
             <ScrollViewer x:Name="Scroller" Margin="0 5 0 0">
                 <Grid x:Name="TableList" ScrollViewer.CanContentScroll="True" VerticalAlignment="Top">
-                    <!--<Grid.Resources>
+                    <Grid.Resources>
                         <Style TargetType="TextBox">
                             <Setter Property="HorizontalAlignment" Value="Left"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Width" Value="70"/>
+                            <Setter Property="Margin" Value="2 0 0 0"/>
                         </Style>
-                    </Grid.Resources>-->
+                    </Grid.Resources>
                 </Grid>
             </ScrollViewer>
 

@@ -29,7 +29,7 @@ namespace Database.TableTemplates
         {
             int latest = Count - 1;
             //InputElements[latest].Add(TextBox(Inputs[0] + Count, "", Count, 1));
-            //InputElements[latest].Add(TextBox(Inputs[1] + Count, "", Count, 1));
+            //InputElements[latest].Add(TextBox(Inputs[1] + Count, "", Count, 2));
         }
 
         protected override void OnInitializeNew()

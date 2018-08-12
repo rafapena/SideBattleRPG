@@ -23,6 +23,13 @@
                             <template:BaseObject x:Name="Base" Margin="5,5,5,5"/>
                         </TabItem>
 
+                        <TabItem Header="Classes and Skills">
+                            <StackPanel Orientation="Horizontal">
+                                <tables:SingleComboBox x:Name="ClassChoices" Margin="5,5,5,5"/>
+                                <!--<tables:ComboBoxNum x:Name="NatStats" Margin="5,5,5,5"/>-->
+                            </StackPanel>
+                        </TabItem>
+
                         <TabItem Header="Rates">
                             <!--<tables:ClassWithNum x:Name="Rates" Margin="5,5,5,5"/>-->
                         </TabItem>

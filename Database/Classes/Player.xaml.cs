@@ -31,6 +31,7 @@ namespace Database.Classes
         {
             Base.InitializeNew();
             NatStats.InitializeNew();
+            ClassChoices.InitializeNew("Class", "Players_To_Classes", "Possible Classes", new List<string> { "Class" });
             //Rates.InitializeNew();
             NatStats.CustomName = "NaturalStats";
         }
@@ -39,6 +40,7 @@ namespace Database.Classes
         {
             Base.Automate();
             NatStats.Automate();
+            ClassChoices.Automate();
             //Rates.Automate();
         }
 
@@ -46,6 +48,7 @@ namespace Database.Classes
         {
             string err = Base.ValidateInputs();
             err += NatStats.ValidateInputs();
+            err += ClassChoices.ValidateInputs();
             //err += Rates.ValidateInputs();
             return err;
         }
@@ -56,14 +59,16 @@ namespace Database.Classes
         {
             Base.Create();
             NatStats.Create();
-            //Rates.Create();
             SQLCreate("BaseObjectID, NaturalStats", Base.ClassTemplateId.ToString() + ", " + NatStats.ClassTemplateId.ToString());
+            ClassChoices.Create();
+            //Rates.Create();
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
             Base.Read(reader);
             NatStats.Read(reader);
+            ClassChoices.Read();
             //Rates.Read(reader);
         }
 
@@ -71,6 +76,7 @@ namespace Database.Classes
         {
             Base.Update();
             NatStats.Update();
+            ClassChoices.Update();
             //Rates.Update();
         }
 
@@ -78,6 +84,7 @@ namespace Database.Classes
         {
             Base.Delete();
             NatStats.Delete();
+            ClassChoices.Delete();
             //Rates.Delete();
         }
 
@@ -85,6 +92,7 @@ namespace Database.Classes
         {
             Base.Clone();
             NatStats.Clone();
+            ClassChoices.Clone();
             //Rates.Clone();
         }
     }

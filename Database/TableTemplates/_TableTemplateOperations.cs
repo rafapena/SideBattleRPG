@@ -32,11 +32,12 @@ namespace Database.TableTemplates
         public List<string> Inputs { get; set; }
         public List<List<UIElement>> InputElements { get; set; }
 
-        public string TableTitle { get; protected set; }
-        public int ScrollerHeight { get; protected set; }
-        public int Count { get; set; }
-
-        protected string TableTemplateTable { get; set; }
+        public string TableTitle { get; private set; }
+        public string TargetClass { get; private set; }
+        public string TargetTable { get; private set; }
+        public string TableTemplateTable { get; private set; }
+        public int ScrollerHeight { get; private set; }
+        public int Count { get; private set; }
 
 
         protected abstract void OnAddRow();
@@ -84,10 +85,13 @@ namespace Database.TableTemplates
         }
 
         protected abstract void OnInitializeNew();
-        public void InitializeNew(string tableName, string title,
-            List<string> columnNames=null, List<string> inputs = null, int scrollerHeight=100)
+        public void InitializeNew(string targetClass, string hostAndTargetTable, string title,
+            List<string> columnNames=null, int scrollerHeight=100)
         {
-            TableTemplateTable = tableName;
+            TargetClass = targetClass;
+            TableTemplateTable = hostAndTargetTable;
+            string[] toGetTable = hostAndTargetTable.Split('_');
+            TargetTable = toGetTable.Length > 2 ? toGetTable[2] : "";
             TableTitle = title;
             ScrollerHeight = scrollerHeight;
             if (columnNames != null && columnNames.Count > 0)
@@ -96,7 +100,7 @@ namespace Database.TableTemplates
                 ColumnNames.Add("#");
                 ColumnNames.AddRange(columnNames);
             }
-            Inputs = inputs;
+            Inputs = columnNames;
             InputElements = new List<List<UIElement>>();
             Count = 0;
             OnInitializeNew();
@@ -116,7 +120,11 @@ namespace Database.TableTemplates
         public string ValidateInputs()
         {
             string err = "";
-            for (int i = 0; i < Count; i++) err += OnValidateInputs(i);
+            for (int i = 0; i < Count; i++)
+            {
+                err += OnValidateInputs(i);
+                if (err != "") break;
+            }
             return err;
         }
 
@@ -149,9 +157,12 @@ namespace Database.TableTemplates
         }
 
 
-        protected virtual string OnReadCondition()
+        protected virtual string[] OnReadCommands()
         {
-            return SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId.ToString();
+            return new string[] {
+                TableTemplateTable + " JOIN  BaseObjects JOIN " + TargetTable,
+                TargetClass + "_ID = " + TargetClass + "ID AND BaseObject_ID = BaseObjectID ORDER BY BaseObject_ID"
+            };
         }
         protected abstract void OnRead(SQLiteDataReader reader);
         public void Read()
@@ -160,7 +171,8 @@ namespace Database.TableTemplates
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + TableTemplateTable + " WHERE " + OnReadCondition(), conn))
+                string[] readStr = OnReadCommands();
+                using (var reader = SQLDB.Retrieve("SELECT * FROM " + readStr[0] + " WHERE " + readStr[1] + ";", conn))
                 {
                     while (reader.Read())
                     {
@@ -185,14 +197,16 @@ namespace Database.TableTemplates
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
-            int prevCount = SQLDB.GetScalar("SELECT COUNT(*) FROM " + TableTemplateTable + " WHERE " + OnUpdateCountCondition());
+            /*int prevCount = SQLDB.GetScalar("SELECT COUNT(*) FROM " + TableTemplateTable + " WHERE " + OnUpdateCountCondition());
             if (Count > prevCount) CreateRows(prevCount);
             if (Count < prevCount) SQLDB.Command("DELETE FROM " + TableTemplateTable + " WHERE " + OnUpdateRemovedRowCondition());
             for (int i = 0; i < Count; i++)
             {
                 string[] str = OnUpdateRow(i);
                 SQLDB.Command("UPDATE " + TableTemplateTable + " SET " + str[0] + " WHERE " + str[1]);
-            }
+            }*/
+            SQLDB.Command("DELETE FROM " + TableTemplateTable + " WHERE " + OnUpdateRemovedRowCondition());
+            CreateRows(0);
             SQLDB.Inputs = null;
         }
 
@@ -204,5 +218,28 @@ namespace Database.TableTemplates
         
         // Not needed: No ID to keep track of and is only implemented here (Create() and OnUpdateAddRow handle everything)
         public void Clone() { }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Other functions --
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public static List<string> getFromQuery(string table, string attribute)
+        {
+            List<string> list = new List<string>();
+            using (var conn = SQLDB.DB())
+            {
+                conn.Open();
+                using (var reader = SQLDB.Retrieve(
+                    "SELECT * FROM BaseObjects JOIN " + table + " " +
+                    "WHERE BaseObject_ID = BaseObjectID ORDER BY BaseObject_ID ASC;",
+                    conn))
+                {
+                    while (reader.Read()) list.Add(reader[attribute].ToString());
+                }
+                conn.Close();
+            }
+            return list;
+        }
     }
 }

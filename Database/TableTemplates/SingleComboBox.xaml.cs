@@ -20,7 +20,8 @@ namespace Database.TableTemplates
 {
     public partial class SingleComboBox : _TableTemplateOperations
     {
-        private List<int> OptionsListIds { get; set; }
+        private List<string> SelectedIds { get; set; }
+        private List<string> OptionsListIds { get; set; }
         private List<string> OptionsListNames { get; set; }
 
         public SingleComboBox()
@@ -30,7 +31,9 @@ namespace Database.TableTemplates
 
         protected override void OnAddRow()
         {
-            InputElements[Count - 1].Add(ComboBox(TableTemplateTable, OptionsListNames, 0, Count, 0));
+            string name = TableTemplateTable + "_" + SelectedIds.Count;
+            InputElements[Count - 1].Add(ComboBox(name, OptionsListNames, 0, Count, 1, UpdateSelectedIds));
+            SelectedIds.Add(OptionsListIds[0]);
         }
 
         protected override void OnInitializeNew()
@@ -38,18 +41,19 @@ namespace Database.TableTemplates
             Title.Text = TableTitle;
             Table = TableList;
             Scroller.Height = ScrollerHeight;
-            //OptionsListIds = ;
-            //OptionsListNames = ;
+            SelectedIds = new List<string>();
+            OptionsListIds = getFromQuery(TargetTable, "BaseObject_ID");
+            OptionsListNames = getFromQuery(TargetTable, "Name");
         }
 
         protected override void OnAutomate(int i) { }
         protected override string OnValidateInputs(int i)
         {
             string err = "";
-            for (int j = i; j < Count; j++)
+            for (int j = i+1; j < Count; j++)
             {
-                //if () continue;
-                //err += ;
+                if (SelectedIds[i] != SelectedIds[j]) continue;
+                err += "All rows in " + Title.Text + " must be unique";
                 break;
             }
             return err;
@@ -59,13 +63,17 @@ namespace Database.TableTemplates
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            int landingIndex = 0;  // Something to do with 'reader'
-            InputElements[Count - 1].Add(ComboBox(TableTemplateTable, OptionsListNames, landingIndex, Count, 0));
+            int landingIndex = Convert.ToInt32( OptionsListIds.FindIndex(a => a == reader["BaseObject_ID"].ToString()) );
+            string name = TableTemplateTable + "_" + SelectedIds.Count;
+            InputElements[Count - 1].Add(ComboBox(name, OptionsListNames, landingIndex, Count, 1, UpdateSelectedIds));
+            SelectedIds.Add(OptionsListIds[landingIndex]);
         }
 
         protected override string[] OnUpdateAddRow(int i)
         {
-            return new string[] { SQLDB.CurrentClass + "ID", SQLDB.CurrentId.ToString() };
+            return new string[] {
+                SQLDB.CurrentClass + "ID, " + TargetClass + "ID",
+                SQLDB.CurrentId.ToString() + ", " + SelectedIds[i] };
         }
         protected override string OnUpdateRemovedRowCondition()
         {
@@ -73,8 +81,16 @@ namespace Database.TableTemplates
         }
         protected override string[] OnUpdateRow(int i)
         {
-            return new string[] { "attr1 = @attr1" + i.ToString(),
-                SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId.ToString() };
+            return new string[] {
+                TargetClass + "ID = " + SelectedIds[i],
+                SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId.ToString() + " AND " + TargetClass + "ID = " + OptionsListIds[i] };
+        }
+
+
+        private void UpdateSelectedIds(object sender, EventArgs e)
+        {
+            int getIdThroughName = Convert.ToInt32( ((ComboBox)sender).Name.Split('_').Last() );
+            SelectedIds[getIdThroughName] = OptionsListIds[((ComboBox)sender).SelectedIndex];
         }
     }
 }
