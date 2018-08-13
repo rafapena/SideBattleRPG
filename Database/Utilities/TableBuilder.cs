@@ -21,24 +21,23 @@ namespace Database.Utilities
     {
         public delegate void Function(object sender, RoutedEventArgs e);
 
-        public static bool TableSetup(Grid targetGrid, List<string> columns=null)
+        public static bool TableSetup(Grid targetGrid, List<string> columnNames=null)
         {
-            //Grid setup
             if (targetGrid == null) return false;
             targetGrid.Children.Clear();
             targetGrid.RowDefinitions.Clear();
             targetGrid.ColumnDefinitions.Clear();
-            if (columns != null && columns.Count > 0)
+            if (columnNames != null && columnNames.Count > 0)
             {
-                for (int i = 0; i < columns.Count; i++)
+                for (int i = 0; i < columnNames.Count; i++)
                 {
                     targetGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                    TextBlock t = TextBlock(columns[i], 0, i);
+                    TextBlock t = TextBlock(columnNames[i], 0, i);
                     t.Margin = Margin(2,2,2,2);
                     t.HorizontalAlignment = HorizontalAlignment.Center;
                     targetGrid.Children.Add(t);
                 }
-                targetGrid.Children.Add(Border("#0000000", 1, 0, 0, 1, columns.Count));
+                targetGrid.Children.Add(Border("#0000000", 1, 0, 0, 1, columnNames.Count));
                 targetGrid.RowDefinitions.Add(new RowDefinition());
             }
             else targetGrid.ColumnDefinitions.Add(new ColumnDefinition());

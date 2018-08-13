@@ -33,6 +33,8 @@ namespace Database.ClassTemplates
         public int ClassTemplateId { get; protected set; }
 
 
+        protected virtual void SetupTableData() { }
+
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {

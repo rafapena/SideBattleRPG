@@ -27,12 +27,17 @@ namespace Database.Classes
             InitializeNew();
         }
 
+        protected void SetupTables()
+        {
+            ClassChoices.SetupTableData("Class", "Players_To_Classes", "Possible Classes", new List<string> { "Class" });
+            //Rates.InitializeNew();
+        }
+
         protected override void OnInitializeNew()
         {
+            SetupTables();
             Base.InitializeNew();
             NatStats.InitializeNew();
-            ClassChoices.InitializeNew("Class", "Players_To_Classes", "Possible Classes", new List<string> { "Class" });
-            //Rates.InitializeNew();
             NatStats.CustomName = "NaturalStats";
         }
 
@@ -66,6 +71,7 @@ namespace Database.Classes
 
         protected override void OnRead(SQLiteDataReader reader)
         {
+            SetupTables();
             Base.Read(reader);
             NatStats.Read(reader);
             ClassChoices.Read();

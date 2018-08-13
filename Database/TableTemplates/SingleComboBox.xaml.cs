@@ -31,8 +31,7 @@ namespace Database.TableTemplates
 
         protected override void OnAddRow()
         {
-            string name = TableTemplateTable + "_" + SelectedIds.Count;
-            InputElements[Count - 1].Add(ComboBox(name, OptionsListNames, 0, Count, 1, UpdateSelectedIds));
+            Elements[Count - 1].Add(ComboBox("CB_" + SelectedIds.Count, OptionsListNames, 0, Count, 1, UpdateSelectedIds));
             SelectedIds.Add(OptionsListIds[0]);
         }
 
@@ -42,8 +41,8 @@ namespace Database.TableTemplates
             Table = TableList;
             Scroller.Height = ScrollerHeight;
             SelectedIds = new List<string>();
-            OptionsListIds = getFromQuery(TargetTable, "BaseObject_ID");
-            OptionsListNames = getFromQuery(TargetTable, "Name");
+            OptionsListIds = getFromQuery(TargetDBTable, "BaseObject_ID");
+            OptionsListNames = getFromQuery(TargetDBTable, "Name");
         }
 
         protected override void OnAutomate(int i) { }
@@ -60,30 +59,18 @@ namespace Database.TableTemplates
         }
         protected override void OnParameterizeInputs(int i) { }
 
-
-        protected override void OnRead(SQLiteDataReader reader)
-        {
-            int landingIndex = Convert.ToInt32( OptionsListIds.FindIndex(a => a == reader["BaseObject_ID"].ToString()) );
-            string name = TableTemplateTable + "_" + SelectedIds.Count;
-            InputElements[Count - 1].Add(ComboBox(name, OptionsListNames, landingIndex, Count, 1, UpdateSelectedIds));
-            SelectedIds.Add(OptionsListIds[landingIndex]);
-        }
-
-        protected override string[] OnUpdateAddRow(int i)
+        protected override string[] OnCreate(int i)
         {
             return new string[] {
                 SQLDB.CurrentClass + "ID, " + TargetClass + "ID",
                 SQLDB.CurrentId.ToString() + ", " + SelectedIds[i] };
         }
-        protected override string OnUpdateRemovedRowCondition()
+
+        protected override void OnRead(SQLiteDataReader reader)
         {
-            return SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId.ToString();
-        }
-        protected override string[] OnUpdateRow(int i)
-        {
-            return new string[] {
-                TargetClass + "ID = " + SelectedIds[i],
-                SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId.ToString() + " AND " + TargetClass + "ID = " + OptionsListIds[i] };
+            int landingIndex = Convert.ToInt32( OptionsListIds.FindIndex(a => a == reader["BaseObject_ID"].ToString()) );
+            Elements[Count - 1].Add(ComboBox("CB_" + SelectedIds.Count, OptionsListNames, landingIndex, Count, 1, UpdateSelectedIds));
+            SelectedIds.Add(OptionsListIds[landingIndex]);
         }
 
 

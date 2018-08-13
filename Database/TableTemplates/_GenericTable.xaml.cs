@@ -27,9 +27,8 @@ namespace Database.TableTemplates
 
         protected override void OnAddRow()
         {
-            int latest = Count - 1;
-            //InputElements[latest].Add(TextBox(Inputs[0] + Count, "", Count, 1));
-            //InputElements[latest].Add(TextBox(Inputs[1] + Count, "", Count, 2));
+            //InputElements[Count - 1].Add(TextBox("TB_" + Count, "", Count, 1));
+            //InputElements[Count - 1].Add(TextBox("TB_" + Count, "", Count, 2));
         }
 
         protected override void OnInitializeNew()
@@ -48,7 +47,7 @@ namespace Database.TableTemplates
         protected override string OnValidateInputs(int i)
         {
             string err = "";
-            if (Utils.CutSpaces(((TextBox)InputElements[i][0]).Text) == "") err += "Inputs in " + TableTitle + " cannot be empty\n";
+            if (Utils.CutSpaces(((TextBox)Elements[i][0]).Text) == "") err += "Inputs in " + TableTitle + " cannot be empty\n";
             return err;
         }
 
@@ -58,25 +57,15 @@ namespace Database.TableTemplates
             //ParameterizeInputs("@attr2" + i, ((TextBox)InputElements[i][1]).Text);
         }
 
-        protected override void OnRead(SQLiteDataReader reader)
-        {
-            int latest = Count - 1;
-            //InputElements[latest].Add(TextBox(Inputs[0]+Count, reader.GetString(3), Count, 1));
-            //InputElements[latest].Add(TextBox(Inputs[1]+Count, reader.GetString(4), Count, 2));
-        }
-
-        protected override string[] OnUpdateAddRow(int i)
+        protected override string[] OnCreate(int i)
         {
             return new string[] { SQLDB.CurrentClass + "ID", SQLDB.CurrentId.ToString() };
         }
-        protected override string OnUpdateRemovedRowCondition()
+
+        protected override void OnRead(SQLiteDataReader reader)
         {
-            return SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId.ToString();
-        }
-        protected override string[] OnUpdateRow(int i)
-        {
-            return new string[] { "attr1 = @attr1" + i.ToString(),
-                SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId.ToString() };
+            //InputElements[Count - 1].Add(TextBox("TB_" + Count, reader.GetString(3), Count, 1));
+            //InputElements[Count - 1].Add(TextBox("TB_" + Count, reader.GetString(4), Count, 2));
         }
     }
 }

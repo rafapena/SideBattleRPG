@@ -27,6 +27,12 @@ namespace Database.Classes
             InitializeNew();
         }
 
+        protected override void SetupTableData()
+        {
+            //table1.SetupTableData();
+            //table2.SetupTableData();
+        }
+
         protected override void OnInitializeNew()
         {
             Base.InitializeNew();

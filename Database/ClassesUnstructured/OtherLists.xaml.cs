@@ -23,14 +23,27 @@ namespace Database.ClassesUnstructured
             InitializeComponent();
             InitializeNew();
         }
+        
+        public void SetupTables()
+        {
+            List<string> columnNames = new List<string> { "Name" };
+            Elements.SetupTableData("", "TypesLists", "Elements", columnNames, 200);
+            WeaponTypes.SetupTableData("", "TypesLists", "Weapon Types", columnNames, 200);
+            SkillTypes.SetupTableData("", "TypesLists", "Skill Types", columnNames, 200);
+            ToolFormulas.SetupTableData("", "TypesLists", "Tool Formulas", columnNames, 200);
+        }
 
         protected override void OnInitializeNew()
         {
-            List<string> columnNames = new List<string> { "Name" };
-            Elements.InitializeNew("", "TypesLists", "Elements", columnNames, 200);
-            WeaponTypes.InitializeNew("", "TypesLists", "Weapon Types", columnNames, 200);
-            SkillTypes.InitializeNew("", "TypesLists", "Skill Types", columnNames, 200);
-            ToolFormulas.InitializeNew("", "TypesLists", "Tool Formulas", columnNames, 200);
+            SetupTables();
+            Elements.InitializeNew();
+            WeaponTypes.InitializeNew();
+            SkillTypes.InitializeNew();
+            ToolFormulas.InitializeNew();
+            Elements.Read();
+            WeaponTypes.Read();
+            SkillTypes.Read();
+            ToolFormulas.Read();
         }
 
         private void Automated(object sender, RoutedEventArgs e)

@@ -24,6 +24,8 @@ namespace Database.Classes
         public Footer LinkedFooter { get; set; }
 
 
+        protected virtual void SetupTableData() { }
+
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {

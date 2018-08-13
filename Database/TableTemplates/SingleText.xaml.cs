@@ -27,7 +27,7 @@ namespace Database.TableTemplates
 
         protected override void OnAddRow()
         {
-            InputElements[Count - 1].Add(TextBox(Inputs[0] + Count, "", Count, 1));
+            Elements[Count - 1].Add(TextBox("TB_" + Count, "", Count, 1));
         }
         
         protected override void OnInitializeNew()
@@ -39,13 +39,13 @@ namespace Database.TableTemplates
 
         protected override void OnAutomate(int i)
         {
-            string text = Utils.CutSpaces(((TextBox)InputElements[i][0]).Text);
-            if (text == "") ((TextBox)InputElements[i][0]).Text = (i + Count*2).ToString();
+            string text = Utils.CutSpaces(((TextBox)Elements[i][0]).Text);
+            if (text == "") ((TextBox)Elements[i][0]).Text = (i + Count*2).ToString();
         }
 
         protected override string OnValidateInputs(int i)
         {
-            string input = ((TextBox)InputElements[i][0]).Text;
+            string input = ((TextBox)Elements[i][1]).Text;
             string text = "";
             if (Utils.CutSpaces(input) == "") text += "Inputs in " + TableTitle + " cannot be empty\n";
             if (input.Length >= 20) text += "Inputs must have 20 characters or less";
@@ -54,36 +54,28 @@ namespace Database.TableTemplates
 
         protected override void OnParameterizeInputs(int i)
         {
-            ParameterizeInput("@Name" + i, ((TextBox)InputElements[i][0]).Text);
+            ParameterizeInput("@Name" + i, ((TextBox)Elements[i][1]).Text);
         }
 
-        
-        protected override string[] OnReadCommands()
-        {
-            return new string[] { TableTemplateTable, "ListType = '" + TableTitle + "' ORDER BY List_ID ASC" };
-        }
-        protected override void OnRead(SQLiteDataReader reader)
-        {
-            InputElements[Count - 1].Add(TextBox(Inputs[0] + Count, reader.GetString(2), Count, 1));
-        }
-
-        protected override string OnUpdateCountCondition()
-        {
-            return "ListType = '" + TableTitle + "'";
-        }
-        protected override string[] OnUpdateAddRow(int i)
+        protected override string[] OnCreate(int i)
         {
             return new string[] { "ListType, List_ID, Name",
                 "'" + TableTitle + "', " + i.ToString() + ", @Name" + i.ToString() };
         }
-        protected override string OnUpdateRemovedRowCondition()
+
+        protected override string[] OnReadCommands()
         {
-            return "ListType = '" + TableTitle + "' AND List_ID >= " + Count.ToString() + ";";
+            return new string[] { TableTemplateDBTable, "ListType = '" + TableTitle + "' ORDER BY List_ID ASC" };
         }
-        protected override string[] OnUpdateRow(int i)
+        protected override void OnRead(SQLiteDataReader reader)
         {
-            return new string[] { "Name = @Name" + i.ToString(),
-                "ListType = '" + TableTitle + "' AND List_ID = " + i.ToString() };
+            Elements[Count - 1].Add(TextBox("TB_" + Count, reader.GetString(2), Count, 1));
+        }
+
+
+        protected override string DeleteCondition()
+        {
+            return "ListType = '" + TableTitle + "'";
         }
     }
 }

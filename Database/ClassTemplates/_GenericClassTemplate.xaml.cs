@@ -26,6 +26,12 @@ namespace Database.ClassTemplates
             ClassTemplateType = "_GenericClassTemplate";
         }
 
+        protected override void SetupTableData()
+        {
+            //table1.SetupTableData();
+            //table2.SetupTableData();
+        }
+
         protected override void OnInitializeNew()
         {
             //attr1Input.Text = "";

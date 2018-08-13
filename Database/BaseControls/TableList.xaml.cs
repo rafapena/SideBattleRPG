@@ -49,7 +49,7 @@ namespace Database.BaseControls
                 string query =
                     "SELECT * FROM BaseObjects JOIN " + SQLDB.CurrentTable + " " +
                     "WHERE BaseObject_ID = BaseObjectID " +
-                    "ORDER BY BaseObject_ID ASC";
+                    "ORDER BY Name ASC";
                 using (SQLiteDataReader reader = SQLDB.Retrieve(query, conn))
                 {
                     if (keepHighlightedButton) while (reader.Read()) CreateRowWithHighlighted(reader, RowsTable, count++);
