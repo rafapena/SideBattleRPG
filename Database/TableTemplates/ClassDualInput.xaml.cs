@@ -18,21 +18,39 @@ using static Database.Utilities.TableBuilder;
 
 namespace Database.TableTemplates
 {
-    public partial class SingleComboBox : _TableTemplateOperations
+    public partial class ClassDualInput : _TableTemplateOperations
     {
-        private List<string> SelectedIds { get; set; }
-        private List<string> OptionsListIds { get; set; }
-        private List<string> OptionsListNames { get; set; }
+        protected List<string> SelectedIds { get; set; }
+        protected List<string> OptionsListIds { get; set; }
+        protected List<string> OptionsListNames { get; set; }
 
-        public SingleComboBox()
+
+        public ClassDualInput()
         {
             InitializeComponent();
         }
 
+        private void AddSecondInput(string startingText)
+        {
+            TextBox tb = TextBox("TB_" + SelectedIds.Count, startingText, Count, 2);
+            tb.Width = 30;
+            Elements[Count - 1].Add(tb);
+        }
+
+        protected override string CheckAddability()
+        {
+            return OptionsListIds.Count > 0 ? "" : "No " + TargetDBTable + " have been created yet.";
+        }
         protected override void OnAddRow()
         {
             Elements[Count - 1].Add(ComboBox("CB_" + SelectedIds.Count, OptionsListNames, 0, Count, 1, UpdateSelectedIds));
+            if (isDual()) AddSecondInput("");
             SelectedIds.Add(OptionsListIds[0]);
+        }
+
+        protected override void OnRemoveRow()
+        {
+            SelectedIds.RemoveAt(Count - 1);
         }
 
         protected override void OnInitializeNew()
@@ -45,31 +63,49 @@ namespace Database.TableTemplates
             OptionsListNames = getFromQuery(TargetDBTable, "Name");
         }
 
-        protected override void OnAutomate(int i) { }
+
+        protected override void OnAutomate(int i)
+        {
+            if (isDual()) ((TextBox)Elements[i][2]).Text = (i*2).ToString();
+        }
+
         protected override string OnValidateInputs(int i)
         {
             string err = "";
-            for (int j = i+1; j < Count; j++)
+            if (isDual() && !Utils.PosInt(((TextBox)Elements[i][2]).Text))
+                err += "Row " + i + " on " + TableTitle + " must be a positive integer";
+            for (int j = i + 1; j < Count; j++)
             {
                 if (SelectedIds[i] != SelectedIds[j]) continue;
-                err += "All rows in " + Title.Text + " must be unique";
+                err += "All rows in " + TableTitle + " must be unique";
                 break;
             }
             return err;
         }
-        protected override void OnParameterizeInputs(int i) { }
+
+        protected override void OnParameterizeInputs(int i)
+        {
+            if (isDual()) ParameterizeInput("@" + AdditionalAttribute + "" + i, ((TextBox)Elements[i][2]).Text);
+        }
+
 
         protected override string[] OnCreate(int i)
         {
-            return new string[] {
-                SQLDB.CurrentClass + "ID, " + TargetClass + "ID",
-                SQLDB.CurrentId.ToString() + ", " + SelectedIds[i] };
+            string attributes = SQLDB.CurrentClass + "ID, " + TargetClass + "ID";
+            string values = SQLDB.CurrentId.ToString() + ", " + SelectedIds[i];
+            if (isDual())
+            {
+                attributes += ", " + AdditionalAttribute;
+                values += ", @" + AdditionalAttribute + "" + i;
+            }
+            return new string[] { attributes, values };
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
             int landingIndex = Convert.ToInt32( OptionsListIds.FindIndex(a => a == reader["BaseObject_ID"].ToString()) );
             Elements[Count - 1].Add(ComboBox("CB_" + SelectedIds.Count, OptionsListNames, landingIndex, Count, 1, UpdateSelectedIds));
+            if (isDual()) AddSecondInput(reader[AdditionalAttribute].ToString());
             SelectedIds.Add(OptionsListIds[landingIndex]);
         }
 

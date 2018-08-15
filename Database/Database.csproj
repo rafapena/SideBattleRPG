@@ -115,14 +115,17 @@
     <Compile Include="ClassTemplates\_GenericClassTemplate.xaml.cs">
       <DependentUpon>_GenericClassTemplate.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TableTemplates\TypeListDualInput.xaml.cs">
+      <DependentUpon>TypeListDualInput.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TableTemplates\SingleText.xaml.cs">
       <DependentUpon>SingleText.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TableTemplates\SingleComboBox.xaml.cs">
-      <DependentUpon>SingleComboBox.xaml</DependentUpon>
+    <Compile Include="TableTemplates\ClassDualInput.xaml.cs">
+      <DependentUpon>ClassDualInput.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TableTemplates\_GenericTable.xaml.cs">
-      <DependentUpon>_GenericTable.xaml</DependentUpon>
+    <Compile Include="TableTemplates\_GenericTable - Copy.xaml.cs">
+      <DependentUpon>_GenericTable - Copy.xaml</DependentUpon>
     </Compile>
     <Compile Include="TableTemplates\_TableTemplateOperations.cs" />
     <Compile Include="Utilities\ObjectOperations.cs" />
@@ -181,17 +184,21 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="TableTemplates\TypeListDualInput.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="TableTemplates\SingleText.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TableTemplates\SingleComboBox.xaml">
+    <Page Include="TableTemplates\ClassDualInput.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TableTemplates\_GenericTable.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="TableTemplates\_GenericTable - Copy.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

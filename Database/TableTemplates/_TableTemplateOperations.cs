@@ -38,10 +38,21 @@ namespace Database.TableTemplates
         public int ScrollerHeight { get; private set; }
         public int Count { get; private set; }
 
+        public string AdditionalAttribute { get; private set; }
+        public void SetToDualMode(string attributeName="") { AdditionalAttribute = attributeName == "" ? "Value" : attributeName; }
+        public bool isDual() { return AdditionalAttribute != ""; }
 
+
+        protected virtual string CheckAddability() { return ""; }
         protected abstract void OnAddRow();
         public void AddRow(object sender, RoutedEventArgs e)
         {
+            string cannotAddMessage = CheckAddability();
+            if (cannotAddMessage != "")
+            {
+                MessageBox.Show("Could not add to " + TableTitle + ":\n" + cannotAddMessage);
+                return;
+            }
             Count++;
             Table.RowDefinitions.Add(new RowDefinition());
             TextBlock t = TextBlock(Count, Count, 0);
@@ -53,6 +64,7 @@ namespace Database.TableTemplates
             AddRangeToTable();
         }
 
+        protected virtual void OnRemoveRow() { }
         protected void RemoveRow(object sender, RoutedEventArgs e)
         {
             if (Count <= 0) return;
@@ -60,6 +72,7 @@ namespace Database.TableTemplates
             for (int i = 0; i < elmts.Count; i++) Table.Children.Remove(elmts[i]);
             Elements.RemoveAt(Count - 1);
             Table.RowDefinitions.RemoveAt(Count);
+            OnRemoveRow();
             Count--;
         }
 
@@ -90,6 +103,7 @@ namespace Database.TableTemplates
         protected abstract void OnInitializeNew();
         public void InitializeNew() // Not too useful: SetupTableData does all of the work, due to naming conventions
         {
+            AdditionalAttribute = "";
             Elements = new List<List<UIElement>>();
             Count = 0;
             OnInitializeNew();

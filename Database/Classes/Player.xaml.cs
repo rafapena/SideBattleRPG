@@ -30,7 +30,12 @@ namespace Database.Classes
         protected void SetupTables()
         {
             ClassChoices.SetupTableData("Class", "Players_To_Classes", "Possible Classes", new List<string> { "Class" });
-            //Rates.InitializeNew();
+            SkillChoices.SetupTableData("Skill", "Players_To_Skills", "Skill Set", new List<string> { "Skill", "Level" });
+            StateRates.SetupTableData("State", "Players_To_States", "State Rates", new List<string> { "State", "%" });
+            ElementRates.SetupTableData("", "", "Element Rates", new List<string> { "Element", "%" });
+            SkillChoices.SetToDualMode("LevelRequired");
+            StateRates.SetToDualMode("Vulnerability");
+            ElementRates.SetToDualMode();
         }
 
         protected override void OnInitializeNew()
@@ -46,7 +51,9 @@ namespace Database.Classes
             Base.Automate();
             NatStats.Automate();
             ClassChoices.Automate();
-            //Rates.Automate();
+            SkillChoices.Automate();
+            StateRates.Automate();
+            ElementRates.Automate();
         }
 
         public override string ValidateInputs()
@@ -54,7 +61,9 @@ namespace Database.Classes
             string err = Base.ValidateInputs();
             err += NatStats.ValidateInputs();
             err += ClassChoices.ValidateInputs();
-            //err += Rates.ValidateInputs();
+            err += SkillChoices.ValidateInputs();
+            err += StateRates.ValidateInputs();
+            err += ElementRates.ValidateInputs();
             return err;
         }
 
@@ -66,7 +75,9 @@ namespace Database.Classes
             NatStats.Create();
             SQLCreate("BaseObjectID, NaturalStats", Base.ClassTemplateId.ToString() + ", " + NatStats.ClassTemplateId.ToString());
             ClassChoices.Create();
-            //Rates.Create();
+            SkillChoices.Create();
+            StateRates.Create();
+            ElementRates.Create();
         }
 
         protected override void OnRead(SQLiteDataReader reader)
@@ -75,7 +86,9 @@ namespace Database.Classes
             Base.Read(reader);
             NatStats.Read(reader);
             ClassChoices.Read();
-            //Rates.Read(reader);
+            SkillChoices.Read();
+            StateRates.Read();
+            ElementRates.Read();
         }
 
         protected override void OnUpdate()
@@ -83,7 +96,9 @@ namespace Database.Classes
             Base.Update();
             NatStats.Update();
             ClassChoices.Update();
-            //Rates.Update();
+            SkillChoices.Update();
+            StateRates.Update();
+            ElementRates.Update();
         }
 
         protected override void OnDelete()
@@ -91,7 +106,9 @@ namespace Database.Classes
             Base.Delete();
             NatStats.Delete();
             ClassChoices.Delete();
-            //Rates.Delete();
+            SkillChoices.Delete();
+            StateRates.Delete();
+            ElementRates.Delete();
         }
 
         protected override void OnClone()
@@ -99,7 +116,9 @@ namespace Database.Classes
             Base.Clone();
             NatStats.Clone();
             ClassChoices.Clone();
-            //Rates.Clone();
+            SkillChoices.Clone();
+            StateRates.Clone();
+            ElementRates.Clone();
         }
     }
 }
