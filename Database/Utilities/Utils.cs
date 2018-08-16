@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -15,16 +16,29 @@ namespace Database.Utilities
             return MessageBox.Show(title, message, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
         }
 
-        private static Regex PNThree = new Regex(@"^[-]?(((0|1|2)([.]\d+)?)|3)$", RegexOptions.IgnoreCase);
-        private static Regex PNOneHundred = new Regex(@"^[-]?(100|\d{1,2})$", RegexOptions.IgnoreCase);
-        private static Regex oneHundred = new Regex(@"^(100|\d{1,2})$", RegexOptions.IgnoreCase);
-        private static Regex positiveInt = new Regex(@"^\d{1,9}$", RegexOptions.IgnoreCase);
-        private static Regex badlySpaced = new Regex(@"^\s+$", RegexOptions.IgnoreCase);
+        private static Regex isNumber = new Regex(@"^[-]?(\d)+(.(\d)+)?$", RegexOptions.IgnoreCase);
+        public static bool NumberBetween(string inputText, double low, double high, bool lowInclusive = true, bool highInclusive = true)
+        {
+            if (!isNumber.Match(inputText).Success) return false;
+            double n;
+            try { n = double.Parse(inputText); }
+            catch (OverflowException) { return false; }
+            bool aboveLow = lowInclusive ? low <= n : low < n;
+            bool belowHigh = highInclusive ? high >= n : high > n;
+            return aboveLow && belowHigh;
+        }
 
-        public static bool N3ToP3Float(string inputText) { return PNThree.Match(inputText).Success; }
-        public static bool N100ToP100(string inputText) { return PNOneHundred.Match(inputText).Success; }
-        public static bool ZeroToOneHundred(string inputText) { return oneHundred.Match(inputText).Success; }
-        public static bool PosInt(string inputText) { return positiveInt.Match(inputText).Success; }
+        private static Regex isPosInt = new Regex(@"^(\d)+$", RegexOptions.IgnoreCase);
+        public static bool PosInt(string inputText)
+        {
+            if (!isPosInt.Match(inputText).Success) return false;
+            int n;
+            try { n = int.Parse(inputText); }
+            catch (OverflowException) { return false; }
+            return n >= 0;
+        }
+
+        private static Regex badlySpaced = new Regex(@"^\s+$", RegexOptions.IgnoreCase);
         public static string CutSpaces(string inputText) { return badlySpaced.Match(inputText).Success ? "" : inputText; }
 
         public static bool InRequiredLength(string inputText)

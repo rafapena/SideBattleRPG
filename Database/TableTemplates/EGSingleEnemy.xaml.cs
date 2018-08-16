@@ -18,9 +18,9 @@ using static Database.Utilities.TableBuilder;
 
 namespace Database.TableTemplates
 {
-    public partial class _GenericTable : _TableTemplateOperations
+    public partial class EGSingleEnemy : _TableTemplateOperations
     {
-        public _GenericTable()
+        public EGSingleEnemy()
         {
             InitializeComponent();
         }

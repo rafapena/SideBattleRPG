@@ -17,13 +17,17 @@ using Database.Utilities;
 
 namespace Database.ClassTemplates
 {
-    public partial class StatsMod : _ClassTemplateOperations
+    public partial class Stats : _ClassTemplateOperations
     {
-        public StatsMod()
+        private double Low, High;
+
+        public Stats()
         {
             InitializeComponent();
             ClassTemplateTable = "Stats";
             ClassTemplateType = "Stats";
+            Low = -1;
+            High = 1;
         }
 
         protected override void OnInitializeNew()
@@ -58,24 +62,30 @@ namespace Database.ClassTemplates
             CevInput.Text = "100";
         }
 
+        public string ValidateInputs(double low, double high)
+        {
+            Low = low;
+            High = high;
+            return ValidateInputs();
+        }
         public override string ValidateInputs()
         {
             string err = "";
             bool err1 = false;
             bool err2 = false;
-            if (!Utils.N3ToP3Float(HPInput.Text)) err1 = true;
-            else if (!Utils.N3ToP3Float(LukInput.Text)) err1 = true;
-            else if (!Utils.N3ToP3Float(AtkInput.Text)) err1 = true;
-            else if (!Utils.N3ToP3Float(DefInput.Text)) err1 = true;
-            else if (!Utils.N3ToP3Float(MapInput.Text)) err1 = true;
-            else if (!Utils.N3ToP3Float(MarInput.Text)) err1 = true;
-            else if (!Utils.N3ToP3Float(SpdInput.Text)) err1 = true;
-            else if (!Utils.N3ToP3Float(TecInput.Text)) err1 = true;
-            if (!Utils.N100ToP100(AccInput.Text)) err2 = true;
-            else if (!Utils.N100ToP100(EvaInput.Text)) err2 = true;
-            else if (!Utils.N100ToP100(CrtInput.Text)) err2 = true;
-            else if (!Utils.N100ToP100(CevInput.Text)) err2 = true;
-            if (err1) err += "All of the 8 stats, on top, must be within -3 and 3\n";
+            if (!Utils.NumberBetween(HPInput.Text, Low, High)) err1 = true;
+            else if (!Utils.NumberBetween(LukInput.Text, Low, High)) err1 = true;
+            else if (!Utils.NumberBetween(AtkInput.Text, Low, High)) err1 = true;
+            else if (!Utils.NumberBetween(DefInput.Text, Low, High)) err1 = true;
+            else if (!Utils.NumberBetween(MapInput.Text, Low, High)) err1 = true;
+            else if (!Utils.NumberBetween(MarInput.Text, Low, High)) err1 = true;
+            else if (!Utils.NumberBetween(SpdInput.Text, Low, High)) err1 = true;
+            else if (!Utils.NumberBetween(TecInput.Text, Low, High)) err1 = true;
+            if (!Utils.NumberBetween(AccInput.Text, -100, 100)) err2 = true;
+            else if (!Utils.NumberBetween(EvaInput.Text, -100, 100)) err2 = true;
+            else if (!Utils.NumberBetween(CrtInput.Text, -100, 100)) err2 = true;
+            else if (!Utils.NumberBetween(CevInput.Text, -100, 100)) err2 = true;
+            if (err1) err += "All of the 8 stats, on top, must be within " + Low + " and " + High + "\n";
             if (err2) err += "All of the 4 stats, at the bottom, be an integer within -100 and 100\n";
             return err;
         }

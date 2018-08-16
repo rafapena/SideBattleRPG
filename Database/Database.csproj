@@ -109,8 +109,8 @@
       <DependentUpon>TableList.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClassTemplates\_ClassTemplateOperations.cs" />
-    <Compile Include="ClassTemplates\StatsMod.xaml.cs">
-      <DependentUpon>StatsMod.xaml</DependentUpon>
+    <Compile Include="ClassTemplates\Stats.xaml.cs">
+      <DependentUpon>Stats.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClassTemplates\_GenericClassTemplate.xaml.cs">
       <DependentUpon>_GenericClassTemplate.xaml</DependentUpon>
@@ -124,8 +124,8 @@
     <Compile Include="TableTemplates\DualInputDBTable.xaml.cs">
       <DependentUpon>DualInputDBTable.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TableTemplates\_GenericTable.xaml.cs">
-      <DependentUpon>_GenericTable.xaml</DependentUpon>
+    <Compile Include="TableTemplates\EGSingleEnemy.xaml.cs">
+      <DependentUpon>EGSingleEnemy.xaml</DependentUpon>
     </Compile>
     <Compile Include="TableTemplates\_TableTemplateOperations.cs" />
     <Compile Include="Utilities\ObjectOperations.cs" />
@@ -144,7 +144,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ClassTemplates\StatsMod.xaml">
+    <Page Include="ClassTemplates\Stats.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -196,7 +196,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TableTemplates\_GenericTable.xaml">
+    <Page Include="TableTemplates\EGSingleEnemy.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

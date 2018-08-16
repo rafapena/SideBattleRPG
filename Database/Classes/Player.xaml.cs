@@ -59,7 +59,7 @@ namespace Database.Classes
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();
-            err += NatStats.ValidateInputs();
+            err += NatStats.ValidateInputs(-3, 3);
             err += ClassChoices.ValidateInputs();
             err += SkillChoices.ValidateInputs();
             err += StateRates.ValidateInputs();

@@ -16,12 +16,6 @@ using System.Data.SQLite;
 using Database.Utilities;
 using static Database.Utilities.TableBuilder;
 
-/*
- * Single string column
- * Single ComboBox
- * TwoNums: ComboBox of class objects + Positive integer input
- * Single Enemies for Enemy Groups (LOTS of content)
-*/
 
 namespace Database.TableTemplates
 {
@@ -102,7 +96,7 @@ namespace Database.TableTemplates
         protected abstract void OnInitializeNew();
         public void InitializeNew() // Not too useful: SetupTableData does all of the work, due to naming conventions and interface constistencies
         {
-            InputAttributeName = "";
+            InputAttributeName = "ValueToReplace";
             Elements = new List<List<UIElement>>();
             Count = 0;
             OnInitializeNew();
