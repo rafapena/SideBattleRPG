@@ -18,14 +18,14 @@ using static Database.Utilities.TableBuilder;
 
 namespace Database.TableTemplates
 {
-    public partial class TypeListDualInput : _TableTemplateOperations
+    public partial class DualInputDBTable : _TableTemplateOperations
     {
-        protected List<string> SelectedIds { get; set; }
-        protected List<string> OptionsListIds { get; set; }
+        protected List<int> SelectedIds { get; set; }
+        protected List<int> OptionsListIds { get; set; }
         protected List<string> OptionsListNames { get; set; }
 
 
-        public TypeListDualInput()
+        public DualInputDBTable()
         {
             InitializeComponent();
         }
@@ -58,26 +58,25 @@ namespace Database.TableTemplates
             Title.Text = TableTitle;
             Table = TableList;
             Scroller.Height = ScrollerHeight;
-            SelectedIds = new List<string>();
-            OptionsListIds = getFromQuery(TargetDBTable, "BaseObject_ID");
-            OptionsListNames = getFromQuery(TargetDBTable, "Name");
+            SelectedIds = new List<int>();
+            getFromQuery();
         }
 
 
         protected override void OnAutomate(int i)
         {
-            if (isDual()) ((TextBox)Elements[i][2]).Text = (i * 2).ToString();
+            if (isDual()) ((TextBox)Elements[i][2]).Text = (i*2).ToString();
         }
 
         protected override string OnValidateInputs(int i)
         {
             string err = "";
             if (isDual() && !Utils.PosInt(((TextBox)Elements[i][2]).Text))
-                err += "Row " + i + " on " + TableTitle + " must be a positive integer";
+                err += "Row " + i + " on " + TableTitle + " must be a positive integer\n";
             for (int j = i + 1; j < Count; j++)
             {
                 if (SelectedIds[i] != SelectedIds[j]) continue;
-                err += "All rows in " + TableTitle + " must be unique";
+                err += "All rows in " + TableTitle + " must be unique\n";
                 break;
             }
             return err;
@@ -91,7 +90,7 @@ namespace Database.TableTemplates
 
         protected override string[] OnCreate(int i)
         {
-            string attributes = SQLDB.CurrentClass + "ID, " + TargetClass + "ID";
+            string attributes = SQLDB.CurrentClass + "ID, " + TargetType + "ID";
             string values = SQLDB.CurrentId.ToString() + ", " + SelectedIds[i];
             if (isDual())
             {
@@ -103,17 +102,44 @@ namespace Database.TableTemplates
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            int landingIndex = Convert.ToInt32(OptionsListIds.FindIndex(a => a == reader["BaseObject_ID"].ToString()));
+            int savedId = int.Parse(reader["BaseObject_ID"].ToString());
+            int landingIndex = Convert.ToInt32( OptionsListIds.FindIndex(a => a ==  savedId));
             Elements[Count - 1].Add(ComboBox("CB_" + SelectedIds.Count, OptionsListNames, landingIndex, Count, 1, UpdateSelectedIds));
             if (isDual()) AddSecondInput(reader[AdditionalAttribute].ToString());
             SelectedIds.Add(OptionsListIds[landingIndex]);
         }
 
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Other functions --
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         private void UpdateSelectedIds(object sender, EventArgs e)
         {
             int getIdThroughName = Convert.ToInt32(((ComboBox)sender).Name.Split('_').Last());
             SelectedIds[getIdThroughName] = OptionsListIds[((ComboBox)sender).SelectedIndex];
+        }
+
+        private void getFromQuery()
+        {
+            OptionsListIds = new List<int>();
+            OptionsListNames = new List<string>();
+            using (var conn = SQLDB.DB())
+            {
+                conn.Open();
+                using (var reader = SQLDB.Retrieve(
+                    "SELECT * FROM BaseObjects JOIN " + TargetDBTable + " " +
+                    "WHERE BaseObject_ID = BaseObjectID ORDER BY Name ASC;",
+                    conn))
+                {
+                    while (reader.Read())
+                    {
+                        OptionsListIds.Add(int.Parse(reader["BaseObjectID"].ToString()));
+                        OptionsListNames.Add(reader["Name"].ToString());
+                    }
+                }
+                conn.Close();
+            }
         }
     }
 }

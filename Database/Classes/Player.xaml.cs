@@ -32,10 +32,11 @@ namespace Database.Classes
             ClassChoices.SetupTableData("Class", "Players_To_Classes", "Possible Classes", new List<string> { "Class" });
             SkillChoices.SetupTableData("Skill", "Players_To_Skills", "Skill Set", new List<string> { "Skill", "Level" });
             StateRates.SetupTableData("State", "Players_To_States", "State Rates", new List<string> { "State", "%" });
-            ElementRates.SetupTableData("", "", "Element Rates", new List<string> { "Element", "%" });
+            ElementRates.SetupTableData("Elements", "TypesLists", "Element Rates", new List<string> { "Element", "%" });
             SkillChoices.SetToDualMode("LevelRequired");
             StateRates.SetToDualMode("Vulnerability");
             ElementRates.SetToDualMode();
+            ElementRates.CustomName = "ElementRates";
         }
 
         protected override void OnInitializeNew()
@@ -73,11 +74,13 @@ namespace Database.Classes
         {
             Base.Create();
             NatStats.Create();
-            SQLCreate("BaseObjectID, NaturalStats", Base.ClassTemplateId.ToString() + ", " + NatStats.ClassTemplateId.ToString());
+            ElementRates.Create();
+            SQLCreate(
+                "BaseObjectID, NaturalStats, ElementRates",
+                Base.ClassTemplateId.ToString() + ", " + NatStats.ClassTemplateId.ToString() + ", '" + ElementRates.StringList + "'");
             ClassChoices.Create();
             SkillChoices.Create();
             StateRates.Create();
-            ElementRates.Create();
         }
 
         protected override void OnRead(SQLiteDataReader reader)

@@ -32,9 +32,10 @@ namespace Database.TableTemplates
         public List<List<UIElement>> Elements { get; private set; }
 
         public string TableTitle { get; private set; }
-        public string TargetClass { get; private set; }
+        public string TargetType { get; private set; }
         public string TargetDBTable { get; private set; }
-        public string TableTemplateDBTable { get; private set; }
+        public string TableTemplateDBTable { get; protected set; }
+        public string CustomName { get; set; }
         public int ScrollerHeight { get; private set; }
         public int Count { get; private set; }
 
@@ -82,13 +83,13 @@ namespace Database.TableTemplates
             for (int i = 1; i < elmts.Count; i++) Table.Children.Add(elmts[i]);
         }
 
-        public void SetupTableData(string targetClass, string hostAndTargetTable, string title,
+        public void SetupTableData(string targetType, string targetDBTable, string title,
             List<string> columnNames = null, int scrollerHeight = 100)
         {
-            string[] toGetTable = hostAndTargetTable.Split('_');
-            TargetClass = targetClass;
-            TableTemplateDBTable = hostAndTargetTable;
-            TargetDBTable = toGetTable.Length > 2 ? toGetTable[2] : "";
+            string[] toGetTable = targetDBTable.Split('_');
+            TargetType = targetType;
+            TableTemplateDBTable = targetDBTable;
+            TargetDBTable = toGetTable.Length > 2 ? toGetTable[2] : targetDBTable;
             TableTitle = title;
             ScrollerHeight = scrollerHeight;
             if (columnNames != null && columnNames.Count > 0)
@@ -101,9 +102,10 @@ namespace Database.TableTemplates
         }
 
         protected abstract void OnInitializeNew();
-        public void InitializeNew() // Not too useful: SetupTableData does all of the work, due to naming conventions
+        public void InitializeNew() // Not too useful: SetupTableData does all of the work, due to naming conventions and interface constistencies
         {
             AdditionalAttribute = "";
+            CustomName = TableTitle;
             Elements = new List<List<UIElement>>();
             Count = 0;
             OnInitializeNew();
@@ -158,7 +160,7 @@ namespace Database.TableTemplates
         {
             return new string[] {
                 TableTemplateDBTable + " JOIN  BaseObjects JOIN " + TargetDBTable,
-                "BaseObject_ID = BaseObjectID AND " + TargetClass + "_ID = " + TargetClass + "ID AND " +
+                "BaseObject_ID = BaseObjectID AND " + TargetType + "_ID = " + TargetType + "ID AND " +
                     SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId + " ORDER BY Name;"
             };
         }
@@ -202,28 +204,5 @@ namespace Database.TableTemplates
         
         // Not needed: No ID to keep track of and is only implemented here (Create() handles everything)
         public void Clone() { }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// -- Other functions --
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        public static List<string> getFromQuery(string table, string attribute)
-        {
-            List<string> list = new List<string>();
-            using (var conn = SQLDB.DB())
-            {
-                conn.Open();
-                using (var reader = SQLDB.Retrieve(
-                    "SELECT * FROM BaseObjects JOIN " + table + " " +
-                    "WHERE BaseObject_ID = BaseObjectID ORDER BY Name ASC;",
-                    conn))
-                {
-                    while (reader.Read()) list.Add(reader[attribute].ToString());
-                }
-                conn.Close();
-            }
-            return list;
-        }
     }
 }

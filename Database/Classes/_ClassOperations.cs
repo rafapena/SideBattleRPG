@@ -75,7 +75,8 @@ namespace Database.Classes
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString(), conn))
+                using (var reader = SQLDB.Retrieve("SELECT * FROM " + SQLDB.CurrentTable + " " +
+                    "WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString(), conn))
                 {
                     reader.Read();
                     OnRead(reader);

@@ -25,15 +25,15 @@
 
                         <TabItem Header="Classes and Skills">
                             <StackPanel Orientation="Horizontal">
-                                <tables:ClassDualInput x:Name="ClassChoices" Margin="5,5,5,5"/>
-                                <tables:ClassDualInput x:Name="SkillChoices" Margin="5,5,5,5"/>
+                                <tables:DualInputDBTable x:Name="ClassChoices" Margin="5,5,5,5"/>
+                                <tables:DualInputDBTable x:Name="SkillChoices" Margin="5,5,5,5"/>
                             </StackPanel>
                         </TabItem>
 
                         <TabItem Header="Rates">
                             <StackPanel Orientation="Horizontal">
-                                <tables:ClassDualInput x:Name="StateRates" Margin="5,5,5,5"/>
-                                <tables:TypeListDualInput x:Name="ElementRates" Margin="5,5,5,5"/>
+                                <tables:DualInputDBTable x:Name="StateRates" Margin="5,5,5,5"/>
+                                <tables:DualInputTypeList x:Name="ElementRates" Margin="5,5,5,5"/>
                             </StackPanel>
                         </TabItem>
 

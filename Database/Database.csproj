@@ -115,17 +115,17 @@
     <Compile Include="ClassTemplates\_GenericClassTemplate.xaml.cs">
       <DependentUpon>_GenericClassTemplate.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TableTemplates\TypeListDualInput.xaml.cs">
-      <DependentUpon>TypeListDualInput.xaml</DependentUpon>
+    <Compile Include="TableTemplates\DualInputTypeList.xaml.cs">
+      <DependentUpon>DualInputTypeList.xaml</DependentUpon>
     </Compile>
     <Compile Include="TableTemplates\SingleText.xaml.cs">
       <DependentUpon>SingleText.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TableTemplates\ClassDualInput.xaml.cs">
-      <DependentUpon>ClassDualInput.xaml</DependentUpon>
+    <Compile Include="TableTemplates\DualInputDBTable.xaml.cs">
+      <DependentUpon>DualInputDBTable.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TableTemplates\_GenericTable - Copy.xaml.cs">
-      <DependentUpon>_GenericTable - Copy.xaml</DependentUpon>
+    <Compile Include="TableTemplates\_GenericTable.xaml.cs">
+      <DependentUpon>_GenericTable.xaml</DependentUpon>
     </Compile>
     <Compile Include="TableTemplates\_TableTemplateOperations.cs" />
     <Compile Include="Utilities\ObjectOperations.cs" />
@@ -184,7 +184,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TableTemplates\TypeListDualInput.xaml">
+    <Page Include="TableTemplates\DualInputTypeList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -192,11 +192,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TableTemplates\ClassDualInput.xaml">
+    <Page Include="TableTemplates\DualInputDBTable.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TableTemplates\_GenericTable - Copy.xaml">
+    <Page Include="TableTemplates\_GenericTable.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

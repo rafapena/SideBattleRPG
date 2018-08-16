@@ -1,5 +1,5 @@
 ﻿<base:_TableTemplateOperations
-    x:Class="Database.TableTemplates.TypeListDualInput"
+    x:Class="Database.TableTemplates.DualInputTypeList"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

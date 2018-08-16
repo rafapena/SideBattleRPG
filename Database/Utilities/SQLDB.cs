@@ -38,13 +38,13 @@ namespace Database.Utilities
                 conn.Open();
                 using (var comm = new SQLiteCommand(sqlCommand, conn))
                 {
-                    try
-                    {
+                    //try
+                    //{
                         if (Inputs != null && Inputs.Count > 0) comm.Parameters.AddRange(Inputs.ToArray());
                         comm.CommandType = CommandType.Text;
                         comm.ExecuteNonQuery();
-                    }
-                    catch (Exception e) { MessageBox.Show("Something went wrong:\n" + e.Message); }
+                    //}
+                    //catch (Exception e) { MessageBox.Show("Something went wrong:\n" + e.Message); }
                 }
                 conn.Close();
             }
