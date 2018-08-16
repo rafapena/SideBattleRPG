@@ -33,10 +33,9 @@ namespace Database.Classes
             SkillChoices.SetupTableData("Skill", "Players_To_Skills", "Skill Set", new List<string> { "Skill", "Level" });
             StateRates.SetupTableData("State", "Players_To_States", "State Rates", new List<string> { "State", "%" });
             ElementRates.SetupTableData("Elements", "TypesLists", "Element Rates", new List<string> { "Element", "%" });
-            SkillChoices.SetToDualMode("LevelRequired");
-            StateRates.SetToDualMode("Vulnerability");
-            ElementRates.SetToDualMode();
-            ElementRates.CustomName = "ElementRates";
+            SkillChoices.InputAttributeName = "LevelRequired";
+            StateRates.InputAttributeName = "Vulnerability";
+            ElementRates.InputAttributeName = "ElementRates";
         }
 
         protected override void OnInitializeNew()

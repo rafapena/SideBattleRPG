@@ -35,13 +35,11 @@ namespace Database.TableTemplates
         public string TargetType { get; private set; }
         public string TargetDBTable { get; private set; }
         public string TableTemplateDBTable { get; protected set; }
-        public string CustomName { get; set; }
+
         public int ScrollerHeight { get; private set; }
         public int Count { get; private set; }
-
-        public string AdditionalAttribute { get; private set; }
-        public void SetToDualMode(string attributeName="") { AdditionalAttribute = attributeName == "" ? "Value" : attributeName; }
-        public bool isDual() { return AdditionalAttribute != ""; }
+        public string InputAttributeName { get; set; }
+        public bool isDual() { return Table.ColumnDefinitions.Count == 3; }
 
 
         protected virtual string CheckAddability() { return ""; }
@@ -104,8 +102,7 @@ namespace Database.TableTemplates
         protected abstract void OnInitializeNew();
         public void InitializeNew() // Not too useful: SetupTableData does all of the work, due to naming conventions and interface constistencies
         {
-            AdditionalAttribute = "";
-            CustomName = TableTitle;
+            InputAttributeName = "";
             Elements = new List<List<UIElement>>();
             Count = 0;
             OnInitializeNew();
@@ -161,7 +158,7 @@ namespace Database.TableTemplates
             return new string[] {
                 TableTemplateDBTable + " JOIN  BaseObjects JOIN " + TargetDBTable,
                 "BaseObject_ID = BaseObjectID AND " + TargetType + "_ID = " + TargetType + "ID AND " +
-                    SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId + " ORDER BY Name;"
+                    SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId + " ORDER BY TableIndex"
             };
         }
         protected abstract void OnRead(SQLiteDataReader reader);

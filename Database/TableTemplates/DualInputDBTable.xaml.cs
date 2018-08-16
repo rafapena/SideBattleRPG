@@ -84,18 +84,18 @@ namespace Database.TableTemplates
 
         protected override void OnParameterizeInputs(int i)
         {
-            if (isDual()) ParameterizeInput("@" + AdditionalAttribute + "" + i, ((TextBox)Elements[i][2]).Text);
+            if (isDual()) ParameterizeInput("@" + InputAttributeName + "" + i, ((TextBox)Elements[i][2]).Text);
         }
 
 
         protected override string[] OnCreate(int i)
         {
-            string attributes = SQLDB.CurrentClass + "ID, " + TargetType + "ID";
-            string values = SQLDB.CurrentId.ToString() + ", " + SelectedIds[i];
+            string attributes = SQLDB.CurrentClass + "ID, " + TargetType + "ID, TableIndex";
+            string values = SQLDB.CurrentId + ", " + SelectedIds[i] + ", " + i;
             if (isDual())
             {
-                attributes += ", " + AdditionalAttribute;
-                values += ", @" + AdditionalAttribute + "" + i;
+                attributes += ", " + InputAttributeName;
+                values += ", @" + InputAttributeName + i.ToString();
             }
             return new string[] { attributes, values };
         }
@@ -105,7 +105,7 @@ namespace Database.TableTemplates
             int savedId = int.Parse(reader["BaseObject_ID"].ToString());
             int landingIndex = Convert.ToInt32( OptionsListIds.FindIndex(a => a ==  savedId));
             Elements[Count - 1].Add(ComboBox("CB_" + SelectedIds.Count, OptionsListNames, landingIndex, Count, 1, UpdateSelectedIds));
-            if (isDual()) AddSecondInput(reader[AdditionalAttribute].ToString());
+            if (isDual()) AddSecondInput(reader[InputAttributeName].ToString());
             SelectedIds.Add(OptionsListIds[landingIndex]);
         }
 

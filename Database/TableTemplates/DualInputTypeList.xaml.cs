@@ -39,7 +39,7 @@ namespace Database.TableTemplates
 
         protected override string CheckAddability()
         {
-            return OptionsListNames.Count > 0 ? "" : "No " + TargetDBTable + " have been created yet.";
+            return OptionsListNames.Count > 0 ? "" : "No " + TargetType + " have been created yet.";
         }
         protected override void OnAddRow()
         {
@@ -72,8 +72,7 @@ namespace Database.TableTemplates
         protected override string OnValidateInputs(int i)
         {
             string err = "";
-            if (isDual() && !Utils.PosInt(((TextBox)Elements[i][2]).Text))
-                err += "Row " + i + " on " + TableTitle + " must be a positive integer\n";
+            if (isDual() && !Utils.PosInt(((TextBox)Elements[i][2]).Text)) err += "Row " + i + " on " + TableTitle + " must be a positive integer\n";
             for (int j = i + 1; j < Count; j++)
             {
                 if (SelectedIds[i] != SelectedIds[j]) continue;
@@ -85,7 +84,7 @@ namespace Database.TableTemplates
 
         protected override void OnParameterizeInputs(int i)
         {
-            if (isDual()) ParameterizeInput("@" + AdditionalAttribute + i.ToString(), ((TextBox)Elements[i][2]).Text);
+            if (isDual()) ParameterizeInput("@" + InputAttributeName + i.ToString(), ((TextBox)Elements[i][2]).Text);
         }
 
 
@@ -110,29 +109,23 @@ namespace Database.TableTemplates
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + SQLDB.CurrentTable + " " +
-                    "WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString(), conn))
+                using (var reader = SQLDB.Retrieve("SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString(), conn))
                 {
                     reader.Read();
-                    StringList = reader[CustomName].ToString();
+                    StringList = reader[InputAttributeName].ToString();
                 }
                 conn.Close();  
             }
             if (StringList == "") return;
             string[] items = StringList.Split('_');
             int inc = isDual() ? 2 : 1;
-            int length = items.Length - 1;
-            for (int i = 0; i < length; i += inc)
+            for (int i = 1; i < items.Length; i += inc)
             {
-                int listId = int.Parse(items[i]);
-                if (listId >= OptionsListNames.Count)
-                {
-                    i--;
-                    continue;
-                }
+                int listId = int.Parse(items[i - 1]);
+                if (listId >= OptionsListNames.Count) continue;
                 AddRow(null, null);
                 Elements[Count - 1].Add(ComboBox("CB_" + SelectedIds.Count, OptionsListNames, listId, Count, 1, UpdateSelectedIds));
-                if (isDual()) AddSecondInput(int.Parse(items[i + 1]).ToString());
+                if (isDual()) AddSecondInput(int.Parse(items[i]).ToString());
                 SelectedIds.Add(listId);
                 AddRangeToTable();
             }
@@ -143,7 +136,7 @@ namespace Database.TableTemplates
         {
             Create();
             SQLDB.Command(
-                "UPDATE " + SQLDB.CurrentTable + " SET " + CustomName + " = '" + StringList + "' " +
+                "UPDATE " + SQLDB.CurrentTable + " SET " + InputAttributeName + " = '" + StringList + "' " +
                 "WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId + ";");
         }
 
