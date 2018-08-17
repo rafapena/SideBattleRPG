@@ -20,10 +20,7 @@ namespace Database.TableTemplates
 {
     public partial class DualInputDBTable : _TableTemplateOperations
     {
-        protected List<int> SelectedIds { get; set; }
-        protected List<int> OptionsListIds { get; set; }
-        protected List<string> OptionsListNames { get; set; }
-
+        private ComboBoxInputData CBInputs;
 
         public DualInputDBTable()
         {
@@ -32,25 +29,24 @@ namespace Database.TableTemplates
 
         private void AddSecondInput(string startingText)
         {
-            TextBox tb = TextBox("TB_" + SelectedIds.Count, startingText, Count, 2);
+            TextBox tb = TextBox("TB_" + Count, startingText, Count, 2);
             tb.Width = 30;
             Elements[Count - 1].Add(tb);
         }
 
         protected override string CheckAddability()
         {
-            return OptionsListIds.Count > 0 ? "" : "No " + TargetDBTable + " have been created yet.";
+            return CBInputs.NoOptions() ? "No " + TargetDBTable + " have been created yet." : "";
         }
         protected override void OnAddRow()
         {
-            Elements[Count - 1].Add(ComboBox("CB_" + SelectedIds.Count, OptionsListNames, 0, Count, 1, UpdateSelectedIds));
+            Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, 0));
             if (isDual()) AddSecondInput("");
-            SelectedIds.Add(OptionsListIds[0]);
+            CBInputs.AddToSelectedIds(0);
         }
-
         protected override void OnRemoveRow()
         {
-            SelectedIds.RemoveAt(Count - 1);
+            CBInputs.RemoveFromSelectedIds();
         }
 
         protected override void OnInitializeNew()
@@ -58,8 +54,7 @@ namespace Database.TableTemplates
             Title.Text = TableTitle;
             Table = TableList;
             Scroller.Height = ScrollerHeight;
-            SelectedIds = new List<int>();
-            getFromQuery();
+            CBInputs = new ComboBoxInputData("BaseObjectID", "Name", "BaseObjects JOIN " + TargetDBTable, "BaseObject_ID = BaseObjectID ORDER BY Name ASC");
         }
 
 
@@ -75,7 +70,7 @@ namespace Database.TableTemplates
                 err += "Row " + i + " on " + TableTitle + " must be a positive integer\n";
             for (int j = i + 1; j < Count; j++)
             {
-                if (SelectedIds[i] != SelectedIds[j]) continue;
+                if (CBInputs.SelectedIds[i] != CBInputs.SelectedIds[j]) continue;
                 err += "All rows in " + TableTitle + " must be unique\n";
                 break;
             }
@@ -91,7 +86,7 @@ namespace Database.TableTemplates
         protected override string[] OnCreate(int i)
         {
             string attributes = SQLDB.CurrentClass + "ID, " + TargetType + "ID, TableIndex";
-            string values = SQLDB.CurrentId + ", " + SelectedIds[i] + ", " + i;
+            string values = SQLDB.CurrentId + ", " + CBInputs.SelectedIds[i] + ", " + i;
             if (isDual())
             {
                 attributes += ", " + InputAttributeName;
@@ -102,44 +97,10 @@ namespace Database.TableTemplates
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            int savedId = int.Parse(reader["BaseObject_ID"].ToString());
-            int landingIndex = Convert.ToInt32( OptionsListIds.FindIndex(a => a ==  savedId));
-            Elements[Count - 1].Add(ComboBox("CB_" + SelectedIds.Count, OptionsListNames, landingIndex, Count, 1, UpdateSelectedIds));
+            int landingIndex = Convert.ToInt32( CBInputs.OptionsListIds.FindIndex( a => a == int.Parse(reader["BaseObject_ID"].ToString())) );
+            Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, landingIndex));
             if (isDual()) AddSecondInput(reader[InputAttributeName].ToString());
-            SelectedIds.Add(OptionsListIds[landingIndex]);
-        }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// -- Other functions --
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private void UpdateSelectedIds(object sender, EventArgs e)
-        {
-            int getIdThroughName = Convert.ToInt32(((ComboBox)sender).Name.Split('_').Last());
-            SelectedIds[getIdThroughName] = OptionsListIds[((ComboBox)sender).SelectedIndex];
-        }
-
-        private void getFromQuery()
-        {
-            OptionsListIds = new List<int>();
-            OptionsListNames = new List<string>();
-            using (var conn = SQLDB.DB())
-            {
-                conn.Open();
-                using (var reader = SQLDB.Retrieve(
-                    "SELECT * FROM BaseObjects JOIN " + TargetDBTable + " " +
-                    "WHERE BaseObject_ID = BaseObjectID ORDER BY Name ASC;",
-                    conn))
-                {
-                    while (reader.Read())
-                    {
-                        OptionsListIds.Add(int.Parse(reader["BaseObjectID"].ToString()));
-                        OptionsListNames.Add(reader["Name"].ToString());
-                    }
-                }
-                conn.Close();
-            }
+            CBInputs.AddToSelectedIds(landingIndex);
         }
     }
 }
