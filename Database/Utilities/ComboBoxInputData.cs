@@ -55,41 +55,5 @@ namespace Database.Utilities
             int getIdThroughName = Convert.ToInt32(((ComboBox)sender).Name.Split('_').Last());
             SelectedIds[getIdThroughName] = OptionsListIds[((ComboBox)sender).SelectedIndex];
         }
-
-
-        /*private void getFromQuery()
-        {
-            OptionsListIds = new List<int>();
-            OptionsListNames = new List<string>();
-            using (var conn = SQLDB.DB())
-            {
-                conn.Open();
-                using (var reader = SQLDB.Retrieve(
-                    "SELECT * FROM BaseObjects JOIN " + TargetDBTable + " " +
-                    "WHERE BaseObject_ID = BaseObjectID ORDER BY Name ASC;",
-                    conn))
-                {
-                    while (reader.Read())
-                    {
-                        OptionsListIds.Add(int.Parse(reader["BaseObjectID"].ToString()));
-                        OptionsListNames.Add(reader["Name"].ToString());
-                    }
-                }
-                conn.Close();
-            }
-        }
-
-        private List<string> getFromQuery(string attribute)
-        {
-            List<string> list = new List<string>();
-            using (var conn = SQLDB.DB())
-            {
-                conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + TargetDBTable + " WHERE ListType = '" + TargetType + "' ORDER BY List_ID ASC;", conn))
-                    while (reader.Read()) list.Add(reader[attribute].ToString());
-                conn.Close();
-            }
-            return list;
-        }*/
     }
 }

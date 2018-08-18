@@ -26,7 +26,7 @@ namespace Database.ClassTemplates
     {
         protected string ClassTemplateTable { get; set; }
         protected string ClassTemplateType { get; set; }
-        public string CustomName { get; set; }
+        public string AttributeName { get; set; }
         public int ClassTemplateId { get; protected set; }
 
 
@@ -35,7 +35,7 @@ namespace Database.ClassTemplates
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {
-            CustomName = ClassTemplateType + "ID";
+            AttributeName = ClassTemplateType + "ID";
             ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
             OnInitializeNew();
         }
@@ -64,7 +64,7 @@ namespace Database.ClassTemplates
         protected abstract void OnRead(SQLiteDataReader reader);
         public void Read(SQLiteDataReader reader)
         {
-            ClassTemplateId = int.Parse(reader[CustomName].ToString());
+            ClassTemplateId = int.Parse(reader[AttributeName].ToString());
             Read();
         }
         public void Read()

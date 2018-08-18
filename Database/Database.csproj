@@ -93,8 +93,8 @@
     <Compile Include="Classes\Achievement.xaml.cs">
       <DependentUpon>Achievement.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes\_GenericClass - Copy.xaml.cs">
-      <DependentUpon>_GenericClass - Copy.xaml</DependentUpon>
+    <Compile Include="Classes\_GenericClass.xaml.cs">
+      <DependentUpon>_GenericClass.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\Skill.xaml.cs">
       <DependentUpon>Skill.xaml</DependentUpon>
@@ -151,7 +151,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Classes\_GenericClass - Copy.xaml">
+    <Page Include="Classes\_GenericClass.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -96,7 +96,7 @@ namespace Database.TableTemplates
         protected abstract void OnInitializeNew();
         public void InitializeNew() // Not too useful: SetupTableData does all of the work, due to naming conventions and interface constistencies
         {
-            InputAttributeName = "ValueToReplace";
+            InputAttributeName = "DefaultValueToReplace";
             Elements = new List<List<UIElement>>();
             Count = 0;
             OnInitializeNew();
@@ -149,9 +149,10 @@ namespace Database.TableTemplates
 
         protected virtual string[] OnReadCommands()
         {
+            string targetIdName = (SQLDB.CurrentClass == TargetType ? "Other" : "") + TargetType + "ID";
             return new string[] {
                 TableTemplateDBTable + " JOIN  BaseObjects JOIN " + TargetDBTable,
-                "BaseObject_ID = BaseObjectID AND " + TargetType + "_ID = " + TargetType + "ID AND " +
+                "BaseObject_ID = BaseObjectID AND " + TargetType + "_ID = " + targetIdName + " AND " +
                     SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId + " ORDER BY TableIndex"
             };
         }

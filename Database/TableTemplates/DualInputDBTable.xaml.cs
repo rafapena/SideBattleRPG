@@ -54,7 +54,10 @@ namespace Database.TableTemplates
             Title.Text = TableTitle;
             Table = TableList;
             Scroller.Height = ScrollerHeight;
-            CBInputs = new ComboBoxInputData("BaseObjectID", "Name", "BaseObjects JOIN " + TargetDBTable, "BaseObject_ID = BaseObjectID ORDER BY Name ASC");
+            string tables = "BaseObjects JOIN " + TargetDBTable;
+            string dupCond = SQLDB.CurrentClass == TargetType ? " AND " + SQLDB.CurrentClass + "_ID <> " + SQLDB.CurrentId : "";
+            string whereSort = "BaseObject_ID = BaseObjectID" + dupCond + " ORDER BY Name ASC";
+            CBInputs = new ComboBoxInputData(TargetType + "_ID", "Name", tables, whereSort);
         }
 
 
@@ -85,7 +88,8 @@ namespace Database.TableTemplates
 
         protected override string[] OnCreate(int i)
         {
-            string attributes = SQLDB.CurrentClass + "ID, " + TargetType + "ID, TableIndex";
+            string targetIdName = (SQLDB.CurrentClass == TargetType ? "Other" : "") + TargetType + "ID";
+            string attributes = SQLDB.CurrentClass + "ID, " + targetIdName + ", TableIndex";
             string values = SQLDB.CurrentId + ", " + CBInputs.SelectedIds[i] + ", " + i;
             if (isDual())
             {
@@ -97,7 +101,7 @@ namespace Database.TableTemplates
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            int landingIndex = Convert.ToInt32( CBInputs.OptionsListIds.FindIndex( a => a == int.Parse(reader["BaseObject_ID"].ToString())) );
+            int landingIndex = Convert.ToInt32( CBInputs.OptionsListIds.FindIndex( a => a == int.Parse(reader[TargetType + "_ID"].ToString())) );
             Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, landingIndex));
             if (isDual()) AddSecondInput(reader[InputAttributeName].ToString());
             CBInputs.AddToSelectedIds(landingIndex);
