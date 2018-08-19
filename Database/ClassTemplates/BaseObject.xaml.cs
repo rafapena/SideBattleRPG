@@ -46,6 +46,8 @@ namespace Database.ClassTemplates
             string err = "";
             if (!Utils.InRequiredLength(Utils.CutSpaces(NameInput.Text))) err += "Name must have 1 to 16 characters\n";
             if (Utils.CutSpaces(DescriptionInput.Text) == "") DescriptionInput.Text = "N/A";
+            int dLen = DescriptionInput.Text.Length;
+            if (dLen > 2500) err += "Description length must be 2500 characters or less (Input has " + dLen + " characters)";
             return err;
         }
 

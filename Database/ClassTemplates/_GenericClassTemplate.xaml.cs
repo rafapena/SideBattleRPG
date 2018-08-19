@@ -28,8 +28,8 @@ namespace Database.ClassTemplates
 
         protected override void SetupTableData()
         {
-            //table1.SetupTableData();
-            //table2.SetupTableData();
+            //table1.Setup(hostType, hostDBTable, targetType, targetDBTable, title, new List<string> {});
+            //table2.Setup(hostType, hostDBTable, targetType, targetDBTable, title, new List<string> {});
         }
 
         protected override void OnInitializeNew()

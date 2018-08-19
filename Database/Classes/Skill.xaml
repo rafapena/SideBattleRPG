@@ -22,9 +22,13 @@
                         <TabItem Header="General">
                             <template:BaseObject x:Name="Base" Margin="5,5,5,5"/>
                         </TabItem>
-                        
+
                         <TabItem Header="Standard Attributes">
-                            <template:Tool x:Name="StandardAttributes" Margin="5,5,5,5"/>
+                            <template:ToolAttributes x:Name="ToolAttributes" Margin="5,5,5,5"/>
+                        </TabItem>
+
+                        <TabItem Header="State Rates">
+                            <template:ToolStates x:Name="ToolStateRates" Margin="5,5,5,5"/>
                         </TabItem>
 
                         <TabItem Header="Special Attributes">

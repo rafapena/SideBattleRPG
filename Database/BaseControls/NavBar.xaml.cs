@@ -44,32 +44,32 @@ namespace Database.BaseControls
 
         private void GoToClasses(object sender, EventArgs e)
         {
-            //SetUpFromClick(); BattlerClass();
+            //SetUpFromClick<Class>("Classes");
         }
 
         private void GoToEnemies(object sender, EventArgs e)
         {
-            //SetUpFromClick(); Enemies();
+            //SetUpFromClick<Enemy>("Enemies");
         }
 
         private void GoToEnemyGroups(object sender, EventArgs e)
         {
-            //SetUpFromClick(); EnemyGroups();
+            //SetUpFromClick<EnemyGroup>("EnemyGroups");
         }
 
         private void GoToEnvironments(object sender, EventArgs e)
         {
-            //SetUpFromClick(); Environments();
+            //SetUpFromClick<Environments>("Environment");
         }
 
         private void GoToEvents(object sender, EventArgs e)
         {
-            //SetUpFromClick(); Events();
+            //SetUpFromClick<Event>("Events");
         }
 
         private void GoToItems(object sender, EventArgs e)
         {
-            //SetUpFromClick(); Items();
+            //SetUpFromClick<Item>("Items");
         }
 
         private void GoToOtherLists(object sender, EventArgs e)
@@ -82,12 +82,12 @@ namespace Database.BaseControls
 
         private void GoToPassiveSkills(object sender, EventArgs e)
         {
-            //SetUpFromClick(); PassiveSkill();
+            //SetUpFromClick<PassiveSkill>("PassiveSkills");
         }
 
         private void GoToPlatforms(object sender, EventArgs e)
         {
-            //SetUpFromClick<Platforms>("Platforms", "Players");
+            //SetUpFromClick<Platforms>("Platforms");
         }
 
         private void GoToPlayers(object sender, EventArgs e)
@@ -97,22 +97,22 @@ namespace Database.BaseControls
 
         private void GoToProjectiles(object sender, EventArgs e)
         {
-            //SetUpFromClick(); Projectiles();
+            //SetUpFromClick<Projectile>("Projectiles");
         }
 
         private void GoToSkills(object sender, EventArgs e)
         {
-            //SetUpFromClick(); Skill();
+            SetUpFromClick<Skill>("Skills");
         }
 
         private void GoToStates(object sender, EventArgs e)
         {
-            //SetUpFromClick(); State();
+            //SetUpFromClick<State>("States");
         }
 
         private void GoToWeapons(object sender, EventArgs e)
         {
-            //SetUpFromClick(); Weapon();
+            //SetUpFromClick<Weapon>("Weapons");
         }
 
     }

@@ -60,6 +60,8 @@ namespace Database.TableTemplates
             Table = TableList;
             Scroller.Height = ScrollerHeight;
             CBInputs = new ComboBoxInputData("List_ID", "Name", TargetDBTable, "ListType = '" + TargetType + "' ORDER BY List_ID ASC");
+            AttributeName = "";
+            StringList = "";
         }
 
 
@@ -72,7 +74,7 @@ namespace Database.TableTemplates
         {
             string err = "";
             if (isDual() && !Utils.PosInt(((TextBox)Elements[i][2]).Text))
-                err += "Input on row " + i + " for " + TableTitle + " must be a positive integer\n";
+                err += "Input on row " + (i+1) + " for " + TableTitle + " must be a positive integer\n";
             for (int j = i + 1; j < Count; j++)
             {
                 if (CBInputs.SelectedIds[i] != CBInputs.SelectedIds[j]) continue;

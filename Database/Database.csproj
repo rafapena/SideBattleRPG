@@ -111,12 +111,15 @@
     <Compile Include="BaseControls\TableList.xaml.cs">
       <DependentUpon>TableList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ClassTemplates\ToolStates.xaml.cs">
+      <DependentUpon>ToolStates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ClassTemplates\_ClassTemplateOperations.cs" />
     <Compile Include="ClassTemplates\Stats.xaml.cs">
       <DependentUpon>Stats.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ClassTemplates\Tool.xaml.cs">
-      <DependentUpon>Tool.xaml</DependentUpon>
+    <Compile Include="ClassTemplates\ToolAttributes.xaml.cs">
+      <DependentUpon>ToolAttributes.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClassTemplates\_GenericClassTemplate.xaml.cs">
       <DependentUpon>_GenericClassTemplate.xaml</DependentUpon>
@@ -159,7 +162,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ClassTemplates\Tool.xaml">
+    <Page Include="ClassTemplates\ToolStates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ClassTemplates\ToolAttributes.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

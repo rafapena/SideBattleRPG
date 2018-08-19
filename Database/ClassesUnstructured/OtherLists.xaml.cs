@@ -29,7 +29,6 @@ namespace Database.ClassesUnstructured
             List<string> columnNames = new List<string> { "Name" };
             Elements.Setup("", "TypesLists", "Elements", columnNames, 200);
             WeaponTypes.Setup("", "TypesLists", "Weapon Types", columnNames, 200);
-            SkillTypes.Setup("", "TypesLists", "Skill Types", columnNames, 200);
             ToolFormulas.Setup("", "TypesLists", "Tool Formulas", columnNames, 200);
         }
 
@@ -38,11 +37,9 @@ namespace Database.ClassesUnstructured
             SetupTables();
             Elements.InitializeNew();
             WeaponTypes.InitializeNew();
-            SkillTypes.InitializeNew();
             ToolFormulas.InitializeNew();
             Elements.Read();
             WeaponTypes.Read();
-            SkillTypes.Read();
             ToolFormulas.Read();
         }
 
@@ -54,7 +51,6 @@ namespace Database.ClassesUnstructured
         {
             Elements.Automate();
             WeaponTypes.Automate();
-            SkillTypes.Automate();
             ToolFormulas.Automate();
         }
 
@@ -62,7 +58,6 @@ namespace Database.ClassesUnstructured
         {
             string err = Elements.ValidateInputs();
             err += WeaponTypes.ValidateInputs();
-            err += SkillTypes.ValidateInputs();
             err += ToolFormulas.ValidateInputs();
             return err;
         }
@@ -71,7 +66,6 @@ namespace Database.ClassesUnstructured
         {
             Elements.ParameterizeInputs();
             WeaponTypes.ParameterizeInputs();
-            SkillTypes.ParameterizeInputs();
             ToolFormulas.ParameterizeInputs();
         }
         
@@ -79,7 +73,6 @@ namespace Database.ClassesUnstructured
         {
             Elements.Create();
             WeaponTypes.Create();
-            SkillTypes.Create();
             ToolFormulas.Create();
         }
 
@@ -87,7 +80,6 @@ namespace Database.ClassesUnstructured
         {
             Elements.Read();
             WeaponTypes.Read();
-            SkillTypes.Read();
             ToolFormulas.Read();
         }
 
@@ -95,7 +87,6 @@ namespace Database.ClassesUnstructured
         {
             Elements.Delete();
             WeaponTypes.Delete();
-            SkillTypes.Delete();
             ToolFormulas.Delete();
         }
 
@@ -107,7 +98,6 @@ namespace Database.ClassesUnstructured
         {
             Elements.Update();
             WeaponTypes.Update();
-            SkillTypes.Update();
             ToolFormulas.Update();
         }
 
@@ -115,7 +105,6 @@ namespace Database.ClassesUnstructured
         {
             Elements.Clone();
             WeaponTypes.Clone();
-            SkillTypes.Clone();
             ToolFormulas.Clone();
         }
     }

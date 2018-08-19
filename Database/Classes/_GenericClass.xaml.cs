@@ -29,8 +29,8 @@ namespace Database.Classes
 
         protected override void SetupTableData()
         {
-            //table1.SetupTableData();
-            //table2.SetupTableData();
+            //table1.Setup(targetType, targetDBTable, title, new List<string> {});
+            //table2.Setup(targetType, targetDBTable, title, new List<string> {});
         }
 
         protected override void OnInitializeNew()

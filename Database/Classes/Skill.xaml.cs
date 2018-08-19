@@ -36,6 +36,8 @@ namespace Database.Classes
         protected override void OnInitializeNew()
         {
             Base.InitializeNew();
+            ToolAttributes.InitializeNew();
+            ToolStateRates.InitializeNew();
             //attr1Input.Text = "";
             //attr2Image.Source = null;
         }
@@ -43,6 +45,8 @@ namespace Database.Classes
         public override void Automate()
         {
             Base.Automate();
+            ToolAttributes.Automate();
+            ToolStateRates.Automate();
             //attr1Input.Text = "This";
             //attr2Input.Text = "0";
         }
@@ -50,6 +54,8 @@ namespace Database.Classes
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();
+            err += ToolAttributes.ValidateInputs();
+            err += ToolStateRates.ValidateInputs();
             //if (!Utils.InRequiredLength(Utils.CutSpaces(attr1))) err += "attr1 needs to have 1 to 16 characters";
             return err;
         }
@@ -64,11 +70,15 @@ namespace Database.Classes
         {
             Base.Create();
             SQLCreate("attr1, attr2, BaseObjectID", "@attr1, @attr2, " + Base.ClassTemplateId.ToString());
+            ToolAttributes.Create();
+            ToolStateRates.Create();
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
             Base.Read(reader);
+            ToolAttributes.Read(reader);
+            ToolStateRates.Read(reader);
             //attr1Input.Text = reader.GetInt32(N).ToString();
             //attr2Input.Text = reader.GetString(N);
         }
@@ -76,17 +86,23 @@ namespace Database.Classes
         protected override void OnUpdate()
         {
             Base.Update();
+            ToolAttributes.Update();
+            ToolStateRates.Update();
             SQLUpdate("attr1 = @attr1, attr2 = @attr2");
         }
 
         protected override void OnDelete()
         {
             Base.Delete();
+            ToolAttributes.Delete();
+            ToolStateRates.Delete();
         }
 
         protected override void OnClone()
         {
             Base.Clone();
+            ToolAttributes.Clone();
+            ToolStateRates.Clone();
         }
     }
 }

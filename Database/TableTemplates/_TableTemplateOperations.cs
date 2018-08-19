@@ -33,6 +33,7 @@ namespace Database.TableTemplates
         protected string TargetType { get; private set; }
         protected string TargetDBTable { get; private set; }
         protected int HostId { get; private set; }
+        public string TableIdentifier { get; set; }
 
 
         protected virtual string CheckAddability() { return ""; }
@@ -83,17 +84,10 @@ namespace Database.TableTemplates
         public void Setup(string hostType, string hostDBTable, string targetType, string targetDBTable,
             string title, List<string> columnNames, int scrollerHeight=100)
         {
-            string[] toGetTable = targetDBTable.Split('_');
             HostType = hostType;
+            HostDBTable = hostDBTable;
             TargetType = targetType;
-            if (toGetTable.Length < 3)
-            {
-                HostDBTable = SQLDB.CurrentTable;
-                TargetDBTable = targetDBTable;
-            } else {
-                HostDBTable = toGetTable[0];
-                TargetDBTable = toGetTable[2];
-            }
+            TargetDBTable = targetDBTable;
             HostId = getHostId();
             TableTitle = title;
             ScrollerHeight = scrollerHeight;
@@ -109,7 +103,7 @@ namespace Database.TableTemplates
         private int getHostId()
         {
             if (SQLDB.CurrentClass == HostType) return SQLDB.CurrentId;
-            int id = 0;
+            int id;
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
@@ -118,7 +112,8 @@ namespace Database.TableTemplates
                 using (var reader = SQLDB.Retrieve(select + " " + where + ";", conn))
                 {
                     reader.Read();
-                    id = (int)reader[HostType + "_ID"];
+                    try { id = int.Parse(reader[HostType + "_ID"].ToString()); }
+                    catch (InvalidOperationException) { id = SQLDB.CurrentId; }
                 }
                 conn.Close();
             }
@@ -132,6 +127,7 @@ namespace Database.TableTemplates
             Elements = new List<List<UIElement>>();
             Count = 0;
             OnInitializeNew();
+            TableIdentifier = "";
             TableSetup(Table, ColumnNames);
         }
 
@@ -180,8 +176,9 @@ namespace Database.TableTemplates
         protected virtual string[] OnReadCommands()
         {
             string targetIdName = (HostType == TargetType ? "Other" : "") + TargetType + "ID";
+            string connectorTable = HostDBTable + "_To_" + TargetDBTable + TableIdentifier;
             return new string[] {
-                HostDBTable + "_To_" + TargetDBTable + " JOIN  BaseObjects JOIN " + TargetDBTable,
+                connectorTable + " JOIN  BaseObjects JOIN " + TargetDBTable,
                 "BaseObject_ID = BaseObjectID AND " + TargetType + "_ID = " + targetIdName + " AND " + HostType + "ID = " + HostId + " ORDER BY TableIndex"
             };
         }
@@ -215,7 +212,8 @@ namespace Database.TableTemplates
 
         protected virtual string[] OnDelete()
         {
-            return new string[] { HostDBTable + "_To_" + TargetDBTable, HostType + "ID = " + HostId };
+            string connectorTable = HostDBTable + "_To_" + TargetDBTable + TableIdentifier;
+            return new string[] { connectorTable, HostType + "ID = " + HostId };
         }
         public void Delete()
         {

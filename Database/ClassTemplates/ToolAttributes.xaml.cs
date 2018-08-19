@@ -17,13 +17,13 @@ using Database.Utilities;
 
 namespace Database.ClassTemplates
 {
-    public partial class Tool : _ClassTemplateOperations
+    public partial class ToolAttributes : _ClassTemplateOperations
     {
-        public Tool()
+        public ToolAttributes()
         {
             InitializeComponent();
-            ClassTemplateTable = "_GenericClassTemplate";    // PLURAL For Type
-            ClassTemplateType = "_GenericClassTemplate";
+            ClassTemplateTable = "Tools";    // PLURAL For Type
+            ClassTemplateType = "Tool";
         }
 
         protected override void SetupTableData()

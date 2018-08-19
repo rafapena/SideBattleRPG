@@ -36,6 +36,7 @@ namespace Database.ClassTemplates
         {
             HostTableAttributeName = ClassTemplateType + "ID";
             ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
+            SetupTableData();
             OnInitializeNew();
         }
 
@@ -54,8 +55,9 @@ namespace Database.ClassTemplates
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
-            string[] text = OnCreate();
-            SQLDB.Command("INSERT INTO " + ClassTemplateTable + " (" + text[0] + ") VALUES (" + text[1] + ");");
+            string[] createText = OnCreate();
+            if (createText != null)
+                SQLDB.Command("INSERT INTO " + ClassTemplateTable + " (" + createText[0] + ") VALUES (" + createText[1] + ");");
             SQLDB.Inputs = null;
         }
 
@@ -75,6 +77,7 @@ namespace Database.ClassTemplates
                 {
                     reader.Read();
                     ClassTemplateId = reader.GetInt32(0);
+                    SetupTableData();
                     OnRead(reader);
                 }
                 conn.Close();
@@ -87,7 +90,11 @@ namespace Database.ClassTemplates
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
-            SQLDB.Command("UPDATE " + ClassTemplateTable + " SET " + OnUpdate() + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
+            string updateText = OnUpdate();
+            if (updateText != "")
+                SQLDB.Command(
+                    "UPDATE " + ClassTemplateTable + " SET " + updateText + " " +
+                    "WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
             SQLDB.Inputs = null;
         }
 

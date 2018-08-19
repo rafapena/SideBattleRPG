@@ -62,6 +62,7 @@ namespace Database.TableTemplates
             string dupCond = HostType == TargetType ? "AND " + HostType + "_ID <> " + HostId : "";
             string whereSort = "BaseObject_ID = BaseObjectID " + dupCond + " ORDER BY Name ASC";
             CBInputs = new ComboBoxInputData(TargetType + "_ID", "Name", tables, whereSort);
+            AttributeName = "";
         }
 
 
@@ -74,7 +75,7 @@ namespace Database.TableTemplates
         {
             string err = "";
             if (isDual() && !Utils.PosInt(((TextBox)Elements[i][2]).Text))
-                err += "Input on row " + i + " for " + TableTitle + " must be a positive integer\n";
+                err += "Input on row " + (i+1) + " for " + TableTitle + " must be a positive integer\n";
             for (int j = i + 1; j < Count; j++)
             {
                 if (CBInputs.SelectedIds[i] != CBInputs.SelectedIds[j]) continue;
@@ -91,10 +92,11 @@ namespace Database.TableTemplates
 
         protected override string[] OnCreate()
         {
+            string connectorTable = HostDBTable + "_To_" + TargetDBTable + TableIdentifier;
             string targetIdName = (HostType == TargetType ? "Other" : "") + TargetType + "ID";
             string attributes = HostType + "ID, " + targetIdName + ", TableIndex";
             if (isDual()) attributes += ", " + AttributeName;
-            return new string[] { HostDBTable + "_To_" + TargetDBTable, attributes };
+            return new string[] { connectorTable, attributes };
         }
         protected override string OnCreateValues(int i)
         {

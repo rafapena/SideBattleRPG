@@ -26,7 +26,6 @@
 
                 <table:SingleText x:Name="Elements"/>
                 <table:SingleText x:Name="WeaponTypes"/>
-                <table:SingleText x:Name="SkillTypes"/>
                 <table:SingleText x:Name="ToolFormulas"/>
 
             </StackPanel>
