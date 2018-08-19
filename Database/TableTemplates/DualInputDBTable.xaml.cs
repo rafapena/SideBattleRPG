@@ -21,6 +21,10 @@ namespace Database.TableTemplates
     public partial class DualInputDBTable : _TableTemplateOperations
     {
         private ComboBoxInputData CBInputs;
+        public string AttributeName { get; set; }
+
+
+        public bool isDual() { return Table.ColumnDefinitions.Count == 3; }
 
         public DualInputDBTable()
         {
@@ -48,15 +52,15 @@ namespace Database.TableTemplates
         {
             CBInputs.RemoveFromSelectedIds();
         }
-
+        
         protected override void OnInitializeNew()
         {
             Title.Text = TableTitle;
             Table = TableList;
             Scroller.Height = ScrollerHeight;
             string tables = "BaseObjects JOIN " + TargetDBTable;
-            string dupCond = SQLDB.CurrentClass == TargetType ? " AND " + SQLDB.CurrentClass + "_ID <> " + SQLDB.CurrentId : "";
-            string whereSort = "BaseObject_ID = BaseObjectID" + dupCond + " ORDER BY Name ASC";
+            string dupCond = HostType == TargetType ? "AND " + HostType + "_ID <> " + HostId : "";
+            string whereSort = "BaseObject_ID = BaseObjectID " + dupCond + " ORDER BY Name ASC";
             CBInputs = new ComboBoxInputData(TargetType + "_ID", "Name", tables, whereSort);
         }
 
@@ -70,7 +74,7 @@ namespace Database.TableTemplates
         {
             string err = "";
             if (isDual() && !Utils.PosInt(((TextBox)Elements[i][2]).Text))
-                err += "Row " + i + " on " + TableTitle + " must be a positive integer\n";
+                err += "Input on row " + i + " for " + TableTitle + " must be a positive integer\n";
             for (int j = i + 1; j < Count; j++)
             {
                 if (CBInputs.SelectedIds[i] != CBInputs.SelectedIds[j]) continue;
@@ -82,28 +86,27 @@ namespace Database.TableTemplates
 
         protected override void OnParameterizeInputs(int i)
         {
-            if (isDual()) ParameterizeInput("@" + InputAttributeName + "" + i, ((TextBox)Elements[i][2]).Text);
+            if (isDual()) ParameterizeInput("@" + AttributeName + i.ToString(), ((TextBox)Elements[i][2]).Text);
         }
 
-
-        protected override string[] OnCreate(int i)
+        protected override string[] OnCreate()
         {
-            string targetIdName = (SQLDB.CurrentClass == TargetType ? "Other" : "") + TargetType + "ID";
-            string attributes = SQLDB.CurrentClass + "ID, " + targetIdName + ", TableIndex";
-            string values = SQLDB.CurrentId + ", " + CBInputs.SelectedIds[i] + ", " + i;
-            if (isDual())
-            {
-                attributes += ", " + InputAttributeName;
-                values += ", @" + InputAttributeName + i.ToString();
-            }
-            return new string[] { attributes, values };
+            string targetIdName = (HostType == TargetType ? "Other" : "") + TargetType + "ID";
+            string attributes = HostType + "ID, " + targetIdName + ", TableIndex";
+            if (isDual()) attributes += ", " + AttributeName;
+            return new string[] { HostDBTable + "_To_" + TargetDBTable, attributes };
+        }
+        protected override string OnCreateValues(int i)
+        {
+            string textAttr = isDual() ? ", @" + AttributeName + i : "";
+            return HostId + ", " + CBInputs.SelectedIds[i] + ", " + i + textAttr;
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            int landingIndex = Convert.ToInt32( CBInputs.OptionsListIds.FindIndex( a => a == int.Parse(reader[TargetType + "_ID"].ToString())) );
+            int landingIndex = CBInputs.OptionsListIds.FindIndex( a => a == int.Parse(reader[TargetType + "_ID"].ToString()) );
             Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, landingIndex));
-            if (isDual()) AddSecondInput(reader[InputAttributeName].ToString());
+            if (isDual()) AddSecondInput(reader[AttributeName].ToString());
             CBInputs.AddToSelectedIds(landingIndex);
         }
     }

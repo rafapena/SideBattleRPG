@@ -21,8 +21,11 @@ namespace Database.TableTemplates
     public partial class DualInputTypeList : _TableTemplateOperations
     {
         private ComboBoxInputData CBInputs;
+        public string AttributeName { get; set; }
         public string StringList { get; private set; }
 
+        
+        public bool isDual() { return Table.ColumnDefinitions.Count == 3; }
 
         public DualInputTypeList()
         {
@@ -69,7 +72,7 @@ namespace Database.TableTemplates
         {
             string err = "";
             if (isDual() && !Utils.PosInt(((TextBox)Elements[i][2]).Text))
-                err += "Row " + i + " on " + TableTitle + " must be a positive integer\n";
+                err += "Input on row " + i + " for " + TableTitle + " must be a positive integer\n";
             for (int j = i + 1; j < Count; j++)
             {
                 if (CBInputs.SelectedIds[i] != CBInputs.SelectedIds[j]) continue;
@@ -81,11 +84,14 @@ namespace Database.TableTemplates
 
         protected override void OnParameterizeInputs(int i)
         {
-            if (isDual()) ParameterizeInput("@" + InputAttributeName + "" + i, ((TextBox)Elements[i][2]).Text);
+            if (isDual()) ParameterizeInput("@" + AttributeName + "" + i, ((TextBox)Elements[i][2]).Text);
         }
 
 
-        protected override string[] OnCreate(int i) { return null; }    // DO NOT USE: Only here because it's an abstract function
+        // DO NOT USE: Only here because they're abstract functions
+        protected override string[] OnCreate() { return null; }
+        protected override string OnCreateValues(int i) { return ""; }
+         
         public new void Create()
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
@@ -106,10 +112,10 @@ namespace Database.TableTemplates
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString(), conn))
+                using (var reader = SQLDB.Retrieve("SELECT * FROM " + HostDBTable + " WHERE " + HostType + "_ID = " + HostId + ";", conn))
                 {
                     reader.Read();
-                    StringList = reader[InputAttributeName].ToString();
+                    StringList = reader[AttributeName].ToString();
                 }
                 conn.Close();  
             }
@@ -132,9 +138,7 @@ namespace Database.TableTemplates
         public new void Update()
         {
             Create();
-            SQLDB.Command(
-                "UPDATE " + SQLDB.CurrentTable + " SET " + InputAttributeName + " = '" + StringList + "' " +
-                "WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId + ";");
+            SQLDB.Command("UPDATE " + HostDBTable + " SET " + AttributeName + " = '" + StringList + "' WHERE " + HostType + "_ID = " + HostId + ";");
         }
 
         public new void Delete() { }    // DO NOT USE: ClassOperation handles this - Only here to override base function

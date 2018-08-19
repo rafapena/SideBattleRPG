@@ -27,10 +27,10 @@ namespace Database.ClassesUnstructured
         public void SetupTables()
         {
             List<string> columnNames = new List<string> { "Name" };
-            Elements.SetupTableData("", "TypesLists", "Elements", columnNames, 200);
-            WeaponTypes.SetupTableData("", "TypesLists", "Weapon Types", columnNames, 200);
-            SkillTypes.SetupTableData("", "TypesLists", "Skill Types", columnNames, 200);
-            ToolFormulas.SetupTableData("", "TypesLists", "Tool Formulas", columnNames, 200);
+            Elements.Setup("", "TypesLists", "Elements", columnNames, 200);
+            WeaponTypes.Setup("", "TypesLists", "Weapon Types", columnNames, 200);
+            SkillTypes.Setup("", "TypesLists", "Skill Types", columnNames, 200);
+            ToolFormulas.Setup("", "TypesLists", "Tool Formulas", columnNames, 200);
         }
 
         protected override void OnInitializeNew()

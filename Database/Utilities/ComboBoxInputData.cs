@@ -11,9 +11,9 @@ namespace Database.Utilities
 {
     public class ComboBoxInputData
     {
-        public List<int> SelectedIds { get; set; }
-        public List<int> OptionsListIds { get; set; }
-        public List<string> OptionsListNames { get; set; }
+        public List<int> SelectedIds { get; private set; }
+        public List<int> OptionsListIds { get; private set; }
+        public List<string> OptionsListNames { get; private set; }
 
         public ComboBoxInputData(string idAttribute, string nameAttribute, string queryTables, string queryConditionAndSorter)
         {
@@ -23,7 +23,8 @@ namespace Database.Utilities
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + queryTables + " WHERE " + queryConditionAndSorter + ";", conn))
+                string select = "SELECT " + idAttribute + ", " + nameAttribute + " FROM " + queryTables;
+                using (var reader = SQLDB.Retrieve(select + " WHERE " + queryConditionAndSorter + ";", conn))
                 {
                     while (reader.Read())
                     {
@@ -39,20 +40,14 @@ namespace Database.Utilities
         public void AddToSelectedIds(int i) { SelectedIds.Add(OptionsListIds[i]); }
         public void RemoveFromSelectedIds() { SelectedIds.RemoveAt(SelectedIds.Count - 1); }
 
-        public ComboBox CreateInput(int landingIndex)
-        {
-            if (OptionsListNames == null && landingIndex >= OptionsListNames.Count) return null;
-            return TableBuilder.ComboBox("CB_" + SelectedIds.Count, OptionsListNames, landingIndex, UpdateSelectedIds);
-        }
         public ComboBox CreateInput(int row, int col, int landingIndex)
         {
             if (OptionsListNames == null && landingIndex >= OptionsListNames.Count) return null;
             return TableBuilder.ComboBox("CB_" + SelectedIds.Count, OptionsListNames, landingIndex, row, col, UpdateSelectedIds);
         }
-
         private void UpdateSelectedIds(object sender, EventArgs e)
         {
-            int getIdThroughName = Convert.ToInt32(((ComboBox)sender).Name.Split('_').Last());
+            int getIdThroughName = int.Parse(((ComboBox)sender).Name.Split('_').Last());
             SelectedIds[getIdThroughName] = OptionsListIds[((ComboBox)sender).SelectedIndex];
         }
     }

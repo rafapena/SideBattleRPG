@@ -63,7 +63,9 @@ namespace Database.Classes
         protected override void OnCreate()
         {
             Base.Create();
+            // Create DualInput TypeLists
             SQLCreate("attr1, attr2, BaseObjectID", "@attr1, @attr2, " + Base.ClassTemplateId.ToString());
+            // Create Dual Input Classes
         }
 
         protected override void OnRead(SQLiteDataReader reader)

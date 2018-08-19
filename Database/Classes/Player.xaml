@@ -47,19 +47,19 @@
                                 <StackPanel Orientation="Vertical" Margin="8,4,8,4">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="General Friendliness:" Margin="8,4,0,4"/>
-                                        <TextBox x:Name="CompanionshipInput" Margin="8,4,0,4" Width="30"/>
+                                        <TextBox x:Name="CompanionshipInput" Margin="8,4,0,4" Width="40"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="Save Partner Rate:" Margin="8,0,0,4"/>
-                                        <TextBox x:Name="SavePartnerRateInput" Margin="8,0,0,4" Width="30"/>
+                                        <TextBox x:Name="SavePartnerRateInput" Margin="8,0,0,4" Width="40"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="Counterattack Rate:" Margin="8,0,0,4"/>
-                                        <TextBox x:Name="CounterattackRateInput" Margin="8,0,0,4" Width="30"/>
+                                        <TextBox x:Name="CounterattackRateInput" Margin="8,0,0,4" Width="40"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="Assist Damage Rate:" Margin="8,0,0,4"/>
-                                        <TextBox x:Name="AssistDamageRateInput" Margin="8,0,0,4" Width="30"/>
+                                        <TextBox x:Name="AssistDamageRateInput" Margin="8,0,0,4" Width="40"/>
                                     </StackPanel>
                                 </StackPanel>
                             </StackPanel>

@@ -57,15 +57,18 @@ namespace Database.TableTemplates
             ParameterizeInput("@Name" + i, ((TextBox)Elements[i][1]).Text);
         }
 
-        protected override string[] OnCreate(int i)
+        protected override string[] OnCreate()
         {
-            return new string[] { "ListType, List_ID, Name",
-                "'" + TableTitle + "', " + i.ToString() + ", @Name" + i.ToString() };
+            return new string[] { TargetDBTable, "ListType, List_ID, Name" };
+        }
+        protected override string OnCreateValues(int i)
+        {
+            return "'" + TableTitle + "', " + i.ToString() + ", @Name" + i.ToString();
         }
 
         protected override string[] OnReadCommands()
         {
-            return new string[] { TableTemplateDBTable, "ListType = '" + TableTitle + "' ORDER BY List_ID ASC" };
+            return new string[] { TargetDBTable, "ListType = '" + TableTitle + "' ORDER BY List_ID ASC" };
         }
         protected override void OnRead(SQLiteDataReader reader)
         {
@@ -73,9 +76,9 @@ namespace Database.TableTemplates
         }
 
 
-        protected override string DeleteCondition()
+        protected override string[] OnDelete()
         {
-            return "ListType = '" + TableTitle + "'";
+            return new string[] { TargetDBTable, "ListType = '" + TableTitle + "'" };
         }
     }
 }

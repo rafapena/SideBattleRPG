@@ -24,8 +24,7 @@ namespace Database.Classes
         public Footer LinkedFooter { get; set; }
 
 
-        protected virtual void SetupTableData() { }
-
+        protected abstract void SetupTableData();
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {
@@ -33,6 +32,7 @@ namespace Database.Classes
             SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
             LinkedFooter.ApplyInitializeNewSettings();
             LinkedTableList.RemoveButtonHighlight();
+            SetupTableData();
             OnInitializeNew();
         }
 
@@ -79,6 +79,7 @@ namespace Database.Classes
                     "WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString(), conn))
                 {
                     reader.Read();
+                    SetupTableData();
                     OnRead(reader);
                 }
                 conn.Close();

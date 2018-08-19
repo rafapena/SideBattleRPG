@@ -57,9 +57,16 @@ namespace Database.TableTemplates
             //ParameterizeInputs("@attr2" + i, ((TextBox)InputElements[i][1]).Text);
         }
 
-        protected override string[] OnCreate(int i)
+        protected override string[] OnCreate()
         {
-            return new string[] { SQLDB.CurrentClass + "ID", SQLDB.CurrentId.ToString() };
+            string targetIdName = (HostType == TargetType ? "Other" : "") + TargetType + "ID";
+            string attributes = HostType + "ID, " + targetIdName + ", TableIndex";
+            return new string[] { HostDBTable + "_To_" + TargetDBTable, attributes };
+        }
+        protected override string OnCreateValues(int i)
+        {
+            //return HostId + ", @" + attr + i;
+            throw new NotImplementedException();
         }
 
         protected override void OnRead(SQLiteDataReader reader)

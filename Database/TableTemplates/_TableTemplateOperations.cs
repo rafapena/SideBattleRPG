@@ -21,19 +21,18 @@ namespace Database.TableTemplates
 {
     public abstract class _TableTemplateOperations : UserControl, ObjectOperations
     {
-        public Grid Table { get; set; }
-        public List<string> ColumnNames { get; private set; }
-        public List<List<UIElement>> Elements { get; private set; }
+        protected Grid Table { get; set; }
+        protected string TableTitle { get; private set; }
+        protected List<string> ColumnNames { get; private set; }
+        protected List<List<UIElement>> Elements { get; private set; }
+        protected int ScrollerHeight { get; private set; }
+        protected int Count { get; private set; }
 
-        public string TableTitle { get; private set; }
-        public string TargetType { get; private set; }
-        public string TargetDBTable { get; private set; }
-        public string TableTemplateDBTable { get; protected set; }
-
-        public int ScrollerHeight { get; private set; }
-        public int Count { get; private set; }
-        public string InputAttributeName { get; set; }
-        public bool isDual() { return Table.ColumnDefinitions.Count == 3; }
+        protected string HostType { get; private set; }
+        protected string HostDBTable { get; set; }
+        protected string TargetType { get; private set; }
+        protected string TargetDBTable { get; private set; }
+        protected int HostId { get; private set; }
 
 
         protected virtual string CheckAddability() { return ""; }
@@ -75,16 +74,30 @@ namespace Database.TableTemplates
             for (int i = 1; i < elmts.Count; i++) Table.Children.Add(elmts[i]);
         }
 
-        public void SetupTableData(string targetType, string targetDBTable, string title,
-            List<string> columnNames = null, int scrollerHeight = 100)
+
+        public void Setup(string targetType, string targetDBTable, string title, List<string> columnNames, int scrollerHeight=100)
+        {
+            Setup(SQLDB.CurrentClass, SQLDB.CurrentTable, targetType, targetDBTable, title, columnNames, scrollerHeight);
+        }
+
+        public void Setup(string hostType, string hostDBTable, string targetType, string targetDBTable,
+            string title, List<string> columnNames, int scrollerHeight=100)
         {
             string[] toGetTable = targetDBTable.Split('_');
+            HostType = hostType;
             TargetType = targetType;
-            TableTemplateDBTable = targetDBTable;
-            TargetDBTable = toGetTable.Length > 2 ? toGetTable[2] : targetDBTable;
+            if (toGetTable.Length < 3)
+            {
+                HostDBTable = SQLDB.CurrentTable;
+                TargetDBTable = targetDBTable;
+            } else {
+                HostDBTable = toGetTable[0];
+                TargetDBTable = toGetTable[2];
+            }
+            HostId = getHostId();
             TableTitle = title;
             ScrollerHeight = scrollerHeight;
-            if (columnNames != null && columnNames.Count > 0)
+            if (columnNames.Count > 0)
             {
                 ColumnNames = new List<string>();
                 ColumnNames.Add("#");
@@ -93,10 +106,29 @@ namespace Database.TableTemplates
             InitializeNew();
         }
 
+        private int getHostId()
+        {
+            if (SQLDB.CurrentClass == HostType) return SQLDB.CurrentId;
+            int id = 0;
+            using (var conn = SQLDB.DB())
+            {
+                conn.Open();
+                string select = "SELECT  " + HostType + "_ID FROM " + SQLDB.CurrentTable + " JOIN " + HostDBTable;
+                string where = "WHERE " + HostType + "_ID = " + HostType + "ID AND " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId;
+                using (var reader = SQLDB.Retrieve(select + " " + where + ";", conn))
+                {
+                    reader.Read();
+                    id = (int)reader[HostType + "_ID"];
+                }
+                conn.Close();
+            }
+            return id;
+        }
+
+
         protected abstract void OnInitializeNew();
         public void InitializeNew() // Not too useful: SetupTableData does all of the work, due to naming conventions and interface constistencies
         {
-            InputAttributeName = "DefaultValueToReplace";
             Elements = new List<List<UIElement>>();
             Count = 0;
             OnInitializeNew();
@@ -133,27 +165,24 @@ namespace Database.TableTemplates
         }
 
 
-        protected abstract string[] OnCreate(int i);
+        protected abstract string[] OnCreate();
+        protected abstract string OnCreateValues(int i);
         public void Create()
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
-            for (int i = 0; i < Count; i++)
-            {
-                string[] str = OnCreate(i);
-                SQLDB.Command("INSERT INTO " + TableTemplateDBTable + " (" + str[0] + ") VALUES (" + str[1] + ");");
-            }
+            string[] str = OnCreate();
+            for (int i = 0; i < Count; i++) SQLDB.Command("INSERT INTO " + str[0] + " (" + str[1] + ") VALUES (" + OnCreateValues(i) + ");");
             SQLDB.Inputs = null;
         }
 
 
         protected virtual string[] OnReadCommands()
         {
-            string targetIdName = (SQLDB.CurrentClass == TargetType ? "Other" : "") + TargetType + "ID";
+            string targetIdName = (HostType == TargetType ? "Other" : "") + TargetType + "ID";
             return new string[] {
-                TableTemplateDBTable + " JOIN  BaseObjects JOIN " + TargetDBTable,
-                "BaseObject_ID = BaseObjectID AND " + TargetType + "_ID = " + targetIdName + " AND " +
-                    SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId + " ORDER BY TableIndex"
+                HostDBTable + "_To_" + TargetDBTable + " JOIN  BaseObjects JOIN " + TargetDBTable,
+                "BaseObject_ID = BaseObjectID AND " + TargetType + "_ID = " + targetIdName + " AND " + HostType + "ID = " + HostId + " ORDER BY TableIndex"
             };
         }
         protected abstract void OnRead(SQLiteDataReader reader);
@@ -184,17 +213,17 @@ namespace Database.TableTemplates
             Create();
         }
 
-
-        protected virtual string DeleteCondition()
+        protected virtual string[] OnDelete()
         {
-            return SQLDB.CurrentClass + "ID = " + SQLDB.CurrentId.ToString();
+            return new string[] { HostDBTable + "_To_" + TargetDBTable, HostType + "ID = " + HostId };
         }
         public void Delete()
         {
-            SQLDB.Command("DELETE FROM " + TableTemplateDBTable + " WHERE " + DeleteCondition() + ";");
+            string[] deleteMsg = OnDelete();
+            SQLDB.Command("DELETE FROM " + deleteMsg[0] + " WHERE " + deleteMsg[1] + ";");
         }
         
-        // Not needed: No ID to keep track of and is only implemented here (Create() handles everything)
+        // Not needed: No ID to keep track of and only implemented to satisfy interface condition (Create() handles everything)
         public void Clone() { }
     }
 }

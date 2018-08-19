@@ -28,6 +28,7 @@ namespace Database.ClassesUnstructured
 {
     public abstract class _ClassUnstructuredOperations : Page, ObjectOperations
     {
+        protected virtual void SetupTableData() { }
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {

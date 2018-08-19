@@ -27,29 +27,28 @@ namespace Database.Classes
             InitializeNew();
         }
 
-        protected void SetupTables()
+        protected override void SetupTableData()
         {
-            ClassChoices.SetupTableData("Class", "Players_To_Classes", "Possible Classes", new List<string> { "Class" });
-            SkillChoices.SetupTableData("Skill", "Players_To_Skills", "Skill Set", new List<string> { "Skill", "Level" });
-            StateRates.SetupTableData("State", "Players_To_States", "State Rates", new List<string> { "State", "%" });
-            ElementRates.SetupTableData("Elements", "TypesLists", "Element Rates", new List<string> { "Element", "%" });
-            Relations.SetupTableData("Player", "Players_To_Players", "Compatibilities", new List<string> { "Player", "Companionship" });
-            SkillChoices.InputAttributeName = "LevelRequired";
-            StateRates.InputAttributeName = "Vulnerability";
-            ElementRates.InputAttributeName = "ElementRates";
-            Relations.InputAttributeName = "CompanionshipTo";
+            ClassChoices.Setup("Class", "Classes", "Possible Classes", new List<string> { "Class" });
+            SkillChoices.Setup("Skill", "Skills", "Skill Set", new List<string> { "Skill", "Level" });
+            StateRates.Setup("State", "States", "State Rates", new List<string> { "State", "%" });
+            ElementRates.Setup("Elements", "TypesLists", "Element Rates", new List<string> { "Element", "%" });
+            Relations.Setup("Player", "Players", "Compatibilities", new List<string> { "Player", "Comp." });
+            SkillChoices.AttributeName = "LevelRequired";
+            StateRates.AttributeName = "Vulnerability";
+            ElementRates.AttributeName = "ElementRates";
+            Relations.AttributeName = "CompanionshipTo";
         }
 
         protected override void OnInitializeNew()
         {
-            SetupTables();
             Base.InitializeNew();
             NatStats.InitializeNew();
-            NatStats.AttributeName = "NaturalStats";
-            CompanionshipInput.Text = "100";
-            SavePartnerRateInput.Text = "100";
-            CounterattackRateInput.Text = "100";
-            AssistDamageRateInput.Text = "100";
+            NatStats.HostTableAttributeName = "NaturalStats";
+            CompanionshipInput.Text = "";
+            SavePartnerRateInput.Text = "";
+            CounterattackRateInput.Text = "";
+            AssistDamageRateInput.Text = "";
         }
 
         public override void Automate()
@@ -61,6 +60,10 @@ namespace Database.Classes
             StateRates.Automate();
             ElementRates.Automate();
             Relations.Automate();
+            CompanionshipInput.Text = "100";
+            SavePartnerRateInput.Text = "100";
+            CounterattackRateInput.Text = "100";
+            AssistDamageRateInput.Text = "100";
         }
 
         public override string ValidateInputs()
@@ -97,7 +100,7 @@ namespace Database.Classes
             SQLCreate(
                 "BaseObjectID, NaturalStats, ElementRates, Companionship, SavePartnerRate, CounterattackRate, AssistDamageRate",
                 Base.ClassTemplateId.ToString() + ", " + NatStats.ClassTemplateId.ToString() + ", '" + ElementRates.StringList + "', " +
-                "@Companionship, @SavePartnerRate, @CounterattackRate, @AssistDamageRate");
+                    "@Companionship, @SavePartnerRate, @CounterattackRate, @AssistDamageRate");
             ClassChoices.Create();
             SkillChoices.Create();
             StateRates.Create();
@@ -106,7 +109,6 @@ namespace Database.Classes
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            SetupTables();
             Base.Read(reader);
             NatStats.Read(reader);
             ClassChoices.Read();
