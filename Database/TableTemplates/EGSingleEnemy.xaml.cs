@@ -38,12 +38,6 @@ namespace Database.TableTemplates
             Scroller.Height = ScrollerHeight;
         }
 
-        protected override void OnAutomate(int i)
-        {
-            //((TextBox)InputElements[i][0]).Text = (i + Count * 2).ToString();
-            //((TextBox)InputElements[i][1]).Text = (i + Count * 2).ToString();
-        }
-
         protected override string OnValidateInputs(int i)
         {
             string err = "";

@@ -40,13 +40,6 @@ namespace Database.Classes
             //attr2Image.Source = null;
         }
 
-        public override void Automate()
-        {
-            Base.Automate();
-            //attr1Input.Text = "This";
-            //attr2Input.Text = "0";
-        }
-
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();

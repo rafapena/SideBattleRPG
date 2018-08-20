@@ -74,11 +74,6 @@ namespace Database.ClassTemplates
             RandomActsInput.Text = "0";
         }
 
-        public override void Automate()
-        {
-            OnInitializeNew();
-        }
-
         public override string ValidateInputs()
         {
             string err = "";

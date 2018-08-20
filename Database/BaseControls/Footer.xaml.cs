@@ -30,7 +30,6 @@ namespace Database.BaseControls
         public void ApplyInitializeNewSettings()
         {
             DeleteButton.Visibility = Visibility.Collapsed;
-            AutoButton.Visibility = Visibility.Visible;
             CloneButton.Visibility = Visibility.Collapsed;
             CreateButton.Visibility = Visibility.Visible;
             UpdateButton.Visibility = Visibility.Collapsed;
@@ -39,7 +38,6 @@ namespace Database.BaseControls
         public void ApplyReadSettings()
         {
             DeleteButton.Visibility = Visibility.Visible;
-            AutoButton.Visibility = Visibility.Collapsed;
             CloneButton.Visibility = Visibility.Visible;
             CreateButton.Visibility = Visibility.Collapsed;
             UpdateButton.Visibility = Visibility.Visible;
@@ -52,11 +50,6 @@ namespace Database.BaseControls
         private void Deleted(object sender, EventArgs e)
         {
             (Application.Current.MainWindow.Content as _ClassOperations).Delete();
-        }
-
-        private void Automated(object sender, EventArgs e)
-        {
-            (Application.Current.MainWindow.Content as _ClassOperations).Automate();
         }
 
         private void Cloned(object sender, EventArgs e)

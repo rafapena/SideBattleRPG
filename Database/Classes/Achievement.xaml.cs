@@ -32,15 +32,8 @@ namespace Database.Classes
         protected override void OnInitializeNew()
         {
             Base.InitializeNew();
-            LevelInput.Text = "";
-            HintInput.Text = "";
-        }
-
-        public override void Automate()
-        {
-            Base.Automate();
             LevelInput.Text = "1";
-            HintInput.Text = "Insert Text Here";
+            HintInput.Text = "????";
         }
 
         public override string ValidateInputs()

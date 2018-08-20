@@ -31,7 +31,6 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Auto" Click="Automated" Margin="2 5 3 5"/>
                 <Button Content="Update" Click="Updated" Margin="2 5 10 5"/>
             </StackPanel>
         </StackPanel>

@@ -39,12 +39,6 @@ namespace Database.ClassTemplates
 
         protected override void OnInitializeNew() { }
 
-        public override void Automate()
-        {
-            StatesGive.Automate();
-            StatesReceive.Automate();
-        }
-
         public override string ValidateInputs()
         {
             string err = "";

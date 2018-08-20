@@ -37,7 +37,6 @@ namespace Database.ClassesUnstructured
         }
 
 
-        public abstract void Automate();
         public abstract string ValidateInputs();
         public abstract void ParameterizeInputs();
         public void ParameterizeInput(string parameterized, string input)

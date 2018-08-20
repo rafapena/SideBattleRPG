@@ -46,7 +46,7 @@ namespace Database.TableTemplates
         protected override void OnAddRow()
         {
             Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, 0));
-            if (isDual()) AddSecondInput("");
+            if (isDual()) AddSecondInput("0");
             CBInputs.AddToSelectedIds(0);
         }
         protected override void OnRemoveRow()
@@ -62,12 +62,6 @@ namespace Database.TableTemplates
             CBInputs = new ComboBoxInputData("List_ID", "Name", TargetDBTable, "ListType = '" + TargetType + "'", "List_ID");
             AttributeName = "";
             StringList = "";
-        }
-
-
-        protected override void OnAutomate(int i)
-        {
-            if (isDual()) ((TextBox)Elements[i][2]).Text = (i * 2).ToString();
         }
 
         protected override string OnValidateInputs(int i)

@@ -32,22 +32,6 @@ namespace Database.ClassTemplates
 
         protected override void OnInitializeNew()
         {
-            HPInput.Text = "";
-            LukInput.Text = "";
-            AtkInput.Text = "";
-            DefInput.Text = "";
-            MapInput.Text = "";
-            MarInput.Text = "";
-            SpdInput.Text = "";
-            TecInput.Text = "";
-            AccInput.Text = "";
-            EvaInput.Text = "";
-            CrtInput.Text = "";
-            CevInput.Text = "";
-        }
-
-        public override void Automate()
-        {
             HPInput.Text = "0";
             LukInput.Text = "0";
             AtkInput.Text = "0";

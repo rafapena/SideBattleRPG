@@ -34,14 +34,8 @@ namespace Database.ClassTemplates
 
         protected override void OnInitializeNew()
         {
-            //attr1Input.Text = "";
+            //attr1Input.Text = "0";
             //attr2Image.Source = null;
-        }
-
-        public override void Automate()
-        {
-            //attr1Input.Text = "This";
-            //attr2Input.Text = "0";
         }
 
         public override string ValidateInputs()

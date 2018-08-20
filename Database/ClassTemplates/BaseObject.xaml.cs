@@ -29,16 +29,10 @@ namespace Database.ClassTemplates
         protected override void OnInitializeNew()
         {
             NameInput.Text = "";
-            DescriptionInput.Text = "";
+            DescriptionInput.Text = "N/A";
             CreatedText.Text = "";
             UpdatedText.Text = "";
             ImageInput.Source = null;
-        }
-
-        public override void Automate()
-        {
-            NameInput.Text = "Generic Name";
-            DescriptionInput.Text = "Description";
         }
 
         public override string ValidateInputs()

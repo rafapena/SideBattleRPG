@@ -51,11 +51,6 @@ namespace Database.Classes
             StealInput.IsChecked = false;
         }
 
-        public override void Automate()
-        {
-            OnInitializeNew();
-        }
-
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();

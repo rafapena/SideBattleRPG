@@ -27,7 +27,7 @@ namespace Database.TableTemplates
 
         protected override void OnAddRow()
         {
-            Elements[Count - 1].Add(TextBox("TB_" + Count, "", Count, 1));
+            Elements[Count - 1].Add(TextBox("TB_" + Count, "Text", Count, 1));
         }
         
         protected override void OnInitializeNew()
@@ -35,12 +35,6 @@ namespace Database.TableTemplates
             Title.Text = TableTitle;
             Scroller.Height = ScrollerHeight;
             Table = TableList;
-        }
-
-        protected override void OnAutomate(int i)
-        {
-            string text = Utils.CutSpaces(((TextBox)Elements[i][0]).Text);
-            if (text == "") ((TextBox)Elements[i][0]).Text = (i + Count*2).ToString();
         }
 
         protected override string OnValidateInputs(int i)

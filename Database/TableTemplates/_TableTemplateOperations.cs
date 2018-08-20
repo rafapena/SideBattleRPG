@@ -132,12 +132,6 @@ namespace Database.TableTemplates
         }
 
 
-        protected abstract void OnAutomate(int i);
-        public void Automate()
-        {
-            for (int i = 0; i < Count; i++) OnAutomate(i);
-        }
-
         protected abstract string OnValidateInputs(int i);
         public string ValidateInputs()
         {

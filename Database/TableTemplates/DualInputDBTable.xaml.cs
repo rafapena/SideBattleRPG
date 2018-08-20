@@ -65,12 +65,6 @@ namespace Database.TableTemplates
             AttributeName = "";
         }
 
-
-        protected override void OnAutomate(int i)
-        {
-            if (isDual()) ((TextBox)Elements[i][2]).Text = (i*2).ToString();
-        }
-
         protected override string OnValidateInputs(int i)
         {
             string err = "";

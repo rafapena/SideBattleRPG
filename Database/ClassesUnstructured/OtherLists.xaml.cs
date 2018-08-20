@@ -43,17 +43,6 @@ namespace Database.ClassesUnstructured
             ToolFormulas.Read();
         }
 
-        private void Automated(object sender, RoutedEventArgs e)
-        {
-            Automate();
-        }
-        public override void Automate()
-        {
-            Elements.Automate();
-            WeaponTypes.Automate();
-            ToolFormulas.Automate();
-        }
-
         public override string ValidateInputs()
         {
             string err = Elements.ValidateInputs();

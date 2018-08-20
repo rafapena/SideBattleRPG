@@ -9,7 +9,6 @@ namespace Database.Utilities
     public interface ObjectOperations
     {
         void InitializeNew();
-        void Automate();
         string ValidateInputs();
         void ParameterizeInputs();
         void ParameterizeInput(string parameterized, string input);

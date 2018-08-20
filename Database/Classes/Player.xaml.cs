@@ -45,21 +45,6 @@ namespace Database.Classes
             Base.InitializeNew();
             NatStats.InitializeNew();
             NatStats.HostTableAttributeName = "NaturalStats";
-            CompanionshipInput.Text = "";
-            SavePartnerRateInput.Text = "";
-            CounterattackRateInput.Text = "";
-            AssistDamageRateInput.Text = "";
-        }
-
-        public override void Automate()
-        {
-            Base.Automate();
-            NatStats.Automate();
-            ClassChoices.Automate();
-            SkillChoices.Automate();
-            StateRates.Automate();
-            ElementRates.Automate();
-            Relations.Automate();
             CompanionshipInput.Text = "100";
             SavePartnerRateInput.Text = "100";
             CounterattackRateInput.Text = "100";
