@@ -60,8 +60,8 @@ namespace Database.TableTemplates
             Scroller.Height = ScrollerHeight;
             string tables = "BaseObjects JOIN " + TargetDBTable;
             string dupCond = HostType == TargetType ? "AND " + HostType + "_ID <> " + HostId : "";
-            string whereSort = "BaseObject_ID = BaseObjectID " + dupCond + " ORDER BY Name ASC";
-            CBInputs = new ComboBoxInputData(TargetType + "_ID", "Name", tables, whereSort);
+            string where = "BaseObject_ID = BaseObjectID " + dupCond;
+            CBInputs = new ComboBoxInputData(TargetType + "_ID", "Name", tables, where, "Name");
             AttributeName = "";
         }
 

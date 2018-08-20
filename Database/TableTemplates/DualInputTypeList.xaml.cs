@@ -59,7 +59,7 @@ namespace Database.TableTemplates
             Title.Text = TableTitle;
             Table = TableList;
             Scroller.Height = ScrollerHeight;
-            CBInputs = new ComboBoxInputData("List_ID", "Name", TargetDBTable, "ListType = '" + TargetType + "' ORDER BY List_ID ASC");
+            CBInputs = new ComboBoxInputData("List_ID", "Name", TargetDBTable, "ListType = '" + TargetType + "'", "List_ID");
             AttributeName = "";
             StringList = "";
         }

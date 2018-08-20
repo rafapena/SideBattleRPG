@@ -26,7 +26,7 @@ namespace Database.TableTemplates
         protected List<string> ColumnNames { get; private set; }
         protected List<List<UIElement>> Elements { get; private set; }
         protected int ScrollerHeight { get; private set; }
-        protected int Count { get; private set; }
+        public int Count { get; private set; }
 
         protected string HostType { get; private set; }
         protected string HostDBTable { get; set; }

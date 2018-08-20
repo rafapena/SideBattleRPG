@@ -47,7 +47,7 @@ namespace Database.ClassTemplates
         public override string ValidateInputs()
         {
             string err = "";
-            //if (!Util.InRequiredLength(Util.CutSpaces(attr1Input.Text))) err += "attr1 needs to have 1 to 16 characters";
+            //if (!Utils.InRequiredLength(Util.CutSpaces(attr1Input.Text))) err += "attr1 needs to have 1 to 16 characters";
             return err;
         }
 

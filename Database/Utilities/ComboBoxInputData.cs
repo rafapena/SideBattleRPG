@@ -15,7 +15,7 @@ namespace Database.Utilities
         public List<int> OptionsListIds { get; private set; }
         public List<string> OptionsListNames { get; private set; }
 
-        public ComboBoxInputData(string idAttribute, string nameAttribute, string queryTables, string queryConditionAndSorter)
+        public ComboBoxInputData(string idAttribute, string nameAttribute, string queryTables, string queryCondition, string sortAttributes)
         {
             SelectedIds = new List<int>();
             OptionsListIds = new List<int>();
@@ -24,7 +24,7 @@ namespace Database.Utilities
             {
                 conn.Open();
                 string select = "SELECT " + idAttribute + ", " + nameAttribute + " FROM " + queryTables;
-                using (var reader = SQLDB.Retrieve(select + " WHERE " + queryConditionAndSorter + ";", conn))
+                using (var reader = SQLDB.Retrieve(select + " WHERE " + queryCondition + " ORDER BY " + sortAttributes + " ASC;", conn))
                 {
                     while (reader.Read())
                     {
@@ -39,6 +39,12 @@ namespace Database.Utilities
         public bool NoOptions() { return OptionsListNames.Count <= 0; }
         public void AddToSelectedIds(int i) { SelectedIds.Add(OptionsListIds[i]); }
         public void RemoveFromSelectedIds() { SelectedIds.RemoveAt(SelectedIds.Count - 1); }
+
+        public void Insert(int index, int id, string text)
+        {
+            OptionsListIds.Insert(index, id);
+            OptionsListNames.Insert(index, text);
+        }
 
         public ComboBox CreateInput(int row, int col, int landingIndex)
         {

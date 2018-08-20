@@ -6,12 +6,86 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:base="clr-namespace:Database.ClassTemplates"
     mc:Ignorable="d" 
+    Background="White"
     d:DesignHeight="300" d:DesignWidth="300">
-    <StackPanel Orientation="Horizontal">
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="15 2 0 2"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Width" Value="40"/>
+                <Setter Property="Height" Value="18"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Margin" Value="5 2 0 2"/>
+            </Style>
+            <Style TargetType="ComboBox">
+                <Setter Property="Margin" Value="5 2 10 2"/>
+            </Style>
+        </Grid.Resources>
 
-        <StackPanel>
-            <TextBlock Text="Insert content here"/>
-        </StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="120"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-    </StackPanel>
+        <TextBlock Text="Type" Grid.Column="0" Grid.Row="0"/>
+        <ComboBox x:Name="TypeInput" Grid.Column="1" Grid.Row="0"/>
+        <TextBlock Text="Element" Grid.Column="2" Grid.Row="0"/>
+        <ComboBox x:Name="ElementInput" Grid.Column="3" Grid.Row="0"/>
+
+        <TextBlock Text="Formula" Grid.Column="0" Grid.Row="1"/>
+        <ComboBox x:Name="FormulaInput" Grid.Column="1" Grid.Row="1"/>
+        <TextBlock Text="Power" Grid.Column="2" Grid.Row="1"/>
+        <TextBox x:Name="PowerInput" Grid.Column="3" Grid.Row="1"/>
+
+        <TextBlock Text="HP/SP Modifier" Grid.Column="0" Grid.Row="2"/>
+        <ComboBox x:Name="HPSPModInput" Grid.Column="1" Grid.Row="2"/>
+        <TextBlock Text="Accuracy %" Grid.Column="2" Grid.Row="2"/>
+        <TextBox x:Name="AccuracyInput" Grid.Column="3" Grid.Row="2"/>
+
+        <TextBlock Text="HP Amount" Grid.Column="0" Grid.Row="3"/>
+        <TextBox x:Name="HPAmountInput" Grid.Column="1" Grid.Row="3"/>
+        <TextBlock Text="Critical Rate %" Grid.Column="2" Grid.Row="3"/>
+        <TextBox x:Name="CriticalRateInput" Grid.Column="3" Grid.Row="3"/>
+
+        <TextBlock Text="SP Amount" Grid.Column="0" Grid.Row="4"/>
+        <TextBox x:Name="SPAmountInput" Grid.Column="1" Grid.Row="4"/>
+        <TextBlock Text="Priority" Grid.Column="2" Grid.Row="4"/>
+        <TextBox x:Name="PriorityInput" Grid.Column="3" Grid.Row="4"/>
+
+        <TextBlock Text="HP %" Grid.Column="0" Grid.Row="5"/>
+        <TextBox x:Name="HPPercentInput" Grid.Column="1" Grid.Row="5"/>
+        <TextBlock Text="Scope" Grid.Column="2" Grid.Row="5"/>
+        <ComboBox x:Name="ScopeInput" Grid.Column="3" Grid.Row="5"/>
+
+        <TextBlock Text="SP %" Grid.Column="0" Grid.Row="6"/>
+        <TextBox x:Name="SPPercentInput" Grid.Column="1" Grid.Row="6"/>
+        <TextBlock Text="Consecutive Acts" Grid.Column="2" Grid.Row="6"/>
+        <TextBox x:Name="ConsecutiveActsInput" Grid.Column="3" Grid.Row="6"/>
+
+        <TextBlock Text="HP Recoil %" Grid.Column="0" Grid.Row="7"/>
+        <TextBox x:Name="HPRecoilInput" Grid.Column="1" Grid.Row="7"/>
+        <TextBlock Text="Random Acts" Grid.Column="2" Grid.Row="7"/>
+        <TextBox x:Name="RandomActsInput" Grid.Column="3" Grid.Row="7"/>
+
+        <TextBlock Text="Class Exclusive 1" Grid.Column="0" Grid.Row="8"/>
+        <ComboBox x:Name="ClassExclusive1Input" Grid.Column="1" Grid.Row="8"/>
+        <TextBlock Text="Class Exclusive 2" Grid.Column="2" Grid.Row="8"/>
+        <ComboBox x:Name="ClassExclusive2Input" Grid.Column="3" Grid.Row="8"/>
+        
+    </Grid>
 </base:_ClassTemplateOperations>

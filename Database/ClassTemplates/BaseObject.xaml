@@ -12,7 +12,7 @@
 
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Name:"/>
+                <TextBlock Text="Name"/>
                 <TextBox x:Name="NameInput" Margin="8,0,0,4" Width="120"/>
             </StackPanel>
 
@@ -26,7 +26,7 @@
                 <TextBlock x:Name="UpdatedText" Margin="8,0,0,4" Width="120"/>
             </StackPanel>
 
-            <TextBlock Text="Description:"/>
+            <TextBlock Text="Description"/>
             <TextBox x:Name="DescriptionInput" Width="250" Height="80"
                      TextWrapping = "Wrap" AcceptsReturn = "True" ScrollViewer.VerticalScrollBarVisibility = "Visible"/>
         </StackPanel>

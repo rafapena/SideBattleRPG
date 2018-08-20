@@ -29,11 +29,10 @@ namespace Database.ClassTemplates
         protected override void SetupTableData()
         {
             List<string> cols = new List<string> { "State", "%" };
-            string attrName = "Chance";
             StatesGive.Setup("Tool", "Tools", "State", "States", "Inflicts", cols);
             StatesReceive.Setup("Tool", "Tools", "State", "States", "Receives", cols);
-            StatesGive.AttributeName = attrName;
-            StatesReceive.AttributeName = attrName;
+            StatesGive.AttributeName = "Chance";
+            StatesReceive.AttributeName = "Chance";
             StatesGive.TableIdentifier = "_Give";
             StatesReceive.TableIdentifier = "_Receive";
         }

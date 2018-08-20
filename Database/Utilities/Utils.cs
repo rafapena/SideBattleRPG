@@ -34,7 +34,11 @@ namespace Database.Utilities
             if (!isPosInt.Match(inputText).Success) return false;
             int n;
             try { n = int.Parse(inputText); }
-            catch (OverflowException) { return false; }
+            catch (OverflowException)
+            {
+                MessageBox.Show("Input overflow detected: This does not count as a positive integer");
+                return false;
+            }
             return n >= 0;
         }
 

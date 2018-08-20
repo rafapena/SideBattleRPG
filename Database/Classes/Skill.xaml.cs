@@ -19,6 +19,8 @@ namespace Database.Classes
 {
     public partial class Skill : _ClassOperations
     {
+        private List<string> NumberOfUsersOptions = new List<string> { "1", "2", "3", "4", "5" };
+
         public Skill()
         {
             InitializeComponent();
@@ -29,8 +31,11 @@ namespace Database.Classes
 
         protected override void SetupTableData()
         {
-            //table1.SetupTableData();
-            //table2.SetupTableData();
+            PlayerSummons.Setup("Player", "Players", "Player Summons", new List<string> { "Name", "%" }, 50);
+            EnemySummons.Setup("Enemy", "Enemies", "Enemy Summons", new List<string> { "Name", "%" }, 50);
+            PlayerSummons.AttributeName = "Response";
+            EnemySummons.AttributeName = "Response";
+            NumberOfUsersInput.ItemsSource = NumberOfUsersOptions;
         }
 
         protected override void OnInitializeNew()
@@ -38,17 +43,17 @@ namespace Database.Classes
             Base.InitializeNew();
             ToolAttributes.InitializeNew();
             ToolStateRates.InitializeNew();
-            //attr1Input.Text = "";
-            //attr2Image.Source = null;
+            SPConsumeInput.Text = "0";
+            NumberOfUsersInput.SelectedIndex = 0;
+            ChargeInput.Text = "0";
+            WarmUpInput.Text = "0";
+            CoolDownInput.Text = "0";
+            StealInput.IsChecked = false;
         }
 
         public override void Automate()
         {
-            Base.Automate();
-            ToolAttributes.Automate();
-            ToolStateRates.Automate();
-            //attr1Input.Text = "This";
-            //attr2Input.Text = "0";
+            OnInitializeNew();
         }
 
         public override string ValidateInputs()
@@ -56,22 +61,33 @@ namespace Database.Classes
             string err = Base.ValidateInputs();
             err += ToolAttributes.ValidateInputs();
             err += ToolStateRates.ValidateInputs();
-            //if (!Utils.InRequiredLength(Utils.CutSpaces(attr1))) err += "attr1 needs to have 1 to 16 characters";
+            if (!Utils.NumberBetween(SPConsumeInput.Text, 0, 100)) err += "SP Consume must be a number between 0 and 100\n";
+            if (!Utils.PosInt(ChargeInput.Text)) err += "Charge Turns must be a positive integer\n";
+            if (!Utils.PosInt(WarmUpInput.Text)) err += "Warmup Turns must be a positive integer\n";
+            if (!Utils.PosInt(CoolDownInput.Text)) err += "Cooldown Turns must be a positive integer\n";
+            if (PlayerSummons.Count > 5) err += "The number of summoned players must be less than 6";
+            if (EnemySummons.Count > 5) err += "The number of summoned enemies must be less than 6";
             return err;
         }
 
         public override void ParameterizeInputs()
         {
-            //ParamterizeInput("@attr1", attr1Input.Text);
-            //ParamterizeInput("@attr2", attr2Input.Text);
+            ParameterizeInput("@SPConsume", SPConsumeInput.Text);
+            ParameterizeInput("@Charge", ChargeInput.Text);
+            ParameterizeInput("@WarmUp", WarmUpInput.Text);
+            ParameterizeInput("@CoolDown", CoolDownInput.Text);
         }
 
         protected override void OnCreate()
         {
             Base.Create();
-            SQLCreate("attr1, attr2, BaseObjectID", "@attr1, @attr2, " + Base.ClassTemplateId.ToString());
             ToolAttributes.Create();
+            SQLCreate( "SPConsume, NumberOfUsers, Charge, WarmUp, CoolDown, Steal, ToolID, BaseObjectID",
+                "@SPConsume, " + NumberOfUsersOptions[NumberOfUsersInput.SelectedIndex] + ", @Charge, @WarmUp, @CoolDown, " +
+                ((bool)StealInput.IsChecked ? 1:0) + ", " + ToolAttributes.ClassTemplateId + ", " + Base.ClassTemplateId);
             ToolStateRates.Create();
+            PlayerSummons.Create();
+            EnemySummons.Create();
         }
 
         protected override void OnRead(SQLiteDataReader reader)
@@ -79,8 +95,14 @@ namespace Database.Classes
             Base.Read(reader);
             ToolAttributes.Read(reader);
             ToolStateRates.Read(reader);
-            //attr1Input.Text = reader.GetInt32(N).ToString();
-            //attr2Input.Text = reader.GetString(N);
+            PlayerSummons.Read();
+            EnemySummons.Read();
+            SPConsumeInput.Text = reader["SPConsume"].ToString();
+            NumberOfUsersInput.SelectedIndex = NumberOfUsersOptions.FindIndex(a => a == reader["NumberOfUsers"].ToString());
+            ChargeInput.Text = reader["Charge"].ToString();
+            WarmUpInput.Text = reader["WarmUp"].ToString();
+            CoolDownInput.Text = reader["CoolDown"].ToString();
+            StealInput.IsChecked = reader["Steal"].ToString() == "True" ? true : false;
         }
 
         protected override void OnUpdate()
@@ -88,7 +110,10 @@ namespace Database.Classes
             Base.Update();
             ToolAttributes.Update();
             ToolStateRates.Update();
-            SQLUpdate("attr1 = @attr1, attr2 = @attr2");
+            SQLUpdate("SPConsume = @SPConsume, NumberOfUsers = " + NumberOfUsersOptions[NumberOfUsersInput.SelectedIndex] + ", " +
+                "Charge = @Charge, WarmUp = @WarmUp, CoolDown = @CoolDown, Steal = " + ((bool)StealInput.IsChecked ? 1:0));
+            PlayerSummons.Update();
+            EnemySummons.Update();
         }
 
         protected override void OnDelete()
@@ -96,6 +121,8 @@ namespace Database.Classes
             Base.Delete();
             ToolAttributes.Delete();
             ToolStateRates.Delete();
+            PlayerSummons.Delete();
+            EnemySummons.Delete();
         }
 
         protected override void OnClone()
@@ -103,6 +130,8 @@ namespace Database.Classes
             Base.Clone();
             ToolAttributes.Clone();
             ToolStateRates.Clone();
+            PlayerSummons.Clone();
+            EnemySummons.Clone();
         }
     }
 }
