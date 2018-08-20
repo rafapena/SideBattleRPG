@@ -117,7 +117,7 @@ namespace Database.ClassTemplates
             ParameterizeInput("@RandomActs", RandomActsInput.Text);
         }
 
-        protected override string[] OnCreate()
+        protected override string[] OnCreate(SQLiteConnection conn)
         {
             return new string[] {
                 "Type, Formula, HPSPModType, HPAmount, SPAmount, HPPercent, SPPercent, HPRecoil, ClassExclusive1, ClassExclusive2, " +
@@ -151,7 +151,7 @@ namespace Database.ClassTemplates
             RandomActsInput.Text = reader["RandomActs"].ToString();
         }
 
-        protected override string OnUpdate()
+        protected override string OnUpdate(SQLiteConnection conn)
         {
             return "Type=@Type, Formula=@Formula, HPSPModType=@HPSPModType, " +
                 "HPAmount=@HPAmount, SPAmount=@SPAmount, HPPercent=@HPPercent, SPPercent=@SPPercent, HPRecoil=@HPRecoil, " +

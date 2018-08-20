@@ -90,7 +90,7 @@ namespace Database.ClassTemplates
             ParameterizeInput("@Cev", CevInput.Text);
         }
 
-        protected override string[] OnCreate()
+        protected override string[] OnCreate(SQLiteConnection conn)
         {
             return new string[] {
                 "HP, Atk, Def, Map, Mar, Spd, Tec, Luk, Acc, Eva, Crt, Cev",
@@ -113,7 +113,7 @@ namespace Database.ClassTemplates
             CevInput.Text = reader["Cev"].ToString();
         }
 
-        protected override string OnUpdate()
+        protected override string OnUpdate(SQLiteConnection conn)
         {
             return "HP=@HP, Atk=@Atk, Def=@Def, Map=@Map, Mar=@Mar, Spd=@Spd, Tec=@Tec, Luk=@Luk, Acc=@Acc, Eva=@Eva, Crt=@Crt, Cev=@Cev";
         }

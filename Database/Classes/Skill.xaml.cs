@@ -31,8 +31,8 @@ namespace Database.Classes
 
         protected override void SetupTableData()
         {
-            PlayerSummons.Setup("Player", "Players", "Player Summons", new List<string> { "Name", "%" }, 50);
-            EnemySummons.Setup("Enemy", "Enemies", "Enemy Summons", new List<string> { "Name", "%" }, 50);
+            PlayerSummons.Setup("Player", "Players", "Player Summons", new List<string> { "Name", "%" }, 80);
+            EnemySummons.Setup("Enemy", "Enemies", "Enemy Summons", new List<string> { "Name", "%" }, 80);
             PlayerSummons.AttributeName = "Response";
             EnemySummons.AttributeName = "Response";
             NumberOfUsersInput.ItemsSource = NumberOfUsersOptions;
@@ -73,16 +73,16 @@ namespace Database.Classes
             ParameterizeInput("@CoolDown", CoolDownInput.Text);
         }
 
-        protected override void OnCreate()
+        protected override void OnCreate(SQLiteConnection conn)
         {
-            Base.Create();
-            ToolAttributes.Create();
-            SQLCreate( "SPConsume, NumberOfUsers, Charge, WarmUp, CoolDown, Steal, ToolID, BaseObjectID",
+            Base.Create(conn);
+            ToolAttributes.Create(conn);
+            SQLCreate(conn, "SPConsume, NumberOfUsers, Charge, WarmUp, CoolDown, Steal, ToolID, BaseObjectID",
                 "@SPConsume, " + NumberOfUsersOptions[NumberOfUsersInput.SelectedIndex] + ", @Charge, @WarmUp, @CoolDown, " +
                 ((bool)StealInput.IsChecked ? 1:0) + ", " + ToolAttributes.ClassTemplateId + ", " + Base.ClassTemplateId);
-            ToolStateRates.Create();
-            PlayerSummons.Create();
-            EnemySummons.Create();
+            ToolStateRates.Create(conn);
+            PlayerSummons.Create(conn);
+            EnemySummons.Create(conn);
         }
 
         protected override void OnRead(SQLiteDataReader reader)
@@ -100,33 +100,33 @@ namespace Database.Classes
             StealInput.IsChecked = reader["Steal"].ToString() == "True" ? true : false;
         }
 
-        protected override void OnUpdate()
+        protected override void OnUpdate(SQLiteConnection conn)
         {
-            Base.Update();
-            ToolAttributes.Update();
-            ToolStateRates.Update();
-            SQLUpdate("SPConsume = @SPConsume, NumberOfUsers = " + NumberOfUsersOptions[NumberOfUsersInput.SelectedIndex] + ", " +
+            Base.Update(conn);
+            ToolAttributes.Update(conn);
+            ToolStateRates.Update(conn);
+            SQLUpdate(conn, "SPConsume = @SPConsume, NumberOfUsers = " + NumberOfUsersOptions[NumberOfUsersInput.SelectedIndex] + ", " +
                 "Charge = @Charge, WarmUp = @WarmUp, CoolDown = @CoolDown, Steal = " + ((bool)StealInput.IsChecked ? 1:0));
-            PlayerSummons.Update();
-            EnemySummons.Update();
+            PlayerSummons.Update(conn);
+            EnemySummons.Update(conn);
         }
 
-        protected override void OnDelete()
+        protected override void OnDelete(SQLiteConnection conn)
         {
-            Base.Delete();
-            ToolAttributes.Delete();
-            ToolStateRates.Delete();
-            PlayerSummons.Delete();
-            EnemySummons.Delete();
+            Base.Delete(conn);
+            ToolAttributes.Delete(conn);
+            ToolStateRates.Delete(conn);
+            PlayerSummons.Delete(conn);
+            EnemySummons.Delete(conn);
         }
 
-        protected override void OnClone()
+        protected override void OnClone(SQLiteConnection conn)
         {
-            Base.Clone();
-            ToolAttributes.Clone();
-            ToolStateRates.Clone();
-            PlayerSummons.Clone();
-            EnemySummons.Clone();
+            Base.Clone(conn);
+            ToolAttributes.Clone(conn);
+            ToolStateRates.Clone(conn);
+            PlayerSummons.Clone(conn);
+            EnemySummons.Clone(conn);
         }
     }
 }

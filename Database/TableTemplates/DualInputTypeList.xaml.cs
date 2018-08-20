@@ -88,7 +88,7 @@ namespace Database.TableTemplates
         protected override string[] OnCreate() { return null; }
         protected override string OnCreateValues(int i) { return ""; }
          
-        public new void Create()
+        public new void Create(SQLiteConnection conn)
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
@@ -131,12 +131,13 @@ namespace Database.TableTemplates
         }
         
 
-        public new void Update()
+        public new void Update(SQLiteConnection conn)
         {
-            Create();
-            SQLDB.Command("UPDATE " + HostDBTable + " SET " + AttributeName + " = '" + StringList + "' WHERE " + HostType + "_ID = " + HostId + ";");
+            Create(conn);
+            SQLDB.Command(conn, "UPDATE " + HostDBTable + " SET " + AttributeName + " = '" + StringList + "' WHERE " + HostType + "_ID = " + HostId + ";");
         }
 
-        public new void Delete() { }    // DO NOT USE: ClassOperation handles this - Only here to override base function
+        // DO NOT USE: ClassOperation handles this - Only here to override base function
+        public new void Delete(SQLiteConnection conn) { }
     }
 }

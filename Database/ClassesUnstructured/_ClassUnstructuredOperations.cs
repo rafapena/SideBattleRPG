@@ -26,7 +26,7 @@ using Database.Utilities;
 
 namespace Database.ClassesUnstructured
 {
-    public abstract class _ClassUnstructuredOperations : Page, ObjectOperations
+    public abstract class _ClassUnstructuredOperations : Page, ObjectClassOperations
     {
         protected virtual void SetupTableData() { }
         protected abstract void OnInitializeNew();
@@ -45,21 +45,30 @@ namespace Database.ClassesUnstructured
         }
 
 
-        protected abstract void OnCreate();
+        protected abstract void OnCreate(SQLiteConnection conn);
         public void Create()
         {
             string err = ValidateInputs();
             if (err != "") MessageBox.Show("Could not update due to the following:\n\n" + err);
             else
             {
-                OnCreate();
+                using (var conn = SQLDB.DB())
+                {
+                    conn.Open();
+                    using (var transaction = conn.BeginTransaction())
+                    {
+                        OnCreate(conn);
+                        transaction.Commit();
+                    }
+                    conn.Close();
+                }
                 MessageBox.Show("Creating successful");
             }
         }
-        protected void SQLCreate(string[] text)
+        protected void SQLCreate(SQLiteConnection conn, string[] text)
         {
             ParameterizeInputs();
-            SQLDB.Command("INSERT INTO " + SQLDB.CurrentTable + " (" + text[0] + ") VALUES (" + text[1] + ");");
+            SQLDB.Command(conn, "INSERT INTO " + SQLDB.CurrentTable + " (" + text[0] + ") VALUES (" + text[1] + ");");
             SQLDB.Inputs = null;
         }
 
@@ -80,37 +89,55 @@ namespace Database.ClassesUnstructured
         }
 
 
-        protected abstract void OnUpdate();
+        protected abstract void OnUpdate(SQLiteConnection conn);
         public void Update()
         {
             string err = ValidateInputs();
             if (err != "") MessageBox.Show("Could not update due to the following:\n\n" + err);
             else
             {
-                OnUpdate();
+                using (var conn = SQLDB.DB())
+                {
+                    conn.Open();
+                    using (var transaction = conn.BeginTransaction())
+                    {
+                        OnUpdate(conn);
+                        transaction.Commit();
+                    }
+                    conn.Close();
+                }
                 MessageBox.Show("Updating successful");
                 SQLDB.Inputs = null;
             }
         }
-        protected void SQLUpdate(string input)
+        protected void SQLUpdate(SQLiteConnection conn, string input)
         {
             ParameterizeInputs();
-            SQLDB.Command("UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString() + ";");
+            SQLDB.Command(conn, "UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString() + ";");
             SQLDB.Inputs = null;
         }
 
 
-        protected abstract void OnDelete();
+        protected abstract void OnDelete(SQLiteConnection conn);
         public void Delete()
         {
             if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentClass)) return;
-            OnDelete();
+            using (var conn = SQLDB.DB())
+            {
+                conn.Open();
+                using (var transaction = conn.BeginTransaction())
+                {
+                    OnDelete(conn);
+                    transaction.Commit();
+                }
+                conn.Close();
+            }
             MessageBox.Show("Deleting successful");
             InitializeNew();
         }
 
 
-        protected abstract void OnClone();
+        protected abstract void OnClone(SQLiteConnection conn);
         public void Clone()
         {
             string err = ValidateInputs();
@@ -118,8 +145,17 @@ namespace Database.ClassesUnstructured
             else
             {
                 SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
-                OnClone();
-                OnCreate();
+                using (var conn = SQLDB.DB())
+                {
+                    conn.Open();
+                    using (var transaction = conn.BeginTransaction())
+                    {
+                        OnClone(conn);
+                        OnCreate(conn);
+                        transaction.Commit();
+                    }
+                    conn.Close();
+                }
                 MessageBox.Show(SQLDB.CurrentClass + " cloned");
             }
         }

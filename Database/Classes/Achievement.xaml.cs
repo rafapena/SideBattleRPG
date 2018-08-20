@@ -50,10 +50,10 @@ namespace Database.Classes
             ParameterizeInput("@Hint", HintInput.Text);
         }
 
-        protected override void OnCreate()
+        protected override void OnCreate(SQLiteConnection conn)
         {
-            Base.Create();
-            SQLCreate("Level, Hint, BaseObjectID", "@Level, @Hint, " + Base.ClassTemplateId);
+            Base.Create(conn);
+            SQLCreate(conn, "Level, Hint, BaseObjectID", "@Level, @Hint, " + Base.ClassTemplateId);
         }
 
         protected override void OnRead(SQLiteDataReader reader)
@@ -63,20 +63,20 @@ namespace Database.Classes
             HintInput.Text = reader.GetString(2);
         }
 
-        protected override void OnUpdate()
+        protected override void OnUpdate(SQLiteConnection conn)
         {
-            Base.Update();
-            SQLUpdate("Level = @Level, Hint = @Hint");
+            Base.Update(conn);
+            SQLUpdate(conn, "Level = @Level, Hint = @Hint");
         }
 
-        protected override void OnDelete()
+        protected override void OnDelete(SQLiteConnection conn)
         {
-            Base.Delete();
+            Base.Delete(conn);
         }
 
-        protected override void OnClone()
+        protected override void OnClone(SQLiteConnection conn)
         {
-            Base.Clone();
+            Base.Clone(conn);
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Database.ClassTemplates
             //ParameterizeInput("@attr2", attr2Input.Text);
         }
 
-        protected override string[] OnCreate()
+        protected override string[] OnCreate(SQLiteConnection conn)
         {
             return new string[] { "attr1, attr2", "@attr1, @attr2" };
         }
@@ -62,7 +62,7 @@ namespace Database.ClassTemplates
             //attr2Input.Text = reader.GetString(N);
         }
 
-        protected override string OnUpdate()
+        protected override string OnUpdate(SQLiteConnection conn)
         {
             return "attr1 = @attr1, attr2 = @attr2";
         }

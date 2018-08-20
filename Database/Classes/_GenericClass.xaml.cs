@@ -53,11 +53,11 @@ namespace Database.Classes
             //ParamterizeInput("@attr2", attr2Input.Text);
         }
 
-        protected override void OnCreate()
+        protected override void OnCreate(SQLiteConnection conn)
         {
-            Base.Create();
+            Base.Create(conn);
             // Create DualInput TypeLists
-            SQLCreate("attr1, attr2, BaseObjectID", "@attr1, @attr2, " + Base.ClassTemplateId.ToString());
+            SQLCreate(conn, "attr1, attr2, BaseObjectID", "@attr1, @attr2, " + Base.ClassTemplateId.ToString());
             // Create Dual Input Classes
         }
 
@@ -68,20 +68,20 @@ namespace Database.Classes
             //attr2Input.Text = reader.GetString(N);
         }
 
-        protected override void OnUpdate()
+        protected override void OnUpdate(SQLiteConnection conn)
         {
-            Base.Update();
-            SQLUpdate("attr1 = @attr1, attr2 = @attr2");
+            Base.Update(conn);
+            SQLUpdate(conn, "attr1 = @attr1, attr2 = @attr2");
         }
 
-        protected override void OnDelete()
+        protected override void OnDelete(SQLiteConnection conn)
         {
-            Base.Delete();
+            Base.Delete(conn);
         }
 
-        protected override void OnClone()
+        protected override void OnClone(SQLiteConnection conn)
         {
-            Base.Clone();
+            Base.Clone(conn);
         }
     }
 }

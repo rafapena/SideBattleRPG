@@ -53,10 +53,10 @@ namespace Database.ClassTemplates
             StatesReceive.ParameterizeInputs();
         }
 
-        protected override string[] OnCreate()
+        protected override string[] OnCreate(SQLiteConnection conn)
         {
-            StatesGive.Create();
-            StatesReceive.Create();
+            StatesGive.Create(conn);
+            StatesReceive.Create(conn);
             return null;
         }
 
@@ -66,11 +66,23 @@ namespace Database.ClassTemplates
             StatesReceive.Read();
         }
 
-        protected override string OnUpdate()
+        protected override string OnUpdate(SQLiteConnection conn)
         {
-            StatesGive.Update();
-            StatesReceive.Update();
+            StatesGive.Update(conn);
+            StatesReceive.Update(conn);
             return "";
+        }
+
+        protected override void OnDelete(SQLiteConnection conn)
+        {
+            StatesGive.Delete(conn);
+            StatesReceive.Delete(conn);
+        }
+
+        protected override void OnClone(SQLiteConnection conn)
+        {
+            StatesGive.Clone(conn);
+            StatesReceive.Clone(conn);
         }
     }
 }

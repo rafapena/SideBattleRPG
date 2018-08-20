@@ -30,27 +30,7 @@ namespace Database.Utilities
             return command.ExecuteReader();
         }
 
-
-        public static void Command(string sqlCommand)
-        {
-            using (var conn = DB())
-            {
-                conn.Open();
-                using (var comm = new SQLiteCommand(sqlCommand, conn))
-                {
-                    //try
-                    //{
-                        if (Inputs != null && Inputs.Count > 0) comm.Parameters.AddRange(Inputs.ToArray());
-                        comm.CommandType = CommandType.Text;
-                        comm.ExecuteNonQuery();
-                    //}
-                    //catch (Exception e) { MessageBox.Show("Something went wrong:\n" + e.Message); }
-                }
-                conn.Close();
-            }
-        }
-
-        /*public static void Command(SQLiteConnection conn, string sqlCommand)
+        public static void Command(SQLiteConnection conn, string sqlCommand)
         {
             using (var comm = new SQLiteCommand(sqlCommand, conn))
             {
@@ -68,7 +48,7 @@ namespace Database.Utilities
                 Command(conn, sqlCommand);
                 conn.Close();
             }
-        }*/
+        }
 
 
         public static int GetScalar(string sqlCommand)

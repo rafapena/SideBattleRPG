@@ -51,7 +51,7 @@ namespace Database.ClassTemplates
             ParameterizeInput("@Description", DescriptionInput.Text);
         }
 
-        protected override string[] OnCreate()
+        protected override string[] OnCreate(SQLiteConnection conn)
         {
             CreatedText.Text = string.Format("{0:MM-dd-yyyy H:mm}", DateTime.Now);
             UpdatedText.Text = string.Format("{0:MM-dd-yyyy H:mm}", DateTime.Now);
@@ -68,7 +68,7 @@ namespace Database.ClassTemplates
             UpdatedText.Text = string.Format("{0:MM-dd-yyyy H:mm}", reader.GetDateTime(5));
         }
 
-        protected override string OnUpdate()
+        protected override string OnUpdate(SQLiteConnection conn)
         {
             UpdatedText.Text = string.Format("{0:MM-dd-yyyy H:mm}", DateTime.Now);
             return "Name = @Name, Description = @Description";

@@ -18,7 +18,7 @@ using Database.Utilities;
 
 namespace Database.Classes
 {
-    public abstract class _ClassOperations : Page, ObjectOperations
+    public abstract class _ClassOperations : Page, ObjectClassOperations
     {
         public TableList LinkedTableList { get; set; }
         public Footer LinkedFooter { get; set; }
@@ -45,24 +45,33 @@ namespace Database.Classes
         }
 
 
-        protected abstract void OnCreate();
+        protected abstract void OnCreate(SQLiteConnection conn);
         public void Create()
         {
             string err = ValidateInputs();
             if (err != "") MessageBox.Show("Could not create " + SQLDB.CurrentClass + ":\n\n" + err);
             else
             {
-                OnCreate();
+                using (var conn = SQLDB.DB())
+                {
+                    conn.Open();
+                    using (var transaction = conn.BeginTransaction())
+                    {
+                        OnCreate(conn);
+                        transaction.Commit();
+                    }
+                    conn.Close();
+                }
                 LinkedTableList.SetupTable(true);
                 LinkedFooter.ApplyReadSettings();
                 MessageBox.Show(SQLDB.CurrentClass + " created");
             }
         }
-        protected void SQLCreate(string attributes, string inputs)
+        protected void SQLCreate(SQLiteConnection conn, string attributes, string inputs)
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
-            SQLDB.Command("INSERT INTO " + SQLDB.CurrentTable + " (" + attributes + ") VALUES (" + inputs + ");");
+            SQLDB.Command(conn, "INSERT INTO " + SQLDB.CurrentTable + " (" + attributes + ") VALUES (" + inputs + ");");
             SQLDB.Inputs = null;
         }
 
@@ -86,39 +95,57 @@ namespace Database.Classes
         }
 
 
-        protected abstract void OnUpdate();
+        protected abstract void OnUpdate(SQLiteConnection conn);
         public void Update()
         {
             string err = ValidateInputs();
             if (err != "") MessageBox.Show("Could not update " + SQLDB.CurrentClass + ":\n\n" + err);
             else
             {
-                OnUpdate();
+                using (var conn = SQLDB.DB())
+                {
+                    conn.Open();
+                    using (var transaction = conn.BeginTransaction())
+                    {
+                        OnUpdate(conn);
+                        transaction.Commit();
+                    }
+                    conn.Close();
+                }
                 LinkedTableList.SetupTable(true);
                 SQLDB.Inputs = null;
                 MessageBox.Show(SQLDB.CurrentClass + " updated");
             }
         }
-        protected void SQLUpdate(string input)
+        protected void SQLUpdate(SQLiteConnection conn, string input)
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
-            SQLDB.Command("UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString() + ";");
+            SQLDB.Command(conn, "UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString() + ";");
             SQLDB.Inputs = null;
         }
 
 
-        protected abstract void OnDelete();
+        protected abstract void OnDelete(SQLiteConnection conn);
         public void Delete()
         {
             if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentClass)) return;
-            OnDelete();
+            using (var conn = SQLDB.DB())
+            {
+                conn.Open();
+                using (var transaction = conn.BeginTransaction())
+                {
+                    OnDelete(conn);
+                    transaction.Commit();
+                }
+                conn.Close();
+            }
             MessageBox.Show(SQLDB.CurrentClass + " deleted");
             InitializeNew();
         }
 
 
-        protected abstract void OnClone();
+        protected abstract void OnClone(SQLiteConnection conn);
         public void Clone()
         {
             string err = ValidateInputs();
@@ -126,8 +153,17 @@ namespace Database.Classes
             else
             {
                 SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
-                OnClone();
-                OnCreate();
+                using (var conn = SQLDB.DB())
+                {
+                    conn.Open();
+                    using (var transaction = conn.BeginTransaction())
+                    {
+                        OnClone(conn);
+                        OnCreate(conn);
+                        transaction.Commit();
+                    }
+                    conn.Close();
+                }
                 LinkedTableList.SetupTable(true);
                 MessageBox.Show(SQLDB.CurrentClass + " cloned");
             }

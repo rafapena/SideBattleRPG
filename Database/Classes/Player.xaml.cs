@@ -77,19 +77,19 @@ namespace Database.Classes
             ParameterizeInput("@AssistDamageRate", AssistDamageRateInput.Text);
         }
 
-        protected override void OnCreate()
+        protected override void OnCreate(SQLiteConnection conn)
         {
-            Base.Create();
-            NatStats.Create();
-            ElementRates.Create();
-            SQLCreate(
+            Base.Create(conn);
+            NatStats.Create(conn);
+            ElementRates.Create(conn);
+            SQLCreate(conn,
                 "BaseObjectID, NaturalStats, ElementRates, Companionship, SavePartnerRate, CounterattackRate, AssistDamageRate",
                 Base.ClassTemplateId.ToString() + ", " + NatStats.ClassTemplateId.ToString() + ", '" + ElementRates.StringList + "', " +
                     "@Companionship, @SavePartnerRate, @CounterattackRate, @AssistDamageRate");
-            ClassChoices.Create();
-            SkillChoices.Create();
-            StateRates.Create();
-            Relations.Create();
+            ClassChoices.Create(conn);
+            SkillChoices.Create(conn);
+            StateRates.Create(conn);
+            Relations.Create(conn);
         }
 
         protected override void OnRead(SQLiteDataReader reader)
@@ -107,39 +107,39 @@ namespace Database.Classes
             AssistDamageRateInput.Text = reader["AssistDamageRate"].ToString();
         }
 
-        protected override void OnUpdate()
+        protected override void OnUpdate(SQLiteConnection conn)
         {
-            Base.Update();
-            NatStats.Update();
-            ClassChoices.Update();
-            SkillChoices.Update();
-            StateRates.Update();
-            ElementRates.Update();
-            Relations.Update();
-            SQLUpdate("Companionship = @Companionship, SavePartnerRate = @SavePartnerRate, " +
+            Base.Update(conn);
+            NatStats.Update(conn);
+            ClassChoices.Update(conn);
+            SkillChoices.Update(conn);
+            StateRates.Update(conn);
+            ElementRates.Update(conn);
+            Relations.Update(conn);
+            SQLUpdate(conn, "Companionship = @Companionship, SavePartnerRate = @SavePartnerRate, " +
                 "CounterattackRate = @CounterattackRate, AssistDamageRate = @AssistDamageRate");
         }
 
-        protected override void OnDelete()
+        protected override void OnDelete(SQLiteConnection conn)
         {
-            Base.Delete();
-            NatStats.Delete();
-            ClassChoices.Delete();
-            SkillChoices.Delete();
-            StateRates.Delete();
-            ElementRates.Delete();
-            Relations.Delete();
+            Base.Delete(conn);
+            NatStats.Delete(conn);
+            ClassChoices.Delete(conn);
+            SkillChoices.Delete(conn);
+            StateRates.Delete(conn);
+            ElementRates.Delete(conn);
+            Relations.Delete(conn);
         }
 
-        protected override void OnClone()
+        protected override void OnClone(SQLiteConnection conn)
         {
-            Base.Clone();
-            NatStats.Clone();
-            ClassChoices.Clone();
-            SkillChoices.Clone();
-            StateRates.Clone();
-            ElementRates.Clone();
-            Relations.Clone();
+            Base.Clone(conn);
+            NatStats.Clone(conn);
+            ClassChoices.Clone(conn);
+            SkillChoices.Clone(conn);
+            StateRates.Clone(conn);
+            ElementRates.Clone(conn);
+            Relations.Clone(conn);
         }
     }
 }

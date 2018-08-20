@@ -22,7 +22,7 @@ using Database.Utilities;
 
 namespace Database.ClassTemplates
 {
-    public abstract class _ClassTemplateOperations : UserControl, ObjectOperations
+    public abstract class _ClassTemplateOperations : UserControl, ObjectTemplateOperations
     {
         protected string ClassTemplateTable { get; set; }
         protected string ClassTemplateType { get; set; }
@@ -49,14 +49,14 @@ namespace Database.ClassTemplates
         }
 
 
-        protected abstract string[] OnCreate();
-        public void Create()
+        protected abstract string[] OnCreate(SQLiteConnection conn);
+        public void Create(SQLiteConnection conn)
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
-            string[] createText = OnCreate();
+            string[] createText = OnCreate(conn);
             if (createText != null)
-                SQLDB.Command("INSERT INTO " + ClassTemplateTable + " (" + createText[0] + ") VALUES (" + createText[1] + ");");
+                SQLDB.Command(conn, "INSERT INTO " + ClassTemplateTable + " (" + createText[0] + ") VALUES (" + createText[1] + ");");
             SQLDB.Inputs = null;
         }
 
@@ -84,27 +84,29 @@ namespace Database.ClassTemplates
         }
 
 
-        protected abstract string OnUpdate();
-        public void Update()
+        protected abstract string OnUpdate(SQLiteConnection conn);
+        public void Update(SQLiteConnection conn)
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
-            string updateText = OnUpdate();
+            string updateText = OnUpdate(conn);
             if (updateText != "")
-                SQLDB.Command(
+                SQLDB.Command(conn,
                     "UPDATE " + ClassTemplateTable + " SET " + updateText + " " +
                     "WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
             SQLDB.Inputs = null;
         }
 
 
-        public void Delete()
+        protected virtual void OnDelete(SQLiteConnection conn) { }
+        public void Delete(SQLiteConnection conn)
         {
-            SQLDB.Command("DELETE FROM " + ClassTemplateTable + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
+            SQLDB.Command(conn, "DELETE FROM " + ClassTemplateTable + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
         }
 
 
-        public void Clone()
+        protected virtual void OnClone(SQLiteConnection conn) { }
+        public void Clone(SQLiteConnection conn)
         {
             ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
         }

@@ -19,7 +19,7 @@ using static Database.Utilities.TableBuilder;
 
 namespace Database.TableTemplates
 {
-    public abstract class _TableTemplateOperations : UserControl, ObjectOperations
+    public abstract class _TableTemplateOperations : UserControl, ObjectTemplateOperations
     {
         protected Grid Table { get; set; }
         protected string TableTitle { get; private set; }
@@ -157,12 +157,13 @@ namespace Database.TableTemplates
 
         protected abstract string[] OnCreate();
         protected abstract string OnCreateValues(int i);
-        public void Create()
+        public void Create(SQLiteConnection conn)
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
             ParameterizeInputs();
             string[] str = OnCreate();
-            for (int i = 0; i < Count; i++) SQLDB.Command("INSERT INTO " + str[0] + " (" + str[1] + ") VALUES (" + OnCreateValues(i) + ");");
+            for (int i = 0; i < Count; i++)
+                SQLDB.Command(conn, "INSERT INTO " + str[0] + " (" + str[1] + ") VALUES (" + OnCreateValues(i) + ");");
             SQLDB.Inputs = null;
         }
 
@@ -198,10 +199,10 @@ namespace Database.TableTemplates
         }
 
 
-        public void Update()
+        public void Update(SQLiteConnection conn)
         {
-            Delete();
-            Create();
+            Delete(conn);
+            Create(conn);
         }
 
         protected virtual string[] OnDelete()
@@ -209,13 +210,15 @@ namespace Database.TableTemplates
             string connectorTable = HostDBTable + "_To_" + TargetDBTable + TableIdentifier;
             return new string[] { connectorTable, HostType + "ID = " + HostId };
         }
-        public void Delete()
+        public void Delete(SQLiteConnection conn)
         {
             string[] deleteMsg = OnDelete();
-            SQLDB.Command("DELETE FROM " + deleteMsg[0] + " WHERE " + deleteMsg[1] + ";");
+            SQLDB.Command(conn, "DELETE FROM " + deleteMsg[0] + " WHERE " + deleteMsg[1] + ";");
         }
         
-        // Not needed: No ID to keep track of and only implemented to satisfy interface condition (Create() handles everything)
-        public void Clone() { }
+        public void Clone(SQLiteConnection conn)
+        {
+            HostId = SQLDB.GetMaxIdFromTable(HostDBTable, HostType);
+        }
     }
 }
