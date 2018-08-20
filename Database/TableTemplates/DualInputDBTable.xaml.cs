@@ -45,7 +45,7 @@ namespace Database.TableTemplates
         protected override void OnAddRow()
         {
             Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, 0));
-            if (isDual()) AddSecondInput("");
+            if (isDual()) AddSecondInput("100");
             CBInputs.AddToSelectedIds(0);
         }
         protected override void OnRemoveRow()

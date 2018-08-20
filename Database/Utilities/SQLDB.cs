@@ -50,6 +50,26 @@ namespace Database.Utilities
             }
         }
 
+        /*public static void Command(SQLiteConnection conn, string sqlCommand)
+        {
+            using (var comm = new SQLiteCommand(sqlCommand, conn))
+            {
+                if (Inputs != null && Inputs.Count > 0) comm.Parameters.AddRange(Inputs.ToArray());
+                comm.CommandType = CommandType.Text;
+                comm.ExecuteNonQuery();
+            }
+        }
+
+        public static void OneCommand(string sqlCommand)
+        {
+            using (var conn = DB())
+            {
+                conn.Open();
+                Command(conn, sqlCommand);
+                conn.Close();
+            }
+        }*/
+
 
         public static int GetScalar(string sqlCommand)
         {

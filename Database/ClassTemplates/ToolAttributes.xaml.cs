@@ -95,6 +95,8 @@ namespace Database.ClassTemplates
 
         public override void ParameterizeInputs()
         {
+            int c1 = ClassExclusive1Data.OptionsListIds[ClassExclusive1Input.SelectedIndex];
+            int c2 = ClassExclusive2Data.OptionsListIds[ClassExclusive2Input.SelectedIndex];
             ParameterizeInput("@Type", TypeOptions[TypeInput.SelectedIndex]);
             ParameterizeInput("@Formula", FormulaData.OptionsListIds[FormulaInput.SelectedIndex].ToString());
             ParameterizeInput("@HPSPModType", HPSPModOptions[HPSPModInput.SelectedIndex]);
@@ -103,8 +105,8 @@ namespace Database.ClassTemplates
             ParameterizeInput("@HPPercent", HPPercentInput.Text);
             ParameterizeInput("@SPPercent", SPPercentInput.Text);
             ParameterizeInput("@HPRecoil", HPRecoilInput.Text);
-            ParameterizeInput("@ClassExclusive1", ClassExclusive1Data.OptionsListIds[ClassExclusive1Input.SelectedIndex].ToString());
-            ParameterizeInput("@ClassExclusive2", ClassExclusive2Data.OptionsListIds[ClassExclusive2Input.SelectedIndex].ToString());
+            ParameterizeInput("@ClassExclusive1", c1 < 0 ? null : c1.ToString());
+            ParameterizeInput("@ClassExclusive2", c2 < 0 ? null : c2.ToString());
             ParameterizeInput("@Element", ElementData.OptionsListIds[ElementInput.SelectedIndex].ToString());
             ParameterizeInput("@Power", PowerInput.Text);
             ParameterizeInput("@Accuracy", AccuracyInput.Text);
@@ -127,6 +129,8 @@ namespace Database.ClassTemplates
 
         protected override void OnRead(SQLiteDataReader reader)
         {
+            int c1 = ClassExclusive1Data.OptionsListIds.FindIndex(a => a.ToString() == reader["ClassExclusive1"].ToString());
+            int c2 = ClassExclusive2Data.OptionsListIds.FindIndex(a => a.ToString() == reader["ClassExclusive2"].ToString());
             TypeInput.SelectedIndex = TypeOptions.FindIndex(a => a == reader["Type"].ToString());
             FormulaInput.SelectedIndex = FormulaData.OptionsListIds.FindIndex(a => a.ToString() == reader["Formula"].ToString());
             HPSPModInput.SelectedIndex = HPSPModOptions.FindIndex(a => a == reader["HPSPModType"].ToString());
@@ -135,8 +139,8 @@ namespace Database.ClassTemplates
             HPPercentInput.Text = reader["HPPercent"].ToString();
             SPPercentInput.Text = reader["SPPercent"].ToString();
             HPRecoilInput.Text = reader["HPRecoil"].ToString();
-            ClassExclusive1Input.SelectedIndex = ClassExclusive1Data.OptionsListIds.FindIndex(a => a.ToString() == reader["ClassExclusive1"].ToString());
-            ClassExclusive2Input.SelectedIndex = ClassExclusive2Data.OptionsListIds.FindIndex(a => a.ToString() == reader["ClassExclusive2"].ToString());
+            ClassExclusive1Input.SelectedIndex = c1 < 0 ? 0 : c1;
+            ClassExclusive2Input.SelectedIndex = c2 < 0 ? 0 : c2;
             ElementInput.SelectedIndex = ElementData.OptionsListIds.FindIndex(a => a.ToString() == reader["Element"].ToString());
             PowerInput.Text = reader["Power"].ToString();
             AccuracyInput.Text = reader["Accuracy"].ToString();

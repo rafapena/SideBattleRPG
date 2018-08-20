@@ -27,7 +27,7 @@
                             <template:ToolAttributes x:Name="ToolAttributes" Margin="5,5,5,5"/>
                         </TabItem>
 
-                        <TabItem Header="State/Buff Rates">
+                        <TabItem Header="State Rates">
                             <template:ToolStates x:Name="ToolStateRates" Margin="5,5,5,5"/>
                         </TabItem>
 
