@@ -18,15 +18,16 @@
 
             <StackPanel Orientation="Horizontal">
                 <StackPanel.Resources>
-                    <Style TargetType="table:SingleText">
+                    <Style TargetType="table:TypeList">
                         <Setter Property="VerticalAlignment" Value="Top"/>
                         <Setter Property="Margin" Value="10 10 10 10"/>
                     </Style>
                 </StackPanel.Resources>
 
-                <table:SingleText x:Name="Elements"/>
-                <table:SingleText x:Name="WeaponTypes"/>
-                <table:SingleText x:Name="ToolFormulas"/>
+                <table:TypeList x:Name="Elements"/>
+                <table:TypeList x:Name="WeaponTypes"/>
+                <table:TypeList x:Name="ToolTypes"/>
+                <table:TypeList x:Name="ToolFormulas"/>
 
             </StackPanel>
 

@@ -19,8 +19,7 @@ namespace Database.ClassTemplates
 {
     public partial class ToolAttributes : _ClassTemplateOperations
     {
-        private ComboBoxInputData FormulaData, ElementData, ClassExclusive1Data, ClassExclusive2Data;
-        private List<string> TypeOptions = new List<string> { "None", "Physical Offense", "Physical Defense", "Magic Offense", "Magic Defense", "Offense", "Defense" };
+        private ComboBoxInputData TypeData, FormulaData, ElementData, ClassExclusive1Data, ClassExclusive2Data;
         private List<string> HPSPModOptions = new List<string> { "None", "HP", "SP", "HP Drain", "SP Drain" };
         private List<string> ScopeOptions = new List<string> {
             "None", "One Enemy", "Splash Enemies", "Row of Enemies", "Column of Enemies",
@@ -37,13 +36,14 @@ namespace Database.ClassTemplates
 
         protected override void SetupTableData()
         {
-            FormulaData = new ComboBoxInputData("List_ID", "Name", "TypesLists", "ListType = 'Tool Formulas'", "List_ID");
-            ElementData = new ComboBoxInputData("List_ID", "Name", "TypesLists", "ListType = 'Elements'", "List_ID");
-            ClassExclusive1Data = new ComboBoxInputData("Class_ID", "Name", "BaseObjects JOIN Classes", "BaseObjectID = BaseObject_ID", "Name");
-            ClassExclusive2Data = new ComboBoxInputData("Class_ID", "Name", "BaseObjects JOIN Classes", "BaseObjectID = BaseObject_ID", "Name");
-            ClassExclusive1Data.Insert(0, -1, "None");
-            ClassExclusive2Data.Insert(0, -1, "None");
-            TypeInput.ItemsSource = TypeOptions;
+            TypeData = new ComboBoxInputData("List_ID", "Name", "TypesLists", "List_Type = 'Tool Types'", "List_ID", ComboBoxInputData.ADD_NULL_INPUT);
+            FormulaData = new ComboBoxInputData("List_ID", "Name", "TypesLists", "List_Type = 'Tool Formulas'", "List_ID", ComboBoxInputData.ADD_NULL_INPUT);
+            ElementData = new ComboBoxInputData("List_ID", "Name", "TypesLists", "List_Type = 'Elements'", "List_ID", ComboBoxInputData.ADD_NULL_INPUT);
+            ClassExclusive1Data = new ComboBoxInputData("Class_ID", "Name", "BaseObjects JOIN Classes",
+                "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
+            ClassExclusive2Data = new ComboBoxInputData("Class_ID", "Name",
+                "BaseObjects JOIN Classes", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
+            TypeInput.ItemsSource = TypeData.OptionsListNames;
             FormulaInput.ItemsSource = FormulaData.OptionsListNames;
             HPSPModInput.ItemsSource = HPSPModOptions;
             ClassExclusive1Input.ItemsSource = ClassExclusive1Data.OptionsListNames;
@@ -97,7 +97,7 @@ namespace Database.ClassTemplates
         {
             int c1 = ClassExclusive1Data.OptionsListIds[ClassExclusive1Input.SelectedIndex];
             int c2 = ClassExclusive2Data.OptionsListIds[ClassExclusive2Input.SelectedIndex];
-            ParameterizeInput("@Type", TypeOptions[TypeInput.SelectedIndex]);
+            ParameterizeInput("@Type", TypeData.OptionsListIds[TypeInput.SelectedIndex].ToString());
             ParameterizeInput("@Formula", FormulaData.OptionsListIds[FormulaInput.SelectedIndex].ToString());
             ParameterizeInput("@HPSPModType", HPSPModOptions[HPSPModInput.SelectedIndex]);
             ParameterizeInput("@HPAmount", HPAmountInput.Text);
@@ -129,19 +129,17 @@ namespace Database.ClassTemplates
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            int c1 = ClassExclusive1Data.OptionsListIds.FindIndex(a => a.ToString() == reader["ClassExclusive1"].ToString());
-            int c2 = ClassExclusive2Data.OptionsListIds.FindIndex(a => a.ToString() == reader["ClassExclusive2"].ToString());
-            TypeInput.SelectedIndex = TypeOptions.FindIndex(a => a == reader["Type"].ToString());
-            FormulaInput.SelectedIndex = FormulaData.OptionsListIds.FindIndex(a => a.ToString() == reader["Formula"].ToString());
+            TypeInput.SelectedIndex = TypeData.FindIndex(reader["Type"]);
+            FormulaInput.SelectedIndex = FormulaData.FindIndex(reader["Formula"]);
             HPSPModInput.SelectedIndex = HPSPModOptions.FindIndex(a => a == reader["HPSPModType"].ToString());
             HPAmountInput.Text = reader["HPAmount"].ToString();
             SPAmountInput.Text = reader["SPAmount"].ToString();
             HPPercentInput.Text = reader["HPPercent"].ToString();
             SPPercentInput.Text = reader["SPPercent"].ToString();
             HPRecoilInput.Text = reader["HPRecoil"].ToString();
-            ClassExclusive1Input.SelectedIndex = c1 < 0 ? 0 : c1;
-            ClassExclusive2Input.SelectedIndex = c2 < 0 ? 0 : c2;
-            ElementInput.SelectedIndex = ElementData.OptionsListIds.FindIndex(a => a.ToString() == reader["Element"].ToString());
+            ClassExclusive1Input.SelectedIndex = ClassExclusive1Data.FindIndex(reader["ClassExclusive1"]);
+            ClassExclusive2Input.SelectedIndex = ClassExclusive2Data.FindIndex(reader["ClassExclusive2"]);
+            ElementInput.SelectedIndex = ElementData.FindIndex(reader["Element"]);
             PowerInput.Text = reader["Power"].ToString();
             AccuracyInput.Text = reader["Accuracy"].ToString();
             CriticalRateInput.Text = reader["CriticalRate"].ToString();

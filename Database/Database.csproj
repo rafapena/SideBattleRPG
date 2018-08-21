@@ -127,8 +127,8 @@
     <Compile Include="TableTemplates\DualInputTypeList.xaml.cs">
       <DependentUpon>DualInputTypeList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TableTemplates\SingleText.xaml.cs">
-      <DependentUpon>SingleText.xaml</DependentUpon>
+    <Compile Include="TableTemplates\TypeList.xaml.cs">
+      <DependentUpon>TypeList.xaml</DependentUpon>
     </Compile>
     <Compile Include="TableTemplates\DualInputDBTable.xaml.cs">
       <DependentUpon>DualInputDBTable.xaml</DependentUpon>
@@ -210,7 +210,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TableTemplates\SingleText.xaml">
+    <Page Include="TableTemplates\TypeList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -18,9 +18,9 @@ using static Database.Utilities.TableBuilder;
 
 namespace Database.TableTemplates
 {
-    public partial class SingleText : _TableTemplateOperations
+    public partial class TypeList : _TableTemplateOperations
     {
-        public SingleText()
+        public TypeList()
         {
             InitializeComponent();
         }
@@ -53,7 +53,7 @@ namespace Database.TableTemplates
 
         protected override string[] OnCreate()
         {
-            return new string[] { TargetDBTable, "ListType, List_ID, Name" };
+            return new string[] { TargetDBTable, "List_Type, List_ID, Name" };
         }
         protected override string OnCreateValues(int i)
         {
@@ -62,17 +62,34 @@ namespace Database.TableTemplates
 
         protected override string[] OnReadCommands()
         {
-            return new string[] { TargetDBTable, "ListType = '" + TableTitle + "' ORDER BY List_ID ASC" };
+            return new string[] { TargetDBTable, "List_Type = '" + TableTitle + "' ORDER BY List_ID ASC" };
         }
         protected override void OnRead(SQLiteDataReader reader)
         {
             Elements[Count - 1].Add(TextBox("TB_" + Count, reader.GetString(2), Count, 1));
         }
 
+        public new void Update(SQLiteConnection conn)
+        {
+            SQLDB.Inputs = new List<SQLiteParameter>();
+            ParameterizeInputs();
+            int prevCount = SQLDB.GetScalar("SELECT COUNT(*) FROM " + TargetDBTable + " WHERE List_Type = '" + TableTitle + "';");
+            if (prevCount < Count)
+            {
+                for (int i = prevCount; i < Count; i++)
+                {
+                    string vals = "'" + TableTitle + "', " + i + ", @Name" + i;
+                    SQLDB.Command(conn, "INSERT INTO " + TargetDBTable + " (List_Type, List_ID, Name) VALUES (" + vals + ");");
+                }
+            }
+            else if (prevCount > Count) SQLDB.Command(conn, "DELETE FROM " + TargetDBTable + " WHERE List_ID >= " + Count + " AND List_Type = '" + TableTitle + "';");
+            for (int i = 0; i < Count; i++) SQLDB.Command(conn, "UPDATE " + TargetDBTable + " SET Name = @Name" + i + " WHERE List_ID = " + i + " AND List_Type = '" + TableTitle + "';");
+            SQLDB.Inputs = null;
+        }
 
         protected override string[] OnDelete()
         {
-            return new string[] { TargetDBTable, "ListType = '" + TableTitle + "'" };
+            return new string[] { TargetDBTable, "List_Type = '" + TableTitle + "'" };
         }
     }
 }

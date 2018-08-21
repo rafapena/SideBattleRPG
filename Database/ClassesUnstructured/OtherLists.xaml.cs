@@ -24,22 +24,24 @@ namespace Database.ClassesUnstructured
             InitializeNew();
         }
         
-        public void SetupTables()
+        protected override void SetupTableData()
         {
             List<string> columnNames = new List<string> { "Name" };
             Elements.Setup("", "TypesLists", "Elements", columnNames, 200);
             WeaponTypes.Setup("", "TypesLists", "Weapon Types", columnNames, 200);
+            ToolTypes.Setup("", "TypesLists", "Tool Types", columnNames, 200);
             ToolFormulas.Setup("", "TypesLists", "Tool Formulas", columnNames, 200);
         }
 
         protected override void OnInitializeNew()
         {
-            SetupTables();
             Elements.InitializeNew();
             WeaponTypes.InitializeNew();
+            ToolTypes.InitializeNew();
             ToolFormulas.InitializeNew();
             Elements.Read();
             WeaponTypes.Read();
+            ToolTypes.Read();
             ToolFormulas.Read();
         }
 
@@ -47,6 +49,7 @@ namespace Database.ClassesUnstructured
         {
             string err = Elements.ValidateInputs();
             err += WeaponTypes.ValidateInputs();
+            err += ToolTypes.ValidateInputs();
             err += ToolFormulas.ValidateInputs();
             return err;
         }
@@ -55,30 +58,18 @@ namespace Database.ClassesUnstructured
         {
             Elements.ParameterizeInputs();
             WeaponTypes.ParameterizeInputs();
+            ToolTypes.ValidateInputs();
             ToolFormulas.ParameterizeInputs();
-        }
-        
-        protected override void OnCreate(SQLiteConnection conn)
-        {
-            Elements.Create(conn);
-            WeaponTypes.Create(conn);
-            ToolFormulas.Create(conn);
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
             Elements.Read();
             WeaponTypes.Read();
+            ToolTypes.Read();
             ToolFormulas.Read();
         }
-
-        protected override void OnDelete(SQLiteConnection conn)
-        {
-            Elements.Delete(conn);
-            WeaponTypes.Delete(conn);
-            ToolFormulas.Delete(conn);
-        }
-
+        
         private void Updated(object sender, RoutedEventArgs e)
         {
             Update();
@@ -87,14 +78,8 @@ namespace Database.ClassesUnstructured
         {
             Elements.Update(conn);
             WeaponTypes.Update(conn);
+            ToolTypes.Update(conn);
             ToolFormulas.Update(conn);
-        }
-
-        protected override void OnClone(SQLiteConnection conn)
-        {
-            Elements.Clone(conn);
-            WeaponTypes.Clone(conn);
-            ToolFormulas.Clone(conn);
         }
     }
 }

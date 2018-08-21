@@ -29,10 +29,11 @@ namespace Database.ClassesUnstructured
     public abstract class _ClassUnstructuredOperations : Page, ObjectClassOperations
     {
         protected virtual void SetupTableData() { }
-        protected abstract void OnInitializeNew();
+        protected virtual void OnInitializeNew() { }
         public void InitializeNew()
         {
             //SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
+            SetupTableData();
             OnInitializeNew();
         }
 
@@ -45,7 +46,7 @@ namespace Database.ClassesUnstructured
         }
 
 
-        protected abstract void OnCreate(SQLiteConnection conn);
+        protected virtual void OnCreate(SQLiteConnection conn) { }
         public void Create()
         {
             string err = ValidateInputs();
@@ -81,6 +82,7 @@ namespace Database.ClassesUnstructured
                 conn.Open();
                 using (var reader = SQLDB.Retrieve("SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString(), conn))
                 {
+                    SetupTableData();
                     reader.Read();
                     OnRead(reader);
                 }
@@ -89,7 +91,7 @@ namespace Database.ClassesUnstructured
         }
 
 
-        protected abstract void OnUpdate(SQLiteConnection conn);
+        protected virtual void OnUpdate(SQLiteConnection conn) { }
         public void Update()
         {
             string err = ValidateInputs();
@@ -118,7 +120,7 @@ namespace Database.ClassesUnstructured
         }
 
 
-        protected abstract void OnDelete(SQLiteConnection conn);
+        protected virtual void OnDelete(SQLiteConnection conn) { }
         public void Delete()
         {
             if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentClass)) return;
@@ -137,7 +139,7 @@ namespace Database.ClassesUnstructured
         }
 
 
-        protected abstract void OnClone(SQLiteConnection conn);
+        protected virtual void OnClone(SQLiteConnection conn) { }
         public void Clone()
         {
             string err = ValidateInputs();

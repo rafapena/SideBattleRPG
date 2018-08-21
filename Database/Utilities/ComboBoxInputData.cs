@@ -11,15 +11,18 @@ namespace Database.Utilities
 {
     public class ComboBoxInputData
     {
+        public const bool ADD_NULL_INPUT = true;
+
         public List<int> SelectedIds { get; private set; }
         public List<int> OptionsListIds { get; private set; }
         public List<string> OptionsListNames { get; private set; }
 
-        public ComboBoxInputData(string idAttribute, string nameAttribute, string queryTables, string queryCondition, string sortAttributes)
+        public ComboBoxInputData(string idAttribute, string nameAttribute, string queryTables,
+            string queryCondition, string sortAttributes, bool addNullInput=false)
         {
             SelectedIds = new List<int>();
-            OptionsListIds = new List<int>();
-            OptionsListNames = new List<string>();
+            OptionsListIds = addNullInput ? new List<int> { -1 } : new List<int>();
+            OptionsListNames = addNullInput ? new List<string> { "None" } : new List<string>();
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
@@ -40,10 +43,11 @@ namespace Database.Utilities
         public void AddToSelectedIds(int i) { SelectedIds.Add(OptionsListIds[i]); }
         public void RemoveFromSelectedIds() { SelectedIds.RemoveAt(SelectedIds.Count - 1); }
 
-        public void Insert(int index, int id, string text)
+        public int FindIndex(object targetData)
         {
-            OptionsListIds.Insert(index, id);
-            OptionsListNames.Insert(index, text);
+            if (targetData == null || targetData.ToString() == "") return 0;
+            int targetIndex = OptionsListIds.FindIndex(a => a.ToString() == targetData.ToString());
+            return targetIndex < 0 ? 0 : targetIndex;
         }
 
         public ComboBox CreateInput(int row, int col, int landingIndex)
