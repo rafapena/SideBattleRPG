@@ -137,6 +137,7 @@
       <DependentUpon>EGSingleEnemy.xaml</DependentUpon>
     </Compile>
     <Compile Include="TableTemplates\_TableTemplateOperations.cs" />
+    <Compile Include="Utilities\ImageManager.cs" />
     <Compile Include="Utilities\ComboBoxInputData.cs" />
     <Compile Include="Utilities\ObjectOperations.cs" />
     <Compile Include="Utilities\SQLDB.cs" />

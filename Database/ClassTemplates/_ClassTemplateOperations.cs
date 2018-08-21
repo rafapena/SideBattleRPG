@@ -53,11 +53,13 @@ namespace Database.ClassTemplates
         public void Create(SQLiteConnection conn)
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
+            SQLDB.ImageInputs = new List<SQLDB.ImageInput>();
             ParameterizeInputs();
             string[] createText = OnCreate(conn);
             if (createText != null)
                 SQLDB.Command(conn, "INSERT INTO " + ClassTemplateTable + " (" + createText[0] + ") VALUES (" + createText[1] + ");");
             SQLDB.Inputs = null;
+            SQLDB.ImageInputs = null;
         }
 
 
@@ -88,6 +90,7 @@ namespace Database.ClassTemplates
         public void Update(SQLiteConnection conn)
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
+            SQLDB.ImageInputs = new List<SQLDB.ImageInput>();
             ParameterizeInputs();
             string updateText = OnUpdate(conn);
             if (updateText != "")
@@ -95,6 +98,7 @@ namespace Database.ClassTemplates
                     "UPDATE " + ClassTemplateTable + " SET " + updateText + " " +
                     "WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
             SQLDB.Inputs = null;
+            SQLDB.ImageInputs = null;
         }
 
 

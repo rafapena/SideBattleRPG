@@ -70,9 +70,11 @@ namespace Database.Classes
         protected void SQLCreate(SQLiteConnection conn, string attributes, string inputs)
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
+            SQLDB.ImageInputs = new List<SQLDB.ImageInput>();
             ParameterizeInputs();
             SQLDB.Command(conn, "INSERT INTO " + SQLDB.CurrentTable + " (" + attributes + ") VALUES (" + inputs + ");");
             SQLDB.Inputs = null;
+            SQLDB.ImageInputs = null;
         }
 
 
@@ -120,9 +122,11 @@ namespace Database.Classes
         protected void SQLUpdate(SQLiteConnection conn, string input)
         {
             SQLDB.Inputs = new List<SQLiteParameter>();
+            SQLDB.ImageInputs = new List<SQLDB.ImageInput>();
             ParameterizeInputs();
             SQLDB.Command(conn, "UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString() + ";");
             SQLDB.Inputs = null;
+            SQLDB.ImageInputs = null;
         }
 
 

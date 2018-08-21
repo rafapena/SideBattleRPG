@@ -7,15 +7,32 @@ using System.Data.SQLite;
 using System.Data;
 using System.Collections;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Database.Utilities
 {
     public static class SQLDB
     {
-        public static List<SQLiteParameter> Inputs { get; set; }
         public static string CurrentClass { get; set; }
         public static string CurrentTable { get; set; }
         public static int CurrentId { get; set; }
+
+        public static List<SQLiteParameter> Inputs { get; set; }
+        public static List<ImageInput> ImageInputs { get; set; }
+        public class ImageInput
+        {
+            public string Name { get; private set; }
+            public byte[] Data { get; private set; }
+            public int Width { get; private set; }
+            public int Height { get; private set; }
+            public ImageInput(string name, byte[] data, int width, int height)
+            {
+                Name = name;
+                Data = data;
+                Width = width;
+                Height = height;
+            }
+        }
 
 
         public static SQLiteConnection DB()
@@ -23,6 +40,11 @@ namespace Database.Utilities
             return new SQLiteConnection(@"data source=C:\Users\User\GC_RPG_DB.db; Version=3; foreign keys=true;");
         }
 
+
+        public static void ParameterizeImageInput(string name, byte[] value,  int width, int height)
+        {
+            ImageInputs.Add(new ImageInput(name, value, width, height));
+        }
 
         public static SQLiteDataReader Retrieve(string sqlCommand, SQLiteConnection currentTransaction)
         {
@@ -35,6 +57,14 @@ namespace Database.Utilities
             using (var comm = new SQLiteCommand(sqlCommand, conn))
             {
                 if (Inputs != null && Inputs.Count > 0) comm.Parameters.AddRange(Inputs.ToArray());
+                if (ImageInputs != null)
+                {
+                    for (int i = 0; i < ImageInputs.Count; i++)
+                    {
+                        int size = 4 * ImageInputs[i].Width * ImageInputs[i].Height;
+                        comm.Parameters.Add(ImageInputs[i].Name, DbType.Binary, size).Value = ImageInputs[i].Data;
+                    }
+                }
                 comm.CommandType = CommandType.Text;
                 comm.ExecuteNonQuery();
             }

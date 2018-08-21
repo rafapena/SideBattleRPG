@@ -33,9 +33,9 @@
 
         <StackPanel Margin="10,0,0,0">
             <Border BorderThickness="0.5" BorderBrush="Black">
-                <Image x:Name="ImageInput" Width="100" Height="120"></Image>
+                <Image x:Name="ImageInput" Width="110" Height="110"/>
             </Border>
-            <Button x:Name="SelectImage" Content="Select Image" Margin="0,5,0,0"></Button>
+            <Button x:Name="SelectImageInput" Content="Select Image" Margin="0,5,0,0" Click="SelectImage"/>
         </StackPanel>
 
     </StackPanel>

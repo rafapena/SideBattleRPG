@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace Database.Utilities
 {
-    class Utils
+    public static class Utils
     {
         public static bool Confirm(string title, string message)
         {
