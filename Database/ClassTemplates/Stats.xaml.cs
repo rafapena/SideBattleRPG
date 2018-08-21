@@ -76,18 +76,18 @@ namespace Database.ClassTemplates
 
         public override void ParameterizeInputs()
         {
-            ParameterizeInput("@HP", HPInput.Text);
-            ParameterizeInput("@Luk", LukInput.Text);
-            ParameterizeInput("@Atk", AtkInput.Text);
-            ParameterizeInput("@Def", DefInput.Text);
-            ParameterizeInput("@Map", MapInput.Text);
-            ParameterizeInput("@Mar", MarInput.Text);
-            ParameterizeInput("@Spd", SpdInput.Text);
-            ParameterizeInput("@Tec", TecInput.Text);
-            ParameterizeInput("@Acc", AccInput.Text);
-            ParameterizeInput("@Eva", EvaInput.Text);
-            ParameterizeInput("@Crt", CrtInput.Text);
-            ParameterizeInput("@Cev", CevInput.Text);
+            SQLDB.ParameterizeInput("@HP", HPInput.Text);
+            SQLDB.ParameterizeInput("@Luk", LukInput.Text);
+            SQLDB.ParameterizeInput("@Atk", AtkInput.Text);
+            SQLDB.ParameterizeInput("@Def", DefInput.Text);
+            SQLDB.ParameterizeInput("@Map", MapInput.Text);
+            SQLDB.ParameterizeInput("@Mar", MarInput.Text);
+            SQLDB.ParameterizeInput("@Spd", SpdInput.Text);
+            SQLDB.ParameterizeInput("@Tec", TecInput.Text);
+            SQLDB.ParameterizeInput("@Acc", AccInput.Text);
+            SQLDB.ParameterizeInput("@Eva", EvaInput.Text);
+            SQLDB.ParameterizeInput("@Crt", CrtInput.Text);
+            SQLDB.ParameterizeInput("@Cev", CevInput.Text);
         }
 
         protected override string[] OnCreate(SQLiteConnection conn)

@@ -80,7 +80,7 @@ namespace Database.TableTemplates
 
         protected override void OnParameterizeInputs(int i)
         {
-            if (isDual()) ParameterizeInput("@" + AttributeName + "" + i, ((TextBox)Elements[i][2]).Text);
+            if (isDual()) SQLDB.ParameterizeInput("@" + AttributeName + "" + i, ((TextBox)Elements[i][2]).Text);
         }
 
 
@@ -90,7 +90,7 @@ namespace Database.TableTemplates
          
         public new void Create(SQLiteConnection conn)
         {
-            SQLDB.Inputs = new List<SQLiteParameter>();
+            SQLDB.ResetParameterizedInputs();
             ParameterizeInputs();
             StringList = "";
             for (int i = 0; i < Count; i++)
@@ -98,7 +98,6 @@ namespace Database.TableTemplates
                 string textInput = isDual() ? ((TextBox)Elements[i][2]).Text + "_" : "";
                 StringList += CBInputs.SelectedIds[i] + "_" + textInput;
             }
-            SQLDB.Inputs = null;
         }
 
         
@@ -108,7 +107,7 @@ namespace Database.TableTemplates
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + HostDBTable + " WHERE " + HostType + "_ID = " + HostId + ";", conn))
+                using (var reader = SQLDB.Read(conn, "SELECT * FROM " + HostDBTable + " WHERE " + HostType + "_ID = " + HostId + ";"))
                 {
                     reader.Read();
                     StringList = reader[AttributeName].ToString();
@@ -134,7 +133,7 @@ namespace Database.TableTemplates
         public new void Update(SQLiteConnection conn)
         {
             Create(conn);
-            SQLDB.Command(conn, "UPDATE " + HostDBTable + " SET " + AttributeName + " = '" + StringList + "' WHERE " + HostType + "_ID = " + HostId + ";");
+            SQLDB.Write(conn, "UPDATE " + HostDBTable + " SET " + AttributeName + " = '" + StringList + "' WHERE " + HostType + "_ID = " + HostId + ";");
         }
 
         // DO NOT USE: ClassOperation handles this - Only here to override base function

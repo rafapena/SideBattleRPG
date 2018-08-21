@@ -109,7 +109,7 @@ namespace Database.TableTemplates
                 conn.Open();
                 string select = "SELECT  " + HostType + "_ID FROM " + SQLDB.CurrentTable + " JOIN " + HostDBTable;
                 string where = "WHERE " + HostType + "_ID = " + HostType + "ID AND " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId;
-                using (var reader = SQLDB.Retrieve(select + " " + where + ";", conn))
+                using (var reader = SQLDB.Read(conn, select + " " + where + ";"))
                 {
                     reader.Read();
                     try { id = int.Parse(reader[HostType + "_ID"].ToString()); }
@@ -149,22 +149,17 @@ namespace Database.TableTemplates
         {
             for (int i = 0; i < Count; i++) OnParameterizeInputs(i);
         }
-        public void ParameterizeInput(string parameterized, string input)
-        {
-            SQLDB.Inputs.Add(new SQLiteParameter(parameterized, input));
-        }
 
 
         protected abstract string[] OnCreate();
         protected abstract string OnCreateValues(int i);
         public void Create(SQLiteConnection conn)
         {
-            SQLDB.Inputs = new List<SQLiteParameter>();
+            SQLDB.ResetParameterizedInputs();
             ParameterizeInputs();
             string[] str = OnCreate();
             for (int i = 0; i < Count; i++)
-                SQLDB.Command(conn, "INSERT INTO " + str[0] + " (" + str[1] + ") VALUES (" + OnCreateValues(i) + ");");
-            SQLDB.Inputs = null;
+                SQLDB.Write(conn, "INSERT INTO " + str[0] + " (" + str[1] + ") VALUES (" + OnCreateValues(i) + ");");
         }
 
 
@@ -185,7 +180,7 @@ namespace Database.TableTemplates
             {
                 conn.Open();
                 string[] readStr = OnReadCommands();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + readStr[0] + " WHERE " + readStr[1] + ";", conn))
+                using (var reader = SQLDB.Read(conn, "SELECT * FROM " + readStr[0] + " WHERE " + readStr[1] + ";"))
                 {
                     while (reader.Read())
                     {
@@ -213,12 +208,12 @@ namespace Database.TableTemplates
         public void Delete(SQLiteConnection conn)
         {
             string[] deleteMsg = OnDelete();
-            SQLDB.Command(conn, "DELETE FROM " + deleteMsg[0] + " WHERE " + deleteMsg[1] + ";");
+            SQLDB.Write(conn, "DELETE FROM " + deleteMsg[0] + " WHERE " + deleteMsg[1] + ";");
         }
         
         public void Clone(SQLiteConnection conn)
         {
-            HostId = SQLDB.GetMaxIdFromTable(HostDBTable, HostType);
+            HostId = SQLDB.MaxIdPlusOne(HostDBTable, HostType);
         }
     }
 }

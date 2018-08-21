@@ -47,9 +47,9 @@ namespace Database.ClassTemplates
 
         public override void ParameterizeInputs()
         {
-            ParameterizeInput("@Name", NameInput.Text);
-            ParameterizeInput("@Description", DescriptionInput.Text);
-            SQLDB.ParameterizeImageInput("@Image", ImageManager.ImageToBytes(ImageInput.Source), (int)ImageInput.Width, (int)ImageInput.Height);
+            SQLDB.ParameterizeInput("@Name", NameInput.Text);
+            SQLDB.ParameterizeInput("@Description", DescriptionInput.Text);
+            SQLDB.ParameterizeBlobInput("@Image", ImageManager.ImageToBytes(ImageInput.Source), (int)ImageInput.Width * (int)ImageInput.Height);
         }
 
         protected override string[] OnCreate(SQLiteConnection conn)
@@ -77,7 +77,8 @@ namespace Database.ClassTemplates
 
         private void SelectImage(object sender, EventArgs e)
         {
-            ImageInput.Source = ImageManager.SelectImage((int)ImageInput.Width, (int)ImageInput.Height);
+            BitmapImage img = ImageManager.SelectImage((int)ImageInput.Width, (int)ImageInput.Height);
+            if (img != null) ImageInput.Source = img;
         }
     }
 }

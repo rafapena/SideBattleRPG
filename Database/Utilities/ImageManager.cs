@@ -17,8 +17,7 @@ namespace Database.Utilities
         public static BitmapImage SelectImage(int width, int height)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            //dlg.Filter = "Files|*.jpg;*.jpeg;*.png;*.gif;";
-            dlg.Filter = "Files|*.jpg";
+            dlg.Filter = "Files|*.jpg;*.jpeg;*.png;*.gif;";
             if (dlg.ShowDialog() != true) return null;
             BitmapImage image = new BitmapImage();
             image.BeginInit();
@@ -34,7 +33,7 @@ namespace Database.Utilities
             BitmapSource bitmapSource = image as BitmapSource;
             if (bitmapSource == null) return null;
             byte[] bytes = null;
-            var encoder = new JpegBitmapEncoder();
+            var encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
             using (var stream = new MemoryStream())
             {
@@ -67,13 +66,12 @@ namespace Database.Utilities
             byte[] buffer = new byte[2048];
             long bytesRead;
             long fieldOffset = 0;
+            try { bytesRead = reader.GetBytes(columnNumber, fieldOffset, buffer, 0, buffer.Length); }
+            catch (InvalidCastException) { return null; }
             using (MemoryStream stream = new MemoryStream())
             {
-                while (true)
+                while ((bytesRead = reader.GetBytes(columnNumber, fieldOffset, buffer, 0, buffer.Length)) > 0)
                 {
-                    try { bytesRead = reader.GetBytes(columnNumber, fieldOffset, buffer, 0, buffer.Length); }
-                    catch (InvalidCastException) { return null; }
-                    if (bytesRead <= 0) break;
                     stream.Write(buffer, 0, (int)bytesRead);
                     fieldOffset += bytesRead;
                 }

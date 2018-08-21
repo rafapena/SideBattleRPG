@@ -49,8 +49,8 @@ namespace Database.Classes
 
         public override void ParameterizeInputs()
         {
-            //ParamterizeInput("@attr1", attr1Input.Text);
-            //ParamterizeInput("@attr2", attr2Input.Text);
+            //SQLDB.ParamterizeInput("@attr1", attr1Input.Text);
+            //SQLDB.ParamterizeInput("@attr2", attr2Input.Text);
         }
 
         protected override void OnCreate(SQLiteConnection conn)

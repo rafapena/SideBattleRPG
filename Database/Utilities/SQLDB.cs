@@ -17,71 +17,65 @@ namespace Database.Utilities
         public static string CurrentTable { get; set; }
         public static int CurrentId { get; set; }
 
-        public static List<SQLiteParameter> Inputs { get; set; }
-        public static List<ImageInput> ImageInputs { get; set; }
-        public class ImageInput
+        public static List<SQLiteParameter> Inputs { get; private set; }
+        public static List<BlobInput> BlobInputs { get; private set; }
+        public class BlobInput
         {
             public string Name { get; private set; }
             public byte[] Data { get; private set; }
-            public int Width { get; private set; }
-            public int Height { get; private set; }
-            public ImageInput(string name, byte[] data, int width, int height)
+            public int Size { get; private set; }
+            public BlobInput(string name, byte[] data, int size)
             {
                 Name = name;
                 Data = data;
-                Width = width;
-                Height = height;
+                Size = size;
             }
         }
 
 
+        // Indicates the file where the database is located
         public static SQLiteConnection DB()
         {
             return new SQLiteConnection(@"data source=C:\Users\User\GC_RPG_DB.db; Version=3; foreign keys=true;");
         }
 
 
-        public static void ParameterizeImageInput(string name, byte[] value,  int width, int height)
+        public static void ResetParameterizedInputs()
         {
-            ImageInputs.Add(new ImageInput(name, value, width, height));
+            Inputs = new List<SQLiteParameter>();
+            BlobInputs = new List<BlobInput>();
+        }
+        public static void ParameterizeInput(string name, string value)
+        {
+            Inputs.Add(new SQLiteParameter(name, value));
+        }
+        public static void ParameterizeBlobInput(string name, byte[] value, int size)
+        {
+            BlobInputs.Add(new BlobInput(name, value, size));
         }
 
-        public static SQLiteDataReader Retrieve(string sqlCommand, SQLiteConnection currentTransaction)
+
+        public static SQLiteDataReader Read(SQLiteConnection conn, string sqlCommand)
         {
-            SQLiteCommand command = new SQLiteCommand(sqlCommand, currentTransaction);
+            SQLiteCommand command = new SQLiteCommand(sqlCommand, conn);
             return command.ExecuteReader();
         }
 
-        public static void Command(SQLiteConnection conn, string sqlCommand)
+        public static void Write(SQLiteConnection conn, string sqlCommand)
         {
             using (var comm = new SQLiteCommand(sqlCommand, conn))
             {
                 if (Inputs != null && Inputs.Count > 0) comm.Parameters.AddRange(Inputs.ToArray());
-                if (ImageInputs != null)
-                {
-                    for (int i = 0; i < ImageInputs.Count; i++)
-                    {
-                        int size = 4 * ImageInputs[i].Width * ImageInputs[i].Height;
-                        comm.Parameters.Add(ImageInputs[i].Name, DbType.Binary, size).Value = ImageInputs[i].Data;
-                    }
-                }
+                if (BlobInputs != null)
+                    for (int i = 0; i < BlobInputs.Count; i++)
+                        comm.Parameters.Add(BlobInputs[i].Name, DbType.Binary, 4 * BlobInputs[i].Size).Value = BlobInputs[i].Data;
                 comm.CommandType = CommandType.Text;
                 comm.ExecuteNonQuery();
             }
         }
 
-        public static void OneCommand(string sqlCommand)
-        {
-            using (var conn = DB())
-            {
-                conn.Open();
-                Command(conn, sqlCommand);
-                conn.Close();
-            }
-        }
 
-
-        public static int GetScalar(string sqlCommand)
+        public static int Scalar(string sqlCommand)
         {
             int val = 0;
             using (var conn = DB())
@@ -97,21 +91,20 @@ namespace Database.Utilities
             return val;
         }
 
-
-        public static int GetMaxIdFromTable(string table, string type)
+        public static int MaxIdPlusOne(string table, string type)
         {
-            int maxId;
+            int maxIdPlusOne;
             using (var conn = DB())
             {
                 conn.Open();
                 using (var comm = new SQLiteCommand("SELECT MAX(" + type + "_ID) FROM " + table, conn))
                 {
-                    try { maxId = (int)((long)comm.ExecuteScalar()) + 1; }
-                    catch (InvalidCastException) { maxId = 1; }
+                    try { maxIdPlusOne = (int)((long)comm.ExecuteScalar()) + 1; }
+                    catch (InvalidCastException) { maxIdPlusOne = 1; }
                 }
                 conn.Close();
             }
-            return maxId;
+            return maxIdPlusOne;
         }
     }
 }

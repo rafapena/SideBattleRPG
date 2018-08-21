@@ -12,7 +12,6 @@ namespace Database.Utilities
         void InitializeNew();
         string ValidateInputs();
         void ParameterizeInputs();
-        void ParameterizeInput(string parameterized, string input);
         void Read();
     }
 

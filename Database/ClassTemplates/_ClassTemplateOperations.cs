@@ -35,31 +35,22 @@ namespace Database.ClassTemplates
         public void InitializeNew()
         {
             HostTableAttributeName = ClassTemplateType + "ID";
-            ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
+            ClassTemplateId = SQLDB.MaxIdPlusOne(ClassTemplateTable, ClassTemplateType);
             SetupTableData();
             OnInitializeNew();
         }
 
-        
         public abstract string ValidateInputs();
         public abstract void ParameterizeInputs();
-        public void ParameterizeInput(string parameterized, string input)
-        {
-            SQLDB.Inputs.Add(new SQLiteParameter(parameterized, input));
-        }
 
 
         protected abstract string[] OnCreate(SQLiteConnection conn);
         public void Create(SQLiteConnection conn)
         {
-            SQLDB.Inputs = new List<SQLiteParameter>();
-            SQLDB.ImageInputs = new List<SQLDB.ImageInput>();
+            SQLDB.ResetParameterizedInputs();
             ParameterizeInputs();
             string[] createText = OnCreate(conn);
-            if (createText != null)
-                SQLDB.Command(conn, "INSERT INTO " + ClassTemplateTable + " (" + createText[0] + ") VALUES (" + createText[1] + ");");
-            SQLDB.Inputs = null;
-            SQLDB.ImageInputs = null;
+            if (createText != null) SQLDB.Write(conn, "INSERT INTO " + ClassTemplateTable + " (" + createText[0] + ") VALUES (" + createText[1] + ");");
         }
 
 
@@ -74,7 +65,8 @@ namespace Database.ClassTemplates
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + ClassTemplateTable + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString(), conn))
+                using (var reader = SQLDB.Read(conn,
+                    "SELECT * FROM " + ClassTemplateTable + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString()))
                 {
                     reader.Read();
                     ClassTemplateId = reader.GetInt32(0);
@@ -89,30 +81,27 @@ namespace Database.ClassTemplates
         protected abstract string OnUpdate(SQLiteConnection conn);
         public void Update(SQLiteConnection conn)
         {
-            SQLDB.Inputs = new List<SQLiteParameter>();
-            SQLDB.ImageInputs = new List<SQLDB.ImageInput>();
+            SQLDB.ResetParameterizedInputs();
             ParameterizeInputs();
             string updateText = OnUpdate(conn);
             if (updateText != "")
-                SQLDB.Command(conn,
+                SQLDB.Write(conn,
                     "UPDATE " + ClassTemplateTable + " SET " + updateText + " " +
                     "WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
-            SQLDB.Inputs = null;
-            SQLDB.ImageInputs = null;
         }
 
 
         protected virtual void OnDelete(SQLiteConnection conn) { }
         public void Delete(SQLiteConnection conn)
         {
-            SQLDB.Command(conn, "DELETE FROM " + ClassTemplateTable + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
+            SQLDB.Write(conn, "DELETE FROM " + ClassTemplateTable + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
         }
 
 
         protected virtual void OnClone(SQLiteConnection conn) { }
         public void Clone(SQLiteConnection conn)
         {
-            ClassTemplateId = SQLDB.GetMaxIdFromTable(ClassTemplateTable, ClassTemplateType);
+            ClassTemplateId = SQLDB.MaxIdPlusOne(ClassTemplateTable, ClassTemplateType);
         }
     }
 }

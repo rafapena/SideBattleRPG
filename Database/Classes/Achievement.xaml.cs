@@ -46,8 +46,8 @@ namespace Database.Classes
 
         public override void ParameterizeInputs()
         {
-            ParameterizeInput("@Level", LevelInput.Text);
-            ParameterizeInput("@Hint", HintInput.Text);
+            SQLDB.ParameterizeInput("@Level", LevelInput.Text);
+            SQLDB.ParameterizeInput("@Hint", HintInput.Text);
         }
 
         protected override void OnCreate(SQLiteConnection conn)

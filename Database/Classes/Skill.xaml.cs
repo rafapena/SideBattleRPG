@@ -67,10 +67,10 @@ namespace Database.Classes
 
         public override void ParameterizeInputs()
         {
-            ParameterizeInput("@SPConsume", SPConsumeInput.Text);
-            ParameterizeInput("@Charge", ChargeInput.Text);
-            ParameterizeInput("@WarmUp", WarmUpInput.Text);
-            ParameterizeInput("@CoolDown", CoolDownInput.Text);
+            SQLDB.ParameterizeInput("@SPConsume", SPConsumeInput.Text);
+            SQLDB.ParameterizeInput("@Charge", ChargeInput.Text);
+            SQLDB.ParameterizeInput("@WarmUp", WarmUpInput.Text);
+            SQLDB.ParameterizeInput("@CoolDown", CoolDownInput.Text);
         }
 
         protected override void OnCreate(SQLiteConnection conn)

@@ -27,7 +27,7 @@ namespace Database.Utilities
             {
                 conn.Open();
                 string select = "SELECT " + idAttribute + ", " + nameAttribute + " FROM " + queryTables;
-                using (var reader = SQLDB.Retrieve(select + " WHERE " + queryCondition + " ORDER BY " + sortAttributes + " ASC;", conn))
+                using (var reader = SQLDB.Read(conn, select + " WHERE " + queryCondition + " ORDER BY " + sortAttributes + " ASC;"))
                 {
                     while (reader.Read())
                     {

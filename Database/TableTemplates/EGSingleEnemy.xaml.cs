@@ -47,8 +47,8 @@ namespace Database.TableTemplates
 
         protected override void OnParameterizeInputs(int i)
         {
-            //ParameterizeInputs("@attr1" + i, ((TextBox)InputElements[i][0]).Text);
-            //ParameterizeInputs("@attr2" + i, ((TextBox)InputElements[i][1]).Text);
+            //SQLDB.ParameterizeInputs("@attr1" + i, ((TextBox)InputElements[i][0]).Text);
+            //SQLDB.ParameterizeInputs("@attr2" + i, ((TextBox)InputElements[i][1]).Text);
         }
 
         protected override string[] OnCreate()

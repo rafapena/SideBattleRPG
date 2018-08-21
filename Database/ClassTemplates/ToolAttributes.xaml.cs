@@ -97,24 +97,24 @@ namespace Database.ClassTemplates
         {
             int c1 = ClassExclusive1Data.OptionsListIds[ClassExclusive1Input.SelectedIndex];
             int c2 = ClassExclusive2Data.OptionsListIds[ClassExclusive2Input.SelectedIndex];
-            ParameterizeInput("@Type", TypeData.OptionsListIds[TypeInput.SelectedIndex].ToString());
-            ParameterizeInput("@Formula", FormulaData.OptionsListIds[FormulaInput.SelectedIndex].ToString());
-            ParameterizeInput("@HPSPModType", HPSPModOptions[HPSPModInput.SelectedIndex]);
-            ParameterizeInput("@HPAmount", HPAmountInput.Text);
-            ParameterizeInput("@SPAmount", SPAmountInput.Text);
-            ParameterizeInput("@HPPercent", HPPercentInput.Text);
-            ParameterizeInput("@SPPercent", SPPercentInput.Text);
-            ParameterizeInput("@HPRecoil", HPRecoilInput.Text);
-            ParameterizeInput("@ClassExclusive1", c1 < 0 ? null : c1.ToString());
-            ParameterizeInput("@ClassExclusive2", c2 < 0 ? null : c2.ToString());
-            ParameterizeInput("@Element", ElementData.OptionsListIds[ElementInput.SelectedIndex].ToString());
-            ParameterizeInput("@Power", PowerInput.Text);
-            ParameterizeInput("@Accuracy", AccuracyInput.Text);
-            ParameterizeInput("@CriticalRate", CriticalRateInput.Text);
-            ParameterizeInput("@Priority", PriorityInput.Text);
-            ParameterizeInput("@Scope", ScopeOptions[ScopeInput.SelectedIndex]);
-            ParameterizeInput("@ConsecutiveActs", ConsecutiveActsInput.Text);
-            ParameterizeInput("@RandomActs", RandomActsInput.Text);
+            SQLDB.ParameterizeInput("@Type", TypeData.OptionsListIds[TypeInput.SelectedIndex].ToString());
+            SQLDB.ParameterizeInput("@Formula", FormulaData.OptionsListIds[FormulaInput.SelectedIndex].ToString());
+            SQLDB.ParameterizeInput("@HPSPModType", HPSPModOptions[HPSPModInput.SelectedIndex]);
+            SQLDB.ParameterizeInput("@HPAmount", HPAmountInput.Text);
+            SQLDB.ParameterizeInput("@SPAmount", SPAmountInput.Text);
+            SQLDB.ParameterizeInput("@HPPercent", HPPercentInput.Text);
+            SQLDB.ParameterizeInput("@SPPercent", SPPercentInput.Text);
+            SQLDB.ParameterizeInput("@HPRecoil", HPRecoilInput.Text);
+            SQLDB.ParameterizeInput("@ClassExclusive1", c1 < 0 ? null : c1.ToString());
+            SQLDB.ParameterizeInput("@ClassExclusive2", c2 < 0 ? null : c2.ToString());
+            SQLDB.ParameterizeInput("@Element", ElementData.OptionsListIds[ElementInput.SelectedIndex].ToString());
+            SQLDB.ParameterizeInput("@Power", PowerInput.Text);
+            SQLDB.ParameterizeInput("@Accuracy", AccuracyInput.Text);
+            SQLDB.ParameterizeInput("@CriticalRate", CriticalRateInput.Text);
+            SQLDB.ParameterizeInput("@Priority", PriorityInput.Text);
+            SQLDB.ParameterizeInput("@Scope", ScopeOptions[ScopeInput.SelectedIndex]);
+            SQLDB.ParameterizeInput("@ConsecutiveActs", ConsecutiveActsInput.Text);
+            SQLDB.ParameterizeInput("@RandomActs", RandomActsInput.Text);
         }
 
         protected override string[] OnCreate(SQLiteConnection conn)

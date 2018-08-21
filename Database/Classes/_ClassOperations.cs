@@ -29,20 +29,15 @@ namespace Database.Classes
         public void InitializeNew()
         {
             LinkedTableList.SetupTable(false);
-            SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
+            SQLDB.CurrentId = SQLDB.MaxIdPlusOne(SQLDB.CurrentTable, SQLDB.CurrentClass);
             LinkedFooter.ApplyInitializeNewSettings();
             LinkedTableList.RemoveButtonHighlight();
             SetupTableData();
             OnInitializeNew();
         }
 
-        
         public abstract string ValidateInputs();
         public abstract void ParameterizeInputs();
-        public void ParameterizeInput(string parameterized, string input)
-        {
-            SQLDB.Inputs.Add(new SQLiteParameter(parameterized, input));
-        }
 
 
         protected abstract void OnCreate(SQLiteConnection conn);
@@ -69,12 +64,9 @@ namespace Database.Classes
         }
         protected void SQLCreate(SQLiteConnection conn, string attributes, string inputs)
         {
-            SQLDB.Inputs = new List<SQLiteParameter>();
-            SQLDB.ImageInputs = new List<SQLDB.ImageInput>();
+            SQLDB.ResetParameterizedInputs();
             ParameterizeInputs();
-            SQLDB.Command(conn, "INSERT INTO " + SQLDB.CurrentTable + " (" + attributes + ") VALUES (" + inputs + ");");
-            SQLDB.Inputs = null;
-            SQLDB.ImageInputs = null;
+            SQLDB.Write(conn, "INSERT INTO " + SQLDB.CurrentTable + " (" + attributes + ") VALUES (" + inputs + ");");
         }
 
 
@@ -85,8 +77,8 @@ namespace Database.Classes
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + SQLDB.CurrentTable + " " +
-                    "WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString(), conn))
+                using (var reader = SQLDB.Read(conn,
+                    "SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString()))
                 {
                     reader.Read();
                     SetupTableData();
@@ -115,18 +107,14 @@ namespace Database.Classes
                     conn.Close();
                 }
                 LinkedTableList.SetupTable(true);
-                SQLDB.Inputs = null;
                 MessageBox.Show(SQLDB.CurrentClass + " updated");
             }
         }
         protected void SQLUpdate(SQLiteConnection conn, string input)
         {
-            SQLDB.Inputs = new List<SQLiteParameter>();
-            SQLDB.ImageInputs = new List<SQLDB.ImageInput>();
+            SQLDB.ResetParameterizedInputs();
             ParameterizeInputs();
-            SQLDB.Command(conn, "UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString() + ";");
-            SQLDB.Inputs = null;
-            SQLDB.ImageInputs = null;
+            SQLDB.Write(conn, "UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString() + ";");
         }
 
 
@@ -156,7 +144,7 @@ namespace Database.Classes
             if (err != "") MessageBox.Show("Could not clone " + SQLDB.CurrentClass + ":\n\n" + err);
             else
             {
-                SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
+                SQLDB.CurrentId = SQLDB.MaxIdPlusOne(SQLDB.CurrentTable, SQLDB.CurrentClass);
                 using (var conn = SQLDB.DB())
                 {
                     conn.Open();

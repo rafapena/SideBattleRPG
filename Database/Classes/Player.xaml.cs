@@ -71,10 +71,10 @@ namespace Database.Classes
 
         public override void ParameterizeInputs()
         {
-            ParameterizeInput("@Companionship", CompanionshipInput.Text);
-            ParameterizeInput("@SavePartnerRate", SavePartnerRateInput.Text);
-            ParameterizeInput("@CounterattackRate", CounterattackRateInput.Text);
-            ParameterizeInput("@AssistDamageRate", AssistDamageRateInput.Text);
+            SQLDB.ParameterizeInput("@Companionship", CompanionshipInput.Text);
+            SQLDB.ParameterizeInput("@SavePartnerRate", SavePartnerRateInput.Text);
+            SQLDB.ParameterizeInput("@CounterattackRate", CounterattackRateInput.Text);
+            SQLDB.ParameterizeInput("@AssistDamageRate", AssistDamageRateInput.Text);
         }
 
         protected override void OnCreate(SQLiteConnection conn)

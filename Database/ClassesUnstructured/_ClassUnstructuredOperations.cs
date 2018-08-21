@@ -37,13 +37,8 @@ namespace Database.ClassesUnstructured
             OnInitializeNew();
         }
 
-
         public abstract string ValidateInputs();
         public abstract void ParameterizeInputs();
-        public void ParameterizeInput(string parameterized, string input)
-        {
-            SQLDB.Inputs.Add(new SQLiteParameter(parameterized, input));
-        }
 
 
         protected virtual void OnCreate(SQLiteConnection conn) { }
@@ -68,9 +63,9 @@ namespace Database.ClassesUnstructured
         }
         protected void SQLCreate(SQLiteConnection conn, string[] text)
         {
+            SQLDB.ResetParameterizedInputs();
             ParameterizeInputs();
-            SQLDB.Command(conn, "INSERT INTO " + SQLDB.CurrentTable + " (" + text[0] + ") VALUES (" + text[1] + ");");
-            SQLDB.Inputs = null;
+            SQLDB.Write(conn, "INSERT INTO " + SQLDB.CurrentTable + " (" + text[0] + ") VALUES (" + text[1] + ");");
         }
 
 
@@ -80,7 +75,7 @@ namespace Database.ClassesUnstructured
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Retrieve("SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString(), conn))
+                using (var reader = SQLDB.Read(conn, "SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString()))
                 {
                     SetupTableData();
                     reader.Read();
@@ -109,14 +104,13 @@ namespace Database.ClassesUnstructured
                     conn.Close();
                 }
                 MessageBox.Show("Updating successful");
-                SQLDB.Inputs = null;
             }
         }
         protected void SQLUpdate(SQLiteConnection conn, string input)
         {
+            SQLDB.ResetParameterizedInputs();
             ParameterizeInputs();
-            SQLDB.Command(conn, "UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString() + ";");
-            SQLDB.Inputs = null;
+            SQLDB.Write(conn, "UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString() + ";");
         }
 
 
@@ -146,7 +140,7 @@ namespace Database.ClassesUnstructured
             if (err != "") MessageBox.Show("Could not clone " + SQLDB.CurrentClass + ":\n\n" + err);
             else
             {
-                SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
+                SQLDB.CurrentId = SQLDB.MaxIdPlusOne(SQLDB.CurrentTable, SQLDB.CurrentClass);
                 using (var conn = SQLDB.DB())
                 {
                     conn.Open();
