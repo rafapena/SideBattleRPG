@@ -11,6 +11,16 @@ using System.Windows.Media;
 
 namespace Database.Utilities
 {
+    /// <summary>
+    /// The main static class directly managing the data from the SQLite database.
+    /// 
+    /// The most important rule: When connecting the database ALWAYS use the statement:
+    /// using (var conn = SQLDB.DB()) { ... }
+    /// 
+    /// When reading and writing data, it is highly advised to use SQLDB.Read(conn, ...) and SQLDB.Write(conn, ...), respectively.
+    /// Putting functions like command.ExecuteCommand() and command.Parameters.AddRange() anywhere in the project outside of this class,
+    /// will be consufing and redundant for this application. They are already provided in the following functions mentioned above
+    /// </summary>
     public static class SQLDB
     {
         // The only global variables: should indicate the current table list and item the user is viewing

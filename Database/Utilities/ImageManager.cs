@@ -12,6 +12,12 @@ using System.Windows.Media;
 
 namespace Database.Utilities
 {
+    /// <summary>
+    /// Handles images so that they can be ready to be stored into the database. Images in a database are stored as blobs.
+    /// To turn the image into a blob object, the image needs to be converted into an array of bytes. These bytes can then be stored into
+    /// the database. To retrieve the stored image, the blob needs to be converted into bytes. Once converted, the bytes need to be
+    /// converted into the Image.
+    /// </summary>
     public static class ImageManager
     {
         // Lets the user select an image from their fie directoy: Only supports JPG, PNG, and GIFs (Will not animate)

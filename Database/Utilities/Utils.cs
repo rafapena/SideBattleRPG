@@ -9,6 +9,11 @@ using System.Windows;
 
 namespace Database.Utilities
 {
+    /// <summary>
+    /// Everything else that is too short to be properly categorized.
+    /// Most of these validate string inputs. Others are confirm and print messages.
+    /// Add anything else here that might be convenient.
+    /// </summary>
     public static class Utils
     {
         // Confirm message
@@ -49,11 +54,11 @@ namespace Database.Utilities
         private static Regex badlySpaced = new Regex(@"^\s+$", RegexOptions.IgnoreCase);
         public static string CutSpaces(string inputText) { return badlySpaced.Match(inputText).Success ? "" : inputText; }
 
-        // Standard length of certain strings inputs should be between 1 and 40, inclusively
-        public static bool InRequiredLength(string inputText)
+        // Standard length of certain strings inputs should be between 1 and maxLength, inclusively
+        public static bool InRequiredLength(string inputText, int maxLength)
         {
             inputText = CutSpaces(inputText);
-            return inputText.Length > 0 && inputText.Length <= 40;
+            return inputText.Length > 0 && inputText.Length <= maxLength;
         }
 
         // Debug statements

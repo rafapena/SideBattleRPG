@@ -41,8 +41,7 @@ namespace Database.TableTemplates
         {
             string input = ((TextBox)Elements[i][1]).Text;
             string text = "";
-            if (Utils.CutSpaces(input) == "") text += "Inputs in " + TableTitle + " cannot be empty\n";
-            if (input.Length >= 20) text += "Inputs must have 20 characters or less";
+            if (!Utils.InRequiredLength(Utils.CutSpaces(input), 20)) text += "Inputs in " + TableTitle + " must be in between 1 to 20 characters\n";
             return text;
         }
 

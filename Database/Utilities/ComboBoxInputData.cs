@@ -9,9 +9,21 @@ using System.Windows;
 
 namespace Database.Utilities
 {
+    /// <summary>
+    /// This class stores extra input data for the combo boxes that need to hold values from the database.
+    /// When the combo box input data is initialized, the options list ids and names are populated by the following query:
+    /// 
+    /// SELECT idAttribute, nameAttribute
+    /// FROM queryTables
+    /// WHERE queryCondition
+    /// ORDER BY sortAttrbiutes
+    /// 
+    /// After that, the "ItemSource" value of the combo box, from the user's current page, needs to be set to the list of names produced by ComboBoxInputData
+    /// The names in each list map to the ids of the database object, for more efficient reading and writing operations.
+    /// </summary>
     public class ComboBoxInputData
     {
-        // Ensures that there is a value called "None" in the combo box
+        // Ensures that there is a value called "None" at the top of the combo box
         public const bool ADD_NULL_INPUT = true;
 
         // Really only exists for handling a table of combo boxes

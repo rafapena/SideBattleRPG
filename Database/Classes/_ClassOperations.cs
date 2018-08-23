@@ -18,7 +18,7 @@ using Database.Utilities;
 
 namespace Database.Classes
 {
-    public abstract class _ClassOperations : Page, ObjectClassOperations
+    public abstract class _ClassOperations : Page, ObjectPageOperations
     {
         public TableList LinkedTableList { get; set; }
         public Footer LinkedFooter { get; set; }

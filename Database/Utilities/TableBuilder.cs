@@ -17,6 +17,10 @@ using static Database.Utilities.SQLDB;
 
 namespace Database.Utilities
 {
+    /// <summary>
+    /// General table utilities to build a table from scratch. This static class can programmatically call UI elements that are meant to be set up in XAML.
+    /// This is so that the table can continuously update on run-time.
+    /// </summary>
     public static class TableBuilder
     {
         public delegate void Function(object sender, RoutedEventArgs e);

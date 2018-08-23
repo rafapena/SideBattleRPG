@@ -26,7 +26,7 @@ using Database.Utilities;
 
 namespace Database.ClassesUnstructured
 {
-    public abstract class _ClassUnstructuredOperations : Page, ObjectClassOperations
+    public abstract class _ClassUnstructuredOperations : Page, ObjectPageOperations
     {
         protected virtual void SetupTableData() { }
         protected virtual void OnInitializeNew() { }

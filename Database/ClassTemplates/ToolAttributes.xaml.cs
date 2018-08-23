@@ -20,7 +20,7 @@ namespace Database.ClassTemplates
     public partial class ToolAttributes : _ClassTemplateOperations
     {
         private ComboBoxInputData TypeData, FormulaData, ElementData, ClassExclusive1Data, ClassExclusive2Data;
-        private List<string> HPSPModOptions = new List<string> { "None", "HP", "SP", "HP Drain", "SP Drain" };
+        private List<string> HPSPModOptions = new List<string> { "None", "HP Loss", "SP Loss", "HP Gain", "SP Gain", "HP Drain", "SP Drain" };
         private List<string> ScopeOptions = new List<string> {
             "None", "One Enemy", "Splash Enemies", "Row of Enemies", "Column of Enemies",
             "All Enemies", "User", "One Ally", "All Allies", "Everyone Except User", "Everyone"
@@ -76,11 +76,11 @@ namespace Database.ClassTemplates
         public override string ValidateInputs()
         {
             string err = "";
-            if (!Utils.NumberBetween(HPAmountInput.Text, -100000, 100000)) err += "HP Amount must be an integer within -100000 and 100000\n";
-            if (!Utils.NumberBetween(SPAmountInput.Text, -100000, 100000)) err += "SP Amount must be an integer within -100000 and 100000\n";
-            if (!Utils.NumberBetween(HPAmountInput.Text, -100, 100)) err += "HP % must be an integer within -100 and 100\n";
-            if (!Utils.NumberBetween(SPAmountInput.Text, -100, 100)) err += "SP % must be an integer within -100 and 100\n";
-            if (!Utils.NumberBetween(HPRecoilInput.Text, -100, 100)) err += "HP Recoil % must be an integer within -100 and 100\n";
+            if (!Utils.PosInt(HPAmountInput.Text)) err += "HP Amount must be a positive integer\n";
+            if (!Utils.PosInt(SPAmountInput.Text)) err += "SP Amount must be a positive integer\n";
+            if (!Utils.NumberBetween(HPPercentInput.Text, 0, 100)) err += "HP % must be an integer within 0 and 100\n";
+            if (!Utils.NumberBetween(SPPercentInput.Text, 0, 100)) err += "SP % must be an integer within 0 and 100\n";
+            if (!Utils.NumberBetween(HPRecoilInput.Text, 0, 100)) err += "HP Recoil % must be an integer within 0 and 100\n";
             if (ClassExclusive1Input.SelectedIndex == ClassExclusive2Input.SelectedIndex && ClassExclusive1Input.SelectedIndex != 0)
                 err += "Class Exclusives cannot be the same\n";
             if (!Utils.PosInt(PowerInput.Text)) err += "Power must be a positive integer\n";
