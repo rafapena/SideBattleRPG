@@ -29,7 +29,7 @@ namespace Database.Classes
         public void InitializeNew()
         {
             LinkedTableList.SetupTable(false);
-            SQLDB.CurrentId = SQLDB.MaxIdPlusOne(SQLDB.CurrentTable, SQLDB.CurrentClass);
+            SQLDB.CurrentId = SQLDB.MaxIdPlusOne(SQLDB.CurrentTable);
             LinkedFooter.ApplyInitializeNewSettings();
             LinkedTableList.RemoveButtonHighlight();
             SetupTableData();
@@ -44,7 +44,7 @@ namespace Database.Classes
         public void Create()
         {
             string err = ValidateInputs();
-            if (err != "") MessageBox.Show("Could not create " + SQLDB.CurrentClass + ":\n\n" + err);
+            if (err != "") MessageBox.Show(err, "Could not create " + SQLDB.CurrentTable);
             else
             {
                 using (var conn = SQLDB.DB())
@@ -59,7 +59,7 @@ namespace Database.Classes
                 }
                 LinkedTableList.SetupTable(true);
                 LinkedFooter.ApplyReadSettings();
-                MessageBox.Show(SQLDB.CurrentClass + " created");
+                MessageBox.Show(SQLDB.CurrentTable + " created");
             }
         }
         protected void SQLCreate(SQLiteConnection conn, string attributes, string inputs)
@@ -77,8 +77,7 @@ namespace Database.Classes
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Read(conn,
-                    "SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString()))
+                using (var reader = SQLDB.Read(conn, "SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentTable + "_ID = " + SQLDB.CurrentId + ";"))
                 {
                     reader.Read();
                     SetupTableData();
@@ -93,7 +92,7 @@ namespace Database.Classes
         public void Update()
         {
             string err = ValidateInputs();
-            if (err != "") MessageBox.Show("Could not update " + SQLDB.CurrentClass + ":\n\n" + err);
+            if (err != "") MessageBox.Show(err, "Could not update " + SQLDB.CurrentTable);
             else
             {
                 using (var conn = SQLDB.DB())
@@ -107,21 +106,21 @@ namespace Database.Classes
                     conn.Close();
                 }
                 LinkedTableList.SetupTable(true);
-                MessageBox.Show(SQLDB.CurrentClass + " updated");
+                MessageBox.Show(SQLDB.CurrentTable + " updated");
             }
         }
         protected void SQLUpdate(SQLiteConnection conn, string input)
         {
             SQLDB.ResetParameterizedInputs();
             ParameterizeInputs();
-            SQLDB.Write(conn, "UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString() + ";");
+            SQLDB.Write(conn, "UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentTable + "_ID = " + SQLDB.CurrentId.ToString() + ";");
         }
 
 
         protected abstract void OnDelete(SQLiteConnection conn);
         public void Delete()
         {
-            if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentClass)) return;
+            if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentTable)) return;
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
@@ -132,7 +131,7 @@ namespace Database.Classes
                 }
                 conn.Close();
             }
-            MessageBox.Show(SQLDB.CurrentClass + " deleted");
+            MessageBox.Show(SQLDB.CurrentTable + " deleted");
             InitializeNew();
         }
 
@@ -141,10 +140,10 @@ namespace Database.Classes
         public void Clone()
         {
             string err = ValidateInputs();
-            if (err != "") MessageBox.Show("Could not clone " + SQLDB.CurrentClass + ":\n\n" + err);
+            if (err != "") MessageBox.Show("Could not clone " + SQLDB.CurrentTable + ":\n\n" + err);
             else
             {
-                SQLDB.CurrentId = SQLDB.MaxIdPlusOne(SQLDB.CurrentTable, SQLDB.CurrentClass);
+                SQLDB.CurrentId = SQLDB.MaxIdPlusOne(SQLDB.CurrentTable);
                 using (var conn = SQLDB.DB())
                 {
                     conn.Open();
@@ -157,7 +156,7 @@ namespace Database.Classes
                     conn.Close();
                 }
                 LinkedTableList.SetupTable(true);
-                MessageBox.Show(SQLDB.CurrentClass + " cloned");
+                MessageBox.Show(SQLDB.CurrentTable + " cloned");
             }
         }
     }

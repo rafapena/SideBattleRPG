@@ -31,8 +31,8 @@ namespace Database.Classes
 
         protected override void SetupTableData()
         {
-            PlayerSummons.Setup("Player", "Players", "Player Summons", new List<string> { "Name", "%" }, 80);
-            EnemySummons.Setup("Enemy", "Enemies", "Enemy Summons", new List<string> { "Name", "%" }, 80);
+            PlayerSummons.Setup("Skill", "Player", "Player Summons", new List<string> { "Name", "%" }, 80);
+            EnemySummons.Setup("Skill", "Enemy", "Enemy Summons", new List<string> { "Name", "%" }, 80);
             PlayerSummons.AttributeName = "Response";
             EnemySummons.AttributeName = "Response";
             NumberOfUsersInput.ItemsSource = NumberOfUsersOptions;

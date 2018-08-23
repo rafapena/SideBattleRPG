@@ -32,7 +32,6 @@ namespace Database.ClassesUnstructured
         protected virtual void OnInitializeNew() { }
         public void InitializeNew()
         {
-            //SQLDB.CurrentId = SQLDB.GetMaxIdFromTable(SQLDB.CurrentTable, SQLDB.CurrentClass);
             SetupTableData();
             OnInitializeNew();
         }
@@ -75,7 +74,7 @@ namespace Database.ClassesUnstructured
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Read(conn, "SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString()))
+                using (var reader = SQLDB.Read(conn, "SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentTable + "_ID = " + SQLDB.CurrentId.ToString()))
                 {
                     SetupTableData();
                     reader.Read();
@@ -110,14 +109,14 @@ namespace Database.ClassesUnstructured
         {
             SQLDB.ResetParameterizedInputs();
             ParameterizeInputs();
-            SQLDB.Write(conn, "UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId.ToString() + ";");
+            SQLDB.Write(conn, "UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentTable + "_ID = " + SQLDB.CurrentId.ToString() + ";");
         }
 
 
         protected virtual void OnDelete(SQLiteConnection conn) { }
         public void Delete()
         {
-            if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentClass)) return;
+            if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentTable)) return;
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
@@ -137,10 +136,10 @@ namespace Database.ClassesUnstructured
         public void Clone()
         {
             string err = ValidateInputs();
-            if (err != "") MessageBox.Show("Could not clone " + SQLDB.CurrentClass + ":\n\n" + err);
+            if (err != "") MessageBox.Show("Could not clone " + SQLDB.CurrentTable + ":\n\n" + err);
             else
             {
-                SQLDB.CurrentId = SQLDB.MaxIdPlusOne(SQLDB.CurrentTable, SQLDB.CurrentClass);
+                SQLDB.CurrentId = SQLDB.MaxIdPlusOne(SQLDB.CurrentTable);
                 using (var conn = SQLDB.DB())
                 {
                     conn.Open();
@@ -152,7 +151,7 @@ namespace Database.ClassesUnstructured
                     }
                     conn.Close();
                 }
-                MessageBox.Show(SQLDB.CurrentClass + " cloned");
+                MessageBox.Show(SQLDB.CurrentTable + " cloned");
             }
         }
     }

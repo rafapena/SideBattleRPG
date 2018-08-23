@@ -14,6 +14,7 @@ namespace Database.Utilities
 {
     public static class ImageManager
     {
+        // Lets the user select an image from their fie directoy: Only supports JPG, PNG, and GIFs (Will not animate)
         public static BitmapImage SelectImage(int width, int height)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();

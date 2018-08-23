@@ -27,6 +27,7 @@ namespace Database.BaseControls
             InitializeComponent();
         }
 
+        // Sets the visibility of the buttons when the user selects 'New'
         public void ApplyInitializeNewSettings()
         {
             DeleteButton.Visibility = Visibility.Collapsed;
@@ -35,6 +36,7 @@ namespace Database.BaseControls
             UpdateButton.Visibility = Visibility.Collapsed;
         }
 
+        // Sets the visibility of the buttons when reading the table
         public void ApplyReadSettings()
         {
             DeleteButton.Visibility = Visibility.Visible;
@@ -43,25 +45,19 @@ namespace Database.BaseControls
             UpdateButton.Visibility = Visibility.Visible;
         }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// -- Trigger Setup and Trigger Page Functions --
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        // Trigger page functions
         private void Deleted(object sender, EventArgs e)
         {
             (Application.Current.MainWindow.Content as _ClassOperations).Delete();
         }
-
         private void Cloned(object sender, EventArgs e)
         {
             (Application.Current.MainWindow.Content as _ClassOperations).Clone();
         }
-
         private void Created(object sender, EventArgs e)
         {
             (Application.Current.MainWindow.Content as _ClassOperations).Create();
         }
-
         private void Updated(object sender, EventArgs e)
         {
             (Application.Current.MainWindow.Content as _ClassOperations).Update();

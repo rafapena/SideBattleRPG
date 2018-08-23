@@ -21,21 +21,22 @@ namespace Database.TableTemplates
 {
     public abstract class _TableTemplateOperations : UserControl, ObjectTemplateOperations
     {
+        // Information for the table template
         protected Grid Table { get; set; }
         protected string TableTitle { get; private set; }
         protected List<string> ColumnNames { get; private set; }
         protected List<List<UIElement>> Elements { get; private set; }
         protected int ScrollerHeight { get; private set; }
         public int Count { get; private set; }
-
-        protected string HostType { get; private set; }
-        protected string HostDBTable { get; set; }
-        protected string TargetType { get; private set; }
+        
+        // Database information for the table template
+        protected string HostDBTable { get; private set; }
         protected string TargetDBTable { get; private set; }
         protected int HostId { get; private set; }
-        public string TableIdentifier { get; set; }
+        public string TableIdentifier { get; set; }     // Only use this to uniquely identify two of the same many-to-many relationship tables
 
 
+        // Adds a row to the table template
         protected virtual string CheckAddability() { return ""; }
         protected abstract void OnAddRow();
         public void AddRow(object sender, RoutedEventArgs e)
@@ -43,7 +44,7 @@ namespace Database.TableTemplates
             string cannotAddMessage = CheckAddability();
             if (cannotAddMessage != "")
             {
-                MessageBox.Show("Could not add to " + TableTitle + ":\n" + cannotAddMessage);
+                MessageBox.Show(cannotAddMessage, "Could not add to " + TableTitle);
                 return;
             }
             Count++;
@@ -57,6 +58,7 @@ namespace Database.TableTemplates
             AddRangeToTable();
         }
 
+        // Removes the bottom row from the table template
         protected virtual void OnRemoveRow() { }
         protected void RemoveRow(object sender, RoutedEventArgs e)
         {
@@ -69,26 +71,19 @@ namespace Database.TableTemplates
             Count--;
         }
 
+        // Helper method that adds all of the column content to latest row of the table
         protected void AddRangeToTable()
         {
             List<UIElement> elmts = Elements[Count - 1];
             for (int i = 1; i < elmts.Count; i++) Table.Children.Add(elmts[i]);
         }
 
-
-        public void Setup(string targetType, string targetDBTable, string title, List<string> columnNames, int scrollerHeight=100)
+        // The actual initialization method for table templates (automatically runs before InitializeNew() and Read())
+        public void Setup(string hostDBTable, string targetDBTable, string title, List<string> columnNames, int scrollerHeight=100)
         {
-            Setup(SQLDB.CurrentClass, SQLDB.CurrentTable, targetType, targetDBTable, title, columnNames, scrollerHeight);
-        }
-
-        public void Setup(string hostType, string hostDBTable, string targetType, string targetDBTable,
-            string title, List<string> columnNames, int scrollerHeight=100)
-        {
-            HostType = hostType;
             HostDBTable = hostDBTable;
-            TargetType = targetType;
             TargetDBTable = targetDBTable;
-            HostId = getHostId();
+            HostId = GetHostId();
             TableTitle = title;
             ScrollerHeight = scrollerHeight;
             if (columnNames.Count > 0)
@@ -100,19 +95,20 @@ namespace Database.TableTemplates
             InitializeNew();
         }
 
-        private int getHostId()
+        // Helper method of Setup: Get Id of the host DB table that matches the current DB table the user is currently viewing
+        private int GetHostId()
         {
-            if (SQLDB.CurrentClass == HostType) return SQLDB.CurrentId;
+            if (SQLDB.CurrentTable == HostDBTable) return SQLDB.CurrentId;
             int id;
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                string select = "SELECT  " + HostType + "_ID FROM " + SQLDB.CurrentTable + " JOIN " + HostDBTable;
-                string where = "WHERE " + HostType + "_ID = " + HostType + "ID AND " + SQLDB.CurrentClass + "_ID = " + SQLDB.CurrentId;
+                string select = "SELECT  " + HostDBTable + "_ID FROM " + SQLDB.CurrentTable + " JOIN " + HostDBTable;
+                string where = "WHERE " + HostDBTable + "_ID = " + HostDBTable + "ID AND " + SQLDB.CurrentTable + "_ID = " + SQLDB.CurrentId;
                 using (var reader = SQLDB.Read(conn, select + " " + where + ";"))
                 {
                     reader.Read();
-                    try { id = int.Parse(reader[HostType + "_ID"].ToString()); }
+                    try { id = int.Parse(reader[HostDBTable + "_ID"].ToString()); }
                     catch (InvalidOperationException) { id = SQLDB.CurrentId; }
                 }
                 conn.Close();
@@ -158,18 +154,17 @@ namespace Database.TableTemplates
             SQLDB.ResetParameterizedInputs();
             ParameterizeInputs();
             string[] str = OnCreate();
-            for (int i = 0; i < Count; i++)
-                SQLDB.Write(conn, "INSERT INTO " + str[0] + " (" + str[1] + ") VALUES (" + OnCreateValues(i) + ");");
+            for (int i = 0; i < Count; i++) SQLDB.Write(conn, "INSERT INTO " + str[0] + " (" + str[1] + ") VALUES (" + OnCreateValues(i) + ");");
         }
 
 
         protected virtual string[] OnReadCommands()
         {
-            string targetIdName = (HostType == TargetType ? "Other" : "") + TargetType + "ID";
+            string targetIdName = (HostDBTable == TargetDBTable ? "Other" : "") + TargetDBTable + "ID";
             string connectorTable = HostDBTable + "_To_" + TargetDBTable + TableIdentifier;
             return new string[] {
-                connectorTable + " JOIN  BaseObjects JOIN " + TargetDBTable,
-                "BaseObject_ID = BaseObjectID AND " + TargetType + "_ID = " + targetIdName + " AND " + HostType + "ID = " + HostId + " ORDER BY TableIndex"
+                connectorTable + " JOIN  BaseObject JOIN " + TargetDBTable,
+                "BaseObject_ID = BaseObjectID AND " + TargetDBTable + "_ID = " + targetIdName + " AND " + HostDBTable + "ID = " + HostId + " ORDER BY TableIndex"
             };
         }
         protected abstract void OnRead(SQLiteDataReader reader);
@@ -203,7 +198,7 @@ namespace Database.TableTemplates
         protected virtual string[] OnDelete()
         {
             string connectorTable = HostDBTable + "_To_" + TargetDBTable + TableIdentifier;
-            return new string[] { connectorTable, HostType + "ID = " + HostId };
+            return new string[] { connectorTable, HostDBTable + "ID = " + HostId };
         }
         public void Delete(SQLiteConnection conn)
         {
@@ -213,7 +208,7 @@ namespace Database.TableTemplates
         
         public void Clone(SQLiteConnection conn)
         {
-            HostId = SQLDB.MaxIdPlusOne(HostDBTable, HostType);
+            HostId = SQLDB.MaxIdPlusOne(HostDBTable);
         }
     }
 }

@@ -21,17 +21,24 @@ namespace Database.TableTemplates
     public partial class DualInputTypeList : _TableTemplateOperations
     {
         private ComboBoxInputData CBInputs;
+        public string ListType { get; private set; }
         public string AttributeName { get; set; }
         public string StringList { get; private set; }
-
-        
-        public bool isDual() { return Table.ColumnDefinitions.Count == 3; }
 
         public DualInputTypeList()
         {
             InitializeComponent();
         }
 
+
+        /// <summary>
+        /// Same functions as DualInputDBTable below
+        /// </summary>
+
+        // Checks is a table has that extra textbox input
+        public bool isDual() { return Table.ColumnDefinitions.Count == 3; }
+
+        // Adds that extra textbox input to the table, as another column
         private void AddSecondInput(string startingText)
         {
             TextBox tb = TextBox("TB_" + Count, startingText, Count, 2);
@@ -41,7 +48,7 @@ namespace Database.TableTemplates
 
         protected override string CheckAddability()
         {
-            return CBInputs.NoOptions() ? "No " + TargetDBTable + " have been created yet." : "";
+            return CBInputs.NoOptions() ? "The table '" + TargetDBTable + "' is currently empty" : "";
         }
         protected override void OnAddRow()
         {
@@ -54,16 +61,32 @@ namespace Database.TableTemplates
             CBInputs.RemoveFromSelectedIds();
         }
 
+        /// <summary>
+        /// Same functions as DualInputDBTable above
+        /// </summary>
+
+
+        public new void Setup(string hostDBTable, string targetDBTable, string title, List<string> columnNames, int scrollerHeight = 100)
+        {
+            throw new InvalidOperationException("Use the other Setup(...) table function for DualInputTypeList templates instead.");
+        }
+        public void Setup(string hostDBTable, string targetDBTable, string listType, string title, List<string> columnNames, int scrollerHeight = 100)
+        {
+            ListType = listType;
+            base.Setup(hostDBTable, targetDBTable, title, columnNames, scrollerHeight);
+        }
+
         protected override void OnInitializeNew()
         {
             Title.Text = TableTitle;
             Table = TableList;
             Scroller.Height = ScrollerHeight;
-            CBInputs = new ComboBoxInputData("List_ID", "Name", TargetDBTable, "List_Type = '" + TargetType + "'", "List_ID");
+            CBInputs = new ComboBoxInputData("List_ID", "Name", TargetDBTable, "List_Type = '" + ListType + "'", "List_ID");
             AttributeName = "";
             StringList = "";
         }
 
+        // Same as DualInputDBTable
         protected override string OnValidateInputs(int i)
         {
             string err = "";
@@ -78,16 +101,15 @@ namespace Database.TableTemplates
             return err;
         }
 
+        // Same as DualInputDBTable
         protected override void OnParameterizeInputs(int i)
         {
-            if (isDual()) SQLDB.ParameterizeInput("@" + AttributeName + "" + i, ((TextBox)Elements[i][2]).Text);
+            if (isDual()) SQLDB.ParameterizeInput("@" + AttributeName + i.ToString(), ((TextBox)Elements[i][2]).Text);
         }
 
-
-        // DO NOT USE: Only here because they're abstract functions
-        protected override string[] OnCreate() { return null; }
+        
+        protected override string[] OnCreate() { return null; }     // DO NOT USE: Only here because they're abstract functions
         protected override string OnCreateValues(int i) { return ""; }
-         
         public new void Create(SQLiteConnection conn)
         {
             SQLDB.ResetParameterizedInputs();
@@ -107,7 +129,9 @@ namespace Database.TableTemplates
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Read(conn, "SELECT * FROM " + HostDBTable + " WHERE " + HostType + "_ID = " + HostId + ";"))
+                using (var reader = SQLDB.Read(conn,
+                    "SELECT " + AttributeName + " FROM " + HostDBTable + " " +
+                    "WHERE " + HostDBTable + "_ID = " + HostId + ";"))
                 {
                     reader.Read();
                     StringList = reader[AttributeName].ToString();
@@ -133,7 +157,7 @@ namespace Database.TableTemplates
         public new void Update(SQLiteConnection conn)
         {
             Create(conn);
-            SQLDB.Write(conn, "UPDATE " + HostDBTable + " SET " + AttributeName + " = '" + StringList + "' WHERE " + HostType + "_ID = " + HostId + ";");
+            SQLDB.Write(conn, "UPDATE " + HostDBTable + " SET " + AttributeName + " = '" + StringList + "' WHERE " + HostDBTable + "_ID = " + HostId + ";");
         }
 
         // DO NOT USE: ClassOperation handles this - Only here to override base function

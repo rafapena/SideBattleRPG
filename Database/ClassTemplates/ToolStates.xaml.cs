@@ -22,15 +22,14 @@ namespace Database.ClassTemplates
         public ToolStates()
         {
             InitializeComponent();
-            ClassTemplateTable = "Tools";
-            ClassTemplateType = "Tool";
+            ClassTemplateTable = "Tool";
         }
 
         protected override void SetupTableData()
         {
             List<string> cols = new List<string> { "State", "%" };
-            StatesGive.Setup("Tool", "Tools", "State", "States", "Inflicts", cols);
-            StatesReceive.Setup("Tool", "Tools", "State", "States", "Receives", cols);
+            StatesGive.Setup("Tool", "State", "Inflicts", cols);
+            StatesReceive.Setup("Tool", "State", "Receives", cols);
             StatesGive.AttributeName = "Chance";
             StatesReceive.AttributeName = "Chance";
             StatesGive.TableIdentifier = "_Give";

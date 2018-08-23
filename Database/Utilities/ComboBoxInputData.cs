@@ -11,12 +11,18 @@ namespace Database.Utilities
 {
     public class ComboBoxInputData
     {
+        // Ensures that there is a value called "None" in the combo box
         public const bool ADD_NULL_INPUT = true;
 
+        // Really only exists for handling a table of combo boxes
         public List<int> SelectedIds { get; private set; }
+
+        // The list of Ids which map to the list of names, which map to the combobox
         public List<int> OptionsListIds { get; private set; }
         public List<string> OptionsListNames { get; private set; }
 
+
+        // Sets up the list that will be added to the combobox input
         public ComboBoxInputData(string idAttribute, string nameAttribute, string queryTables,
             string queryCondition, string sortAttributes, bool addNullInput=false)
         {
@@ -40,15 +46,18 @@ namespace Database.Utilities
         }
 
         public bool NoOptions() { return OptionsListNames.Count <= 0; }
-        public void AddToSelectedIds(int i) { SelectedIds.Add(OptionsListIds[i]); }
-        public void RemoveFromSelectedIds() { SelectedIds.RemoveAt(SelectedIds.Count - 1); }
-
+        
         public int FindIndex(object targetData)
         {
             if (targetData == null || targetData.ToString() == "") return 0;
             int targetIndex = OptionsListIds.FindIndex(a => a.ToString() == targetData.ToString());
             return targetIndex < 0 ? 0 : targetIndex;
         }
+
+
+        // The four functions below are only for tables of combo boxes
+        public void AddToSelectedIds(int i) { SelectedIds.Add(OptionsListIds[i]); }
+        public void RemoveFromSelectedIds() { SelectedIds.RemoveAt(SelectedIds.Count - 1); }
 
         public ComboBox CreateInput(int row, int col, int landingIndex)
         {

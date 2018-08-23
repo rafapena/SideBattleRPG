@@ -25,17 +25,16 @@ namespace Database.ClassTemplates
     public abstract class _ClassTemplateOperations : UserControl, ObjectTemplateOperations
     {
         protected string ClassTemplateTable { get; set; }
-        protected string ClassTemplateType { get; set; }
-        public string HostTableAttributeName { get; set; }
         public int ClassTemplateId { get; protected set; }
+        public string HostTableAttributeName { get; set; }  // The forirgn key attribute of the host table
 
 
         protected virtual void SetupTableData() { }
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {
-            HostTableAttributeName = ClassTemplateType + "ID";
-            ClassTemplateId = SQLDB.MaxIdPlusOne(ClassTemplateTable, ClassTemplateType);
+            HostTableAttributeName = ClassTemplateTable + "ID";
+            ClassTemplateId = SQLDB.MaxIdPlusOne(ClassTemplateTable);
             SetupTableData();
             OnInitializeNew();
         }
@@ -65,8 +64,7 @@ namespace Database.ClassTemplates
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                using (var reader = SQLDB.Read(conn,
-                    "SELECT * FROM " + ClassTemplateTable + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString()))
+                using (var reader = SQLDB.Read(conn, "SELECT * FROM " + ClassTemplateTable + " WHERE " + ClassTemplateTable + "_ID = " + ClassTemplateId + ";"))
                 {
                     reader.Read();
                     ClassTemplateId = reader.GetInt32(0);
@@ -84,24 +82,22 @@ namespace Database.ClassTemplates
             SQLDB.ResetParameterizedInputs();
             ParameterizeInputs();
             string updateText = OnUpdate(conn);
-            if (updateText != "")
-                SQLDB.Write(conn,
-                    "UPDATE " + ClassTemplateTable + " SET " + updateText + " " +
-                    "WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
+            if (updateText == "") return;
+            SQLDB.Write(conn, "UPDATE " + ClassTemplateTable + " SET " + updateText + " WHERE " + ClassTemplateTable + "_ID = " + ClassTemplateId + ";");
         }
 
 
         protected virtual void OnDelete(SQLiteConnection conn) { }
         public void Delete(SQLiteConnection conn)
         {
-            SQLDB.Write(conn, "DELETE FROM " + ClassTemplateTable + " WHERE " + ClassTemplateType + "_ID = " + ClassTemplateId.ToString() + ";");
+            SQLDB.Write(conn, "DELETE FROM " + ClassTemplateTable + " WHERE " + ClassTemplateTable + "_ID = " + ClassTemplateId + ";");
         }
 
 
         protected virtual void OnClone(SQLiteConnection conn) { }
         public void Clone(SQLiteConnection conn)
         {
-            ClassTemplateId = SQLDB.MaxIdPlusOne(ClassTemplateTable, ClassTemplateType);
+            ClassTemplateId = SQLDB.MaxIdPlusOne(ClassTemplateTable);
         }
     }
 }

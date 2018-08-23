@@ -13,10 +13,11 @@ namespace Database.Utilities
 {
     public static class SQLDB
     {
-        public static string CurrentClass { get; set; }
+        // The only global variables: should indicate the current table list and item the user is viewing
         public static string CurrentTable { get; set; }
         public static int CurrentId { get; set; }
 
+        // For handling input parameters: deals with injection attacks
         public static List<SQLiteParameter> Inputs { get; private set; }
         public static List<BlobInput> BlobInputs { get; private set; }
         public class BlobInput
@@ -36,10 +37,11 @@ namespace Database.Utilities
         // Indicates the file where the database is located
         public static SQLiteConnection DB()
         {
-            return new SQLiteConnection(@"data source=C:\Users\User\GC_RPG_DB.db; Version=3; foreign keys=true;");
+            return new SQLiteConnection(@"data source=C:\Users\User\SideBattleRPG.db; Version=3; foreign keys=true;");
         }
 
 
+        // Deals with sanitizing across the object operations Create(), Update(), and Clone()
         public static void ResetParameterizedInputs()
         {
             Inputs = new List<SQLiteParameter>();
@@ -55,26 +57,46 @@ namespace Database.Utilities
         }
 
 
+        // Only reads the SQL data: Assumes that sqlCommand is a SELECT statement
         public static SQLiteDataReader Read(SQLiteConnection conn, string sqlCommand)
         {
-            SQLiteCommand command = new SQLiteCommand(sqlCommand, conn);
-            return command.ExecuteReader();
-        }
-
-        public static void Write(SQLiteConnection conn, string sqlCommand)
-        {
-            using (var comm = new SQLiteCommand(sqlCommand, conn))
+            try
             {
-                if (Inputs != null && Inputs.Count > 0) comm.Parameters.AddRange(Inputs.ToArray());
-                if (BlobInputs != null)
-                    for (int i = 0; i < BlobInputs.Count; i++)
-                        comm.Parameters.Add(BlobInputs[i].Name, DbType.Binary, 4 * BlobInputs[i].Size).Value = BlobInputs[i].Data;
-                comm.CommandType = CommandType.Text;
-                comm.ExecuteNonQuery();
+                SQLiteCommand command = new SQLiteCommand(sqlCommand, conn);
+                return command.ExecuteReader();
+            }
+            catch (Exception e)
+            {
+                string endMsg = "The program will probably crash or misbehave from this point";
+                MessageBox.Show(e.Message + "\n" + endMsg, "Error while writing to the database");
+                return null;
             }
         }
 
+        // Assume this doesn't do anything else besides: creating, updating, deleting, and cloning
+        public static void Write(SQLiteConnection conn, string sqlCommand)
+        {
+            try
+            {
+                using (var comm = new SQLiteCommand(sqlCommand, conn))
+                {
+                    if (Inputs != null && Inputs.Count > 0) comm.Parameters.AddRange(Inputs.ToArray());
+                    if (BlobInputs != null)
+                        for (int i = 0; i < BlobInputs.Count; i++)
+                            comm.Parameters.Add(BlobInputs[i].Name, DbType.Binary, 4 * BlobInputs[i].Size).Value = BlobInputs[i].Data;
+                    comm.CommandType = CommandType.Text;
+                    comm.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                string endMsg = "The program will probably crash or misbehave from this point";
+                MessageBox.Show(e.Message + "\n" + endMsg, "Error while writing to the database");
+            }
+        }
 
+        
+        // Returns a scalar value, such as COUNT(*): This function is rarely ever used, if not at all
         public static int Scalar(string sqlCommand)
         {
             int val = 0;
@@ -84,20 +106,21 @@ namespace Database.Utilities
                 using (var comm = new SQLiteCommand(sqlCommand, conn))
                 {
                     try { val = (int)((long)comm.ExecuteScalar()); }
-                    catch (Exception e) { MessageBox.Show("Could not convert into a scalar:\n" + e.Message); }
+                    catch (Exception e) { MessageBox.Show(e.Message + "\nReturning default value 0", "Could not convert into a scalar"); }
                 }
                 conn.Close();
             }
             return val;
         }
 
-        public static int MaxIdPlusOne(string table, string type)
+        // When a new item is going to be created, the currentId gets set to a value +1 value higher than the max Id of the table
+        public static int MaxIdPlusOne(string table)
         {
             int maxIdPlusOne;
             using (var conn = DB())
             {
                 conn.Open();
-                using (var comm = new SQLiteCommand("SELECT MAX(" + type + "_ID) FROM " + table, conn))
+                using (var comm = new SQLiteCommand("SELECT MAX(" + table + "_ID) FROM " + table, conn))
                 {
                     try { maxIdPlusOne = (int)((long)comm.ExecuteScalar()) + 1; }
                     catch (InvalidCastException) { maxIdPlusOne = 1; }

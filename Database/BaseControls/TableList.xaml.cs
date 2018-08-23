@@ -25,17 +25,22 @@ namespace Database.BaseControls
     /// </summary>
     public partial class TableList : UserControl
     {
+        // Highlights the button that is currently selected
         private Button CurrentlySelected;
+
+        // Button colors
         private const string StandardButtonColor = "#dddddd";
         private const string HighlightedButtonColor = "#888888";
         private const string StandardNewColor = "#aaffaa";
         private const string HighlightedNewColor = "#558855";
+
 
         public TableList()
         {
             InitializeComponent();
         }
 
+        // Heavily relies on the BaseObject table: Lists the rows of the selected table in the navbar
         public void SetupTable(bool keepHighlightedButton)
         {
             AddNew.Background = Color(StandardNewColor);
@@ -46,10 +51,7 @@ namespace Database.BaseControls
             using (var conn = SQLDB.DB())
             {
                 conn.Open();
-                string query =
-                    "SELECT * FROM BaseObjects JOIN " + SQLDB.CurrentTable + " " +
-                    "WHERE BaseObject_ID = BaseObjectID " +
-                    "ORDER BY Name ASC";
+                string query = "SELECT * FROM BaseObject JOIN " + SQLDB.CurrentTable + " WHERE BaseObject_ID = BaseObjectID ORDER BY Name ASC";
                 using (SQLiteDataReader reader = SQLDB.Read(conn, query))
                 {
                     if (keepHighlightedButton) while (reader.Read()) CreateRowWithHighlighted(reader, RowsTable, count++);
@@ -60,20 +62,17 @@ namespace Database.BaseControls
             }
         }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// -- Row creating operations --
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        // Row creating operations
         private void CreateRow(SQLiteDataReader reader, Grid table, int rowNum)
         {
-            Button b = Button((string)reader["Name"], Read, StandardButtonColor, int.Parse(reader[SQLDB.CurrentClass + "_ID"].ToString()), rowNum, 0);
+            Button b = Button((string)reader["Name"], Read, StandardButtonColor, int.Parse(reader[SQLDB.CurrentTable + "_ID"].ToString()), rowNum, 0);
             table.RowDefinitions.Add(new RowDefinition());
             table.Children.Add(b);
         }
 
         private void CreateRowWithHighlighted(SQLiteDataReader reader, Grid table, int rowNum)
         {
-            int currId = int.Parse(reader[SQLDB.CurrentClass + "_ID"].ToString());
+            int currId = int.Parse(reader[SQLDB.CurrentTable + "_ID"].ToString());
             Button b = null;
             if (SQLDB.CurrentId == currId)
             {
@@ -85,27 +84,22 @@ namespace Database.BaseControls
             table.Children.Add(b);
         }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// -- Highlighting buttons --
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        // Highlighting buttons
         public void HighlightButton(Button current)
         {
             if (CurrentlySelected != null) CurrentlySelected.Background = Color(StandardButtonColor);
             current.Background = Color(HighlightedButtonColor);
             CurrentlySelected = current;
         }
-
         public void RemoveButtonHighlight()
         {
             if (CurrentlySelected != null) CurrentlySelected.Background = Color(StandardButtonColor);
             AddNew.Background = Color(HighlightedNewColor);
         }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// -- Trigger Setup and Trigger Page Functions --
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        // Goes to the selected database item, from the table
         private void Read(object sender, EventArgs e)
         {
             Button b = sender as Button;
@@ -114,7 +108,6 @@ namespace Database.BaseControls
             AddNew.Background = Color(StandardNewColor);
             (Application.Current.MainWindow.Content as _ClassOperations).Read();
         }
-
         private void InitializeNew(object sender, EventArgs e)
         {
             (Application.Current.MainWindow.Content as _ClassOperations).InitializeNew();

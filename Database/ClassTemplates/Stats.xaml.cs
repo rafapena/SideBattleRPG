@@ -25,7 +25,6 @@ namespace Database.ClassTemplates
         {
             InitializeComponent();
             ClassTemplateTable = "Stats";
-            ClassTemplateType = "Stats";
             Low = -1;
             High = 1;
         }

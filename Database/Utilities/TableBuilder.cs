@@ -21,6 +21,7 @@ namespace Database.Utilities
     {
         public delegate void Function(object sender, RoutedEventArgs e);
 
+        // Sets up a grid from scratch (Title and buttons on included)
         public static bool TableSetup(Grid targetGrid, List<string> columnNames=null)
         {
             if (targetGrid == null) return false;
@@ -43,6 +44,11 @@ namespace Database.Utilities
             else targetGrid.ColumnDefinitions.Add(new ColumnDefinition());
             return true;
         }
+
+
+        /// <summary>
+        /// Textblock inputs for tables
+        /// </summary>
 
         public static TextBlock TextBlock(string text) { return TextBlock(text, HorizontalAlignment.Left); }
         public static TextBlock TextBlock(int text) { return TextBlock(Convert.ToString(text), HorizontalAlignment.Center); }
@@ -70,6 +76,11 @@ namespace Database.Utilities
             return newTextBlock;
         }
 
+
+        /// <summary>
+        /// Textbox inputs for tables
+        /// </summary>
+
         public static TextBox TextBox(string name, string text, int rowNum, int colNum, Function changed = null)
         {
             var newTextBox = TextBox(name, text, changed);
@@ -87,7 +98,12 @@ namespace Database.Utilities
             return newTextBox;
         }
 
-        private static WriteableBitmap loadedImage;
+
+        /// <summary>
+        /// Images for tables
+        /// </summary>
+
+       /* private static WriteableBitmap loadedImage;
         public static Image Image(byte[] data, int w, int h, int rowNum, int colNum)
         {
             GetImage(data, w, h);
@@ -108,7 +124,12 @@ namespace Database.Utilities
         private static async void GetImage(byte[] data, int w, int h)
         {
             //loadedImage = data == null ? null : await BytesToImage(data, w, h);
-        }
+        }*/
+
+
+        /// <summary>
+        /// Combo box inputs for tables
+        /// </summary>
 
         public static ComboBox ComboBox<L>(string name, List<L> list, int initIndex, int rowNum, int colNum, Function changed = null)
         {
@@ -137,6 +158,11 @@ namespace Database.Utilities
             return newCheckBox;
         }
 
+
+        /// <summary>
+        /// Button inputs for tables
+        /// </summary>
+
         public static Button Button(string name, Function clicked, string hexColor, int id, int rowNum, int colNum)
         {
             var newButton = Button(name, clicked, hexColor, id);
@@ -153,6 +179,11 @@ namespace Database.Utilities
             newButton.Background = Color(hexColor);
             return newButton;
         }
+
+
+        /// <summary>
+        /// Other inputs for tables
+        /// </summary>
 
         public static Border Border(string hexColor, int thickness, int rowNum, int colNum, int rowSpan, int colSpan)
         {

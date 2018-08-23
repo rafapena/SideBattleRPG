@@ -53,8 +53,8 @@ namespace Database.TableTemplates
 
         protected override string[] OnCreate()
         {
-            string targetIdName = (HostType == TargetType ? "Other" : "") + TargetType + "ID";
-            string attributes = HostType + "ID, " + targetIdName + ", TableIndex";
+            string targetIdName = (HostDBTable == TargetDBTable ? "Other" : "") + TargetDBTable + "ID";
+            string attributes = HostDBTable + "ID, " + targetIdName + ", TableIndex";
             return new string[] { HostDBTable + "_To_" + TargetDBTable, attributes };
         }
         protected override string OnCreateValues(int i)

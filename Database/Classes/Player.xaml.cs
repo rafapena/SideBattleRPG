@@ -29,11 +29,11 @@ namespace Database.Classes
 
         protected override void SetupTableData()
         {
-            ClassChoices.Setup("Class", "Classes", "Possible Classes", new List<string> { "Class" });
-            SkillChoices.Setup("Skill", "Skills", "Skill Set", new List<string> { "Skill", "Level" });
-            StateRates.Setup("State", "States", "State Rates", new List<string> { "State", "%" });
-            ElementRates.Setup("Elements", "TypesLists", "Element Rates", new List<string> { "Element", "%" });
-            Relations.Setup("Player", "Players", "Compatibilities", new List<string> { "Player", "Comp." });
+            ClassChoices.Setup("Player", "BattlerClass", "Possible Classes", new List<string> { "Class" });
+            SkillChoices.Setup("Player", "Skill", "Skill Set", new List<string> { "Skill", "Level" });
+            StateRates.Setup("Player", "State", "State Rates", new List<string> { "State", "%" });
+            ElementRates.Setup("Player", "TypesLists", "Elements", "Element Rates", new List<string> { "Element", "%" });
+            Relations.Setup("Player", "Player", "Compatibilities", new List<string> { "Player", "Comp." });
             SkillChoices.AttributeName = "LevelRequired";
             StateRates.AttributeName = "Vulnerability";
             ElementRates.AttributeName = "ElementRates";

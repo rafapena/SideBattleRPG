@@ -30,8 +30,7 @@ namespace Database.ClassTemplates
         public ToolAttributes()
         {
             InitializeComponent();
-            ClassTemplateTable = "Tools";
-            ClassTemplateType = "Tool";
+            ClassTemplateTable = "Tool";
         }
 
         protected override void SetupTableData()
@@ -39,10 +38,10 @@ namespace Database.ClassTemplates
             TypeData = new ComboBoxInputData("List_ID", "Name", "TypesLists", "List_Type = 'Tool Types'", "List_ID", ComboBoxInputData.ADD_NULL_INPUT);
             FormulaData = new ComboBoxInputData("List_ID", "Name", "TypesLists", "List_Type = 'Tool Formulas'", "List_ID", ComboBoxInputData.ADD_NULL_INPUT);
             ElementData = new ComboBoxInputData("List_ID", "Name", "TypesLists", "List_Type = 'Elements'", "List_ID", ComboBoxInputData.ADD_NULL_INPUT);
-            ClassExclusive1Data = new ComboBoxInputData("Class_ID", "Name", "BaseObjects JOIN Classes",
-                "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
-            ClassExclusive2Data = new ComboBoxInputData("Class_ID", "Name",
-                "BaseObjects JOIN Classes", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
+            ClassExclusive1Data = new ComboBoxInputData("BattlerClass_ID", "Name", "BaseObject JOIN BattlerClass", "BaseObjectID = BaseObject_ID", "Name",
+                ComboBoxInputData.ADD_NULL_INPUT);
+            ClassExclusive2Data = new ComboBoxInputData("BattlerClass_ID", "Name", "BaseObject JOIN BattlerClass", "BaseObjectID = BaseObject_ID", "Name",
+                ComboBoxInputData.ADD_NULL_INPUT);
             TypeInput.ItemsSource = TypeData.OptionsListNames;
             FormulaInput.ItemsSource = FormulaData.OptionsListNames;
             HPSPModInput.ItemsSource = HPSPModOptions;

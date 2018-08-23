@@ -21,16 +21,22 @@ namespace Database.TableTemplates
     public partial class DualInputDBTable : _TableTemplateOperations
     {
         private ComboBoxInputData CBInputs;
-        public string AttributeName { get; set; }
-
-
-        public bool isDual() { return Table.ColumnDefinitions.Count == 3; }
+        public string AttributeName { get; set; }   // That name of the fourth attribute on a many-to-many relationship table
 
         public DualInputDBTable()
         {
             InitializeComponent();
         }
 
+
+        // <summary>
+        /// Same functions as DualInputTypesList below
+        /// </summary>
+        
+        // Checks is a table has that extra textbox input
+        public bool isDual() { return Table.ColumnDefinitions.Count == 3; }
+
+        // Adds that extra textbox input to the table, as another column
         private void AddSecondInput(string startingText)
         {
             TextBox tb = TextBox("TB_" + Count, startingText, Count, 2);
@@ -40,7 +46,7 @@ namespace Database.TableTemplates
 
         protected override string CheckAddability()
         {
-            return CBInputs.NoOptions() ? "No " + TargetDBTable + " have been created yet." : "";
+            return CBInputs.NoOptions() ? "The table '" + TargetDBTable + "' is currently empty" : "";
         }
         protected override void OnAddRow()
         {
@@ -52,19 +58,25 @@ namespace Database.TableTemplates
         {
             CBInputs.RemoveFromSelectedIds();
         }
-        
+
+        /// <summary>
+        /// Same functions as DualInputTypesList above
+        /// </summary>
+
+
         protected override void OnInitializeNew()
         {
             Title.Text = TableTitle;
             Table = TableList;
             Scroller.Height = ScrollerHeight;
-            string tables = "BaseObjects JOIN " + TargetDBTable;
-            string dupCond = HostType == TargetType ? "AND " + HostType + "_ID <> " + HostId : "";
+            string tables = "BaseObject JOIN " + TargetDBTable;
+            string dupCond = HostDBTable == TargetDBTable ? "AND " + HostDBTable + "_ID <> " + HostId : "";
             string where = "BaseObject_ID = BaseObjectID " + dupCond;
-            CBInputs = new ComboBoxInputData(TargetType + "_ID", "Name", tables, where, "Name");
+            CBInputs = new ComboBoxInputData(TargetDBTable + "_ID", "Name", tables, where, "Name");
             AttributeName = "";
         }
 
+        // Same as DualInputTypesList
         protected override string OnValidateInputs(int i)
         {
             string err = "";
@@ -79,16 +91,18 @@ namespace Database.TableTemplates
             return err;
         }
 
+        // Same as DualInputTypesList
         protected override void OnParameterizeInputs(int i)
         {
             if (isDual()) SQLDB.ParameterizeInput("@" + AttributeName + i.ToString(), ((TextBox)Elements[i][2]).Text);
         }
+        
 
         protected override string[] OnCreate()
         {
             string connectorTable = HostDBTable + "_To_" + TargetDBTable + TableIdentifier;
-            string targetIdName = (HostType == TargetType ? "Other" : "") + TargetType + "ID";
-            string attributes = HostType + "ID, " + targetIdName + ", TableIndex";
+            string targetIdName = (HostDBTable == TargetDBTable ? "Other" : "") + TargetDBTable + "ID";
+            string attributes = HostDBTable + "ID, " + targetIdName + ", TableIndex";
             if (isDual()) attributes += ", " + AttributeName;
             return new string[] { connectorTable, attributes };
         }
@@ -100,7 +114,7 @@ namespace Database.TableTemplates
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            int landingIndex = CBInputs.OptionsListIds.FindIndex( a => a == int.Parse(reader[TargetType + "_ID"].ToString()) );
+            int landingIndex = CBInputs.OptionsListIds.FindIndex( a => a == int.Parse(reader[TargetDBTable + "_ID"].ToString()) );
             Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, landingIndex));
             if (isDual()) AddSecondInput(reader[AttributeName].ToString());
             CBInputs.AddToSelectedIds(landingIndex);

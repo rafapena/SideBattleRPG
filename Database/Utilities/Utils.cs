@@ -11,11 +11,13 @@ namespace Database.Utilities
 {
     public static class Utils
     {
+        // Confirm message
         public static bool Confirm(string title, string message)
         {
             return MessageBox.Show(title, message, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
         }
 
+        // Checks if a string input if a number is in between low and high
         private static Regex isNumber = new Regex(@"^[-]?(\d)+(.(\d)+)?$", RegexOptions.IgnoreCase);
         public static bool NumberBetween(string inputText, double low, double high, bool lowInclusive = true, bool highInclusive = true)
         {
@@ -28,6 +30,7 @@ namespace Database.Utilities
             return aboveLow && belowHigh;
         }
 
+        // Checks if a string input is a positive integer
         private static Regex isPosInt = new Regex(@"^(\d)+$", RegexOptions.IgnoreCase);
         public static bool PosInt(string inputText)
         {
@@ -42,15 +45,18 @@ namespace Database.Utilities
             return n >= 0;
         }
 
+        // Returns an empty string, if it only has spaces
         private static Regex badlySpaced = new Regex(@"^\s+$", RegexOptions.IgnoreCase);
         public static string CutSpaces(string inputText) { return badlySpaced.Match(inputText).Success ? "" : inputText; }
 
+        // Standard length of certain strings inputs should be between 1 and 40, inclusively
         public static bool InRequiredLength(string inputText)
         {
             inputText = CutSpaces(inputText);
-            return inputText.Length > 0 && inputText.Length <= 16;
+            return inputText.Length > 0 && inputText.Length <= 40;
         }
 
+        // Debug statements
         public static void Print(string message) { System.Diagnostics.Debug.WriteLine(message); }
         public static void Print() { Print("00000"); }
     }

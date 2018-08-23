@@ -29,42 +29,41 @@ namespace Database.BaseControls
             InitializeComponent();
         }
 
-        private void SetUpFromClick<P>(string currentTable) where P : Page, new()
+        private void SetUpFromClick<P>() where P : Page, new()
         {
-            if (SQLDB.CurrentTable == currentTable) return;
-            SQLDB.CurrentTable = currentTable;
-            SQLDB.CurrentClass = typeof(P).Name;
+            if (SQLDB.CurrentTable == typeof(P).Name) return;
+            SQLDB.CurrentTable = typeof(P).Name;
             Application.Current.MainWindow.Content = new P();
         }
 
         private void GoToAchievements(object sender, EventArgs e)
         {
-            SetUpFromClick<Achievement>("Achievements");
+            SetUpFromClick<Achievement>();
         }
 
         private void GoToClasses(object sender, EventArgs e)
         {
-            //SetUpFromClick<Class>("Classes");
+            //SetUpFromClick<BattlerClass>();
         }
 
         private void GoToEnemies(object sender, EventArgs e)
         {
-            //SetUpFromClick<Enemy>("Enemies");
+            //SetUpFromClick<Enemy>();
         }
 
         private void GoToEnemyGroups(object sender, EventArgs e)
         {
-            //SetUpFromClick<EnemyGroup>("EnemyGroups");
+            //SetUpFromClick<EnemyGroup>();
         }
 
         private void GoToEnvironments(object sender, EventArgs e)
         {
-            //SetUpFromClick<Environments>("Environment");
+            //SetUpFromClick<Environment>();
         }
 
         private void GoToEvents(object sender, EventArgs e)
         {
-            //SetUpFromClick<Event>("Events");
+            //SetUpFromClick<Event>();
         }
 
         private void GoToItems(object sender, EventArgs e)
@@ -76,43 +75,42 @@ namespace Database.BaseControls
         {
             if (SQLDB.CurrentTable == "") return;
             SQLDB.CurrentTable = "";
-            SQLDB.CurrentClass = "";
             Application.Current.MainWindow.Content = new ClassesUnstructured.OtherLists();
         }
 
         private void GoToPassiveSkills(object sender, EventArgs e)
         {
-            //SetUpFromClick<PassiveSkill>("PassiveSkills");
+            //SetUpFromClick<PassiveSkill>();
         }
 
         private void GoToPlatforms(object sender, EventArgs e)
         {
-            //SetUpFromClick<Platforms>("Platforms");
+            //SetUpFromClick<Platforms>();
         }
 
         private void GoToPlayers(object sender, EventArgs e)
         {
-            SetUpFromClick<Player>("Players");
+            SetUpFromClick<Player>();
         }
 
         private void GoToProjectiles(object sender, EventArgs e)
         {
-            //SetUpFromClick<Projectile>("Projectiles");
+            //SetUpFromClick<Projectile>();
         }
 
         private void GoToSkills(object sender, EventArgs e)
         {
-            SetUpFromClick<Skill>("Skills");
+            SetUpFromClick<Skill>();
         }
 
         private void GoToStates(object sender, EventArgs e)
         {
-            //SetUpFromClick<State>("States");
+            //SetUpFromClick<State>();
         }
 
         private void GoToWeapons(object sender, EventArgs e)
         {
-            //SetUpFromClick<Weapon>("Weapons");
+            //SetUpFromClick<Weapon>();
         }
 
     }
