@@ -1,17 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Data.SQLite;
 using Database.Utilities;
 using static Database.Utilities.TableBuilder;
@@ -100,7 +91,7 @@ namespace Database.TableTemplates
         {
             if (SQLDB.CurrentTable == HostDBTable) return SQLDB.CurrentId;
             int id;
-            using (var conn = SQLDB.DB())
+            using (var conn = AccessDB.Connect())
             {
                 conn.Open();
                 string select = "SELECT  " + HostDBTable + "_ID FROM " + SQLDB.CurrentTable + " JOIN " + HostDBTable;
@@ -171,7 +162,7 @@ namespace Database.TableTemplates
         public void Read()
         {
             if (Table.ColumnDefinitions.Count <= 0) return;
-            using (var conn = SQLDB.DB())
+            using (var conn = AccessDB.Connect())
             {
                 conn.Open();
                 string[] readStr = OnReadCommands();

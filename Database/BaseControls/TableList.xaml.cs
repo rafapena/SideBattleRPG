@@ -1,22 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Data.SQLite;
 using Database.Classes;
 using Database.Utilities;
 using static Database.Utilities.TableBuilder;
-using System.Reflection;
 
 namespace Database.BaseControls
 {
@@ -48,7 +37,7 @@ namespace Database.BaseControls
             CurrentlySelected = null;
             TableSetup(RowsTable);
             int count = 0;
-            using (var conn = SQLDB.DB())
+            using (var conn = AccessDB.Connect())
             {
                 conn.Open();
                 string query = "SELECT * FROM BaseObject JOIN " + SQLDB.CurrentTable + " WHERE BaseObject_ID = BaseObjectID ORDER BY Name ASC";

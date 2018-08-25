@@ -47,7 +47,7 @@ namespace Database.ClassesUnstructured
             if (err != "") MessageBox.Show("Could not update due to the following:\n\n" + err);
             else
             {
-                using (var conn = SQLDB.DB())
+                using (var conn = AccessDB.Connect())
                 {
                     conn.Open();
                     using (var transaction = conn.BeginTransaction())
@@ -71,7 +71,7 @@ namespace Database.ClassesUnstructured
         protected abstract void OnRead(SQLiteDataReader reader);
         public void Read()
         {
-            using (var conn = SQLDB.DB())
+            using (var conn = AccessDB.Connect())
             {
                 conn.Open();
                 using (var reader = SQLDB.Read(conn, "SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentTable + "_ID = " + SQLDB.CurrentId.ToString()))
@@ -92,7 +92,7 @@ namespace Database.ClassesUnstructured
             if (err != "") MessageBox.Show("Could not update due to the following:\n\n" + err);
             else
             {
-                using (var conn = SQLDB.DB())
+                using (var conn = AccessDB.Connect())
                 {
                     conn.Open();
                     using (var transaction = conn.BeginTransaction())
@@ -117,7 +117,7 @@ namespace Database.ClassesUnstructured
         public void Delete()
         {
             if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentTable)) return;
-            using (var conn = SQLDB.DB())
+            using (var conn = AccessDB.Connect())
             {
                 conn.Open();
                 using (var transaction = conn.BeginTransaction())
@@ -140,7 +140,7 @@ namespace Database.ClassesUnstructured
             else
             {
                 SQLDB.CurrentId = SQLDB.MaxIdPlusOne(SQLDB.CurrentTable);
-                using (var conn = SQLDB.DB())
+                using (var conn = AccessDB.Connect())
                 {
                     conn.Open();
                     using (var transaction = conn.BeginTransaction())

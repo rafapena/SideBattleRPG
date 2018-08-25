@@ -1,17 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Data.SQLite;
 using Database.Utilities;
 using static Database.Utilities.TableBuilder;
@@ -126,7 +115,7 @@ namespace Database.TableTemplates
         protected override void OnRead(SQLiteDataReader reader) { } // DO NOT USE: Only here because it's an abstract function
         public new void Read()
         {
-            using (var conn = SQLDB.DB())
+            using (var conn = AccessDB.Connect())
             {
                 conn.Open();
                 using (var reader = SQLDB.Read(conn,

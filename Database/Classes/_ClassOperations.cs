@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Data.SQLite;
 using Database.BaseControls;
 using Database.Utilities;
@@ -47,7 +36,7 @@ namespace Database.Classes
             if (err != "") MessageBox.Show(err, "Could not create " + SQLDB.CurrentTable);
             else
             {
-                using (var conn = SQLDB.DB())
+                using (var conn = AccessDB.Connect())
                 {
                     conn.Open();
                     using (var transaction = conn.BeginTransaction())
@@ -74,7 +63,7 @@ namespace Database.Classes
         public void Read()
         {
             LinkedFooter.ApplyReadSettings();
-            using (var conn = SQLDB.DB())
+            using (var conn = AccessDB.Connect())
             {
                 conn.Open();
                 using (var reader = SQLDB.Read(conn, "SELECT * FROM " + SQLDB.CurrentTable + " WHERE " + SQLDB.CurrentTable + "_ID = " + SQLDB.CurrentId + ";"))
@@ -95,7 +84,7 @@ namespace Database.Classes
             if (err != "") MessageBox.Show(err, "Could not update " + SQLDB.CurrentTable);
             else
             {
-                using (var conn = SQLDB.DB())
+                using (var conn = AccessDB.Connect())
                 {
                     conn.Open();
                     using (var transaction = conn.BeginTransaction())
@@ -121,7 +110,7 @@ namespace Database.Classes
         public void Delete()
         {
             if (!Utils.Confirm("Are you sure?", "Deleting " + SQLDB.CurrentTable)) return;
-            using (var conn = SQLDB.DB())
+            using (var conn = AccessDB.Connect())
             {
                 conn.Open();
                 using (var transaction = conn.BeginTransaction())
@@ -144,7 +133,7 @@ namespace Database.Classes
             else
             {
                 SQLDB.CurrentId = SQLDB.MaxIdPlusOne(SQLDB.CurrentTable);
-                using (var conn = SQLDB.DB())
+                using (var conn = AccessDB.Connect())
                 {
                     conn.Open();
                     using (var transaction = conn.BeginTransaction())

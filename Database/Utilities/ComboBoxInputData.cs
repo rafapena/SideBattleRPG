@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Data.SQLite;
-using System.Windows;
 
 namespace Database.Utilities
 {
@@ -41,7 +38,7 @@ namespace Database.Utilities
             SelectedIds = new List<int>();
             OptionsListIds = addNullInput ? new List<int> { -1 } : new List<int>();
             OptionsListNames = addNullInput ? new List<string> { "None" } : new List<string>();
-            using (var conn = SQLDB.DB())
+            using (var conn = AccessDB.Connect())
             {
                 conn.Open();
                 string select = "SELECT " + idAttribute + ", " + nameAttribute + " FROM " + queryTables;

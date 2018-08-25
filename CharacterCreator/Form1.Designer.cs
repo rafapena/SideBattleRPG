@@ -1,4 +1,4 @@
-﻿namespace MapBuilder
+﻿namespace CharacterCreator
 {
     partial class Form1
     {

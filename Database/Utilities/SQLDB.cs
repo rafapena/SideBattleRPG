@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Data;
-using System.Collections;
 using System.Windows;
 using System.Windows.Media;
 
@@ -15,7 +11,7 @@ namespace Database.Utilities
     /// The main static class directly managing the data from the SQLite database.
     /// 
     /// The most important rule: When connecting the database ALWAYS use the statement:
-    /// using (var conn = SQLDB.DB()) { ... }
+    /// using (var conn = AccessDB.Connect()) { ... }
     /// 
     /// When reading and writing data, it is highly advised to use SQLDB.Read(conn, ...) and SQLDB.Write(conn, ...), respectively.
     /// Putting functions like command.ExecuteCommand() and command.Parameters.AddRange() anywhere in the project outside of this class,
@@ -42,14 +38,6 @@ namespace Database.Utilities
                 Size = size;
             }
         }
-
-
-        // Indicates the file where the database is located
-        public static SQLiteConnection DB()
-        {
-            return new SQLiteConnection(@"data source=C:\Users\User\SideBattleRPG.db; Version=3; foreign keys=true;");
-        }
-
 
         // Deals with sanitizing across the object operations Create(), Update(), and Clone()
         public static void ResetParameterizedInputs()
@@ -110,7 +98,7 @@ namespace Database.Utilities
         public static int Scalar(string sqlCommand)
         {
             int val = 0;
-            using (var conn = DB())
+            using (var conn = AccessDB.Connect())
             {
                 conn.Open();
                 using (var comm = new SQLiteCommand(sqlCommand, conn))
@@ -127,7 +115,7 @@ namespace Database.Utilities
         public static int MaxIdPlusOne(string table)
         {
             int maxIdPlusOne;
-            using (var conn = DB())
+            using (var conn = AccessDB.Connect())
             {
                 conn.Open();
                 using (var comm = new SQLiteCommand("SELECT MAX(" + table + "_ID) FROM " + table, conn))
