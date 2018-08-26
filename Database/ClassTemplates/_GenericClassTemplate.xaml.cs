@@ -20,7 +20,7 @@ namespace Database.ClassTemplates
         }
 
         protected override void OnInitializeNew()
-        {
+        {   
             //attr1Input.Text = "0";
             //attr2Image.Source = null;
         }

@@ -23,10 +23,6 @@ namespace Database.ClassesUnstructured
 
         protected override void OnInitializeNew()
         {
-            Elements.InitializeNew();
-            WeaponTypes.InitializeNew();
-            ToolTypes.InitializeNew();
-            ToolFormulas.InitializeNew();
             Elements.Read();
             WeaponTypes.Read();
             ToolTypes.Read();
