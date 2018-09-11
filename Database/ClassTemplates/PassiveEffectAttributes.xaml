@@ -1,0 +1,83 @@
+﻿<base:_ClassTemplateOperations
+    x:Class="Database.ClassTemplates.PassiveEffectAttributes"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:base="clr-namespace:Database.ClassTemplates"
+    mc:Ignorable="d"
+    Background="White"
+    d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="15 2 0 2"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Width" Value="40"/>
+                <Setter Property="Height" Value="18"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Margin" Value="5 2 0 2"/>
+            </Style>
+            <Style TargetType="ComboBox">
+                <Setter Property="Margin" Value="5 2 10 2"/>
+            </Style>
+        </Grid.Resources>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="120"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="HP Regenerate" Grid.Column="0" Grid.Row="0"/>
+        <TextBox x:Name="HPRegenInput" Grid.Column="1" Grid.Row="0"/>
+        <TextBlock Text="TurnEnd1" Grid.Column="2" Grid.Row="0"/>
+        <TextBox x:Name="TurnEnd1Input" Grid.Column="3" Grid.Row="0"/>
+
+        <TextBlock Text="SP Regenerate" Grid.Column="0" Grid.Row="1"/>
+        <TextBox x:Name="SPRegenInput" Grid.Column="1" Grid.Row="1"/>
+        <TextBlock Text="TurnEnd2" Grid.Column="2" Grid.Row="1"/>
+        <TextBox x:Name="TurnEnd2Input" Grid.Column="3" Grid.Row="1"/>
+
+        <TextBlock Text="SP Consume Rate" Grid.Column="0" Grid.Row="2"/>
+        <TextBox x:Name="SPConsumeRateInput" Grid.Column="1" Grid.Row="2"/>
+        <TextBlock Text="Turn Sequence" Grid.Column="2" Grid.Row="2"/>
+        <ComboBox x:Name="TurnSequenceInput" Grid.Column="3" Grid.Row="2"/>
+
+        <TextBlock Text="Combo Difficulty" Grid.Column="0" Grid.Row="3"/>
+        <TextBox x:Name="ComboDifficultyInput" Grid.Column="1" Grid.Row="3"/>
+        <TextBlock Text="Remove by Hit %" Grid.Column="2" Grid.Row="3"/>
+        <TextBox x:Name="RemoveByHitInput" Grid.Column="3" Grid.Row="3"/>
+
+        <TextBlock Text="Counter Rate" Grid.Column="0" Grid.Row="4"/>
+        <TextBox x:Name="CounterInput" Grid.Column="1" Grid.Row="4"/>
+        <TextBlock Text="Physical Damage Rate" Grid.Column="2" Grid.Row="4"/>
+        <TextBox x:Name="PhysicalDamageRateInput" Grid.Column="3" Grid.Row="4"/>
+
+        <TextBlock Text="Reflect Rate" Grid.Column="0" Grid.Row="5"/>
+        <TextBox x:Name="ReflectInput" Grid.Column="1" Grid.Row="5"/>
+        <TextBlock Text="Magical Damage Rate" Grid.Column="2" Grid.Row="5"/>
+        <TextBox x:Name="MagicalDamageRateInput" Grid.Column="3" Grid.Row="5"/>
+
+        <TextBlock Text="Disabled Tool Type 1" Grid.Column="0" Grid.Row="6"/>
+        <ComboBox x:Name="DisabledToolType1Input" Grid.Column="1" Grid.Row="6"/>
+        <TextBlock Text="Disabled Tool Type 2" Grid.Column="2" Grid.Row="6"/>
+        <ComboBox x:Name="DisabledToolType2Input" Grid.Column="3" Grid.Row="6"/>
+
+        <TextBlock Text="Extra Turns" Grid.Column="0" Grid.Row="7"/>
+        <TextBox x:Name="ExtraTurnsInput" Grid.Column="1" Grid.Row="7"/>
+    </Grid>
+</base:_ClassTemplateOperations>

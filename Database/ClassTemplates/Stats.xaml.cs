@@ -8,26 +8,33 @@ namespace Database.ClassTemplates
 {
     public partial class Stats : _ClassTemplateOperations
     {
-        private double Low, High;
+        private double Initial, Low, High;
 
         public Stats()
         {
             InitializeComponent();
             ClassTemplateTable = "Stats";
+            Initial = 0;
             Low = -1;
             High = 1;
         }
 
+        public void InitializeNew(int initial)
+        {
+            Initial = initial;
+            InitializeNew();
+        }
         protected override void OnInitializeNew()
         {
-            HPInput.Text = "0";
-            LukInput.Text = "0";
-            AtkInput.Text = "0";
-            DefInput.Text = "0";
-            MapInput.Text = "0";
-            MarInput.Text = "0";
-            SpdInput.Text = "0";
-            TecInput.Text = "0";
+            string initial = Initial.ToString();
+            HPInput.Text = initial;
+            LukInput.Text = initial;
+            AtkInput.Text = initial;
+            DefInput.Text = initial;
+            MapInput.Text = initial;
+            MarInput.Text = initial;
+            SpdInput.Text = initial;
+            TecInput.Text = initial;
             AccInput.Text = "100";
             EvaInput.Text = "100";
             CrtInput.Text = "100";

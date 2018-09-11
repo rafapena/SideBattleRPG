@@ -93,7 +93,7 @@ namespace Database.BaseControls
 
         private void GoToStates(object sender, EventArgs e)
         {
-            //SetUpFromClick<State>();
+            SetUpFromClick<State>();
         }
 
         private void GoToWeapons(object sender, EventArgs e)

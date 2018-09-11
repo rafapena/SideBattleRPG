@@ -153,10 +153,10 @@ namespace Database.TableTemplates
         {
             string targetIdName = (HostDBTable == TargetDBTable ? "Other" : "") + TargetDBTable + "ID";
             string connectorTable = HostDBTable + "_To_" + TargetDBTable + TableIdentifier;
-            return new string[] {
-                connectorTable + " JOIN  BaseObject JOIN " + TargetDBTable,
-                "BaseObject_ID = BaseObjectID AND " + TargetDBTable + "_ID = " + targetIdName + " AND " + HostDBTable + "ID = " + HostId + " ORDER BY TableIndex"
-            };
+            string select = connectorTable + " JOIN  BaseObject JOIN " + TargetDBTable;
+            string whereSort = "BaseObject_ID = BaseObjectID AND " + TargetDBTable + "_ID = " + targetIdName + " AND " +
+                connectorTable + "." + HostDBTable + "ID = " + HostId + " ORDER BY TableIndex";
+            return new string[] { select, whereSort };
         }
         protected abstract void OnRead(SQLiteDataReader reader);
         public void Read()

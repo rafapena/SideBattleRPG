@@ -25,7 +25,11 @@ namespace Database.Utilities
             if (!isNumber.Match(inputText).Success) return false;
             double n;
             try { n = double.Parse(inputText); }
-            catch (OverflowException) { return false; }
+            catch (OverflowException)
+            {
+                MessageBox.Show("Input overflow detected: This will not count as a number");
+                return false;
+            }
             bool aboveLow = lowInclusive ? low <= n : low < n;
             bool belowHigh = highInclusive ? high >= n : high > n;
             return aboveLow && belowHigh;
@@ -40,7 +44,7 @@ namespace Database.Utilities
             try { n = int.Parse(inputText); }
             catch (OverflowException)
             {
-                MessageBox.Show("Input overflow detected: This does not count as a positive integer");
+                MessageBox.Show("Input overflow detected: This will not count as a positive integer");
                 return false;
             }
             return n >= 0;

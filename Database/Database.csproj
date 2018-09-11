@@ -93,6 +93,9 @@
     <Compile Include="Classes\Achievement.xaml.cs">
       <DependentUpon>Achievement.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\State.xaml.cs">
+      <DependentUpon>State.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Classes\_GenericClass.xaml.cs">
       <DependentUpon>_GenericClass.xaml</DependentUpon>
     </Compile>
@@ -111,6 +114,9 @@
     <Compile Include="BaseControls\TableList.xaml.cs">
       <DependentUpon>TableList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ClassTemplates\PassiveEffectRates.xaml.cs">
+      <DependentUpon>PassiveEffectRates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ClassTemplates\ToolStates.xaml.cs">
       <DependentUpon>ToolStates.xaml</DependentUpon>
     </Compile>
@@ -120,6 +126,9 @@
     </Compile>
     <Compile Include="ClassTemplates\ToolAttributes.xaml.cs">
       <DependentUpon>ToolAttributes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClassTemplates\PassiveEffectAttributes.xaml.cs">
+      <DependentUpon>PassiveEffectAttributes.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClassTemplates\_GenericClassTemplate.xaml.cs">
       <DependentUpon>_GenericClassTemplate.xaml</DependentUpon>
@@ -156,7 +165,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Classes\State.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Classes\_GenericClass.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ClassTemplates\PassiveEffectRates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -169,6 +186,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ClassTemplates\ToolAttributes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ClassTemplates\PassiveEffectAttributes.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

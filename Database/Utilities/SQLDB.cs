@@ -58,17 +58,17 @@ namespace Database.Utilities
         // Only reads the SQL data: Assumes that sqlCommand is a SELECT statement
         public static SQLiteDataReader Read(SQLiteConnection conn, string sqlCommand)
         {
-            try
-            {
+            //try
+            //{
                 SQLiteCommand command = new SQLiteCommand(sqlCommand, conn);
                 return command.ExecuteReader();
-            }
-            catch (Exception e)
+            //}
+            /*catch (Exception e)
             {
                 string endMsg = "The program will probably crash or misbehave from this point";
-                MessageBox.Show(e.Message + "\n" + endMsg, "Error while writing to the database");
+                MessageBox.Show(e.Message + "\n\n" + endMsg, "Error while writing to the database");
                 return null;
-            }
+            }*/
         }
 
         // Assume this doesn't do anything else besides: creating, updating, deleting, and cloning
@@ -89,7 +89,7 @@ namespace Database.Utilities
             catch (Exception e)
             {
                 string endMsg = "The program will probably crash or misbehave from this point";
-                MessageBox.Show(e.Message + "\n" + endMsg, "Error while writing to the database");
+                MessageBox.Show(e.Message + "\n\n" + endMsg, "Error while writing to the database");
             }
         }
 

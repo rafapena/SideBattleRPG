@@ -27,10 +27,8 @@ namespace Database.ClassTemplates
             TypeData = new ComboBoxInputData("List_ID", "Name", "TypesLists", "List_Type = 'Tool Types'", "List_ID", ComboBoxInputData.ADD_NULL_INPUT);
             FormulaData = new ComboBoxInputData("List_ID", "Name", "TypesLists", "List_Type = 'Tool Formulas'", "List_ID", ComboBoxInputData.ADD_NULL_INPUT);
             ElementData = new ComboBoxInputData("List_ID", "Name", "TypesLists", "List_Type = 'Elements'", "List_ID", ComboBoxInputData.ADD_NULL_INPUT);
-            ClassExclusive1Data = new ComboBoxInputData("BattlerClass_ID", "Name", "BaseObject JOIN BattlerClass", "BaseObjectID = BaseObject_ID", "Name",
-                ComboBoxInputData.ADD_NULL_INPUT);
-            ClassExclusive2Data = new ComboBoxInputData("BattlerClass_ID", "Name", "BaseObject JOIN BattlerClass", "BaseObjectID = BaseObject_ID", "Name",
-                ComboBoxInputData.ADD_NULL_INPUT);
+            ClassExclusive1Data = new ComboBoxInputData("BattlerClass_ID", "Name", "BaseObject JOIN BattlerClass", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
+            ClassExclusive2Data = new ComboBoxInputData("BattlerClass_ID", "Name", "BaseObject JOIN BattlerClass", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
             TypeInput.ItemsSource = TypeData.OptionsListNames;
             FormulaInput.ItemsSource = FormulaData.OptionsListNames;
             HPSPModInput.ItemsSource = HPSPModOptions;
@@ -67,15 +65,14 @@ namespace Database.ClassTemplates
             string err = "";
             if (!Utils.PosInt(HPAmountInput.Text)) err += "HP Amount must be a positive integer\n";
             if (!Utils.PosInt(SPAmountInput.Text)) err += "SP Amount must be a positive integer\n";
-            if (!Utils.NumberBetween(HPPercentInput.Text, 0, 100)) err += "HP % must be an integer within 0 and 100\n";
-            if (!Utils.NumberBetween(SPPercentInput.Text, 0, 100)) err += "SP % must be an integer within 0 and 100\n";
-            if (!Utils.NumberBetween(HPRecoilInput.Text, 0, 100)) err += "HP Recoil % must be an integer within 0 and 100\n";
-            if (ClassExclusive1Input.SelectedIndex == ClassExclusive2Input.SelectedIndex && ClassExclusive1Input.SelectedIndex != 0)
-                err += "Class Exclusives cannot be the same\n";
+            if (!Utils.NumberBetween(HPPercentInput.Text, 0, 100)) err += "HP % must be a number within 0 and 100\n";
+            if (!Utils.NumberBetween(SPPercentInput.Text, 0, 100)) err += "SP % must be a number within 0 and 100\n";
+            if (!Utils.NumberBetween(HPRecoilInput.Text, 0, 100)) err += "HP Recoil % must be a number within 0 and 100\n";
+            if (ClassExclusive1Input.SelectedIndex == ClassExclusive2Input.SelectedIndex && ClassExclusive1Input.SelectedIndex != 0) err += "Class Exclusives cannot be the same\n";
             if (!Utils.PosInt(PowerInput.Text)) err += "Power must be a positive integer\n";
             if (!Utils.PosInt(AccuracyInput.Text)) err += "Accuracy % must be a positive integer\n";
             if (!Utils.PosInt(CriticalRateInput.Text)) err += "Critical Rate % must be a positive integer\n";
-            if (!Utils.NumberBetween(PriorityInput.Text, -3, 3)) err += "Priority must be an integer within -3 and 3\n";
+            if (!Utils.NumberBetween(PriorityInput.Text, -3, 3)) err += "Priority must be a number within -3 and 3\n";
             if (!Utils.PosInt(ConsecutiveActsInput.Text)) err += "Consecutive Acts must be a positive integer\n";
             if (!Utils.PosInt(RandomActsInput.Text)) err += "Random Acts must be a positive integer\n";
             return err;

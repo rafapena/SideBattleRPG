@@ -71,7 +71,7 @@ namespace Database.Classes
             ElementRates.Create(conn);
             SQLCreate(conn,
                 "BaseObjectID, NaturalStats, ElementRates, Companionship, SavePartnerRate, CounterattackRate, AssistDamageRate",
-                Base.ClassTemplateId.ToString() + ", " + NatStats.ClassTemplateId.ToString() + ", '" + ElementRates.StringList + "', " +
+                Base.ClassTemplateId + ", " + NatStats.ClassTemplateId + ", '" + ElementRates.StringList + "', " +
                     "@Companionship, @SavePartnerRate, @CounterattackRate, @AssistDamageRate");
             ClassChoices.Create(conn);
             SkillChoices.Create(conn);
