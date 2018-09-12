@@ -58,38 +58,30 @@ namespace Database.Utilities
         // Only reads the SQL data: Assumes that sqlCommand is a SELECT statement
         public static SQLiteDataReader Read(SQLiteConnection conn, string sqlCommand)
         {
-            //try
-            //{
-                SQLiteCommand command = new SQLiteCommand(sqlCommand, conn);
-                return command.ExecuteReader();
-            //}
-            /*catch (Exception e)
-            {
-                string endMsg = "The program will probably crash or misbehave from this point";
-                MessageBox.Show(e.Message + "\n\n" + endMsg, "Error while writing to the database");
-                return null;
-            }*/
-        }
-
-        // Assume this doesn't do anything else besides: creating, updating, deleting, and cloning
-        public static void Write(SQLiteConnection conn, string sqlCommand)
-        {
             try
             {
-                using (var comm = new SQLiteCommand(sqlCommand, conn))
-                {
-                    if (Inputs != null && Inputs.Count > 0) comm.Parameters.AddRange(Inputs.ToArray());
-                    if (BlobInputs != null)
-                        for (int i = 0; i < BlobInputs.Count; i++)
-                            comm.Parameters.Add(BlobInputs[i].Name, DbType.Binary, 4 * BlobInputs[i].Size).Value = BlobInputs[i].Data;
-                    comm.CommandType = CommandType.Text;
-                    comm.ExecuteNonQuery();
-                }
+                SQLiteCommand command = new SQLiteCommand(sqlCommand, conn);
+                return command.ExecuteReader();
             }
             catch (Exception e)
             {
                 string endMsg = "The program will probably crash or misbehave from this point";
                 MessageBox.Show(e.Message + "\n\n" + endMsg, "Error while writing to the database");
+                return null;
+            }
+        }
+
+        // Assume this doesn't do anything else besides creating, updating, deleting, and cloning
+        public static void Write(SQLiteConnection conn, string sqlCommand)
+        {
+            using (var comm = new SQLiteCommand(sqlCommand, conn))
+            {
+                if (Inputs != null && Inputs.Count > 0) comm.Parameters.AddRange(Inputs.ToArray());
+                if (BlobInputs != null)
+                    for (int i = 0; i < BlobInputs.Count; i++)
+                        comm.Parameters.Add(BlobInputs[i].Name, DbType.Binary, 4 * BlobInputs[i].Size).Value = BlobInputs[i].Data;
+                comm.CommandType = CommandType.Text;
+                comm.ExecuteNonQuery();
             }
         }
 

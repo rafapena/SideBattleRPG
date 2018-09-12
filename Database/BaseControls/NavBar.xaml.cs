@@ -29,21 +29,16 @@ namespace Database.BaseControls
             SetUpFromClick<Achievement>();
         }
 
-        private void GoToClasses(object sender, EventArgs e)
+        private void GoToBattlerClasses(object sender, EventArgs e)
         {
-            //SetUpFromClick<BattlerClass>();
+            SetUpFromClick<BattlerClass>();
         }
 
         private void GoToEnemies(object sender, EventArgs e)
         {
             //SetUpFromClick<Enemy>();
         }
-
-        private void GoToEnemyGroups(object sender, EventArgs e)
-        {
-            //SetUpFromClick<EnemyGroup>();
-        }
-
+        
         private void GoToEnvironments(object sender, EventArgs e)
         {
             //SetUpFromClick<Environment>();

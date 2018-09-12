@@ -20,9 +20,8 @@
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name = "achievementsButton"  Content = "Achievements" Click = "GoToAchievements"/>
-            <Button x:Name = "classesButton" Content = "Classes" Click = "GoToClasses"/>
+            <Button x:Name = "battlerClassesButton" Content = "Battler Classes" Click = "GoToBattlerClasses"/>
             <Button x:Name = "enemiesButton" Content = "Enemies" Click = "GoToEnemies"/>
-            <Button x:Name = "enemyGroupsButton" Content = "Enemy Groups" Click = "GoToEnemyGroups"/>
             <Button x:Name = "environmentsButton"  Content = "Environments" Click = "GoToEnvironments"/>
             <Button x:Name = "eventsButton" Content = "Events" Click = "GoToEvents"/>
             <Button x:Name = "itemsButton" Content = "Items" Click = "GoToItems"/>
