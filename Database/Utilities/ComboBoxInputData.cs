@@ -63,6 +63,13 @@ namespace Database.Utilities
             return targetIndex < 0 ? 0 : targetIndex;
         }
 
+        // Returns the string for selected inputs: shortcut for parameterizing inputs with combo box data from a DB table
+        public string SelectedInput(ComboBox inputSource)
+        {
+            int chosen = OptionsListIds[inputSource.SelectedIndex];
+            return chosen < 0 ? null : chosen.ToString();
+        }
+
 
         // The four functions below are only for tables of combo boxes
         public void AddToSelectedIds(int i) { SelectedIds.Add(OptionsListIds[i]); }

@@ -50,10 +50,8 @@ namespace Database.Classes
 
         public override void ParameterizeInputs()
         {
-            int c1 = UpgradedClass1Data.OptionsListIds[UpgradedClass1Input.SelectedIndex];
-            int c2 = UpgradedClass2Data.OptionsListIds[UpgradedClass2Input.SelectedIndex];
-            SQLDB.ParameterizeInput("@UpgradedClass1", c1 < 0 ? null : c1.ToString());
-            SQLDB.ParameterizeInput("@UpgradedClass2", c2 < 0 ? null : c2.ToString());
+            SQLDB.ParameterizeInput("@UpgradedClass1", UpgradedClass1Data.SelectedInput(UpgradedClass1Input));
+            SQLDB.ParameterizeInput("@UpgradedClass2", UpgradedClass2Data.SelectedInput(UpgradedClass2Input));
             SQLDB.ParameterizeInput("@UsableWeaponType1", UsableWeaponType1Data.OptionsListIds[UsableWeaponType1Input.SelectedIndex].ToString());
             SQLDB.ParameterizeInput("@UsableWeaponType2", UsableWeaponType2Data.OptionsListIds[UsableWeaponType2Input.SelectedIndex].ToString());
         }

@@ -11,7 +11,7 @@
     <Grid>
         <Grid.Resources>
             <Style TargetType="TextBlock">
-                <Setter Property="Margin" Value="15 2 0 2"/>
+                <Setter Property="Margin" Value="10 2 0 2"/>
             </Style>
             <Style TargetType="TextBox">
                 <Setter Property="Width" Value="40"/>
@@ -25,9 +25,9 @@
         </Grid.Resources>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="120"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="120"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>

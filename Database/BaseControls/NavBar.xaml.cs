@@ -36,7 +36,7 @@ namespace Database.BaseControls
 
         private void GoToEnemies(object sender, EventArgs e)
         {
-            //SetUpFromClick<Enemy>();
+            SetUpFromClick<Enemy>();
         }
         
         private void GoToEnvironments(object sender, EventArgs e)
@@ -44,14 +44,9 @@ namespace Database.BaseControls
             //SetUpFromClick<Environment>();
         }
 
-        private void GoToEvents(object sender, EventArgs e)
-        {
-            //SetUpFromClick<Event>();
-        }
-
         private void GoToItems(object sender, EventArgs e)
         {
-            //SetUpFromClick<Item>("Items");
+            SetUpFromClick<Item>();
         }
 
         private void GoToOtherLists(object sender, EventArgs e)

@@ -45,6 +45,12 @@ namespace Database.Classes
         {
             SQLDB.ParameterizeInput("@MaxStack", MaxStackInput.Text);
             SQLDB.ParameterizeInput("@StepsToRemove", StepsToRemoveInput.Text);
+            SQLDB.ParameterizeInput("@Stun", (bool)StunInput.IsChecked ? 1 : 0);
+            SQLDB.ParameterizeInput("@Petrify", (bool)PetrifyInput.IsChecked ? 1 : 0);
+            SQLDB.ParameterizeInput("@KO", (bool)KOInput.IsChecked ? 1 : 0);
+            SQLDB.ParameterizeInput("@PassiveEffectID", PassiveEffectAttributes.ClassTemplateId);
+            SQLDB.ParameterizeInput("@StatModifiers", StatMods.ClassTemplateId);
+            SQLDB.ParameterizeInput("@BaseObjectID", Base.ClassTemplateId);
         }
 
         protected override void OnCreate(SQLiteConnection conn)
@@ -54,8 +60,7 @@ namespace Database.Classes
             PassiveEffectRates.Create(conn);
             StatMods.Create(conn);
             SQLCreate(conn, "MaxStack, StepsToRemove, Stun, Petrify, KO, PassiveEffectID, StatModifiers, BaseObjectID",
-                "@MaxStack, @StepsToRemove, " + ((bool)StunInput.IsChecked ? 1:0) + ", " + ((bool)PetrifyInput.IsChecked ? 1:0) + ", " + ((bool)KOInput.IsChecked ? 1:0) + ", " +
-                PassiveEffectAttributes.ClassTemplateId + ", " + StatMods.ClassTemplateId + ", " + Base.ClassTemplateId);
+                "@MaxStack, @StepsToRemove, @Stun, @Petrify, @KO, @PassiveEffectID, @StatModifiers, @BaseObjectID");
         }
 
         protected override void OnRead(SQLiteDataReader reader)
@@ -77,8 +82,7 @@ namespace Database.Classes
             PassiveEffectAttributes.Update(conn);
             PassiveEffectRates.Update(conn);
             StatMods.Update(conn);
-            SQLUpdate(conn, "MaxStack = @MaxStack, StepsToRemove = @StepsToRemove, " +
-                "Stun = " + ((bool)StunInput.IsChecked ? 1:0) + ", Petrify = " + ((bool)PetrifyInput.IsChecked ? 1:0) + ", KO = " + ((bool)KOInput.IsChecked ? 1:0));
+            SQLUpdate(conn, "MaxStack = @MaxStack, StepsToRemove = @StepsToRemove, Stun = @Stun, Petrify = @Petrify, KO = @KO");
         }
 
         protected override void OnDelete(SQLiteConnection conn)

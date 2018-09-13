@@ -55,9 +55,13 @@ namespace Database.Classes
         public override void ParameterizeInputs()
         {
             SQLDB.ParameterizeInput("@SPConsume", SPConsumeInput.Text);
+            SQLDB.ParameterizeInput("@NumberOfUsers", NumberOfUsersOptions[NumberOfUsersInput.SelectedIndex]);
             SQLDB.ParameterizeInput("@Charge", ChargeInput.Text);
             SQLDB.ParameterizeInput("@WarmUp", WarmUpInput.Text);
             SQLDB.ParameterizeInput("@CoolDown", CoolDownInput.Text);
+            SQLDB.ParameterizeInput("@Steal", (bool)StealInput.IsChecked ? 1 : 0);
+            SQLDB.ParameterizeInput("@ToolID", ToolAttributes.ClassTemplateId);
+            SQLDB.ParameterizeInput("@BaseObjectID", Base.ClassTemplateId);
         }
 
         protected override void OnCreate(SQLiteConnection conn)
@@ -65,8 +69,7 @@ namespace Database.Classes
             Base.Create(conn);
             ToolAttributes.Create(conn);
             SQLCreate(conn, "SPConsume, NumberOfUsers, Charge, WarmUp, CoolDown, Steal, ToolID, BaseObjectID",
-                "@SPConsume, " + NumberOfUsersOptions[NumberOfUsersInput.SelectedIndex] + ", @Charge, @WarmUp, @CoolDown, " +
-                ((bool)StealInput.IsChecked ? 1:0) + ", " + ToolAttributes.ClassTemplateId + ", " + Base.ClassTemplateId);
+                "@SPConsume, @NumberOfUsers, @Charge, @WarmUp, @CoolDown, @Steal, @ToolID, @BaseObjectID");
             ToolStateRates.Create(conn);
             PlayerSummons.Create(conn);
             EnemySummons.Create(conn);
@@ -92,8 +95,7 @@ namespace Database.Classes
             Base.Update(conn);
             ToolAttributes.Update(conn);
             ToolStateRates.Update(conn);
-            SQLUpdate(conn, "SPConsume = @SPConsume, NumberOfUsers = " + NumberOfUsersOptions[NumberOfUsersInput.SelectedIndex] + ", " +
-                "Charge = @Charge, WarmUp = @WarmUp, CoolDown = @CoolDown, Steal = " + ((bool)StealInput.IsChecked ? 1:0));
+            SQLUpdate(conn, "SPConsume = @SPConsume, NumberOfUsers = @NumberOfUsers, Charge = @Charge, WarmUp = @WarmUp, CoolDown = @CoolDown, Steal = @Steal");
             PlayerSummons.Update(conn);
             EnemySummons.Update(conn);
         }

@@ -89,7 +89,8 @@ namespace Database.ClassTemplates
         {
             return new string[] {
                 "HP, Atk, Def, Map, Mar, Spd, Tec, Luk, Acc, Eva, Crt, Cev",
-                "@HP, @Atk, @Def, @Map, @Mar, @Spd, @Tec, @Luk, @Acc, @Eva, @Crt, @Cev" };
+                "@HP, @Atk, @Def, @Map, @Mar, @Spd, @Tec, @Luk, @Acc, @Eva, @Crt, @Cev"
+            };
         }
 
         protected override void OnRead(SQLiteDataReader reader)

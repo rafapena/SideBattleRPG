@@ -23,12 +23,11 @@
             <Button x:Name = "battlerClassesButton" Content = "Battler Classes" Click = "GoToBattlerClasses"/>
             <Button x:Name = "enemiesButton" Content = "Enemies" Click = "GoToEnemies"/>
             <Button x:Name = "environmentsButton"  Content = "Environments" Click = "GoToEnvironments"/>
-            <Button x:Name = "eventsButton" Content = "Events" Click = "GoToEvents"/>
             <Button x:Name = "itemsButton" Content = "Items" Click = "GoToItems"/>
+            <Button x:Name = "otherListsButton" Content = "Other Lists" Click = "GoToOtherLists"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button x:Name = "otherListsButton" Content = "Other Lists" Click = "GoToOtherLists"/>
             <Button x:Name = "passiveSkillsButton" Content = "Passive Skills" Click = "GoToPassiveSkills"/>
             <Button x:Name = "platformssButton" Content = "Platforms" Click = "GoToPlatforms"/>
             <Button x:Name = "playersButton" Content = "Players" Click = "GoToPlayers"/>

@@ -49,6 +49,10 @@ namespace Database.Utilities
         {
             Inputs.Add(new SQLiteParameter(name, value));
         }
+        public static void ParameterizeInput(string name, int value)
+        {
+            Inputs.Add(new SQLiteParameter(name, value));
+        }
         public static void ParameterizeBlobInput(string name, byte[] value, int size)
         {
             BlobInputs.Add(new BlobInput(name, value, size));

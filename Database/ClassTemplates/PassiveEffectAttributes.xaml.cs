@@ -71,12 +71,12 @@ namespace Database.ClassTemplates
             SQLDB.ParameterizeInput("@ComboDifficulty", ComboDifficultyInput.Text);
             SQLDB.ParameterizeInput("@Counter", CounterInput.Text);
             SQLDB.ParameterizeInput("@Reflect", ReflectInput.Text);
-            SQLDB.ParameterizeInput("@DisabledToolType1", DisabledToolType1Data.OptionsListIds[DisabledToolType1Input.SelectedIndex].ToString());
-            SQLDB.ParameterizeInput("@DisabledToolType2", DisabledToolType2Data.OptionsListIds[DisabledToolType2Input.SelectedIndex].ToString());
+            SQLDB.ParameterizeInput("@DisabledToolType1", DisabledToolType1Data.SelectedInput(DisabledToolType1Input));
+            SQLDB.ParameterizeInput("@DisabledToolType2", DisabledToolType2Data.SelectedInput(DisabledToolType2Input));
             SQLDB.ParameterizeInput("@ExtraTurns", ExtraTurnsInput.Text);
             SQLDB.ParameterizeInput("@TurnEnd1", TurnEnd1Input.Text);
             SQLDB.ParameterizeInput("@TurnEnd2", TurnEnd2Input.Text);
-            SQLDB.ParameterizeInput("@TurnSequence", TurnSequenceOptions[TurnSequenceInput.SelectedIndex]);
+            SQLDB.ParameterizeInput("@TurnSequence", TurnSequenceInput.SelectedIndex.ToString());
             SQLDB.ParameterizeInput("@RemoveByHit", RemoveByHitInput.Text);
             SQLDB.ParameterizeInput("@PhysicalDamageRate", PhysicalDamageRateInput.Text);
             SQLDB.ParameterizeInput("@MagicalDamageRate", MagicalDamageRateInput.Text);
@@ -105,7 +105,7 @@ namespace Database.ClassTemplates
             ExtraTurnsInput.Text = reader["ExtraTurns"].ToString();
             TurnEnd1Input.Text = reader["TurnEnd1"].ToString();
             TurnEnd2Input.Text = reader["TurnEnd2"].ToString();
-            TurnSequenceInput.SelectedIndex = TurnSequenceOptions.FindIndex(a => a == reader["TurnSequence"].ToString());
+            TurnSequenceInput.SelectedIndex = int.Parse(reader["TurnSequence"].ToString());
             RemoveByHitInput.Text = reader["RemoveByHit"].ToString();
             PhysicalDamageRateInput.Text = reader["PhysicalDamageRate"].ToString();
             MagicalDamageRateInput.Text = reader["MagicalDamageRate"].ToString();

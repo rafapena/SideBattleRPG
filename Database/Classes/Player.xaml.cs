@@ -58,6 +58,9 @@ namespace Database.Classes
 
         public override void ParameterizeInputs()
         {
+            SQLDB.ParameterizeInput("@BaseObjectID", Base.ClassTemplateId);
+            SQLDB.ParameterizeInput("@NaturalStats", NatStats.ClassTemplateId);
+            SQLDB.ParameterizeInput("@ElementRates", ElementRates.StringList);
             SQLDB.ParameterizeInput("@Companionship", CompanionshipInput.Text);
             SQLDB.ParameterizeInput("@SavePartnerRate", SavePartnerRateInput.Text);
             SQLDB.ParameterizeInput("@CounterattackRate", CounterattackRateInput.Text);
@@ -69,10 +72,8 @@ namespace Database.Classes
             Base.Create(conn);
             NatStats.Create(conn);
             ElementRates.Create(conn);
-            SQLCreate(conn,
-                "BaseObjectID, NaturalStats, ElementRates, Companionship, SavePartnerRate, CounterattackRate, AssistDamageRate",
-                Base.ClassTemplateId + ", " + NatStats.ClassTemplateId + ", '" + ElementRates.StringList + "', " +
-                    "@Companionship, @SavePartnerRate, @CounterattackRate, @AssistDamageRate");
+            SQLCreate(conn, "BaseObjectID, NaturalStats, ElementRates, Companionship, SavePartnerRate, CounterattackRate, AssistDamageRate",
+                "@BaseObjectID, @NaturalStats, @ElementRates, @Companionship, @SavePartnerRate, @CounterattackRate, @AssistDamageRate");
             ClassChoices.Create(conn);
             SkillChoices.Create(conn);
             StateRates.Create(conn);
@@ -103,8 +104,7 @@ namespace Database.Classes
             StateRates.Update(conn);
             ElementRates.Update(conn);
             Relations.Update(conn);
-            SQLUpdate(conn, "Companionship = @Companionship, SavePartnerRate = @SavePartnerRate, " +
-                "CounterattackRate = @CounterattackRate, AssistDamageRate = @AssistDamageRate");
+            SQLUpdate(conn, "Companionship=@Companionship, SavePartnerRate=@SavePartnerRate, CounterattackRate=@CounterattackRate, AssistDamageRate=@AssistDamageRate");
         }
 
         protected override void OnDelete(SQLiteConnection conn)

@@ -80,24 +80,22 @@ namespace Database.ClassTemplates
 
         public override void ParameterizeInputs()
         {
-            int c1 = ClassExclusive1Data.OptionsListIds[ClassExclusive1Input.SelectedIndex];
-            int c2 = ClassExclusive2Data.OptionsListIds[ClassExclusive2Input.SelectedIndex];
             SQLDB.ParameterizeInput("@Type", TypeData.OptionsListIds[TypeInput.SelectedIndex].ToString());
             SQLDB.ParameterizeInput("@Formula", FormulaData.OptionsListIds[FormulaInput.SelectedIndex].ToString());
-            SQLDB.ParameterizeInput("@HPSPModType", HPSPModOptions[HPSPModInput.SelectedIndex]);
+            SQLDB.ParameterizeInput("@HPSPModType", HPSPModInput.SelectedIndex.ToString());
             SQLDB.ParameterizeInput("@HPAmount", HPAmountInput.Text);
             SQLDB.ParameterizeInput("@SPAmount", SPAmountInput.Text);
             SQLDB.ParameterizeInput("@HPPercent", HPPercentInput.Text);
             SQLDB.ParameterizeInput("@SPPercent", SPPercentInput.Text);
             SQLDB.ParameterizeInput("@HPRecoil", HPRecoilInput.Text);
-            SQLDB.ParameterizeInput("@ClassExclusive1", c1 < 0 ? null : c1.ToString());
-            SQLDB.ParameterizeInput("@ClassExclusive2", c2 < 0 ? null : c2.ToString());
+            SQLDB.ParameterizeInput("@ClassExclusive1", ClassExclusive1Data.SelectedInput(ClassExclusive1Input));
+            SQLDB.ParameterizeInput("@ClassExclusive2", ClassExclusive1Data.SelectedInput(ClassExclusive2Input));
             SQLDB.ParameterizeInput("@Element", ElementData.OptionsListIds[ElementInput.SelectedIndex].ToString());
             SQLDB.ParameterizeInput("@Power", PowerInput.Text);
             SQLDB.ParameterizeInput("@Accuracy", AccuracyInput.Text);
             SQLDB.ParameterizeInput("@CriticalRate", CriticalRateInput.Text);
             SQLDB.ParameterizeInput("@Priority", PriorityInput.Text);
-            SQLDB.ParameterizeInput("@Scope", ScopeOptions[ScopeInput.SelectedIndex]);
+            SQLDB.ParameterizeInput("@Scope", ScopeInput.SelectedIndex.ToString());
             SQLDB.ParameterizeInput("@ConsecutiveActs", ConsecutiveActsInput.Text);
             SQLDB.ParameterizeInput("@RandomActs", RandomActsInput.Text);
         }
@@ -116,7 +114,7 @@ namespace Database.ClassTemplates
         {
             TypeInput.SelectedIndex = TypeData.FindIndex(reader["Type"]);
             FormulaInput.SelectedIndex = FormulaData.FindIndex(reader["Formula"]);
-            HPSPModInput.SelectedIndex = HPSPModOptions.FindIndex(a => a == reader["HPSPModType"].ToString());
+            HPSPModInput.SelectedIndex = int.Parse(reader["HPSPModType"].ToString());
             HPAmountInput.Text = reader["HPAmount"].ToString();
             SPAmountInput.Text = reader["SPAmount"].ToString();
             HPPercentInput.Text = reader["HPPercent"].ToString();
@@ -129,7 +127,7 @@ namespace Database.ClassTemplates
             AccuracyInput.Text = reader["Accuracy"].ToString();
             CriticalRateInput.Text = reader["CriticalRate"].ToString();
             PriorityInput.Text = reader["Priority"].ToString();
-            ScopeInput.SelectedIndex = ScopeOptions.FindIndex(a => a == reader["Scope"].ToString());
+            ScopeInput.SelectedIndex = int.Parse(reader["Scope"].ToString());
             ConsecutiveActsInput.Text = reader["ConsecutiveActs"].ToString();
             RandomActsInput.Text = reader["RandomActs"].ToString();
         }
