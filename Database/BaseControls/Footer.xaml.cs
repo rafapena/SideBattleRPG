@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Database.Classes;
 using Database.Utilities;
+using System.Windows.Media;
 
 namespace Database.BaseControls
 {
@@ -33,6 +34,19 @@ namespace Database.BaseControls
             CloneButton.Visibility = Visibility.Visible;
             CreateButton.Visibility = Visibility.Collapsed;
             UpdateButton.Visibility = Visibility.Visible;
+        }
+
+        // Changes the text at the bottom of the buttons
+        public void SetOperationMessage(string footerMsg, Color color)
+        {
+            FooterMessage.Text = footerMsg;
+            FooterMessage.Foreground = new SolidColorBrush(color);
+        }
+
+        // Removes the text at the bottom of the buttons
+        public void RemoveOperationMessage()
+        {
+            FooterMessage.Text = "";
         }
 
         // Trigger page functions

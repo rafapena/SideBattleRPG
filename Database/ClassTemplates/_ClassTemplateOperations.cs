@@ -28,14 +28,14 @@ namespace Database.ClassTemplates
         }
 
         public abstract string ValidateInputs();
-        public abstract void ParameterizeInputs();
+        public abstract void ParameterizeAttributes();
 
 
         protected abstract string[] OnCreate(SQLiteConnection conn);
         public void Create(SQLiteConnection conn)
         {
-            SQLDB.ResetParameterizedInputs();
-            ParameterizeInputs();
+            SQLDB.ResetParameterizedAttributes();
+            ParameterizeAttributes();
             string[] createText = OnCreate(conn);
             if (createText != null) SQLDB.Write(conn, "INSERT INTO " + ClassTemplateTable + " (" + createText[0] + ") VALUES (" + createText[1] + ");");
         }
@@ -67,8 +67,8 @@ namespace Database.ClassTemplates
         protected abstract string OnUpdate(SQLiteConnection conn);
         public void Update(SQLiteConnection conn)
         {
-            SQLDB.ResetParameterizedInputs();
-            ParameterizeInputs();
+            SQLDB.ResetParameterizedAttributes();
+            ParameterizeAttributes();
             string updateText = OnUpdate(conn);
             if (updateText == "") return;
             SQLDB.Write(conn, "UPDATE " + ClassTemplateTable + " SET " + updateText + " WHERE " + ClassTemplateTable + "_ID = " + ClassTemplateId + ";");

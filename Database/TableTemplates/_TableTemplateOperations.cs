@@ -132,7 +132,7 @@ namespace Database.TableTemplates
         }
 
         protected abstract void OnParameterizeInputs(int i);
-        public void ParameterizeInputs()
+        public void ParameterizeAttributes()
         {
             for (int i = 0; i < Count; i++) OnParameterizeInputs(i);
         }
@@ -142,8 +142,8 @@ namespace Database.TableTemplates
         protected abstract string OnCreateValues(int i);
         public void Create(SQLiteConnection conn)
         {
-            SQLDB.ResetParameterizedInputs();
-            ParameterizeInputs();
+            SQLDB.ResetParameterizedAttributes();
+            ParameterizeAttributes();
             string[] str = OnCreate();
             for (int i = 0; i < Count; i++) SQLDB.Write(conn, "INSERT INTO " + str[0] + " (" + str[1] + ") VALUES (" + OnCreateValues(i) + ");");
         }

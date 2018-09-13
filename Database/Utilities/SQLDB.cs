@@ -40,16 +40,16 @@ namespace Database.Utilities
         }
 
         // Deals with sanitizing across the object operations Create(), Update(), and Clone()
-        public static void ResetParameterizedInputs()
+        public static void ResetParameterizedAttributes()
         {
             Inputs = new List<SQLiteParameter>();
             BlobInputs = new List<BlobInput>();
         }
-        public static void ParameterizeInput(string name, string value)
+        public static void ParameterizeAttribute(string name, string value)
         {
             Inputs.Add(new SQLiteParameter(name, value));
         }
-        public static void ParameterizeInput(string name, int value)
+        public static void ParameterizeAttribute(string name, int value)
         {
             Inputs.Add(new SQLiteParameter(name, value));
         }

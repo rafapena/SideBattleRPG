@@ -83,7 +83,7 @@ namespace Database.TableTemplates
         // Same as DualInputTypesList
         protected override void OnParameterizeInputs(int i)
         {
-            if (isDual()) SQLDB.ParameterizeInput("@" + AttributeName + i.ToString(), ((TextBox)Elements[i][2]).Text);
+            if (isDual()) SQLDB.ParameterizeAttribute("@" + AttributeName + i.ToString(), ((TextBox)Elements[i][2]).Text);
         }
         
 

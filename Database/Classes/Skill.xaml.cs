@@ -52,24 +52,24 @@ namespace Database.Classes
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            SQLDB.ParameterizeInput("@SPConsume", SPConsumeInput.Text);
-            SQLDB.ParameterizeInput("@NumberOfUsers", NumberOfUsersOptions[NumberOfUsersInput.SelectedIndex]);
-            SQLDB.ParameterizeInput("@Charge", ChargeInput.Text);
-            SQLDB.ParameterizeInput("@WarmUp", WarmUpInput.Text);
-            SQLDB.ParameterizeInput("@CoolDown", CoolDownInput.Text);
-            SQLDB.ParameterizeInput("@Steal", (bool)StealInput.IsChecked ? 1 : 0);
-            SQLDB.ParameterizeInput("@ToolID", ToolAttributes.ClassTemplateId);
-            SQLDB.ParameterizeInput("@BaseObjectID", Base.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@ToolID", ToolAttributes.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@SPConsume", SPConsumeInput.Text);
+            SQLDB.ParameterizeAttribute("@NumberOfUsers", NumberOfUsersOptions[NumberOfUsersInput.SelectedIndex]);
+            SQLDB.ParameterizeAttribute("@Charge", ChargeInput.Text);
+            SQLDB.ParameterizeAttribute("@WarmUp", WarmUpInput.Text);
+            SQLDB.ParameterizeAttribute("@CoolDown", CoolDownInput.Text);
+            SQLDB.ParameterizeAttribute("@Steal", (bool)StealInput.IsChecked ? 1 : 0);
         }
 
         protected override void OnCreate(SQLiteConnection conn)
         {
             Base.Create(conn);
             ToolAttributes.Create(conn);
-            SQLCreate(conn, "SPConsume, NumberOfUsers, Charge, WarmUp, CoolDown, Steal, ToolID, BaseObjectID",
-                "@SPConsume, @NumberOfUsers, @Charge, @WarmUp, @CoolDown, @Steal, @ToolID, @BaseObjectID");
+            SQLCreate(conn, "ToolID, BaseObjectID, SPConsume, NumberOfUsers, Charge, WarmUp, CoolDown, Steal",
+                "@ToolID, @BaseObjectID, @SPConsume, @NumberOfUsers, @Charge, @WarmUp, @CoolDown, @Steal");
             ToolStateRates.Create(conn);
             PlayerSummons.Create(conn);
             EnemySummons.Create(conn);

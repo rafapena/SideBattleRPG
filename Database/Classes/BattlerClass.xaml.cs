@@ -48,20 +48,22 @@ namespace Database.Classes
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            SQLDB.ParameterizeInput("@UpgradedClass1", UpgradedClass1Data.SelectedInput(UpgradedClass1Input));
-            SQLDB.ParameterizeInput("@UpgradedClass2", UpgradedClass2Data.SelectedInput(UpgradedClass2Input));
-            SQLDB.ParameterizeInput("@UsableWeaponType1", UsableWeaponType1Data.OptionsListIds[UsableWeaponType1Input.SelectedIndex].ToString());
-            SQLDB.ParameterizeInput("@UsableWeaponType2", UsableWeaponType2Data.OptionsListIds[UsableWeaponType2Input.SelectedIndex].ToString());
+            SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@ScaledStats", ScaledStats.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@UpgradedClass1", UpgradedClass1Data.SelectedInput(UpgradedClass1Input));
+            SQLDB.ParameterizeAttribute("@UpgradedClass2", UpgradedClass2Data.SelectedInput(UpgradedClass2Input));
+            SQLDB.ParameterizeAttribute("@UsableWeaponType1", UsableWeaponType1Data.SelectedInput(UsableWeaponType1Input));
+            SQLDB.ParameterizeAttribute("@UsableWeaponType2", UsableWeaponType2Data.SelectedInput(UsableWeaponType2Input));
         }
 
         protected override void OnCreate(SQLiteConnection conn)
         {
             Base.Create(conn);
             ScaledStats.Create(conn);
-            SQLCreate(conn, "UpgradedClass1, UpgradedClass2, UsableWeaponType1, UsableWeaponType2, ScaledStats, BaseObjectID",
-                "@UpgradedClass1, @UpgradedClass2, @UsableWeaponType1, @UsableWeaponType2, " + ScaledStats.ClassTemplateId + ", " + Base.ClassTemplateId);
+            SQLCreate(conn, "BaseObjectID, ScaledStats, UpgradedClass1, UpgradedClass2, UsableWeaponType1, UsableWeaponType2",
+                "@BaseObjectID, @ScaledStats, @UpgradedClass1, @UpgradedClass2, @UsableWeaponType1, @UsableWeaponType2");
         }
 
         protected override void OnRead(SQLiteDataReader reader)

@@ -56,15 +56,15 @@ namespace Database.Classes
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            SQLDB.ParameterizeInput("@BaseObjectID", Base.ClassTemplateId);
-            SQLDB.ParameterizeInput("@NaturalStats", NatStats.ClassTemplateId);
-            SQLDB.ParameterizeInput("@ElementRates", ElementRates.StringList);
-            SQLDB.ParameterizeInput("@Companionship", CompanionshipInput.Text);
-            SQLDB.ParameterizeInput("@SavePartnerRate", SavePartnerRateInput.Text);
-            SQLDB.ParameterizeInput("@CounterattackRate", CounterattackRateInput.Text);
-            SQLDB.ParameterizeInput("@AssistDamageRate", AssistDamageRateInput.Text);
+            SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@NaturalStats", NatStats.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@ElementRates", ElementRates.StringList);
+            SQLDB.ParameterizeAttribute("@Companionship", CompanionshipInput.Text);
+            SQLDB.ParameterizeAttribute("@SavePartnerRate", SavePartnerRateInput.Text);
+            SQLDB.ParameterizeAttribute("@CounterattackRate", CounterattackRateInput.Text);
+            SQLDB.ParameterizeAttribute("@AssistDamageRate", AssistDamageRateInput.Text);
         }
 
         protected override void OnCreate(SQLiteConnection conn)

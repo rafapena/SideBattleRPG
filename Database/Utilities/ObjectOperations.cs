@@ -10,10 +10,10 @@ namespace Database.Utilities
     /// </summary>
     public interface ObjectOperations
     {
-        void InitializeNew();       // Gets called when the "Add New" button is clicked.It sets up a the creation of a new row.
-        string ValidateInputs();    // Checks if all of the input data is valid, before creating or updating the row.
-        void ParameterizeInputs();  // Sanitizes the input data. Works with ValidateInputs() to secure data from malformed user inputs.
-        void Read();                // Reads the content of the selected database table row
+        void InitializeNew();           // Gets called when the "Add New" button is clicked.It sets up a the creation of a new row.
+        string ValidateInputs();        // Checks if all of the input data is valid, before creating or updating the row.
+        void ParameterizeAttributes();  // Sanitizes the input/attribute data. Works with ValidateInputs() to secure data from malformed user inputs.
+        void Read();                    // Reads the content of the selected database table row
     }
 
     public interface ObjectPageOperations : ObjectOperations

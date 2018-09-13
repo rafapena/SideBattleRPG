@@ -93,7 +93,7 @@ namespace Database.TableTemplates
         // Same as DualInputDBTable
         protected override void OnParameterizeInputs(int i)
         {
-            if (isDual()) SQLDB.ParameterizeInput("@" + AttributeName + i.ToString(), ((TextBox)Elements[i][2]).Text);
+            if (isDual()) SQLDB.ParameterizeAttribute("@" + AttributeName + i.ToString(), ((TextBox)Elements[i][2]).Text);
         }
 
         
@@ -101,8 +101,8 @@ namespace Database.TableTemplates
         protected override string OnCreateValues(int i) { return ""; }
         public new void Create(SQLiteConnection conn)
         {
-            SQLDB.ResetParameterizedInputs();
-            ParameterizeInputs();
+            SQLDB.ResetParameterizedAttributes();
+            ParameterizeAttributes();
             StringList = "";
             for (int i = 0; i < Count; i++)
             {

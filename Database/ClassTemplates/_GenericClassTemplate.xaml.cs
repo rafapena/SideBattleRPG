@@ -34,7 +34,7 @@ namespace Database.ClassTemplates
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
             //SQLDB.ParameterizeInput("@attr1", attr1Input.Text);
             //SQLDB.ParameterizeInput("@attr2", attr2Input.Text);

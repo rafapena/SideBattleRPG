@@ -41,10 +41,10 @@ namespace Database.Classes
             SPMaxInput.Text = "100";
             AnyStateInput.IsChecked = false;
             NoStateInput.IsChecked = false;
-            StateActive1Input.ItemsSource = StateActive1Data.OptionsListNames;
-            StateActive2Input.ItemsSource = StateActive2Data.OptionsListNames;
-            StateInactive1Input.ItemsSource = StateInactive1Data.OptionsListNames;
-            StateInactive2Input.ItemsSource = StateInactive2Data.OptionsListNames;
+            StateActive1Input.SelectedIndex = 0;
+            StateActive2Input.SelectedIndex = 0;
+            StateInactive1Input.SelectedIndex = 0;
+            StateInactive2Input.SelectedIndex = 0;
             ExpGainRateInput.Text = "100";
             GoldGainRateInput.Text = "100";
         }
@@ -59,15 +59,37 @@ namespace Database.Classes
             if (!Utils.PosInt(HPMaxInput.Text)) err += "HP Max % must be a positive integer\n";
             if (!Utils.PosInt(SPMinInput.Text)) err += "SP Min % must be a positive integer\n";
             if (!Utils.PosInt(SPMaxInput.Text)) err += "SP Max % must be a positive integer\n";
+            bool identical = false;
+            int s1 = StateActive1Input.SelectedIndex;
+            int s2 = StateActive2Input.SelectedIndex;
+            int s3 = StateInactive1Input.SelectedIndex;
+            int s4 = StateInactive2Input.SelectedIndex;
+            if (s1 != 0 && (s1 == s2 || s1 == s3 || s1 == s4)) identical = true;
+            if (s2 != 0 && (s2 == s3 || s2 == s4)) identical = true;
+            if (s3 != 0 && (s3 == s4)) identical = true;
+            if (identical) err += "All State Active/Inactive inputs must be unique from each other\n";
             if (!Utils.PosInt(ExpGainRateInput.Text)) err += "EXP Gain % must be a positive integer\n";
             if (!Utils.PosInt(GoldGainRateInput.Text)) err += "Gold Gain % must be a positive integer\n";
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            //SQLDB.ParameterizeInput("@MaxStack", MaxStackInput.Text);
-            //SQLDB.ParameterizeInput("@StepsToRemove", StepsToRemoveInput.Text);
+            SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@PassiveEffectID", PassiveEffectAttributes.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@StatModifiers", StatMods.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@HPMin", HPMinInput.Text);
+            SQLDB.ParameterizeAttribute("@HPMax", HPMaxInput.Text);
+            SQLDB.ParameterizeAttribute("@SPMin", SPMinInput.Text);
+            SQLDB.ParameterizeAttribute("@SPMax", SPMaxInput.Text);
+            SQLDB.ParameterizeAttribute("@AnyState", (bool)AnyStateInput.IsChecked ? 1 : 0);
+            SQLDB.ParameterizeAttribute("@NoState", (bool)NoStateInput.IsChecked ? 1 : 0);
+            SQLDB.ParameterizeAttribute("@StateActive1", StateActive1Data.SelectedInput(StateActive1Input));
+            SQLDB.ParameterizeAttribute("@StateActive2", StateActive2Data.SelectedInput(StateActive2Input));
+            SQLDB.ParameterizeAttribute("@StateInactive1", StateInactive1Data.SelectedInput(StateInactive1Input));
+            SQLDB.ParameterizeAttribute("@StateInactive2", StateInactive2Data.SelectedInput(StateInactive2Input));
+            SQLDB.ParameterizeAttribute("@ExpGainRate", ExpGainRateInput.Text);
+            SQLDB.ParameterizeAttribute("@GoldGainRate", GoldGainRateInput.Text);
         }
 
         protected override void OnCreate(SQLiteConnection conn)
@@ -76,9 +98,10 @@ namespace Database.Classes
             PassiveEffectAttributes.Create(conn);
             PassiveEffectRates.Create(conn);
             StatMods.Create(conn);
-            //SQLCreate(conn, "MaxStack, StepsToRemove, Stun, Petrify, KO, PassiveEffectID, StatModifiers, BaseObjectID",
-              //  "@MaxStack, @StepsToRemove, " + ((bool)StunInput.IsChecked ? 1:0) + ", " + ((bool)PetrifyInput.IsChecked ? 1:0) + ", " + ((bool)KOInput.IsChecked ? 1:0) + ", " +
-                //PassiveEffectAttributes.ClassTemplateId + ", " + StatMods.ClassTemplateId + ", " + Base.ClassTemplateId);
+            SQLCreate(conn, "BaseObjectID, PassiveEffectID, StatModifiers, HPMin, HPMax, SPMin, SPMax, AnyState, NoState, " +
+                "StateActive1, StateActive2, StateInactive1, StateInactive2, ExpGainRate, GoldGainRate",
+                "@BaseObjectID, @PassiveEffectID, @StatModifiers, @HPMin, @HPMax, @SPMin, @SPMax, @AnyState, @NoState, " +
+                "@StateActive1, @StateActive2, @StateInactive1, @StateInactive2, @ExpGainRate, @GoldGainRate");
         }
 
         protected override void OnRead(SQLiteDataReader reader)
@@ -87,11 +110,18 @@ namespace Database.Classes
             PassiveEffectAttributes.Read(reader);
             PassiveEffectRates.Read(reader);
             StatMods.Read(reader);
-            //MaxStackInput.Text = reader["MaxStack"].ToString();
-            //StepsToRemoveInput.Text = reader["StepsToRemove"].ToString();
-            //StunInput.IsChecked = reader["Stun"].ToString() == "True" ? true : false; ;
-            //PetrifyInput.IsChecked = reader["Petrify"].ToString() == "True" ? true : false; ;
-            //KOInput.IsChecked = reader["KO"].ToString() == "True" ? true : false; ;
+            HPMinInput.Text = reader["HPMin"].ToString();
+            HPMaxInput.Text = reader["HPMax"].ToString();
+            SPMinInput.Text = reader["SPMin"].ToString();
+            SPMaxInput.Text = reader["SPMax"].ToString();
+            AnyStateInput.IsChecked = reader["AnyState"].ToString() == "True" ? true : false;
+            NoStateInput.IsChecked = reader["NoState"].ToString() == "True" ? true : false;
+            StateActive1Input.SelectedIndex = StateActive1Data.FindIndex(reader["StateActive1"]);
+            StateActive2Input.SelectedIndex = StateActive2Data.FindIndex(reader["StateActive2"]);
+            StateInactive1Input.SelectedIndex = StateInactive1Data.FindIndex(reader["StateInactive1"]);
+            StateInactive2Input.SelectedIndex = StateInactive2Data.FindIndex(reader["StateInactive2"]);
+            ExpGainRateInput.Text = reader["ExpGainRate"].ToString();
+            GoldGainRateInput.Text = reader["GoldGainRate"].ToString();
         }
 
         protected override void OnUpdate(SQLiteConnection conn)
@@ -100,8 +130,9 @@ namespace Database.Classes
             PassiveEffectAttributes.Update(conn);
             PassiveEffectRates.Update(conn);
             StatMods.Update(conn);
-            //SQLUpdate(conn, "MaxStack = @MaxStack, StepsToRemove = @StepsToRemove, " +
-              //  "Stun = " + ((bool)StunInput.IsChecked ? 1:0) + ", Petrify = " + ((bool)PetrifyInput.IsChecked ? 1:0) + ", KO = " + ((bool)KOInput.IsChecked ? 1:0));
+            SQLUpdate(conn, "BaseObjectID=@BaseObjectID, PassiveEffectID=@PassiveEffectID, StatModifiers=@StatModifiers, HPMin=@HPMin, HPMax=@HPMax, " +
+                "SPMin=@SPMin, SPMax=@SPMax, AnyState=@AnyState, NoState=@NoState, StateActive1=@StateActive1, StateActive2=@StateActive2, " +
+                "StateInactive1=@StateInactive1, StateInactive2=@StateInactive2, ExpGainRate=@ExpGainRate, GoldGainRate=@GoldGainRate");
         }
 
         protected override void OnDelete(SQLiteConnection conn)

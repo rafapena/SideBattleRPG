@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Data.SQLite;
 using Database.BaseControls;
 using Database.Utilities;
@@ -20,22 +21,23 @@ namespace Database.Classes
             LinkedTableList.SetupTable(false);
             SQLDB.CurrentId = SQLDB.MaxIdPlusOne(SQLDB.CurrentTable);
             LinkedFooter.ApplyInitializeNewSettings();
+            LinkedFooter.RemoveOperationMessage();
             LinkedTableList.RemoveButtonHighlight();
             SetupTableData();
             OnInitializeNew();
         }
 
         public abstract string ValidateInputs();
-        public abstract void ParameterizeInputs();
+        public abstract void ParameterizeAttributes();
 
 
         protected abstract void OnCreate(SQLiteConnection conn);
         public void Create()
         {
+            LinkedFooter.RemoveOperationMessage();
             string err = ValidateInputs();
-            if (err != "") MessageBox.Show(err, "Could not create " + SQLDB.CurrentTable);
-            else
-            {
+            if (err != "")  MessageBox.Show(err, "Could not create " + SQLDB.CurrentTable);
+            else {
                 using (var conn = AccessDB.Connect())
                 {
                     conn.Open();
@@ -48,13 +50,13 @@ namespace Database.Classes
                 }
                 LinkedTableList.SetupTable(true);
                 LinkedFooter.ApplyReadSettings();
-                MessageBox.Show(SQLDB.CurrentTable + " created");
+                LinkedFooter.SetOperationMessage(SQLDB.CurrentTable + " Created", Colors.LightGreen);
             }
         }
         protected void SQLCreate(SQLiteConnection conn, string attributes, string inputs)
         {
-            SQLDB.ResetParameterizedInputs();
-            ParameterizeInputs();
+            SQLDB.ResetParameterizedAttributes();
+            ParameterizeAttributes();
             SQLDB.Write(conn, "INSERT INTO " + SQLDB.CurrentTable + " (" + attributes + ") VALUES (" + inputs + ");");
         }
 
@@ -63,6 +65,7 @@ namespace Database.Classes
         public void Read()
         {
             LinkedFooter.ApplyReadSettings();
+            LinkedFooter.RemoveOperationMessage();
             using (var conn = AccessDB.Connect())
             {
                 conn.Open();
@@ -80,6 +83,7 @@ namespace Database.Classes
         protected abstract void OnUpdate(SQLiteConnection conn);
         public void Update()
         {
+            LinkedFooter.RemoveOperationMessage();
             string err = ValidateInputs();
             if (err != "") MessageBox.Show(err, "Could not update " + SQLDB.CurrentTable);
             else
@@ -95,13 +99,13 @@ namespace Database.Classes
                     conn.Close();
                 }
                 LinkedTableList.SetupTable(true);
-                MessageBox.Show(SQLDB.CurrentTable + " updated");
+                LinkedFooter.SetOperationMessage(SQLDB.CurrentTable + " Updated", Colors.SkyBlue);
             }
         }
         protected void SQLUpdate(SQLiteConnection conn, string input)
         {
-            SQLDB.ResetParameterizedInputs();
-            ParameterizeInputs();
+            SQLDB.ResetParameterizedAttributes();
+            ParameterizeAttributes();
             SQLDB.Write(conn, "UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentTable + "_ID = " + SQLDB.CurrentId.ToString() + ";");
         }
 
@@ -120,14 +124,15 @@ namespace Database.Classes
                 }
                 conn.Close();
             }
-            MessageBox.Show(SQLDB.CurrentTable + " deleted");
             InitializeNew();
+            LinkedFooter.SetOperationMessage(SQLDB.CurrentTable + " Deleted", Colors.PaleVioletRed);
         }
 
 
         protected abstract void OnClone(SQLiteConnection conn);
         public void Clone()
         {
+            LinkedFooter.RemoveOperationMessage();
             string err = ValidateInputs();
             if (err != "") MessageBox.Show("Could not clone " + SQLDB.CurrentTable + ":\n\n" + err);
             else
@@ -145,7 +150,7 @@ namespace Database.Classes
                     conn.Close();
                 }
                 LinkedTableList.SetupTable(true);
-                MessageBox.Show(SQLDB.CurrentTable + " cloned");
+                LinkedFooter.SetOperationMessage(SQLDB.CurrentTable + " Cloned", Colors.DarkTurquoise);
             }
         }
     }

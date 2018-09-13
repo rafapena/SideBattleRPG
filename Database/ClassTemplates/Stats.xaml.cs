@@ -69,20 +69,20 @@ namespace Database.ClassTemplates
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            SQLDB.ParameterizeInput("@HP", HPInput.Text);
-            SQLDB.ParameterizeInput("@Luk", LukInput.Text);
-            SQLDB.ParameterizeInput("@Atk", AtkInput.Text);
-            SQLDB.ParameterizeInput("@Def", DefInput.Text);
-            SQLDB.ParameterizeInput("@Map", MapInput.Text);
-            SQLDB.ParameterizeInput("@Mar", MarInput.Text);
-            SQLDB.ParameterizeInput("@Spd", SpdInput.Text);
-            SQLDB.ParameterizeInput("@Tec", TecInput.Text);
-            SQLDB.ParameterizeInput("@Acc", AccInput.Text);
-            SQLDB.ParameterizeInput("@Eva", EvaInput.Text);
-            SQLDB.ParameterizeInput("@Crt", CrtInput.Text);
-            SQLDB.ParameterizeInput("@Cev", CevInput.Text);
+            SQLDB.ParameterizeAttribute("@HP", HPInput.Text);
+            SQLDB.ParameterizeAttribute("@Luk", LukInput.Text);
+            SQLDB.ParameterizeAttribute("@Atk", AtkInput.Text);
+            SQLDB.ParameterizeAttribute("@Def", DefInput.Text);
+            SQLDB.ParameterizeAttribute("@Map", MapInput.Text);
+            SQLDB.ParameterizeAttribute("@Mar", MarInput.Text);
+            SQLDB.ParameterizeAttribute("@Spd", SpdInput.Text);
+            SQLDB.ParameterizeAttribute("@Tec", TecInput.Text);
+            SQLDB.ParameterizeAttribute("@Acc", AccInput.Text);
+            SQLDB.ParameterizeAttribute("@Eva", EvaInput.Text);
+            SQLDB.ParameterizeAttribute("@Crt", CrtInput.Text);
+            SQLDB.ParameterizeAttribute("@Cev", CevInput.Text);
         }
 
         protected override string[] OnCreate(SQLiteConnection conn)

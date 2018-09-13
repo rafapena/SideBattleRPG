@@ -44,14 +44,14 @@ namespace Database.Classes
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            SQLDB.ParameterizeInput("@DefaultPrice", DefaultPriceInput.Text);
-            SQLDB.ParameterizeInput("@Consumable", (bool)ConsumableInput.IsChecked ? 1 : 0);
-            SQLDB.ParameterizeInput("@TurnsInto", TurnsIntoData.SelectedInput(TurnsIntoInput));
-            SQLDB.ParameterizeInput("@PermStatMods", PermanentStatMods.ClassTemplateId);
-            SQLDB.ParameterizeInput("@ToolID", ToolAttributes.ClassTemplateId);
-            SQLDB.ParameterizeInput("@BaseObjectID", Base.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@ToolID", ToolAttributes.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@PermStatMods", PermanentStatMods.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@DefaultPrice", DefaultPriceInput.Text);
+            SQLDB.ParameterizeAttribute("@Consumable", (bool)ConsumableInput.IsChecked ? 1 : 0);
+            SQLDB.ParameterizeAttribute("@TurnsInto", TurnsIntoData.SelectedInput(TurnsIntoInput));
         }
 
         protected override void OnCreate(SQLiteConnection conn)
@@ -59,8 +59,8 @@ namespace Database.Classes
             Base.Create(conn);
             PermanentStatMods.Create(conn);
             ToolAttributes.Create(conn);
-            SQLCreate(conn, "DefaultPrice, Consumable, TurnsInto, PermStatMods, ToolID, BaseObjectID",
-                "@DefaultPrice, @Consumable, @TurnsInto, @PermStatMods, @ToolID, @BaseObjectID");
+            SQLCreate(conn, "BaseObjectID, ToolID, PermStatMods, DefaultPrice, Consumable, TurnsInto",
+                "@BaseObjectID, @ToolID, @PermStatMods, @DefaultPrice, @Consumable, @TurnsInto");
             ToolStateRates.Create(conn);
         }
 

@@ -31,16 +31,17 @@ namespace Database.Classes
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            SQLDB.ParameterizeInput("@Level", LevelInput.Text);
-            SQLDB.ParameterizeInput("@Hint", HintInput.Text);
+            SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@Level", LevelInput.Text);
+            SQLDB.ParameterizeAttribute("@Hint", HintInput.Text);
         }
 
         protected override void OnCreate(SQLiteConnection conn)
         {
             Base.Create(conn);
-            SQLCreate(conn, "Level, Hint, BaseObjectID", "@Level, @Hint, " + Base.ClassTemplateId);
+            SQLCreate(conn, "BaseObjectID, Level, Hint", "@BaseObjectID, @Level, @Hint");
         }
 
         protected override void OnRead(SQLiteDataReader reader)

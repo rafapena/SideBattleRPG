@@ -36,7 +36,7 @@ namespace Database.TableTemplates
 
         protected override void OnParameterizeInputs(int i)
         {
-            SQLDB.ParameterizeInput("@Name" + i, ((TextBox)Elements[i][1]).Text);
+            SQLDB.ParameterizeAttribute("@Name" + i, ((TextBox)Elements[i][1]).Text);
         }
 
         protected override string[] OnCreate()
@@ -59,8 +59,8 @@ namespace Database.TableTemplates
 
         public new void Update(SQLiteConnection conn)
         {
-            SQLDB.ResetParameterizedInputs();
-            ParameterizeInputs();
+            SQLDB.ResetParameterizedAttributes();
+            ParameterizeAttributes();
             int prevCount = SQLDB.Scalar("SELECT COUNT(*) FROM " + TargetDBTable + " WHERE List_Type = '" + TableTitle + "';");
             if (prevCount < Count)
             {

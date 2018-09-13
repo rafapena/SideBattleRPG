@@ -33,10 +33,10 @@ namespace Database.ClassTemplates
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            SQLDB.ParameterizeInput("@Name", NameInput.Text);
-            SQLDB.ParameterizeInput("@Description", DescriptionInput.Text);
+            SQLDB.ParameterizeAttribute("@Name", NameInput.Text);
+            SQLDB.ParameterizeAttribute("@Description", DescriptionInput.Text);
             SQLDB.ParameterizeBlobInput("@Image", ImageManager.ImageToBytes(ImageInput.Source), (int)ImageInput.Width * (int)ImageInput.Height);
         }
 

@@ -36,17 +36,18 @@ namespace Database.Classes
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            //SQLDB.ParameterizeInput("@attr1", attr1Input.Text);
-            //SQLDB.ParameterizeInput("@attr2", attr2Input.Text);
+            SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
+            //SQLDB.ParameterizeAttribute("@attr1", attr1Input.Text);
+            //SQLDB.ParameterizeAttribute("@attr2", attr2Input.Text);
         }
 
         protected override void OnCreate(SQLiteConnection conn)
         {
             Base.Create(conn);
             // Create DualInput TypeLists
-            SQLCreate(conn, "attr1, attr2, BaseObjectID", "@attr1, @attr2, " + Base.ClassTemplateId.ToString());
+            SQLCreate(conn, "BaseObjectID, attr1, attr2", "@BaseObjectID, @attr1, @attr2");
             // Create Dual Input Classes
         }
 

@@ -63,23 +63,23 @@ namespace Database.ClassTemplates
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            SQLDB.ParameterizeInput("@HPRegen", HPRegenInput.Text);
-            SQLDB.ParameterizeInput("@SPRegen", SPRegenInput.Text);
-            SQLDB.ParameterizeInput("@SPConsumeRate", SPConsumeRateInput.Text);
-            SQLDB.ParameterizeInput("@ComboDifficulty", ComboDifficultyInput.Text);
-            SQLDB.ParameterizeInput("@Counter", CounterInput.Text);
-            SQLDB.ParameterizeInput("@Reflect", ReflectInput.Text);
-            SQLDB.ParameterizeInput("@DisabledToolType1", DisabledToolType1Data.SelectedInput(DisabledToolType1Input));
-            SQLDB.ParameterizeInput("@DisabledToolType2", DisabledToolType2Data.SelectedInput(DisabledToolType2Input));
-            SQLDB.ParameterizeInput("@ExtraTurns", ExtraTurnsInput.Text);
-            SQLDB.ParameterizeInput("@TurnEnd1", TurnEnd1Input.Text);
-            SQLDB.ParameterizeInput("@TurnEnd2", TurnEnd2Input.Text);
-            SQLDB.ParameterizeInput("@TurnSequence", TurnSequenceInput.SelectedIndex.ToString());
-            SQLDB.ParameterizeInput("@RemoveByHit", RemoveByHitInput.Text);
-            SQLDB.ParameterizeInput("@PhysicalDamageRate", PhysicalDamageRateInput.Text);
-            SQLDB.ParameterizeInput("@MagicalDamageRate", MagicalDamageRateInput.Text);
+            SQLDB.ParameterizeAttribute("@HPRegen", HPRegenInput.Text);
+            SQLDB.ParameterizeAttribute("@SPRegen", SPRegenInput.Text);
+            SQLDB.ParameterizeAttribute("@SPConsumeRate", SPConsumeRateInput.Text);
+            SQLDB.ParameterizeAttribute("@ComboDifficulty", ComboDifficultyInput.Text);
+            SQLDB.ParameterizeAttribute("@Counter", CounterInput.Text);
+            SQLDB.ParameterizeAttribute("@Reflect", ReflectInput.Text);
+            SQLDB.ParameterizeAttribute("@DisabledToolType1", DisabledToolType1Data.SelectedInput(DisabledToolType1Input));
+            SQLDB.ParameterizeAttribute("@DisabledToolType2", DisabledToolType2Data.SelectedInput(DisabledToolType2Input));
+            SQLDB.ParameterizeAttribute("@ExtraTurns", ExtraTurnsInput.Text);
+            SQLDB.ParameterizeAttribute("@TurnEnd1", TurnEnd1Input.Text);
+            SQLDB.ParameterizeAttribute("@TurnEnd2", TurnEnd2Input.Text);
+            SQLDB.ParameterizeAttribute("@TurnSequence", TurnSequenceInput.SelectedIndex.ToString());
+            SQLDB.ParameterizeAttribute("@RemoveByHit", RemoveByHitInput.Text);
+            SQLDB.ParameterizeAttribute("@PhysicalDamageRate", PhysicalDamageRateInput.Text);
+            SQLDB.ParameterizeAttribute("@MagicalDamageRate", MagicalDamageRateInput.Text);
         }
 
         protected override string[] OnCreate(SQLiteConnection conn)

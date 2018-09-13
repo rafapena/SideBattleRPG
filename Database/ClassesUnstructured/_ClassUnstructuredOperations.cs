@@ -37,7 +37,7 @@ namespace Database.ClassesUnstructured
         }
 
         public abstract string ValidateInputs();
-        public abstract void ParameterizeInputs();
+        public abstract void ParameterizeAttributes();
 
 
         protected virtual void OnCreate(SQLiteConnection conn) { }
@@ -62,8 +62,8 @@ namespace Database.ClassesUnstructured
         }
         protected void SQLCreate(SQLiteConnection conn, string[] text)
         {
-            SQLDB.ResetParameterizedInputs();
-            ParameterizeInputs();
+            SQLDB.ResetParameterizedAttributes();
+            ParameterizeAttributes();
             SQLDB.Write(conn, "INSERT INTO " + SQLDB.CurrentTable + " (" + text[0] + ") VALUES (" + text[1] + ");");
         }
 
@@ -107,8 +107,8 @@ namespace Database.ClassesUnstructured
         }
         protected void SQLUpdate(SQLiteConnection conn, string input)
         {
-            SQLDB.ResetParameterizedInputs();
-            ParameterizeInputs();
+            SQLDB.ResetParameterizedAttributes();
+            ParameterizeAttributes();
             SQLDB.Write(conn, "UPDATE " + SQLDB.CurrentTable + " SET " + input + " WHERE " + SQLDB.CurrentTable + "_ID = " + SQLDB.CurrentId.ToString() + ";");
         }
 

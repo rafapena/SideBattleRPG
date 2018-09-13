@@ -34,8 +34,8 @@ namespace Database.Classes
         protected override void OnInitializeNew()
         {
             Base.InitializeNew();
-            CustomStats.InitializeNew(0);
-            CustomStats.HostTableAttributeName = "ScaledStats";
+            ScaledStats.InitializeNew(0);
+            ScaledStats.HostTableAttributeName = "ScaledStats";
             WidthInput.SelectedIndex = 0;
             HeightInput.SelectedIndex = 0;
             BossTypeInput.SelectedIndex = 0;
@@ -48,16 +48,16 @@ namespace Database.Classes
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();
-            string customStats = "";
+            string scaledStats = "";
             if (EnemyClassInput.SelectedIndex == 0)
             {
-                customStats = CustomStats.ValidateInputs(0, 8.5);
-                if (customStats != "") customStats = "Class is set to 'None': " + customStats;
+                scaledStats = ScaledStats.ValidateInputs(0, 8.5);
+                if (scaledStats != "") scaledStats = "Class is set to 'None': " + scaledStats;
             } else {
-                customStats = CustomStats.ValidateInputs(-3, 3);
-                if (customStats != "") customStats = "Enemy has a class: " + customStats;
+                scaledStats = ScaledStats.ValidateInputs(-3, 3);
+                if (scaledStats != "") scaledStats = "Enemy has a class: " + scaledStats;
             }
-            err += customStats;
+            err += scaledStats;
             err += ElementRates.ValidateInputs();
             err += StateRates.ValidateInputs();
             if (!Utils.PosInt(ExpInput.Text)) err += "EXP Gain must be a positive integer";
@@ -65,31 +65,35 @@ namespace Database.Classes
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            SQLDB.ParameterizeInput("@Width", SizeOptions[WidthInput.SelectedIndex].ToString());
-            SQLDB.ParameterizeInput("@Height", SizeOptions[HeightInput.SelectedIndex].ToString());
-            SQLDB.ParameterizeInput("@BossType", BossTypeInput.SelectedIndex.ToString());
-            SQLDB.ParameterizeInput("@Exp", ExpInput.Text);
-            SQLDB.ParameterizeInput("@Gold", GoldInput.Text);
-            SQLDB.ParameterizeInput("@EnemyClass", EnemyClassData.SelectedInput(EnemyClassInput));
+            SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@ScaledStats", ScaledStats.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@EnemyClass", EnemyClassData.SelectedInput(EnemyClassInput));
+            SQLDB.ParameterizeAttribute("@ElementRates", ElementRates.StringList);
+            SQLDB.ParameterizeAttribute("@Width", SizeOptions[WidthInput.SelectedIndex].ToString());
+            SQLDB.ParameterizeAttribute("@Height", SizeOptions[HeightInput.SelectedIndex].ToString());
+            SQLDB.ParameterizeAttribute("@BossType", BossTypeInput.SelectedIndex.ToString());
+            SQLDB.ParameterizeAttribute("@Flying", (bool)FlyingInput.IsChecked ? 1 : 0);
+            SQLDB.ParameterizeAttribute("@Exp", ExpInput.Text);
+            SQLDB.ParameterizeAttribute("@Gold", GoldInput.Text);
         }
 
         protected override void OnCreate(SQLiteConnection conn)
         {
             Base.Create(conn);
-            CustomStats.Create(conn);
+            ScaledStats.Create(conn);
             ElementRates.Create(conn);
-            SQLCreate(conn, "ElementRates, Width, Height, BossType, Flying, Exp, Gold, BaseObjectID, ScaledStats, EnemyClass",
-                "'" + ElementRates.StringList + "', @Width, @Height, @BossType, " + ((bool)FlyingInput.IsChecked ? 1:0) + ", @Exp, @Gold, " +
-                Base.ClassTemplateId + ", " + CustomStats.ClassTemplateId + ", @EnemyClass");
+            SQLCreate(conn, "BaseObjectID, ScaledStats, EnemyClass, ElementRates, Width, Height, BossType, Flying, Exp, Gold",
+                "@BaseObjectID, @ScaledStats, @EnemyClass, '@ElementRates', @Width, @Height, @BossType, @Flying, @Exp, @Gold");
             StateRates.Create(conn);
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
             Base.Read(reader);
-            CustomStats.Read(reader);
+            ScaledStats.Read(reader);
+            EnemyClassInput.SelectedIndex = EnemyClassData.FindIndex(reader["EnemyClass"]);
             ElementRates.Read();
             StateRates.Read();
             WidthInput.SelectedIndex = SizeOptions.FindIndex(a => a == reader["Width"].ToString());
@@ -98,23 +102,21 @@ namespace Database.Classes
             FlyingInput.IsChecked = reader["Flying"].ToString() == "True" ? true : false;
             ExpInput.Text = reader["Exp"].ToString();
             GoldInput.Text = reader["Gold"].ToString();
-            EnemyClassInput.SelectedIndex = EnemyClassData.FindIndex(reader["EnemyClass"]);
         }
 
         protected override void OnUpdate(SQLiteConnection conn)
         {
             Base.Update(conn);
-            CustomStats.Update(conn);
+            ScaledStats.Update(conn);
             ElementRates.Update(conn);
             StateRates.Update(conn);
-            SQLUpdate(conn, "ElementRates='" + ElementRates.StringList + "', Width=@Width, Height=@Height, BossType=@BossType, " +
-                "Flying=" + ((bool)FlyingInput.IsChecked ? 1:0) + ", Exp=@Exp, Gold=@Gold, EnemyClass=@EnemyClass");
+            SQLUpdate(conn, "EnemyClass=@EnemyClass, ElementRates='@ElementRates', Width=@Width, Height=@Height, BossType=@BossType, Flying=@Flying, Exp=@Exp, Gold=@Gold");
         }
 
         protected override void OnDelete(SQLiteConnection conn)
         {
             Base.Delete(conn);
-            CustomStats.Delete(conn);
+            ScaledStats.Delete(conn);
             ElementRates.Delete(conn);
             StateRates.Delete(conn);
         }
@@ -122,7 +124,7 @@ namespace Database.Classes
         protected override void OnClone(SQLiteConnection conn)
         {
             Base.Clone(conn);
-            CustomStats.Clone(conn);
+            ScaledStats.Clone(conn);
             ElementRates.Clone(conn);
             StateRates.Clone(conn);
         }

@@ -35,10 +35,10 @@ namespace Database.ClassTemplates
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            StatesGive.ParameterizeInputs();
-            StatesReceive.ParameterizeInputs();
+            StatesGive.ParameterizeAttributes();
+            StatesReceive.ParameterizeAttributes();
         }
 
         protected override string[] OnCreate(SQLiteConnection conn)

@@ -6,16 +6,19 @@
              xmlns:local="clr-namespace:Database.BaseControls"
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="300">
-    <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
-        <StackPanel.Resources>
-            <Style TargetType="Button">
-                <Setter Property="Margin" Value="10 0 0 0"/>
-            </Style>
-        </StackPanel.Resources>
+    <StackPanel Margin="10 10 0 0">
+        <StackPanel Orientation="Horizontal">
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="0 0 10 0"/>
+                </Style>
+            </StackPanel.Resources>
 
-        <Button Content="Delete" x:Name="DeleteButton" Click="Deleted" Background="#faa"/>
-        <Button Content="Clone" x:Name="CloneButton" Click="Cloned"/>
-        <Button Content="Create" x:Name="CreateButton" Click="Created" Background="#afa"/>
-        <Button Content="Update" x:Name="UpdateButton" Click="Updated"/>
+            <Button Content="Delete" x:Name="DeleteButton" Click="Deleted" Background="#faa"/>
+            <Button Content="Clone" x:Name="CloneButton" Click="Cloned"/>
+            <Button Content="Create" x:Name="CreateButton" Click="Created" Background="#afa"/>
+            <Button Content="Update" x:Name="UpdateButton" Click="Updated"/>
+        </StackPanel>
+        <TextBlock x:Name="FooterMessage"/>
     </StackPanel>
 </UserControl>

@@ -41,16 +41,16 @@ namespace Database.Classes
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            SQLDB.ParameterizeInput("@MaxStack", MaxStackInput.Text);
-            SQLDB.ParameterizeInput("@StepsToRemove", StepsToRemoveInput.Text);
-            SQLDB.ParameterizeInput("@Stun", (bool)StunInput.IsChecked ? 1 : 0);
-            SQLDB.ParameterizeInput("@Petrify", (bool)PetrifyInput.IsChecked ? 1 : 0);
-            SQLDB.ParameterizeInput("@KO", (bool)KOInput.IsChecked ? 1 : 0);
-            SQLDB.ParameterizeInput("@PassiveEffectID", PassiveEffectAttributes.ClassTemplateId);
-            SQLDB.ParameterizeInput("@StatModifiers", StatMods.ClassTemplateId);
-            SQLDB.ParameterizeInput("@BaseObjectID", Base.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@PassiveEffectID", PassiveEffectAttributes.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@StatModifiers", StatMods.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@MaxStack", MaxStackInput.Text);
+            SQLDB.ParameterizeAttribute("@StepsToRemove", StepsToRemoveInput.Text);
+            SQLDB.ParameterizeAttribute("@Stun", (bool)StunInput.IsChecked ? 1 : 0);
+            SQLDB.ParameterizeAttribute("@Petrify", (bool)PetrifyInput.IsChecked ? 1 : 0);
+            SQLDB.ParameterizeAttribute("@KO", (bool)KOInput.IsChecked ? 1 : 0);
         }
 
         protected override void OnCreate(SQLiteConnection conn)
@@ -59,8 +59,8 @@ namespace Database.Classes
             PassiveEffectAttributes.Create(conn);
             PassiveEffectRates.Create(conn);
             StatMods.Create(conn);
-            SQLCreate(conn, "MaxStack, StepsToRemove, Stun, Petrify, KO, PassiveEffectID, StatModifiers, BaseObjectID",
-                "@MaxStack, @StepsToRemove, @Stun, @Petrify, @KO, @PassiveEffectID, @StatModifiers, @BaseObjectID");
+            SQLCreate(conn, "BaseObjectID, PassiveEffectID, StatModifiers, MaxStack, StepsToRemove, Stun, Petrify, KO",
+                "@BaseObjectID, @PassiveEffectID, @StatModifiers, @MaxStack, @StepsToRemove, @Stun, @Petrify, @KO");
         }
 
         protected override void OnRead(SQLiteDataReader reader)

@@ -58,7 +58,7 @@ namespace Database.BaseControls
 
         private void GoToPassiveSkills(object sender, EventArgs e)
         {
-            //SetUpFromClick<PassiveSkill>();
+            SetUpFromClick<PassiveSkill>();
         }
 
         private void GoToPlatforms(object sender, EventArgs e)

@@ -31,10 +31,10 @@ namespace Database.ClassTemplates
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            StateRates.ParameterizeInputs();
-            ElementRates.ParameterizeInputs();
+            StateRates.ParameterizeAttributes();
+            ElementRates.ParameterizeAttributes();
         }
 
         protected override string[] OnCreate(SQLiteConnection conn)

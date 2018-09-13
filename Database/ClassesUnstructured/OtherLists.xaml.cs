@@ -38,12 +38,12 @@ namespace Database.ClassesUnstructured
             return err;
         }
 
-        public override void ParameterizeInputs()
+        public override void ParameterizeAttributes()
         {
-            Elements.ParameterizeInputs();
-            WeaponTypes.ParameterizeInputs();
+            Elements.ParameterizeAttributes();
+            WeaponTypes.ParameterizeAttributes();
             ToolTypes.ValidateInputs();
-            ToolFormulas.ParameterizeInputs();
+            ToolFormulas.ParameterizeAttributes();
         }
 
         protected override void OnRead(SQLiteDataReader reader)
