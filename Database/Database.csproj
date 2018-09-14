@@ -86,8 +86,14 @@
       <DependentUpon>OtherLists.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClassesUnstructured\_ClassUnstructuredOperations.cs" />
+    <Compile Include="Classes\Weapon.xaml.cs">
+      <DependentUpon>Weapon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Classes\Item.xaml.cs">
       <DependentUpon>Item.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\Environment.xaml.cs">
+      <DependentUpon>Environment.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\PassiveSkill.xaml.cs">
       <DependentUpon>PassiveSkill.xaml</DependentUpon>
@@ -107,6 +113,9 @@
     </Compile>
     <Compile Include="Classes\Enemy.xaml.cs">
       <DependentUpon>Enemy.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\Platform.xaml.cs">
+      <DependentUpon>Platform.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\_GenericClass.xaml.cs">
       <DependentUpon>_GenericClass.xaml</DependentUpon>
@@ -169,6 +178,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Classes\Environment.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Classes\Weapon.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Classes\Player.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -194,6 +211,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Classes\Enemy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Classes\Platform.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

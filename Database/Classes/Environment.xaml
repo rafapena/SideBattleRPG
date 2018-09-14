@@ -1,0 +1,104 @@
+﻿<base:_ClassOperations
+    x:Class="Database.Classes.Environment"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:control="clr-namespace:Database.BaseControls"
+    xmlns:base="clr-namespace:Database.Classes"
+    xmlns:template="clr-namespace:Database.ClassTemplates"
+    xmlns:tables="clr-namespace:Database.TableTemplates"
+    mc:Ignorable="d" 
+    d:DesignHeight="300" d:DesignWidth="300"
+    Title="_GenericTemplate">
+    <Viewbox>
+        <StackPanel>
+            <control:NavBar x:Name="Header"/>
+            <StackPanel Orientation="Horizontal">
+                <control:TableList x:Name="ObjectList"/>
+                <StackPanel Orientation="Vertical">
+
+                    <TabControl>
+                        <TabItem Header="General">
+                            <template:BaseObject x:Name="Base" Margin="5,5,5,5"/>
+                        </TabItem>
+
+                        <TabItem Header="Map Images">
+                            <StackPanel Margin="5 5 5 5">
+                                <Border BorderThickness="0.5" BorderBrush="Black" Width="150" Height="150">
+                                    <Image x:Name="MapForegroundInput" Width="150" Height="150"/>
+                                </Border>
+                                <Button x:Name="SelectMapForegroundInput" Content="Select Map Foreground" Margin="0,5,0,0" Click="SelectMapForeground" Width="150"/>
+                                <Border BorderThickness="0.5" BorderBrush="Black" Margin="0 20 0 0" Width="150" Height="150">
+                                    <Image x:Name="MapBackgroundInput" Width="150" Height="150"/>
+                                </Border>
+                                <Button x:Name="SelectMapBackgroundInput" Content="Select Map Background" Margin="0,5,0,0" Click="SelectMapBackground" Width="150"/>
+                            </StackPanel>
+                        </TabItem>
+
+                        <TabItem Header="Battle Images">
+                            <StackPanel Margin="5 5 5 5">
+                                <Border BorderThickness="0.5" BorderBrush="Black" Width="200" Height="120">
+                                    <Image x:Name="BattleForegroundInput" Width="200" Height="120"/>
+                                </Border>
+                                <Button x:Name="SelectBattleForegroundInput" Content="Select Battle Foreground" Margin="0,5,0,0" Click="SelectBattleForeground" Width="150"/>
+                                <Border BorderThickness="0.5" BorderBrush="Black" Margin="0 20 0 0" Width="200" Height="120">
+                                    <Image x:Name="BattleBackgroundInput" Width="200" Height="120"/>
+                                </Border>
+                                <Button x:Name="SelectBattleBackgroundInput" Content="Select Battle Background" Margin="0,5,0,0" Click="SelectBattleBackground" Width="150"/>
+                            </StackPanel>
+                        </TabItem>
+
+                        <TabItem Header="Standard Attributes">
+                            <StackPanel Margin="5 5 5 5">
+                                <template:PassiveEffectAttributes x:Name="PassiveEffectAttributes"/>
+                            </StackPanel>
+                        </TabItem>
+
+                        <TabItem Header="Rates">
+                            <StackPanel Margin="5,5,5,5">
+                                <Grid Margin="15 0 0 0">
+                                    <Grid.Resources>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Margin" Value="0 2 0 2"/>
+                                        </Style>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="Width" Value="40"/>
+                                            <Setter Property="Height" Value="18"/>
+                                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                                            <Setter Property="Margin" Value="5 2 0 2"/>
+                                        </Style>
+                                    </Grid.Resources>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Text="Accuracy" Grid.Column="0" Grid.Row="0"/>
+                                    <TextBox x:Name="AccuracyInput" Grid.Column="1" Grid.Row="0"/>
+                                    <TextBlock Text="Evasion" Grid.Column="2" Grid.Row="0"/>
+                                    <TextBox x:Name="EvasionInput" Grid.Column="3" Grid.Row="0"/>
+
+                                    <TextBlock Text="Critical Rate" Grid.Column="0" Grid.Row="1"/>
+                                    <TextBox x:Name="CriticalRateInput" Grid.Column="1" Grid.Row="1"/>
+                                    <TextBlock Text="Crit Evade Rate" Grid.Column="2" Grid.Row="1"/>
+                                    <TextBox x:Name="CritEvadeRateInput" Grid.Column="3" Grid.Row="1"/>
+                                </Grid>
+                                <template:PassiveEffectRates x:Name="PassiveEffectRates"/>
+                            </StackPanel>
+                        </TabItem>
+                    </TabControl>
+
+                    <control:Footer x:Name="FooterButtons"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </Viewbox>
+</base:_ClassOperations>

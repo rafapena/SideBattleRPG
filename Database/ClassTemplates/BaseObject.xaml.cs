@@ -14,6 +14,8 @@ namespace Database.ClassTemplates
             ClassTemplateTable = "BaseObject";
         }
 
+        protected override void SetupTableData() { }
+
         protected override void OnInitializeNew()
         {
             NameInput.Text = "";
@@ -37,7 +39,7 @@ namespace Database.ClassTemplates
         {
             SQLDB.ParameterizeAttribute("@Name", NameInput.Text);
             SQLDB.ParameterizeAttribute("@Description", DescriptionInput.Text);
-            SQLDB.ParameterizeBlobInput("@Image", ImageManager.ImageToBytes(ImageInput.Source), (int)ImageInput.Width * (int)ImageInput.Height);
+            SQLDB.ParameterizeBlobAttribute("@Image", ImageManager.ImageToBytes(ImageInput.Source), (int)ImageInput.Width * (int)ImageInput.Height);
         }
 
         protected override string[] OnCreate(SQLiteConnection conn)

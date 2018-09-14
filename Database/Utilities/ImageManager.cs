@@ -6,6 +6,7 @@ using System.Data.SQLite;
 using System.Windows.Media.Imaging;
 using System.IO;
 using System.Windows.Media;
+using System.Windows;
 
 namespace Database.Utilities
 {
@@ -20,16 +21,21 @@ namespace Database.Utilities
         // Lets the user select an image from their fie directoy: Only supports JPG, PNG, and GIFs (Will not animate)
         public static BitmapImage SelectImage(int width, int height)
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.Filter = "Files|*.jpg;*.jpeg;*.png;*.gif;";
-            if (dlg.ShowDialog() != true) return null;
-            BitmapImage image = new BitmapImage();
-            image.BeginInit();
-            image.UriSource = new Uri(dlg.FileName);
-            image.DecodePixelWidth = width;
-            image.DecodePixelHeight = height;
-            image.EndInit();
-            return image;
+            try
+            {
+                Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+                dlg.Filter = "Files|*.jpg;*.jpeg;*.png;*.gif;";
+                if (dlg.ShowDialog() != true) return null;
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+                image.UriSource = new Uri(dlg.FileName);
+                image.DecodePixelWidth = width;
+                image.DecodePixelHeight = height;
+                image.EndInit();
+                return image;
+            }
+            catch (Exception e) { MessageBox.Show("Could not upload image:\n" + e.Message); }
+            return null;
         }
 
         public static byte[] ImageToBytes(ImageSource image)

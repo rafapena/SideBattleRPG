@@ -25,13 +25,9 @@
             <Button x:Name = "environmentsButton"  Content = "Environments" Click = "GoToEnvironments"/>
             <Button x:Name = "itemsButton" Content = "Items" Click = "GoToItems"/>
             <Button x:Name = "otherListsButton" Content = "Other Lists" Click = "GoToOtherLists"/>
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name = "passiveSkillsButton" Content = "Passive Skills" Click = "GoToPassiveSkills"/>
             <Button x:Name = "platformssButton" Content = "Platforms" Click = "GoToPlatforms"/>
             <Button x:Name = "playersButton" Content = "Players" Click = "GoToPlayers"/>
-            <Button x:Name = "projectilesButton" Content = "Projectiles" Click = "GoToProjectiles"/>
             <Button x:Name = "skillsButton" Content = "Skills" Click = "GoToSkills"/>
             <Button x:Name = "statesButton" Content = "States" Click = "GoToStates"/>
             <Button x:Name = "weaponsButton" Content = "Weapons" Click = "GoToWeapons"/>

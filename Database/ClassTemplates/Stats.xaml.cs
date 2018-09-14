@@ -19,6 +19,8 @@ namespace Database.ClassTemplates
             High = 1;
         }
 
+        protected override void SetupTableData() { }
+
         public void InitializeNew(int initial)
         {
             Initial = initial;

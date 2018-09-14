@@ -17,11 +17,11 @@ namespace Database.Classes
         protected override void SetupTableData()
         {
             ClassChoices.Setup("Player", "BattlerClass", "Possible Classes", new List<string> { "Class" });
-            SkillChoices.Setup("Player", "Skill", "Skill Set", new List<string> { "Skill", "Level" });
+            Skills.Setup("Player", "Skill", "Skill Set", new List<string> { "Skill", "Level" });
             StateRates.Setup("Player", "State", "State Rates", new List<string> { "State", "%" });
             ElementRates.Setup("Player", "TypesLists", "Elements", "Element Rates", new List<string> { "Element", "%" });
             Relations.Setup("Player", "Player", "Compatibilities", new List<string> { "Player", "Comp." });
-            SkillChoices.AttributeName = "LevelRequired";
+            Skills.AttributeName = "LevelRequired";
             StateRates.AttributeName = "Vulnerability";
             ElementRates.AttributeName = "ElementRates";
             Relations.AttributeName = "CompanionshipTo";
@@ -43,7 +43,7 @@ namespace Database.Classes
             string err = Base.ValidateInputs();
             err += NatStats.ValidateInputs(-3, 3);
             err += ClassChoices.ValidateInputs();
-            err += SkillChoices.ValidateInputs();
+            err += Skills.ValidateInputs();
             err += StateRates.ValidateInputs();
             err += ElementRates.ValidateInputs();
             err += Relations.ValidateInputs();
@@ -75,7 +75,7 @@ namespace Database.Classes
             SQLCreate(conn, "BaseObjectID, NaturalStats, ElementRates, Companionship, SavePartnerRate, CounterattackRate, AssistDamageRate",
                 "@BaseObjectID, @NaturalStats, @ElementRates, @Companionship, @SavePartnerRate, @CounterattackRate, @AssistDamageRate");
             ClassChoices.Create(conn);
-            SkillChoices.Create(conn);
+            Skills.Create(conn);
             StateRates.Create(conn);
             Relations.Create(conn);
         }
@@ -85,7 +85,7 @@ namespace Database.Classes
             Base.Read(reader);
             NatStats.Read(reader);
             ClassChoices.Read();
-            SkillChoices.Read();
+            Skills.Read();
             StateRates.Read();
             ElementRates.Read();
             Relations.Read();
@@ -100,7 +100,7 @@ namespace Database.Classes
             Base.Update(conn);
             NatStats.Update(conn);
             ClassChoices.Update(conn);
-            SkillChoices.Update(conn);
+            Skills.Update(conn);
             StateRates.Update(conn);
             ElementRates.Update(conn);
             Relations.Update(conn);
@@ -112,7 +112,7 @@ namespace Database.Classes
             Base.Delete(conn);
             NatStats.Delete(conn);
             ClassChoices.Delete(conn);
-            SkillChoices.Delete(conn);
+            Skills.Delete(conn);
             StateRates.Delete(conn);
             ElementRates.Delete(conn);
             Relations.Delete(conn);
@@ -123,7 +123,7 @@ namespace Database.Classes
             Base.Clone(conn);
             NatStats.Clone(conn);
             ClassChoices.Clone(conn);
-            SkillChoices.Clone(conn);
+            Skills.Clone(conn);
             StateRates.Clone(conn);
             ElementRates.Clone(conn);
             Relations.Clone(conn);

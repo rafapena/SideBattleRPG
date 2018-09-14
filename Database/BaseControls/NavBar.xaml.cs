@@ -41,7 +41,7 @@ namespace Database.BaseControls
         
         private void GoToEnvironments(object sender, EventArgs e)
         {
-            //SetUpFromClick<Environment>();
+            SetUpFromClick<Classes.Environment>();
         }
 
         private void GoToItems(object sender, EventArgs e)
@@ -63,17 +63,12 @@ namespace Database.BaseControls
 
         private void GoToPlatforms(object sender, EventArgs e)
         {
-            //SetUpFromClick<Platforms>();
+            SetUpFromClick<Platform>();
         }
 
         private void GoToPlayers(object sender, EventArgs e)
         {
             SetUpFromClick<Player>();
-        }
-
-        private void GoToProjectiles(object sender, EventArgs e)
-        {
-            //SetUpFromClick<Projectile>();
         }
 
         private void GoToSkills(object sender, EventArgs e)
@@ -88,7 +83,7 @@ namespace Database.BaseControls
 
         private void GoToWeapons(object sender, EventArgs e)
         {
-            //SetUpFromClick<Weapon>();
+            SetUpFromClick<Weapon>();
         }
 
     }

@@ -4,11 +4,11 @@ using Database.Utilities;
 
 namespace Database.Classes
 {
-    public partial class Item : _ClassOperations
+    public partial class Weapon : _ClassOperations
     {
-        private ComboBoxInputData TurnsIntoData;
+        private ComboBoxInputData WeaponTypeData;
 
-        public Item()
+        public Weapon()
         {
             InitializeComponent();
             LinkedTableList = ObjectList;
@@ -18,8 +18,8 @@ namespace Database.Classes
 
         protected override void SetupTableData()
         {
-            TurnsIntoData = new ComboBoxInputData("Item_ID", "Name", "BaseObject JOIN Item", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
-            TurnsIntoInput.ItemsSource = TurnsIntoData.OptionsListNames;
+            WeaponTypeData = new ComboBoxInputData("List_ID", "Name", "TypesLists", "List_Type = 'Weapon Types'", "List_ID");
+            WeaponTypeInput.ItemsSource = WeaponTypeData.OptionsListNames;
         }
 
         protected override void OnInitializeNew()
@@ -27,11 +27,10 @@ namespace Database.Classes
             Base.InitializeNew();
             ToolAttributes.InitializeNew();
             ToolStateRates.InitializeNew();
-            PermanentStatMods.InitializeNew();
-            PermanentStatMods.HostTableAttributeName = "PermStatMods";
+            WeaponTypeInput.SelectedIndex = 0;
+            RangeInput.Text = "2";
             DefaultPriceInput.Text = "100";
-            ConsumableInput.IsChecked = true;
-            TurnsIntoInput.SelectedIndex = 0;
+            DefaultQuantityInput.Text = "0";
         }
 
         public override string ValidateInputs()
@@ -39,8 +38,9 @@ namespace Database.Classes
             string err = Base.ValidateInputs();
             err += ToolAttributes.ValidateInputs();
             err += ToolStateRates.ValidateInputs();
-            err += PermanentStatMods.ValidateInputs(0, 100);
+            if (!Utils.PosInt(RangeInput.Text)) err += "Range must be a positive integer\n";
             if (!Utils.PosInt(DefaultPriceInput.Text)) err += "Default Price must be a positive integer\n";
+            if (!Utils.PosInt(DefaultQuantityInput.Text)) err += "Default Quantity must be a positive integer\n";
             return err;
         }
 
@@ -48,19 +48,18 @@ namespace Database.Classes
         {
             SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
             SQLDB.ParameterizeAttribute("@ToolID", ToolAttributes.ClassTemplateId);
-            SQLDB.ParameterizeAttribute("@PermStatMods", PermanentStatMods.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@WeaponType", WeaponTypeData.SelectedInput(WeaponTypeInput));
+            SQLDB.ParameterizeAttribute("@Range", RangeInput.Text);
             SQLDB.ParameterizeAttribute("@DefaultPrice", DefaultPriceInput.Text);
-            SQLDB.ParameterizeAttribute("@Consumable", (bool)ConsumableInput.IsChecked ? 1 : 0);
-            SQLDB.ParameterizeAttribute("@TurnsInto", TurnsIntoData.SelectedInput(TurnsIntoInput));
+            SQLDB.ParameterizeAttribute("@DefaultQuantity", DefaultQuantityInput.Text);
         }
 
         protected override void OnCreate(SQLiteConnection conn)
         {
             Base.Create(conn);
-            PermanentStatMods.Create(conn);
             ToolAttributes.Create(conn);
-            SQLCreate(conn, "BaseObjectID, ToolID, PermStatMods, DefaultPrice, Consumable, TurnsInto",
-                "@BaseObjectID, @ToolID, @PermStatMods, @DefaultPrice, @Consumable, @TurnsInto");
+            SQLCreate(conn, "BaseObjectID, ToolID, WeaponType, Range, DefaultPrice, DefaultQuantity",
+                "@BaseObjectID, @ToolID, @WeaponType, @Range, @DefaultPrice, @DefaultQuantity");
             ToolStateRates.Create(conn);
         }
 
@@ -69,10 +68,10 @@ namespace Database.Classes
             Base.Read(reader);
             ToolAttributes.Read(reader);
             ToolStateRates.Read(reader);
-            PermanentStatMods.Read(reader);
+            WeaponTypeInput.SelectedIndex = WeaponTypeData.FindIndex(reader["WeaponType"]);
+            RangeInput.Text = reader["Range"].ToString();
             DefaultPriceInput.Text = reader["DefaultPrice"].ToString();
-            ConsumableInput.IsChecked = reader["Consumable"].ToString() == "True" ? true : false;
-            TurnsIntoInput.SelectedIndex = TurnsIntoData.FindIndex(reader["TurnsInto"]);
+            DefaultQuantityInput.Text = reader["DefaultQuantity"].ToString();
         }
 
         protected override void OnUpdate(SQLiteConnection conn)
@@ -80,8 +79,7 @@ namespace Database.Classes
             Base.Update(conn);
             ToolAttributes.Update(conn);
             ToolStateRates.Update(conn);
-            PermanentStatMods.Update(conn);
-            SQLUpdate(conn, "DefaultPrice = @DefaultPrice, Consumable = @Consumable, TurnsInto = @TurnsInto");
+            SQLUpdate(conn, "WeaponType = @WeaponType, Range = @Range, DefaultPrice = @DefaultPrice, DefaultQuantity = @DefaultQuantity");
         }
 
         protected override void OnDelete(SQLiteConnection conn)
@@ -89,7 +87,6 @@ namespace Database.Classes
             Base.Delete(conn);
             ToolAttributes.Delete(conn);
             ToolStateRates.Delete(conn);
-            PermanentStatMods.Delete(conn);
         }
 
         protected override void OnClone(SQLiteConnection conn)
@@ -97,7 +94,6 @@ namespace Database.Classes
             Base.Clone(conn);
             ToolAttributes.Clone(conn);
             ToolStateRates.Clone(conn);
-            PermanentStatMods.Clone(conn);
         }
     }
 }

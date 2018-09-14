@@ -24,14 +24,14 @@ namespace Database.Utilities
         public static int CurrentId { get; set; }
 
         // For handling input parameters: deals with injection attacks
-        public static List<SQLiteParameter> Inputs { get; private set; }
-        public static List<BlobInput> BlobInputs { get; private set; }
-        public class BlobInput
+        public static List<SQLiteParameter> Attributes { get; private set; }
+        public static List<BlobAttribute> BlobAttributes { get; private set; }
+        public class BlobAttribute
         {
             public string Name { get; private set; }
             public byte[] Data { get; private set; }
             public int Size { get; private set; }
-            public BlobInput(string name, byte[] data, int size)
+            public BlobAttribute(string name, byte[] data, int size)
             {
                 Name = name;
                 Data = data;
@@ -42,20 +42,20 @@ namespace Database.Utilities
         // Deals with sanitizing across the object operations Create(), Update(), and Clone()
         public static void ResetParameterizedAttributes()
         {
-            Inputs = new List<SQLiteParameter>();
-            BlobInputs = new List<BlobInput>();
+            Attributes = new List<SQLiteParameter>();
+            BlobAttributes = new List<BlobAttribute>();
         }
         public static void ParameterizeAttribute(string name, string value)
         {
-            Inputs.Add(new SQLiteParameter(name, value));
+            Attributes.Add(new SQLiteParameter(name, value));
         }
         public static void ParameterizeAttribute(string name, int value)
         {
-            Inputs.Add(new SQLiteParameter(name, value));
+            Attributes.Add(new SQLiteParameter(name, value));
         }
-        public static void ParameterizeBlobInput(string name, byte[] value, int size)
+        public static void ParameterizeBlobAttribute(string name, byte[] value, int size)
         {
-            BlobInputs.Add(new BlobInput(name, value, size));
+            BlobAttributes.Add(new BlobAttribute(name, value, size));
         }
 
 
@@ -80,10 +80,10 @@ namespace Database.Utilities
         {
             using (var comm = new SQLiteCommand(sqlCommand, conn))
             {
-                if (Inputs != null && Inputs.Count > 0) comm.Parameters.AddRange(Inputs.ToArray());
-                if (BlobInputs != null)
-                    for (int i = 0; i < BlobInputs.Count; i++)
-                        comm.Parameters.Add(BlobInputs[i].Name, DbType.Binary, 4 * BlobInputs[i].Size).Value = BlobInputs[i].Data;
+                if (Attributes != null && Attributes.Count > 0) comm.Parameters.AddRange(Attributes.ToArray());
+                if (BlobAttributes != null)
+                    for (int i = 0; i < BlobAttributes.Count; i++)
+                        comm.Parameters.Add(BlobAttributes[i].Name, DbType.Binary, 4 * BlobAttributes[i].Size).Value = BlobAttributes[i].Data;
                 comm.CommandType = CommandType.Text;
                 comm.ExecuteNonQuery();
             }

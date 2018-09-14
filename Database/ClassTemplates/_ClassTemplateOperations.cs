@@ -17,7 +17,7 @@ namespace Database.ClassTemplates
         public string HostTableAttributeName { get; set; }  // The forirgn key attribute of the host table
 
 
-        protected virtual void SetupTableData() { }
+        protected abstract void SetupTableData();
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {
