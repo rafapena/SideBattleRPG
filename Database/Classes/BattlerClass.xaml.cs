@@ -19,19 +19,19 @@ namespace Database.Classes
         protected override void SetupTableData()
         {
             Skills.Setup("BattlerClass", "Skill", "Skill Set", new List<string> { "Skill", "Level" });
-            PassiveSkill1Data = new ComboBoxInputData("PassiveSkill_ID", "Name", "BaseObject JOIN PassiveSkill", "BaseObject_ID = BaseObjectID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
-            PassiveSkill2Data = new ComboBoxInputData("PassiveSkill_ID", "Name", "BaseObject JOIN PassiveSkill", "BaseObject_ID = BaseObjectID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
             UpgradedClass1Data = new ComboBoxInputData("BattlerClass_ID", "Name", "BaseObject JOIN BattlerClass", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
             UpgradedClass2Data = new ComboBoxInputData("BattlerClass_ID", "Name", "BaseObject JOIN BattlerClass", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
             UsableWeaponType1Data = new ComboBoxInputData("List_ID", "Name", "TypesLists", "List_Type = 'Weapon Types'", "List_ID", ComboBoxInputData.ADD_NULL_INPUT);
             UsableWeaponType2Data = new ComboBoxInputData("List_ID", "Name", "TypesLists", "List_Type = 'Weapon Types'", "List_ID", ComboBoxInputData.ADD_NULL_INPUT);
+            PassiveSkill1Data = new ComboBoxInputData("PassiveSkill_ID", "Name", "BaseObject JOIN PassiveSkill", "BaseObject_ID = BaseObjectID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
+            PassiveSkill2Data = new ComboBoxInputData("PassiveSkill_ID", "Name", "BaseObject JOIN PassiveSkill", "BaseObject_ID = BaseObjectID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
             Skills.AttributeName = "LevelRequired";
-            PassiveSkill1Input.ItemsSource = PassiveSkill1Data.OptionsListNames;
-            PassiveSkill2Input.ItemsSource = PassiveSkill2Data.OptionsListNames;
             UpgradedClass1Input.ItemsSource = UpgradedClass1Data.OptionsListNames;
             UpgradedClass2Input.ItemsSource = UpgradedClass2Data.OptionsListNames;
             UsableWeaponType1Input.ItemsSource = UsableWeaponType1Data.OptionsListNames;
             UsableWeaponType2Input.ItemsSource = UsableWeaponType2Data.OptionsListNames;
+            PassiveSkill1Input.ItemsSource = PassiveSkill1Data.OptionsListNames;
+            PassiveSkill2Input.ItemsSource = PassiveSkill2Data.OptionsListNames;
         }
 
         protected override void OnInitializeNew()

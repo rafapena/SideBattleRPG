@@ -24,28 +24,36 @@
                         </TabItem>
 
                         <TabItem Header="Map Images">
-                            <StackPanel Margin="5 5 5 5">
-                                <Border BorderThickness="0.5" BorderBrush="Black" Width="150" Height="150">
-                                    <Image x:Name="MapForegroundInput" Width="150" Height="150"/>
-                                </Border>
-                                <Button x:Name="SelectMapForegroundInput" Content="Select Map Foreground" Margin="0,5,0,0" Click="SelectMapForeground" Width="150"/>
-                                <Border BorderThickness="0.5" BorderBrush="Black" Margin="0 20 0 0" Width="150" Height="150">
-                                    <Image x:Name="MapBackgroundInput" Width="150" Height="150"/>
-                                </Border>
-                                <Button x:Name="SelectMapBackgroundInput" Content="Select Map Background" Margin="0,5,0,0" Click="SelectMapBackground" Width="150"/>
+                            <StackPanel Orientation="Horizontal" Margin="5 5 5 5">
+                                <StackPanel>
+                                    <Border BorderThickness="0.5" BorderBrush="Black" Width="150" Height="150">
+                                        <Image x:Name="MapForegroundInput" Width="150" Height="150"/>
+                                    </Border>
+                                    <Button x:Name="SelectMapForegroundInput" Content="Select Map Foreground" Margin="0,5,0,0" Click="SelectMapForeground" Width="150"/>
+                                </StackPanel>
+                                <StackPanel Margin="15 0 0 0">
+                                    <Border BorderThickness="0.5" BorderBrush="Black" Width="150" Height="150">
+                                        <Image x:Name="MapBackgroundInput" Width="150" Height="150"/>
+                                    </Border>
+                                    <Button x:Name="SelectMapBackgroundInput" Content="Select Map Background" Margin="0,5,0,0" Click="SelectMapBackground" Width="150"/>
+                                </StackPanel>
                             </StackPanel>
                         </TabItem>
 
                         <TabItem Header="Battle Images">
-                            <StackPanel Margin="5 5 5 5">
-                                <Border BorderThickness="0.5" BorderBrush="Black" Width="200" Height="120">
-                                    <Image x:Name="BattleForegroundInput" Width="200" Height="120"/>
-                                </Border>
-                                <Button x:Name="SelectBattleForegroundInput" Content="Select Battle Foreground" Margin="0,5,0,0" Click="SelectBattleForeground" Width="150"/>
-                                <Border BorderThickness="0.5" BorderBrush="Black" Margin="0 20 0 0" Width="200" Height="120">
-                                    <Image x:Name="BattleBackgroundInput" Width="200" Height="120"/>
-                                </Border>
-                                <Button x:Name="SelectBattleBackgroundInput" Content="Select Battle Background" Margin="0,5,0,0" Click="SelectBattleBackground" Width="150"/>
+                            <StackPanel Orientation="Horizontal" Margin="5 5 5 5">
+                                <StackPanel>
+                                    <Border BorderThickness="0.5" BorderBrush="Black" Width="200" Height="120">
+                                        <Image x:Name="BattleForegroundInput" Width="200" Height="120"/>
+                                    </Border>
+                                    <Button x:Name="SelectBattleForegroundInput" Content="Select Battle Foreground" Margin="0,5,0,0" Click="SelectBattleForeground" Width="150"/>
+                                </StackPanel>
+                                <StackPanel Margin="15 0 0 0">
+                                    <Border BorderThickness="0.5" BorderBrush="Black" Width="200" Height="120">
+                                        <Image x:Name="BattleBackgroundInput" Width="200" Height="120"/>
+                                    </Border>
+                                    <Button x:Name="SelectBattleBackgroundInput" Content="Select Battle Background" Margin="0,5,0,0" Click="SelectBattleBackground" Width="150"/>
+                                </StackPanel>
                             </StackPanel>
                         </TabItem>
 

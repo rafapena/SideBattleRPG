@@ -16,14 +16,6 @@ using System.Data.SQLite;
 using Database.BaseControls;
 using Database.Utilities;
 
-/*
- * OtherLists
- * Skill/Tool Animations
- * Skill/Tools Animation Combos
- * State Animations
- * Event Control Flow
-*/
-
 namespace Database.ClassesUnstructured
 {
     public abstract class _ClassUnstructuredOperations : Page, ObjectPageOperations

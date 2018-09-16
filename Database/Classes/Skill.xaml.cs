@@ -57,7 +57,7 @@ namespace Database.Classes
             SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
             SQLDB.ParameterizeAttribute("@ToolID", ToolAttributes.ClassTemplateId);
             SQLDB.ParameterizeAttribute("@SPConsume", SPConsumeInput.Text);
-            SQLDB.ParameterizeAttribute("@NumberOfUsers", NumberOfUsersOptions[NumberOfUsersInput.SelectedIndex]);
+            SQLDB.ParameterizeAttribute("@NumberOfUsers", NumberOfUsersInput.SelectedIndex.ToString());
             SQLDB.ParameterizeAttribute("@Charge", ChargeInput.Text);
             SQLDB.ParameterizeAttribute("@WarmUp", WarmUpInput.Text);
             SQLDB.ParameterizeAttribute("@CoolDown", CoolDownInput.Text);
@@ -83,7 +83,7 @@ namespace Database.Classes
             PlayerSummons.Read();
             EnemySummons.Read();
             SPConsumeInput.Text = reader["SPConsume"].ToString();
-            NumberOfUsersInput.SelectedIndex = NumberOfUsersOptions.FindIndex(a => a == reader["NumberOfUsers"].ToString());
+            NumberOfUsersInput.SelectedIndex = int.Parse(reader["NumberOfUsers"].ToString());
             ChargeInput.Text = reader["Charge"].ToString();
             WarmUpInput.Text = reader["WarmUp"].ToString();
             CoolDownInput.Text = reader["CoolDown"].ToString();

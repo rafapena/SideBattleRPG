@@ -27,8 +27,11 @@ namespace Database.Classes
             Base.InitializeNew();
             ToolAttributes.InitializeNew();
             ToolStateRates.InitializeNew();
+            EquipBoosts.InitializeNew();
+            EquipBoosts.HostTableAttributeName = "EquipBoosts";
             WeaponTypeInput.SelectedIndex = 0;
             RangeInput.Text = "2";
+            CollideRangeInput.IsChecked = true;
             DefaultPriceInput.Text = "100";
             DefaultQuantityInput.Text = "0";
         }
@@ -38,6 +41,7 @@ namespace Database.Classes
             string err = Base.ValidateInputs();
             err += ToolAttributes.ValidateInputs();
             err += ToolStateRates.ValidateInputs();
+            err += EquipBoosts.ValidateInputs(0, 500);
             if (!Utils.PosInt(RangeInput.Text)) err += "Range must be a positive integer\n";
             if (!Utils.PosInt(DefaultPriceInput.Text)) err += "Default Price must be a positive integer\n";
             if (!Utils.PosInt(DefaultQuantityInput.Text)) err += "Default Quantity must be a positive integer\n";
@@ -48,8 +52,10 @@ namespace Database.Classes
         {
             SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
             SQLDB.ParameterizeAttribute("@ToolID", ToolAttributes.ClassTemplateId);
+            SQLDB.ParameterizeAttribute("@EquipBoosts", EquipBoosts.ClassTemplateId);
             SQLDB.ParameterizeAttribute("@WeaponType", WeaponTypeData.SelectedInput(WeaponTypeInput));
             SQLDB.ParameterizeAttribute("@Range", RangeInput.Text);
+            SQLDB.ParameterizeAttribute("@CollideRange", (bool)CollideRangeInput.IsChecked ? 1 : 0);
             SQLDB.ParameterizeAttribute("@DefaultPrice", DefaultPriceInput.Text);
             SQLDB.ParameterizeAttribute("@DefaultQuantity", DefaultQuantityInput.Text);
         }
@@ -57,9 +63,10 @@ namespace Database.Classes
         protected override void OnCreate(SQLiteConnection conn)
         {
             Base.Create(conn);
+            EquipBoosts.Create(conn);
             ToolAttributes.Create(conn);
-            SQLCreate(conn, "BaseObjectID, ToolID, WeaponType, Range, DefaultPrice, DefaultQuantity",
-                "@BaseObjectID, @ToolID, @WeaponType, @Range, @DefaultPrice, @DefaultQuantity");
+            SQLCreate(conn, "BaseObjectID, ToolID, EquipBoosts, WeaponType, Range, CollideRange, DefaultPrice, DefaultQuantity",
+                "@BaseObjectID, @ToolID, @EquipBoosts, @WeaponType, @Range, @CollideRange, @DefaultPrice, @DefaultQuantity");
             ToolStateRates.Create(conn);
         }
 
@@ -68,8 +75,10 @@ namespace Database.Classes
             Base.Read(reader);
             ToolAttributes.Read(reader);
             ToolStateRates.Read(reader);
+            EquipBoosts.Read(reader);
             WeaponTypeInput.SelectedIndex = WeaponTypeData.FindIndex(reader["WeaponType"]);
             RangeInput.Text = reader["Range"].ToString();
+            CollideRangeInput.IsChecked = reader["CollideRange"].ToString() == "True" ? true : false;
             DefaultPriceInput.Text = reader["DefaultPrice"].ToString();
             DefaultQuantityInput.Text = reader["DefaultQuantity"].ToString();
         }
@@ -79,7 +88,8 @@ namespace Database.Classes
             Base.Update(conn);
             ToolAttributes.Update(conn);
             ToolStateRates.Update(conn);
-            SQLUpdate(conn, "WeaponType = @WeaponType, Range = @Range, DefaultPrice = @DefaultPrice, DefaultQuantity = @DefaultQuantity");
+            EquipBoosts.Update(conn);
+            SQLUpdate(conn, "WeaponType = @WeaponType, Range = @Range, CollideRange = @CollideRange, DefaultPrice = @DefaultPrice, DefaultQuantity = @DefaultQuantity");
         }
 
         protected override void OnDelete(SQLiteConnection conn)
@@ -87,6 +97,7 @@ namespace Database.Classes
             Base.Delete(conn);
             ToolAttributes.Delete(conn);
             ToolStateRates.Delete(conn);
+            EquipBoosts.Delete(conn);
         }
 
         protected override void OnClone(SQLiteConnection conn)
@@ -94,6 +105,7 @@ namespace Database.Classes
             Base.Clone(conn);
             ToolAttributes.Clone(conn);
             ToolStateRates.Clone(conn);
+            EquipBoosts.Clone(conn);
         }
     }
 }

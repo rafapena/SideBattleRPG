@@ -16,7 +16,7 @@
             <control:NavBar/>
             <TextBlock Text="Other Lists" FontWeight="Bold" FontSize="20" HorizontalAlignment="Center"/>
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <StackPanel.Resources>
                     <Style TargetType="table:TypeList">
                         <Setter Property="VerticalAlignment" Value="Top"/>

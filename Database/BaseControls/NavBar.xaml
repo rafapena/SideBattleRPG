@@ -13,6 +13,7 @@
             <Style TargetType="Button">
                 <Setter Property="Margin" Value="2,1,2,1"/>
                 <Setter Property="Background" Value="#88aacc"/>
+                <Setter Property="Width" Value="80"/>
             </Style>
         </StackPanel.Resources>
 

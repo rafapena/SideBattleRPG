@@ -7,6 +7,9 @@ namespace Database.Classes
     public partial class PassiveSkill : _ClassOperations
     {
         private ComboBoxInputData StateActive1Data, StateActive2Data, StateInactive1Data, StateInactive2Data;
+        private List<string> AllyConditionOptions = new List<string> { "None", "No allies", "One ally", "All allies" };
+        private List<string> FoeConditionOptions = new List<string> { "None", "No foes", "One foe", "All foes" };
+        private List<string> UserConditionOptions = new List<string> { "None", "Cannot meet", "Must meet" };
 
         public PassiveSkill()
         {
@@ -26,6 +29,9 @@ namespace Database.Classes
             StateActive2Input.ItemsSource = StateActive2Data.OptionsListNames;
             StateInactive1Input.ItemsSource = StateInactive1Data.OptionsListNames;
             StateInactive2Input.ItemsSource = StateInactive2Data.OptionsListNames;
+            AllyConditionInput.ItemsSource = AllyConditionOptions;
+            FoeConditionInput.ItemsSource = FoeConditionOptions;
+            UserConditionInput.ItemsSource = UserConditionOptions;
         }
 
         protected override void OnInitializeNew()
@@ -47,6 +53,9 @@ namespace Database.Classes
             StateInactive2Input.SelectedIndex = 0;
             ExpGainRateInput.Text = "100";
             GoldGainRateInput.Text = "100";
+            AllyConditionInput.SelectedIndex = 0;
+            FoeConditionInput.SelectedIndex = 0;
+            UserConditionInput.SelectedIndex = 2;
         }
 
         public override string ValidateInputs()
@@ -90,6 +99,9 @@ namespace Database.Classes
             SQLDB.ParameterizeAttribute("@StateInactive2", StateInactive2Data.SelectedInput(StateInactive2Input));
             SQLDB.ParameterizeAttribute("@ExpGainRate", ExpGainRateInput.Text);
             SQLDB.ParameterizeAttribute("@GoldGainRate", GoldGainRateInput.Text);
+            SQLDB.ParameterizeAttribute("@AllyCondition", AllyConditionInput.SelectedIndex.ToString());
+            SQLDB.ParameterizeAttribute("@FoeCondition", FoeConditionInput.SelectedIndex.ToString());
+            SQLDB.ParameterizeAttribute("@UserCondition", UserConditionInput.SelectedIndex.ToString());
         }
 
         protected override void OnCreate(SQLiteConnection conn)
@@ -99,9 +111,9 @@ namespace Database.Classes
             PassiveEffectRates.Create(conn);
             StatMods.Create(conn);
             SQLCreate(conn, "BaseObjectID, PassiveEffectID, StatModifiers, HPMin, HPMax, SPMin, SPMax, AnyState, NoState, " +
-                "StateActive1, StateActive2, StateInactive1, StateInactive2, ExpGainRate, GoldGainRate",
+                "StateActive1, StateActive2, StateInactive1, StateInactive2, ExpGainRate, GoldGainRate, AllyCondition, FoeCondition, UserCondition",
                 "@BaseObjectID, @PassiveEffectID, @StatModifiers, @HPMin, @HPMax, @SPMin, @SPMax, @AnyState, @NoState, " +
-                "@StateActive1, @StateActive2, @StateInactive1, @StateInactive2, @ExpGainRate, @GoldGainRate");
+                "@StateActive1, @StateActive2, @StateInactive1, @StateInactive2, @ExpGainRate, @GoldGainRate, @AllyCondition, @FoeCondition, @UserCondition");
         }
 
         protected override void OnRead(SQLiteDataReader reader)
@@ -122,6 +134,9 @@ namespace Database.Classes
             StateInactive2Input.SelectedIndex = StateInactive2Data.FindIndex(reader["StateInactive2"]);
             ExpGainRateInput.Text = reader["ExpGainRate"].ToString();
             GoldGainRateInput.Text = reader["GoldGainRate"].ToString();
+            AllyConditionInput.SelectedIndex = int.Parse(reader["AllyCondition"].ToString());
+            FoeConditionInput.SelectedIndex = int.Parse(reader["FoeCondition"].ToString());
+            UserConditionInput.SelectedIndex = int.Parse(reader["UserCondition"].ToString());
         }
 
         protected override void OnUpdate(SQLiteConnection conn)
@@ -132,7 +147,8 @@ namespace Database.Classes
             StatMods.Update(conn);
             SQLUpdate(conn, "BaseObjectID=@BaseObjectID, PassiveEffectID=@PassiveEffectID, StatModifiers=@StatModifiers, HPMin=@HPMin, HPMax=@HPMax, " +
                 "SPMin=@SPMin, SPMax=@SPMax, AnyState=@AnyState, NoState=@NoState, StateActive1=@StateActive1, StateActive2=@StateActive2, " +
-                "StateInactive1=@StateInactive1, StateInactive2=@StateInactive2, ExpGainRate=@ExpGainRate, GoldGainRate=@GoldGainRate");
+                "StateInactive1=@StateInactive1, StateInactive2=@StateInactive2, ExpGainRate=@ExpGainRate, GoldGainRate=@GoldGainRate, " +
+                "AllyCondition=@AllyCondition, FoeCondition=@FoeCondition, UserCondition=@UserCondition");
         }
 
         protected override void OnDelete(SQLiteConnection conn)

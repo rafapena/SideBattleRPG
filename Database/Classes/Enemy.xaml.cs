@@ -36,8 +36,8 @@ namespace Database.Classes
             Base.InitializeNew();
             ScaledStats.InitializeNew(0);
             ScaledStats.HostTableAttributeName = "ScaledStats";
-            WidthInput.SelectedIndex = 0;
-            HeightInput.SelectedIndex = 0;
+            WidthInput.SelectedIndex = 1;
+            HeightInput.SelectedIndex = 1;
             BossTypeInput.SelectedIndex = 0;
             FlyingInput.IsChecked = false;
             ExpInput.Text = "50";
@@ -71,8 +71,8 @@ namespace Database.Classes
             SQLDB.ParameterizeAttribute("@ScaledStats", ScaledStats.ClassTemplateId);
             SQLDB.ParameterizeAttribute("@EnemyClass", EnemyClassData.SelectedInput(EnemyClassInput));
             SQLDB.ParameterizeAttribute("@ElementRates", ElementRates.StringList);
-            SQLDB.ParameterizeAttribute("@Width", SizeOptions[WidthInput.SelectedIndex].ToString());
-            SQLDB.ParameterizeAttribute("@Height", SizeOptions[HeightInput.SelectedIndex].ToString());
+            SQLDB.ParameterizeAttribute("@Width", WidthInput.SelectedIndex.ToString());
+            SQLDB.ParameterizeAttribute("@Height", HeightInput.SelectedIndex.ToString());
             SQLDB.ParameterizeAttribute("@BossType", BossTypeInput.SelectedIndex.ToString());
             SQLDB.ParameterizeAttribute("@Flying", (bool)FlyingInput.IsChecked ? 1 : 0);
             SQLDB.ParameterizeAttribute("@Exp", ExpInput.Text);
@@ -96,8 +96,8 @@ namespace Database.Classes
             EnemyClassInput.SelectedIndex = EnemyClassData.FindIndex(reader["EnemyClass"]);
             ElementRates.Read();
             StateRates.Read();
-            WidthInput.SelectedIndex = SizeOptions.FindIndex(a => a == reader["Width"].ToString());
-            HeightInput.SelectedIndex = SizeOptions.FindIndex(a => a == reader["Height"].ToString());
+            WidthInput.SelectedIndex = int.Parse(reader["Width"].ToString());
+            HeightInput.SelectedIndex = int.Parse(reader["Height"].ToString());
             BossTypeInput.SelectedIndex = int.Parse(reader["BossType"].ToString());
             FlyingInput.IsChecked = reader["Flying"].ToString() == "True" ? true : false;
             ExpInput.Text = reader["Exp"].ToString();

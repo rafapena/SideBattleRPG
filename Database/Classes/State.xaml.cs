@@ -25,6 +25,7 @@ namespace Database.Classes
             StatMods.HostTableAttributeName = "StatModifiers";
             MaxStackInput.Text = "1";
             StepsToRemoveInput.Text = "0";
+            SpreadOnContactInput.IsChecked = false;
             StunInput.IsChecked = false;
             PetrifyInput.IsChecked = false;
             KOInput.IsChecked = false;
@@ -48,6 +49,7 @@ namespace Database.Classes
             SQLDB.ParameterizeAttribute("@StatModifiers", StatMods.ClassTemplateId);
             SQLDB.ParameterizeAttribute("@MaxStack", MaxStackInput.Text);
             SQLDB.ParameterizeAttribute("@StepsToRemove", StepsToRemoveInput.Text);
+            SQLDB.ParameterizeAttribute("@SpreadOnContact", (bool)SpreadOnContactInput.IsChecked ? 1 : 0);
             SQLDB.ParameterizeAttribute("@Stun", (bool)StunInput.IsChecked ? 1 : 0);
             SQLDB.ParameterizeAttribute("@Petrify", (bool)PetrifyInput.IsChecked ? 1 : 0);
             SQLDB.ParameterizeAttribute("@KO", (bool)KOInput.IsChecked ? 1 : 0);
@@ -59,8 +61,8 @@ namespace Database.Classes
             PassiveEffectAttributes.Create(conn);
             PassiveEffectRates.Create(conn);
             StatMods.Create(conn);
-            SQLCreate(conn, "BaseObjectID, PassiveEffectID, StatModifiers, MaxStack, StepsToRemove, Stun, Petrify, KO",
-                "@BaseObjectID, @PassiveEffectID, @StatModifiers, @MaxStack, @StepsToRemove, @Stun, @Petrify, @KO");
+            SQLCreate(conn, "BaseObjectID, PassiveEffectID, StatModifiers, MaxStack, StepsToRemove, SpreadOnContact, Stun, Petrify, KO",
+                "@BaseObjectID, @PassiveEffectID, @StatModifiers, @MaxStack, @StepsToRemove, @SpreadOnContact, @Stun, @Petrify, @KO");
         }
 
         protected override void OnRead(SQLiteDataReader reader)
@@ -71,6 +73,7 @@ namespace Database.Classes
             StatMods.Read(reader);
             MaxStackInput.Text = reader["MaxStack"].ToString();
             StepsToRemoveInput.Text = reader["StepsToRemove"].ToString();
+            SpreadOnContactInput.IsChecked = reader["SpreadOnContact"].ToString() == "True" ? true : false; ;
             StunInput.IsChecked = reader["Stun"].ToString() == "True" ? true : false; ;
             PetrifyInput.IsChecked = reader["Petrify"].ToString() == "True" ? true : false; ;
             KOInput.IsChecked = reader["KO"].ToString() == "True" ? true : false; ;
@@ -82,7 +85,7 @@ namespace Database.Classes
             PassiveEffectAttributes.Update(conn);
             PassiveEffectRates.Update(conn);
             StatMods.Update(conn);
-            SQLUpdate(conn, "MaxStack = @MaxStack, StepsToRemove = @StepsToRemove, Stun = @Stun, Petrify = @Petrify, KO = @KO");
+            SQLUpdate(conn, "MaxStack = @MaxStack, StepsToRemove = @StepsToRemove, SpreadOnContact = @SpreadOnContact, Stun = @Stun, Petrify = @Petrify, KO = @KO");
         }
 
         protected override void OnDelete(SQLiteConnection conn)
