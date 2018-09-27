@@ -3,11 +3,6 @@ using System.Windows.Controls;
 using System.Data.SQLite;
 using Database.Utilities;
 
-/*
- * Tools <-- Superclass for skills, items, and weapons
- * States <-- Superclass for passive skills
-*/
-
 namespace Database.ClassTemplates
 {
     public abstract class _ClassTemplateOperations : UserControl, ObjectTemplateOperations

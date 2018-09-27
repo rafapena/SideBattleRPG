@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{53865B18-9097-467B-9582-F80247F8228A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnemyBattleSimluator", "EnemyBattleSimluator\EnemyBattleSimluator.csproj", "{D181033F-83A9-4D7E-A168-173B131BA95F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleSimluator", "EnemyBattleSimluator\BattleSimluator.csproj", "{D181033F-83A9-4D7E-A168-173B131BA95F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapBuilder", "MapBuilder\MapBuilder.csproj", "{5E4DC518-E3FD-4BA2-94C9-2BD8EA369852}"
 EndProject

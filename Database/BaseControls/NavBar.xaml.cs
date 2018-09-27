@@ -29,6 +29,11 @@ namespace Database.BaseControls
             SetUpFromClick<Achievement>();
         }
 
+        private void GoToBattles(object sender, EventArgs e)
+        {
+            SetUpFromClick<Battle>();
+        }
+
         private void GoToBattlerClasses(object sender, EventArgs e)
         {
             SetUpFromClick<BattlerClass>();
@@ -38,7 +43,7 @@ namespace Database.BaseControls
         {
             SetUpFromClick<Enemy>();
         }
-        
+
         private void GoToEnvironments(object sender, EventArgs e)
         {
             SetUpFromClick<Classes.Environment>();

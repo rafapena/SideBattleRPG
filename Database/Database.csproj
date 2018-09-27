@@ -117,6 +117,9 @@
     <Compile Include="Classes\Platform.xaml.cs">
       <DependentUpon>Platform.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\Battle.xaml.cs">
+      <DependentUpon>Battle.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Classes\_GenericClass.xaml.cs">
       <DependentUpon>_GenericClass.xaml</DependentUpon>
     </Compile>
@@ -151,6 +154,9 @@
     <Compile Include="ClassTemplates\PassiveEffectAttributes.xaml.cs">
       <DependentUpon>PassiveEffectAttributes.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ClassTemplates\BattleEnemy.xaml.cs">
+      <DependentUpon>BattleEnemy.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ClassTemplates\_GenericClassTemplate.xaml.cs">
       <DependentUpon>_GenericClassTemplate.xaml</DependentUpon>
     </Compile>
@@ -163,6 +169,9 @@
     </Compile>
     <Compile Include="TableTemplates\DualInputDBTable.xaml.cs">
       <DependentUpon>DualInputDBTable.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TableTemplates\BattleEnemyTool.xaml.cs">
+      <DependentUpon>BattleEnemyTool.xaml</DependentUpon>
     </Compile>
     <Compile Include="TableTemplates\_GenericTableTemplate.xaml.cs">
       <DependentUpon>_GenericTableTemplate.xaml</DependentUpon>
@@ -218,6 +227,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Classes\Battle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Classes\_GenericClass.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -239,6 +252,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ClassTemplates\PassiveEffectAttributes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ClassTemplates\BattleEnemy.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -287,6 +304,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="TableTemplates\DualInputDBTable.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TableTemplates\BattleEnemyTool.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
