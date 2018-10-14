@@ -7,7 +7,7 @@ using System.Data.SQLite;
 namespace Database.Utilities
 {
     /// <summary>
-    /// This class stores extra input data for the combo boxes that need to hold values from the database.
+    /// This class stores extra input data for the combo boxes that need to hold values directly from the database.
     /// When the combo box input data is initialized, the options list ids and names are populated by the following query:
     /// 
     /// SELECT idAttribute, nameAttribute
@@ -72,13 +72,15 @@ namespace Database.Utilities
 
 
         // The four functions below are only for tables of combo boxes
-        public void AddToSelectedIds(int i) { SelectedIds.Add(OptionsListIds[i]); }
         public void RemoveFromSelectedIds() { SelectedIds.RemoveAt(SelectedIds.Count - 1); }
 
         public ComboBox CreateInput(int row, int col, int landingIndex)
         {
             if (OptionsListNames == null && landingIndex >= OptionsListNames.Count) return null;
-            return TableBuilder.ComboBox("CB_" + SelectedIds.Count, OptionsListNames, landingIndex, row, col, UpdateSelectedIds);
+            ComboBox cb = TableBuilder.ComboBox("CB_" + SelectedIds.Count, OptionsListNames, landingIndex, row, col, UpdateSelectedIds);
+            cb.Width = 120;
+            SelectedIds.Add(OptionsListIds[landingIndex]);
+            return cb;
         }
         private void UpdateSelectedIds(object sender, EventArgs e)
         {

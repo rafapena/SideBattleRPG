@@ -16,13 +16,13 @@ namespace Database.Classes
 
         protected override void SetupTableData()
         {
-            //table1.Setup(hostDBTable, targetDBTable, title, new List<string> { "colunmName1", "columnName2" });   // For DBTables
-            //table2.Setup(hostDBTable, targetDBTable, List_Type, title, new List<string> { "colunmName1", "columnName2" }); // For TypesLists
+            Enemies.Setup("Battle", "Enemy", "Enemies", new List<string> { "Enemy", "Position", "Mods", "Tools" }, 300);
         }
 
         protected override void OnInitializeNew()
         {
             Base.InitializeNew();
+            Enemies.InitializeNew();
             //attr1Input.Text = "";
             //attr2Image.Source = null;
         }
@@ -30,6 +30,7 @@ namespace Database.Classes
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();
+            err += Enemies.ValidateInputs();
             //if (!Utils.InRequiredLength(Utils.CutSpaces(attr1Input.Text))) err += "attr1 must have 1 to 16 characters";
             //if (!Utils.PosInt(attr2Input.Text)) err += "attr2 must be a positive integer";
             //if (!Utils.NumberBetween(attr3Input.Text, 1, 100)) err += "attr3 must be a number between 1 and 100";
@@ -48,12 +49,14 @@ namespace Database.Classes
             Base.Create(conn);
             // Create DualInput TypeLists
             SQLCreate(conn, "BaseObjectID, attr1, attr2", "@BaseObjectID, @attr1, @attr2");
+            Enemies.Create(conn);
             // Create Dual Input Classes
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
             Base.Read(reader);
+            Enemies.Read();
             //attr1Input.Text = int.Parse(reader["IntegerAttr"].ToString());
             //attr2Input.Text = reader["StringAttr"].ToString();
         }
@@ -61,17 +64,20 @@ namespace Database.Classes
         protected override void OnUpdate(SQLiteConnection conn)
         {
             Base.Update(conn);
+            Enemies.Update(conn);
             SQLUpdate(conn, "attr1 = @attr1, attr2 = @attr2");
         }
 
         protected override void OnDelete(SQLiteConnection conn)
         {
             Base.Delete(conn);
+            Enemies.Delete(conn);
         }
 
         protected override void OnClone(SQLiteConnection conn)
         {
             Base.Clone(conn);
+            Enemies.Clone(conn);
         }
     }
 }

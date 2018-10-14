@@ -4,6 +4,7 @@ using System.Windows.Media.Imaging;
 using System.Data.SQLite;
 using Database.Utilities;
 using static Database.Utilities.TableBuilder;
+using System.Windows;
 
 namespace Database.TableTemplates
 {
@@ -41,7 +42,6 @@ namespace Database.TableTemplates
         {
             Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, 0));
             if (isDual()) AddSecondInput("100");
-            CBInputs.AddToSelectedIds(0);
         }
         protected override void OnRemoveRow()
         {
@@ -83,7 +83,10 @@ namespace Database.TableTemplates
         // Same as DualInputTypesList
         protected override void OnParameterizeInputs(int i)
         {
-            if (isDual()) SQLDB.ParameterizeAttribute("@" + AttributeName + i.ToString(), ((TextBox)Elements[i][2]).Text);
+            SQLDB.ParameterizeAttribute("@HostID" + i, HostId);
+            SQLDB.ParameterizeAttribute("@TargetID" + i, CBInputs.SelectedIds[i]);
+            SQLDB.ParameterizeAttribute("@TableIndex" + i, i.ToString());
+            if (isDual()) SQLDB.ParameterizeAttribute("@" + AttributeName + i, ((TextBox)Elements[i][2]).Text);
         }
         
 
@@ -97,8 +100,7 @@ namespace Database.TableTemplates
         }
         protected override string OnCreateValues(int i)
         {
-            string textAttr = isDual() ? ", @" + AttributeName + i : "";
-            return HostId + ", " + CBInputs.SelectedIds[i] + ", " + i + textAttr;
+            return "@HostID" + i + ", @TargetID" + i + ", @TableIndex" + i + (isDual() ? (", @" + AttributeName + i) : "");
         }
 
         protected override void OnRead(SQLiteDataReader reader)
@@ -106,7 +108,6 @@ namespace Database.TableTemplates
             int landingIndex = CBInputs.OptionsListIds.FindIndex( a => a == int.Parse(reader[TargetDBTable + "_ID"].ToString()) );
             Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, landingIndex));
             if (isDual()) AddSecondInput(reader[AttributeName].ToString());
-            CBInputs.AddToSelectedIds(landingIndex);
         }
     }
 }

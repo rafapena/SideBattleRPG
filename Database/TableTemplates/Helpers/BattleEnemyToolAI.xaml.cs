@@ -6,19 +6,19 @@ using System.Data.SQLite;
 using Database.Utilities;
 using static Database.Utilities.TableBuilder;
 
-namespace Database.TableTemplates
+namespace Database.TableTemplates.Helpers
 {
-    public partial class _GenericTableTemplate : _TableTemplateOperations
+    public partial class BattleEnemyToolAI : _TableTemplateOperations
     {
-        public _GenericTableTemplate()
+        public BattleEnemyToolAI()
         {
             InitializeComponent();
         }
 
         protected override void OnAddRow()
         {
-            //Elements[Count - 1].Add(TextBox("TB_" + Count, "", Count, 1));
-            //Elements[Count - 1].Add(TextBox("TB_" + Count, "", Count, 2));
+            //InputElements[Count - 1].Add(TextBox("TB_" + Count, "", Count, 1));
+            //InputElements[Count - 1].Add(TextBox("TB_" + Count, "", Count, 2));
         }
 
         protected override void OnInitializeNew()
@@ -37,8 +37,8 @@ namespace Database.TableTemplates
 
         protected override void OnParameterizeInputs(int i)
         {
-            //SQLDB.ParameterizeAttribute("@attr1" + i, ((TextBox)Elements[i][0]).Text);
-            //SQLDB.ParameterizeAttribute("@attr2" + i, ((TextBox)Elements[i][1]).Text);
+            //SQLDB.ParameterizeInputs("@attr1" + i, ((TextBox)InputElements[i][0]).Text);
+            //SQLDB.ParameterizeInputs("@attr2" + i, ((TextBox)InputElements[i][1]).Text);
         }
 
         protected override string[] OnCreate()
@@ -55,8 +55,8 @@ namespace Database.TableTemplates
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            //Elements[Count - 1].Add(TextBox("TB_" + Count, reader.GetString(3), Count, 1));
-            //Elements[Count - 1].Add(TextBox("TB_" + Count, reader.GetString(4), Count, 2));
+            //InputElements[Count - 1].Add(TextBox("TB_" + Count, reader.GetString(3), Count, 1));
+            //InputElements[Count - 1].Add(TextBox("TB_" + Count, reader.GetString(4), Count, 2));
         }
     }
 }

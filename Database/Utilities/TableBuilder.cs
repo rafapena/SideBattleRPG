@@ -33,13 +33,15 @@ namespace Database.Utilities
             {
                 for (int i = 0; i < columnNames.Count; i++)
                 {
-                    targetGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                    ColumnDefinition indexColumn = new ColumnDefinition();
+                    targetGrid.ColumnDefinitions.Add(indexColumn);
                     TextBlock t = TextBlock(columnNames[i], 0, i);
                     t.Margin = Margin(2,2,2,2);
                     t.HorizontalAlignment = HorizontalAlignment.Center;
                     targetGrid.Children.Add(t);
                 }
                 targetGrid.Children.Add(Border("#0000000", 1, 0, 0, 1, columnNames.Count));
+                targetGrid.ColumnDefinitions[0].Width = new GridLength(20);
                 targetGrid.RowDefinitions.Add(new RowDefinition());
             }
             else targetGrid.ColumnDefinitions.Add(new ColumnDefinition());

@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Data.SQLite;
 using Database.Utilities;
 using static Database.Utilities.TableBuilder;
+using System.Windows;
 
 namespace Database.TableTemplates
 {
@@ -43,7 +44,6 @@ namespace Database.TableTemplates
         {
             Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, 0));
             if (isDual()) AddSecondInput("100");
-            CBInputs.AddToSelectedIds(0);
         }
         protected override void OnRemoveRow()
         {
@@ -137,7 +137,6 @@ namespace Database.TableTemplates
                 AddRow(null, null);
                 Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, listId));
                 if (isDual()) AddSecondInput(int.Parse(items[i]).ToString());
-                CBInputs.AddToSelectedIds(listId);
                 AddRangeToTable();
             }
         }
