@@ -47,6 +47,8 @@ namespace Database.Classes
             if (!Utils.PosInt(ChargeInput.Text)) err += "Charge Turns must be a positive integer\n";
             if (!Utils.PosInt(WarmUpInput.Text)) err += "Warmup Turns must be a positive integer\n";
             if (!Utils.PosInt(CoolDownInput.Text)) err += "Cooldown Turns must be a positive integer\n";
+            err += PlayerSummons.ValidateInputs();
+            err += EnemySummons.ValidateInputs();
             if (PlayerSummons.Count > 5) err += "The number of summoned players must be less than 6";
             if (EnemySummons.Count > 5) err += "The number of summoned enemies must be less than 6";
             return err;
@@ -95,9 +97,9 @@ namespace Database.Classes
             Base.Update(conn);
             ToolAttributes.Update(conn);
             ToolStateRates.Update(conn);
-            SQLUpdate(conn, "SPConsume = @SPConsume, NumberOfUsers = @NumberOfUsers, Charge = @Charge, WarmUp = @WarmUp, CoolDown = @CoolDown, Steal = @Steal");
             PlayerSummons.Update(conn);
             EnemySummons.Update(conn);
+            SQLUpdate(conn, "SPConsume = @SPConsume, NumberOfUsers = @NumberOfUsers, Charge = @Charge, WarmUp = @WarmUp, CoolDown = @CoolDown, Steal = @Steal");
         }
 
         protected override void OnDelete(SQLiteConnection conn)

@@ -21,9 +21,9 @@ namespace Database.TableTemplates
         public int Count { get; private set; }
         
         // Database information for the table template
-        protected string HostDBTable { get; private set; }
-        protected string TargetDBTable { get; private set; }
-        protected int HostId { get; private set; }
+        protected string HostDBTable { get; set; }
+        protected string TargetDBTable { get; set; }
+        protected int HostId { get; set; }
         public string TableIdentifier { get; set; }     // Only use this to uniquely identify two of the same many-to-many relationship tables
 
 
@@ -87,7 +87,7 @@ namespace Database.TableTemplates
         }
 
         // Helper method of Setup: Get Id of the host DB table that matches the current DB table the user is currently viewing
-        private int GetHostId()
+        protected virtual int GetHostId()
         {
             if (SQLDB.CurrentTable == HostDBTable) return SQLDB.CurrentId;
             int id;

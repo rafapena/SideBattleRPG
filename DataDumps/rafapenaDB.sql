@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.1 on Thu Oct 11 16:09:26 2018
+-- File generated with SQLiteStudio v3.1.1 on Tue Oct 16 10:18:16 2018
 --
 -- Text encoding used: System
 --
@@ -52,7 +52,31 @@ INSERT INTO BaseObject (BaseObject_ID, Name, Description, Image, Created, Update
 INSERT INTO BaseObject (BaseObject_ID, Name, Description, Image, Created, Updated) VALUES (37, 'Test State', 'A state that is used for testing.', NULL, '2018-10-11 15:12:07', '2018-10-11 15:12:35');
 
 -- Table: Battle
-CREATE TABLE Battle (Battle_ID INTEGER PRIMARY KEY NOT NULL UNIQUE, EnvironmentID INTEGER REFERENCES Environment (Environment_ID) ON DELETE SET NULL, BaseObjectID INTEGER NOT NULL REFERENCES BaseObject (BaseObject_ID) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY (EnvironmentID) REFERENCES Environment (Environment_ID) ON DELETE SET NULL, FOREIGN KEY (BaseObjectID) REFERENCES BaseObject (BaseObject_ID) ON DELETE CASCADE ON UPDATE CASCADE);
+CREATE TABLE Battle (
+    Battle_ID     INTEGER PRIMARY KEY NOT NULL UNIQUE,
+    BattleEnemy1  INTEGER,
+    BattleEnemy2  INTEGER,
+    BattleEnemy3  INTEGER,
+    BattleEnemy4  INTEGER,
+    BattleEnemy5  INTEGER,
+    BattleEnemy6  INTEGER,
+    BattleEnemy7  INTEGER,
+    BattleEnemy8  INTEGER,
+    BattleEnemy9  INTEGER,
+    EnvironmentID INTEGER,
+    BaseObjectID  INTEGER NOT NULL,
+    FOREIGN KEY (BattleEnemy1) REFERENCES BattleEnemy(BattleEnemyID) ON DELETE SET NULL,
+    FOREIGN KEY (BattleEnemy2) REFERENCES BattleEnemy(BattleEnemyID) ON DELETE SET NULL,
+    FOREIGN KEY (BattleEnemy3) REFERENCES BattleEnemy(BattleEnemyID) ON DELETE SET NULL,
+    FOREIGN KEY (BattleEnemy4) REFERENCES BattleEnemy(BattleEnemyID) ON DELETE SET NULL,
+    FOREIGN KEY (BattleEnemy5) REFERENCES BattleEnemy(BattleEnemyID) ON DELETE SET NULL,
+    FOREIGN KEY (BattleEnemy6) REFERENCES BattleEnemy(BattleEnemyID) ON DELETE SET NULL,
+    FOREIGN KEY (BattleEnemy7) REFERENCES BattleEnemy(BattleEnemyID) ON DELETE SET NULL,
+    FOREIGN KEY (BattleEnemy8) REFERENCES BattleEnemy(BattleEnemyID) ON DELETE SET NULL,
+    FOREIGN KEY (BattleEnemy9) REFERENCES BattleEnemy(BattleEnemyID) ON DELETE SET NULL,
+    FOREIGN KEY (EnvironmentID) REFERENCES Environment (Environment_ID) ON DELETE SET NULL,
+    FOREIGN KEY (BaseObjectID) REFERENCES BaseObject (BaseObject_ID) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 -- Table: Battle_Scene
 CREATE TABLE Battle_Scene(
@@ -66,93 +90,23 @@ CREATE TABLE Battle_Scene(
     FOREIGN KEY (BattleID) REFERENCES Battle(Battle_ID) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
--- Table: Battle_To_Enemy
-CREATE TABLE Battle_To_Enemy (
-    BattleID      INTEGER NOT NULL,
-    EnemyID       INTEGER NOT NULL,
-    TableIndex    INTEGER NOT NULL,
-    GridPositionX INTEGER NOT NULL,
-    GridPositionY INTEGER NOT NULL,
-    HPMultiplier  INTEGER NOT NULL,
-    Level         INTEGER NOT NULL,
-    PRIMARY KEY (
-        BattleID,
-        EnemyID,
-        TableIndex
-    ),
-    FOREIGN KEY (
-        BattleID
-    )
-    REFERENCES Battle (Battle_ID) ON DELETE CASCADE
-                                  ON UPDATE CASCADE,
-    FOREIGN KEY (
-        EnemyID
-    )
-    REFERENCES Enemy (Enemy_ID) ON UPDATE CASCADE
-                                ON DELETE CASCADE
+-- Table: BattleEnemy
+CREATE TABLE BattleEnemy (
+    BattleEnemy_ID INTEGER NOT NULL PRIMARY KEY,
+    EnemyID        INTEGER NOT NULL,
+    TableIndex     INTEGER NOT NULL,
+    GridPositionX  INTEGER NOT NULL,
+    GridPositionY  INTEGER NOT NULL,
+    HPMultiplier   INTEGER NOT NULL,
+    Level          INTEGER NOT NULL,
+    FOREIGN KEY (EnemyID) REFERENCES Enemy (Enemy_ID) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
--- Table: Battle_To_Enemy_To_PassiveSkill
-CREATE TABLE Battle_To_Enemy_To_PassiveSkill (
-    BattleEnemyID     INTEGER NOT NULL,
-    PassiveSkillID    INTEGER NOT NULL,
-    TableIndex        INTEGER NOT NULL,
-    OwningProbability INTEGER NOT NULL,
-    PRIMARY KEY (
-        BattleEnemyID,
-        PassiveSkillID,
-        TableIndex
-    ),
-    FOREIGN KEY (
-        BattleEnemyID
-    )
-    REFERENCES Battle (Battle_ID) ON UPDATE CASCADE
-                                  ON DELETE CASCADE,
-    FOREIGN KEY (
-        PassiveSkillID
-    )
-    REFERENCES PassiveSkill (PassiveSkill_ID) ON UPDATE CASCADE
-                                              ON DELETE CASCADE
-);
+-- Table: BattleEnemy_To_PassiveSkill
+CREATE TABLE BattleEnemy_To_PassiveSkill (BattleEnemyID INTEGER NOT NULL, PassiveSkillID INTEGER NOT NULL, TableIndex INTEGER NOT NULL, OwningProbability INTEGER NOT NULL, PRIMARY KEY (BattleEnemyID, PassiveSkillID), FOREIGN KEY (BattleEnemyID) REFERENCES BattleEnemy (BattleEnemy_ID) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY (PassiveSkillID) REFERENCES PassiveSkill (PassiveSkill_ID) ON DELETE CASCADE ON UPDATE CASCADE);
 
--- Table: Battle_To_Enemy_To_Tool
-CREATE TABLE Battle_To_Enemy_To_Tool (
-    BattleEnemyID      INTEGER NOT NULL,
-    ToolID             INTEGER NOT NULL,
-    TableIndex         INTEGER NOT NULL,
-    ToolTable          TEXT    NOT NULL,
-    Priority           INTEGER NOT NULL,
-    HPLow              INTEGER,
-    HPHigh             INTEGER,
-    SPLow              INTEGER,
-    SPHigh             INTEGER,
-    ActiveState1       INTEGER,
-    ActiveState2       INTEGER,
-    InactiveState1     INTEGER,
-    InactiveState2     INTEGER,
-    Quantity           INTEGER,
-    AllyCondition      INTEGER NOT NULL,
-    FoeCondition       INTEGER NOT NULL,
-    UserCondition      INTEGER NOT NULL,
-    TargetElementRates TEXT,
-    TargetStateRates   TEXT,
-    TargetStats        TEXT,
-    PRIMARY KEY (
-        BattleEnemyID,
-        ToolID,
-        TableIndex
-    ),
-    FOREIGN KEY (
-        BattleEnemyID
-    )
-    REFERENCES Battle (Battle_ID) ON UPDATE CASCADE
-                                  ON DELETE CASCADE,
-    FOREIGN KEY (
-        ToolID
-    )
-    REFERENCES Tool (Tool_ID) ON UPDATE CASCADE
-                              ON DELETE SET NULL
-);
+-- Table: BattleEnemy_To_Tool
+CREATE TABLE BattleEnemy_To_Tool (BattleEnemyID INTEGER NOT NULL, ToolID INTEGER NOT NULL, TableIndex INTEGER NOT NULL, ToolTable TEXT NOT NULL, Priority INTEGER NOT NULL, HPLow INTEGER, HPHigh INTEGER, SPLow INTEGER, SPHigh INTEGER, ActiveState1 INTEGER, ActiveState2 INTEGER, InactiveState1 INTEGER, InactiveState2 INTEGER, Quantity INTEGER, AllyCondition INTEGER NOT NULL, FoeCondition INTEGER NOT NULL, UserCondition INTEGER NOT NULL, TargetElementRates TEXT, TargetStateRates TEXT, TargetStats TEXT, PRIMARY KEY (BattleEnemyID, ToolID), FOREIGN KEY (BattleEnemyID) REFERENCES BattleEnemy (BattleEnemy_ID) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY (ToolID) REFERENCES Tool (Tool_ID) ON UPDATE CASCADE ON DELETE CASCADE);
 
 -- Table: BattlerClass
 CREATE TABLE BattlerClass (BattlerClass_ID INTEGER PRIMARY KEY NOT NULL UNIQUE, BaseObjectID INTEGER NOT NULL REFERENCES BaseObject (BaseObject_ID) ON DELETE CASCADE ON UPDATE CASCADE, ScaledStats INTEGER NOT NULL REFERENCES Stats (Stats_ID), UpgradedClass1 INTEGER REFERENCES BattlerClass (BattlerClass_ID) ON DELETE SET NULL, UpgradedClass2 INTEGER REFERENCES BattlerClass (BattlerClass_ID) ON DELETE SET NULL, UsableWeaponType1 INTEGER, UsableWeaponType2 INTEGER, PassiveSkill1 INTEGER REFERENCES PassiveSkill (PassiveSkill_ID) ON DELETE SET NULL, PassiveSkill2 INTEGER REFERENCES PassiveEffect (PassiveEffect_ID) ON DELETE SET NULL, PSkillLvlRequired1 INTEGER, PSkillLvlRequired2 INTEGER, FOREIGN KEY (BaseObjectID) REFERENCES BaseObject (BaseObject_ID) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED, FOREIGN KEY (ScaledStats) REFERENCES Stats (Stats_ID), FOREIGN KEY (UpgradedClass1) REFERENCES BattlerClass (BattlerClass_ID) ON DELETE SET NULL, FOREIGN KEY (UpgradedClass2) REFERENCES BattlerClass (BattlerClass_ID) ON DELETE SET NULL, FOREIGN KEY (PassiveSkill1) REFERENCES PassiveSkill (PassiveSkill_ID) ON DELETE SET NULL, FOREIGN KEY (PassiveSkill2) REFERENCES PassiveEffect (PassiveEffect_ID) ON DELETE SET NULL);

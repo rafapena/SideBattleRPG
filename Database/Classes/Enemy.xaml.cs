@@ -36,8 +36,8 @@ namespace Database.Classes
             Base.InitializeNew();
             ScaledStats.InitializeNew(0);
             ScaledStats.HostTableAttributeName = "ScaledStats";
-            WidthInput.SelectedIndex = 1;
-            HeightInput.SelectedIndex = 1;
+            WidthInput.SelectedIndex = 0;
+            HeightInput.SelectedIndex = 0;
             BossTypeInput.SelectedIndex = 0;
             FlyingInput.IsChecked = false;
             ExpInput.Text = "50";

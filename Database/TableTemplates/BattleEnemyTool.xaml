@@ -16,7 +16,7 @@
                 <Button Content="Remove" Click="RemoveRow" Background="#faa" Width="50" Height="20"/>
             </StackPanel>
 
-            <ScrollViewer x:Name="Scroller" Margin="0 5 0 0">
+            <ScrollViewer x:Name="Scroller" Margin="0 5 0 0" Height="120">
                 <Grid x:Name="TableList" ScrollViewer.CanContentScroll="True" VerticalAlignment="Top">
                     <Grid.Resources>
                         <Style TargetType="TextBox">

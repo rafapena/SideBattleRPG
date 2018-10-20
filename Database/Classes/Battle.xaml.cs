@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Data.SQLite;
 using Database.Utilities;
+using System.Windows;
 
 namespace Database.Classes
 {
     public partial class Battle : _ClassOperations
     {
+        private static ClassTemplates.BattleEnemy[] Enemies;
+
         public Battle()
         {
             InitializeComponent();
@@ -16,68 +19,76 @@ namespace Database.Classes
 
         protected override void SetupTableData()
         {
-            Enemies.Setup("Battle", "Enemy", "Enemies", new List<string> { "Enemy", "Position", "Mods", "Tools" }, 300);
+            Enemies = new ClassTemplates.BattleEnemy[] { Enemy1, Enemy2, Enemy3, Enemy4, Enemy5, Enemy6, Enemy7, Enemy8, Enemy9 };
         }
 
         protected override void OnInitializeNew()
         {
             Base.InitializeNew();
-            Enemies.InitializeNew();
-            //attr1Input.Text = "";
-            //attr2Image.Source = null;
+            int[] Zs = { 0, 0, 0, 1, 1, 1, 2, 2, 2 };
+            int[] Xs = { 1, 0, 2, 1, 0, 2, 1, 0, 2 };
+            for (int i = 0; i < Enemies.Length; i++)
+            {
+                Enemies[i].HostTableAttributeName = "BattleEnemy" + (i + 1);
+                Enemies[i].InitializeNew();
+                Enemies[i].SetPosition(Zs[i], Xs[i]);
+            }
         }
 
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();
-            err += Enemies.ValidateInputs();
-            //if (!Utils.InRequiredLength(Utils.CutSpaces(attr1Input.Text))) err += "attr1 must have 1 to 16 characters";
-            //if (!Utils.PosInt(attr2Input.Text)) err += "attr2 must be a positive integer";
-            //if (!Utils.NumberBetween(attr3Input.Text, 1, 100)) err += "attr3 must be a number between 1 and 100";
+            for (int i = 0; i < Enemies.Length; i++)
+            {
+                err += Enemies[i].ValidateInputs();
+                for (int j = i+1; j < Enemies.Length; j++)
+                {
+                    if ((!Enemies[i].Exists() || !Enemies[j].Exists()) && Enemies[i].Position() != Enemies[j].Position()) continue;
+                    err += "Enemies cannot share the same X and Z positions\n";
+                    break;
+                }
+            }
             return err;
         }
 
         public override void ParameterizeAttributes()
         {
             SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
-            //SQLDB.ParameterizeAttribute("@attr1", attr1Input.Text);
-            //SQLDB.ParameterizeAttribute("@attr2", attr2Input.Text);
+            for (int i = 0; i < Enemies.Length; i++) SQLDB.ParameterizeAttribute("@BattleEnemy" + (i + 1), Enemies[i].Exists() ? Enemies[i].ClassTemplateId : 0);
         }
 
         protected override void OnCreate(SQLiteConnection conn)
         {
             Base.Create(conn);
-            // Create DualInput TypeLists
-            SQLCreate(conn, "BaseObjectID, attr1, attr2", "@BaseObjectID, @attr1, @attr2");
-            Enemies.Create(conn);
+            for (int i = 0; i < Enemies.Length; i++) Enemies[i].Create(conn);
+            SQLCreate(conn, "BaseObjectID, BattleEnemy1, BattleEnemy2, BattleEnemy3, BattleEnemy4, BattleEnemy5, BattleEnemy6, BattleEnemy7, BattleEnemy8, BattleEnemy9",
+                "@BaseObjectID, @BattleEnemy1, @BattleEnemy2, @BattleEnemy3, @BattleEnemy4, @BattleEnemy5, @BattleEnemy6, @BattleEnemy7, @BattleEnemy8, @BattleEnemy9");
             // Create Dual Input Classes
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
             Base.Read(reader);
-            Enemies.Read();
-            //attr1Input.Text = int.Parse(reader["IntegerAttr"].ToString());
-            //attr2Input.Text = reader["StringAttr"].ToString();
+            for (int i = 0; i < Enemies.Length; i++) Enemies[i].Read(reader);
         }
 
         protected override void OnUpdate(SQLiteConnection conn)
         {
             Base.Update(conn);
-            Enemies.Update(conn);
-            SQLUpdate(conn, "attr1 = @attr1, attr2 = @attr2");
+            for (int i = 0; i < Enemies.Length; i++) Enemies[i].Update(conn);
+            //SQLUpdate(conn, "");
         }
 
         protected override void OnDelete(SQLiteConnection conn)
         {
             Base.Delete(conn);
-            Enemies.Delete(conn);
+            for (int i = 0; i < Enemies.Length; i++) Enemies[i].Delete(conn);
         }
 
         protected override void OnClone(SQLiteConnection conn)
         {
             Base.Clone(conn);
-            Enemies.Clone(conn);
+            for (int i = 0; i < Enemies.Length; i++) Enemies[i].Clone(conn);
         }
     }
 }

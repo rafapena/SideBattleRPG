@@ -77,7 +77,9 @@ namespace Database.Utilities
         public ComboBox CreateInput(int row, int col, int landingIndex)
         {
             if (OptionsListNames == null && landingIndex >= OptionsListNames.Count) return null;
-            ComboBox cb = TableBuilder.ComboBox("CB_" + SelectedIds.Count, OptionsListNames, landingIndex, row, col, UpdateSelectedIds);
+            ComboBox cb;
+            if (row < 0 || col < 0) cb = TableBuilder.ComboBox("CB_" + SelectedIds.Count, OptionsListNames, landingIndex, UpdateSelectedIds);
+            else cb = TableBuilder.ComboBox("CB_" + SelectedIds.Count, OptionsListNames, landingIndex, row, col, UpdateSelectedIds);
             cb.Width = 120;
             SelectedIds.Add(OptionsListIds[landingIndex]);
             return cb;

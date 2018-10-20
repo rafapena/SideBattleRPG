@@ -23,7 +23,7 @@ namespace Database.TableTemplates
         /// Same functions as DualInputTypesList below
         /// </summary>
         
-        // Checks is a table has that extra textbox input
+        // Checks if a table has that extra textbox input
         public bool isDual() { return Table.ColumnDefinitions.Count == 3; }
 
         // Adds that extra textbox input to the table, as another column

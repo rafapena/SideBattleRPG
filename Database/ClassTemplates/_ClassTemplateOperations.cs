@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Data.SQLite;
 using Database.Utilities;
@@ -16,7 +17,7 @@ namespace Database.ClassTemplates
         protected abstract void OnInitializeNew();
         public void InitializeNew()
         {
-            HostTableAttributeName = ClassTemplateTable + "ID";
+            if (HostTableAttributeName == null) HostTableAttributeName = ClassTemplateTable + "ID";
             ClassTemplateId = SQLDB.MaxIdPlusOne(ClassTemplateTable);
             SetupTableData();
             OnInitializeNew();
@@ -39,6 +40,7 @@ namespace Database.ClassTemplates
         protected abstract void OnRead(SQLiteDataReader reader);
         public void Read(SQLiteDataReader reader)
         {
+            if (HostTableAttributeName == null) HostTableAttributeName = ClassTemplateTable + "ID";
             ClassTemplateId = int.Parse(reader[HostTableAttributeName].ToString());
             Read();
         }
