@@ -75,7 +75,7 @@ namespace Database.Utilities
             }
         }
 
-        // Assume this doesn't do anything else besides creating, updating, deleting, and cloning
+        // Assume this doesn't do anything besides creating, updating, deleting, and cloning
         public static void Write(SQLiteConnection conn, string sqlCommand)
         {
             using (var comm = new SQLiteCommand(sqlCommand, conn))

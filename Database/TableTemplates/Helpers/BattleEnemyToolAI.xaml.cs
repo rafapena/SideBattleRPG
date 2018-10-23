@@ -2,6 +2,7 @@
 using System.Windows;
 using Database.Utilities;
 using static Database.TableTemplates.BattleEnemyTool;
+using System.Windows.Controls;
 
 namespace Database.TableTemplates.Helpers
 {
@@ -10,7 +11,7 @@ namespace Database.TableTemplates.Helpers
         private ComboBoxInputData ElementData;
         private ComboBoxInputData StateData;
         private List<string> StatsOptions = new List<string> { "None", "MaxHP", "Luck", "Attack", "Defense", "Magic Power", "Magic Resistance", "Speed", "Technique" };
-        private List<string> ValueOptions = new List<string> { "Immune", "Very Low" , "Low", "Average", "High", "Very High" };
+        private List<string> ValueOptions = new List<string> { "Immune", "Very Low", "Low", "Average", "High", "Very High" };
         private List<string> GateOptions = new List<string> { "is", "not" };
         private List<string> StatValueOptions = new List<string> { "Low-Bounded", "High-Bounded" };
         public bool Stored { get; private set; }
@@ -23,6 +24,10 @@ namespace Database.TableTemplates.Helpers
             UserConditionInput.ItemsSource = new List<string> { "None", "Cannot meet", "Must meet" };
             ElementData = new ComboBoxInputData("List_ID", "Name", "TypesLists", "List_Type = 'Elements'", "List_ID", ComboBoxInputData.ADD_NULL_INPUT);
             StateData = new ComboBoxInputData("State_ID", "Name", "BaseObject JOIN State", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
+            ActiveState1Input.ItemsSource = StateData.OptionsListNames;
+            ActiveState2Input.ItemsSource = StateData.OptionsListNames;
+            InactiveState1Input.ItemsSource = StateData.OptionsListNames;
+            InactiveState2Input.ItemsSource = StateData.OptionsListNames;
             ElementRateInput.ItemsSource = ElementData.OptionsListNames;
             State1Input.ItemsSource = StateData.OptionsListNames;
             State2Input.ItemsSource = StateData.OptionsListNames;
@@ -40,7 +45,7 @@ namespace Database.TableTemplates.Helpers
             Value5Input.ItemsSource = StatValueOptions;
             ToolElementInput.ItemsSource = ElementData.OptionsListNames;
         }
-        
+
         public void SetInformation(ToolAI selectedBETool)
         {
             PriorityInput.Text = selectedBETool.Priority.ToString();
@@ -49,10 +54,10 @@ namespace Database.TableTemplates.Helpers
             HPHighInput.Text = selectedBETool.HPHigh.ToString();
             SPLowInput.Text = selectedBETool.SPLow.ToString();
             SPHighInput.Text = selectedBETool.SPHigh.ToString();
-            ActiveState1Input.Text = selectedBETool.ActiveState1.ToString();
-            ActiveState2Input.Text = selectedBETool.ActiveState2.ToString();
-            InactiveState1Input.Text = selectedBETool.InactiveState1.ToString();
-            InactiveState2Input.Text = selectedBETool.InactiveState2.ToString();
+            ActiveState1Input.SelectedIndex = StateData.FindIndex(selectedBETool.ActiveState1);
+            ActiveState2Input.SelectedIndex = StateData.FindIndex(selectedBETool.ActiveState2);
+            InactiveState1Input.SelectedIndex = StateData.FindIndex(selectedBETool.InactiveState1);
+            InactiveState2Input.SelectedIndex = StateData.FindIndex(selectedBETool.InactiveState2);
             AllyConditionInput.SelectedIndex = selectedBETool.AllyCondition;
             FoeConditionInput.SelectedIndex = selectedBETool.FoeCondition;
             UserConditionInput.SelectedIndex = selectedBETool.UserCondition;
@@ -60,13 +65,13 @@ namespace Database.TableTemplates.Helpers
             string[] elementRate = selectedBETool.TargetElementRate.Split('_');
             string[] stateRates = selectedBETool.TargetStateRates.Split('_');
             string[] statConditions = selectedBETool.TargetStatConditions.Split('_');
-            ElementRateInput.SelectedIndex = int.Parse(elementRate[0]);
+            ElementRateInput.SelectedIndex = ElementData.FindIndex(int.Parse(elementRate[0]));
             Gate1Input.SelectedIndex = int.Parse(elementRate[1]);
             Value1Input.SelectedIndex = int.Parse(elementRate[2]);
-            State1Input.SelectedIndex = int.Parse(stateRates[0]);
+            State1Input.SelectedIndex = StateData.FindIndex(int.Parse(stateRates[0]));
             Gate2Input.SelectedIndex = int.Parse(stateRates[1]);
             Value2Input.SelectedIndex = int.Parse(stateRates[2]);
-            State2Input.SelectedIndex = int.Parse(stateRates[3]);
+            State2Input.SelectedIndex = StateData.FindIndex(int.Parse(stateRates[3]));
             Gate3Input.SelectedIndex = int.Parse(stateRates[4]);
             Value3Input.SelectedIndex = int.Parse(stateRates[5]);
             Stat1Input.SelectedIndex = int.Parse(statConditions[0]);
@@ -75,7 +80,7 @@ namespace Database.TableTemplates.Helpers
             Stat2Input.SelectedIndex = int.Parse(statConditions[3]);
             Gate5Input.SelectedIndex = int.Parse(statConditions[4]);
             Value5Input.SelectedIndex = int.Parse(statConditions[5]);
-            ToolElementInput.SelectedIndex = selectedBETool.TargetToolElement;
+            ToolElementInput.SelectedIndex = ElementData.FindIndex(selectedBETool.TargetToolElement);
         }
 
         public string ValidateInputs()
@@ -87,13 +92,19 @@ namespace Database.TableTemplates.Helpers
             if (!Utils.NumberBetween(HPHighInput.Text, 0, 100)) err += "HP High must be a number between 0 and 100\n";
             if (!Utils.NumberBetween(SPLowInput.Text, 0, 100)) err += "SP Low must be a number between 0 and 100\n";
             if (!Utils.NumberBetween(SPHighInput.Text, 0, 100)) err += "SP High must be a number between 0 and 100\n";
-            if (!Utils.PosInt(ActiveState1Input.Text)) err += "Active State 1 must be a positive integer\n";
-            if (!Utils.PosInt(ActiveState2Input.Text)) err += "Active State 2 must be a positive integer\n";
-            if (!Utils.PosInt(InactiveState1Input.Text)) err += "Inactive State 1 must be a positive integer\n";
-            if (!Utils.PosInt(InactiveState2Input.Text)) err += "Inactive State 2 must be a positive integer\n";
-            if (State1Input.SelectedIndex != State2Input.SelectedIndex) err += "State Rates must be unique\n";
-            if (Stat1Input.SelectedIndex != Stat2Input.SelectedIndex) err += "Stat Conditions must be unique\n";
+            if (NotUnique(ActiveState1Input, ActiveState2Input)) err += "Active states must be unique\n";
+            if (NotUnique(ActiveState1Input, InactiveState1Input)) err += "Active and inactive state 1 must be unique\n";
+            if (NotUnique(ActiveState1Input, InactiveState2Input)) err += "Active state 1 and inactive state 2 must be unique\n";
+            if (NotUnique(ActiveState2Input, InactiveState1Input)) err += "Active state 2 and inactive state 1 must be unique\n";
+            if (NotUnique(ActiveState2Input, InactiveState2Input)) err += "Active and inactive state 2 must be unique\n";
+            if (NotUnique(InactiveState1Input, InactiveState2Input)) err += "Inactive states must be unique\n";
+            if (NotUnique(State1Input, State2Input)) err += "State Rates must be unique\n";
+            if (NotUnique(Stat1Input, Stat2Input)) err += "Stat Conditions must be unique\n";
             return err;
+        }
+        public bool NotUnique(ComboBox a, ComboBox b)
+        {
+            return a.SelectedIndex == b.SelectedIndex && a.SelectedIndex > 0;
         }
 
         private void CancelClicked(object sender, RoutedEventArgs e) { CloseWindow(false); }
@@ -122,10 +133,10 @@ namespace Database.TableTemplates.Helpers
             toolAi.HPHigh = int.Parse(HPHighInput.Text);
             toolAi.SPLow = int.Parse(SPLowInput.Text);
             toolAi.SPHigh = int.Parse(SPHighInput.Text);
-            toolAi.ActiveState1 = int.Parse(ActiveState1Input.Text);
-            toolAi.ActiveState2 = int.Parse(ActiveState2Input.Text);
-            toolAi.InactiveState1 = int.Parse(InactiveState1Input.Text);
-            toolAi.InactiveState2 = int.Parse(InactiveState2Input.Text);
+            toolAi.ActiveState1 = ActiveState1Input.SelectedIndex;
+            toolAi.ActiveState2 = ActiveState2Input.SelectedIndex;
+            toolAi.InactiveState1 = InactiveState1Input.SelectedIndex;
+            toolAi.InactiveState2 = InactiveState2Input.SelectedIndex;
             toolAi.AllyCondition = AllyConditionInput.SelectedIndex;
             toolAi.FoeCondition = FoeConditionInput.SelectedIndex;
             toolAi.UserCondition = UserConditionInput.SelectedIndex;

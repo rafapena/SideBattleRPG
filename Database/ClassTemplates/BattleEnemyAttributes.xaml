@@ -1,5 +1,5 @@
 ﻿<base:_ClassTemplateOperations
-    x:Class="Database.ClassTemplates.BattleEnemy"
+    x:Class="Database.ClassTemplates.BattleEnemyAttributes"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -49,9 +49,5 @@
                 <TextBox x:Name="LevelInput" Grid.Row="3" Grid.Column="1"/>
             </Grid>
         </StackPanel>
-        <tables:BattleEnemyTool x:Name="EnemySkills" VerticalAlignment="Top"/>
-        <tables:BattleEnemyTool x:Name="EnemyWeapons" VerticalAlignment="Top"/>
-        <tables:BattleEnemyTool x:Name="EnemyItems" VerticalAlignment="Top"/>
-        <tables:BattleEnemyTool x:Name="EnemyPassiveSkills" VerticalAlignment="Top"/>
     </StackPanel>
 </base:_ClassTemplateOperations>

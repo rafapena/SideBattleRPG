@@ -62,14 +62,14 @@
                         <TextBox x:Name="SPHighInput" Grid.Column="3" Grid.Row="2"/>
 
                         <TextBlock Text="Active State 1" Grid.Column="0" Grid.Row="3"/>
-                        <TextBox x:Name="ActiveState1Input" Grid.Column="1" Grid.Row="3"/>
+                        <ComboBox x:Name="ActiveState1Input" Grid.Column="1" Grid.Row="3"/>
                         <TextBlock Text="Active State 2" Grid.Column="2" Grid.Row="3"/>
-                        <TextBox x:Name="ActiveState2Input" Grid.Column="3" Grid.Row="3"/>
+                        <ComboBox x:Name="ActiveState2Input" Grid.Column="3" Grid.Row="3"/>
 
                         <TextBlock Text="Inactive State 1" Grid.Column="0" Grid.Row="4"/>
-                        <TextBox x:Name="InactiveState1Input" Grid.Column="1" Grid.Row="4"/>
+                        <ComboBox x:Name="InactiveState1Input" Grid.Column="1" Grid.Row="4"/>
                         <TextBlock Text="Inactive State 2" Grid.Column="2" Grid.Row="4"/>
-                        <TextBox x:Name="InactiveState2Input" Grid.Column="3" Grid.Row="4"/>
+                        <ComboBox x:Name="InactiveState2Input" Grid.Column="3" Grid.Row="4"/>
 
                         <TextBlock Text="Ally Condition" Grid.Column="0" Grid.Row="5"/>
                         <ComboBox x:Name="AllyConditionInput" Grid.Column="1" Grid.Row="5"/>

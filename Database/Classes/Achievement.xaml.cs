@@ -47,8 +47,8 @@ namespace Database.Classes
         protected override void OnRead(SQLiteDataReader reader)
         {
             Base.Read(reader);
-            LevelInput.Text = reader.GetInt32(1).ToString();
-            HintInput.Text = reader.GetString(2);
+            LevelInput.Text = reader["Level"].ToString();
+            HintInput.Text = reader["Hint"].ToString();
         }
 
         protected override void OnUpdate(SQLiteConnection conn)

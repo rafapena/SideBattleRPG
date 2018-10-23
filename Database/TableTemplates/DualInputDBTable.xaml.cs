@@ -105,7 +105,7 @@ namespace Database.TableTemplates
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            int landingIndex = CBInputs.OptionsListIds.FindIndex( a => a == int.Parse(reader[TargetDBTable + "_ID"].ToString()) );
+            int landingIndex = CBInputs.FindIndex(reader[TargetDBTable + "_ID"]);
             Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, landingIndex));
             if (isDual()) AddSecondInput(reader[AttributeName].ToString());
         }

@@ -85,7 +85,7 @@ namespace Database.Classes
             ScaledStats.Create(conn);
             ElementRates.Create(conn);
             SQLCreate(conn, "BaseObjectID, ScaledStats, EnemyClass, ElementRates, Width, Height, BossType, Flying, Exp, Gold",
-                "@BaseObjectID, @ScaledStats, @EnemyClass, '@ElementRates', @Width, @Height, @BossType, @Flying, @Exp, @Gold");
+                "@BaseObjectID, @ScaledStats, @EnemyClass, @ElementRates, @Width, @Height, @BossType, @Flying, @Exp, @Gold");
             StateRates.Create(conn);
         }
 
@@ -110,7 +110,7 @@ namespace Database.Classes
             ScaledStats.Update(conn);
             ElementRates.Update(conn);
             StateRates.Update(conn);
-            SQLUpdate(conn, "EnemyClass=@EnemyClass, ElementRates='@ElementRates', Width=@Width, Height=@Height, BossType=@BossType, Flying=@Flying, Exp=@Exp, Gold=@Gold");
+            SQLUpdate(conn, "EnemyClass=@EnemyClass, ElementRates=@ElementRates, Width=@Width, Height=@Height, BossType=@BossType, Flying=@Flying, Exp=@Exp, Gold=@Gold");
         }
 
         protected override void OnDelete(SQLiteConnection conn)

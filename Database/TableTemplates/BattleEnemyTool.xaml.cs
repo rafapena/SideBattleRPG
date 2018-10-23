@@ -34,6 +34,7 @@ namespace Database.TableTemplates
         }
 
 
+        private string TargetToolTable;
         private ComboBoxInputData CBInputs;
         private List<ToolAI> ToolAIs;
         public string AttributeName { get; set; }   // The name of the fourth attribute on a many-to-many relationship table
@@ -43,21 +44,17 @@ namespace Database.TableTemplates
         {
             InitializeComponent();
         }
-
         
-        // Same functions as DualInputTypesList below
-        public bool isDual() { return Table.ColumnDefinitions.Count == 3; }
+        // Same functions as DualInput tables
         protected override string CheckAddability()
         {
-            return CBInputs.NoOptions() ? "The table '" + TargetDBTable + "' is currently empty" : "";
+            return CBInputs.NoOptions() ? "The table '" + TargetToolTable + "' is currently empty" : "";
         }
-        // Same functions as DualInputTypesList above
 
         protected override void OnAddRow()
         {
             int count = Count - 1;
             Elements[count].Add(CBInputs.CreateInput(Count, 1, 0));
-            if (!isDual()) return;
             Elements[count].Add(Button("Edit", EditAI, "#CCCCCC", Count, Count, 2));
             ToolAI toolAi = new ToolAI();
             toolAi.Priority = 10;
@@ -89,7 +86,8 @@ namespace Database.TableTemplates
         {
             ToolAIs = new List<ToolAI>();
             BaseTableAttributeName = baseTableAttributeName;
-            Setup(hostDBTable, targetDBTable, title, columnNames, scrollerHeight);
+            TargetToolTable = targetDBTable;
+            Setup(hostDBTable, "Tool", title, columnNames, scrollerHeight);
         }
 
         // Helper method of Setup: Get Id of the host DB table that matches the current DB table the user is currently viewing
@@ -118,10 +116,9 @@ namespace Database.TableTemplates
             Title.Text = TableTitle;
             Table = TableList;
             Scroller.Height = ScrollerHeight;
-            string tables = "BaseObject JOIN " + TargetDBTable;
-            string dupCond = HostDBTable == TargetDBTable ? "AND " + HostDBTable + "_ID <> " + HostId : "";
-            string where = "BaseObject_ID = BaseObjectID " + dupCond;
-            CBInputs = new ComboBoxInputData(TargetDBTable + "_ID", "Name", tables, where, "Name");
+            string tables = "BaseObject JOIN " + TargetToolTable;
+            string where = "BaseObject_ID = BaseObjectID ";
+            CBInputs = new ComboBoxInputData(TargetToolTable + "_ID", "Name", tables, where, TargetToolTable + "_ID");
             AttributeName = "";
         }
 
@@ -138,8 +135,7 @@ namespace Database.TableTemplates
             SQLDB.ParameterizeAttribute("@HostID" + i, HostId);
             SQLDB.ParameterizeAttribute("@ToolID" + i, CBInputs.SelectedIds[i]);
             SQLDB.ParameterizeAttribute("@TableIndex" + i, i.ToString());
-            SQLDB.ParameterizeAttribute("@ToolTable" + i, TargetDBTable);
-            if (!isDual()) return;
+            SQLDB.ParameterizeAttribute("@ToolTable" + i, TargetToolTable);
             SQLDB.ParameterizeAttribute("@Priority" + i, ToolAIs[i].Priority);
             SQLDB.ParameterizeAttribute("@Quantity" + i, ToolAIs[i].Quantity);
             SQLDB.ParameterizeAttribute("@HPLow" + i, ToolAIs[i].HPLow);
@@ -158,33 +154,28 @@ namespace Database.TableTemplates
             SQLDB.ParameterizeAttribute("@TargetStatConditions" + i, ToolAIs[i].TargetStatConditions);
             SQLDB.ParameterizeAttribute("@TargetToolElement" + i, ToolAIs[i].TargetToolElement);
         }
-        
 
         protected override string[] OnCreate()
         {
             string connectorTable = HostDBTable + "_To_Tool";
-            string attributes = HostDBTable + "ID, ToolID, TableIndex, ToolTable";
-            if (!isDual()) return new string[] { connectorTable, attributes };
-            attributes += "Priority, Quantity, HPLow, HPHigh, SPLow, SPHigh, ActiveState1, ActiveState2, InactiveState1, InactiveState2, " +
+            string attributes = HostDBTable + "ID, ToolID, TableIndex, ToolTable, " +
+                "Priority, Quantity, HPLow, HPHigh, SPLow, SPHigh, ActiveState1, ActiveState2, InactiveState1, InactiveState2, " +
                 "AllyCondition, FoeCondition, UserCondition, TargetElementRate, TargetStateRates, TargetStatConditions, TargetToolElement";
             return new string[] { connectorTable, attributes };
         }
         protected override string OnCreateValues(int i)
         {
-            string defaultAttr = "@HostID" + i + ", @ToolID" + i + ", @TableIndex" + i + ", @ToolTable" + i;
-            if (!isDual()) return defaultAttr;
-            return defaultAttr +
+            return "@HostID" + i + ", @ToolID" + i + ", @TableIndex" + i + ", @ToolTable" + i +
                 ", @Priority" + i + ", @Quantity" + i + ", @HPLow" + i + ", @HPHigh" + i + ", @SPLow" + i + ", @SPHigh" + i + ", @ActiveState1" + i + ", @ActiveState2" + i +
                 ", @InactiveState2" + i + ", @InactiveState2" + i + ", @AllyCondition" + i + ", @FoeCondition" + i + ", @UserCondition" + i +
-                ", @TargetElementRate, " + i + ", @TargetStateRates, " + i + ", @TargetStatConditions" + i + ", @TargetToolElement";
+                ", @TargetElementRate" + i + ", @TargetStateRates" + i + ", @TargetStatConditions" + i + ", @TargetToolElement" + i;
         }
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            int landingIndex = CBInputs.OptionsListIds.FindIndex( a => a == int.Parse(reader[TargetDBTable + "_ID"].ToString()) );
+            int landingIndex = CBInputs.FindIndex(reader[TargetToolTable + "_ID"]);
             Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, landingIndex));
-            if (!isDual()) return;
-            Elements[Count - 1].Add(Button("BTN_" + Count, EditAI, "#999999", Count, Count, 2));
+            Elements[Count - 1].Add(Button("Edit", EditAI, "#CCCCCC", Count, Count, 2));
             ToolAI toolAi = new ToolAI();
             toolAi.Priority = int.Parse(reader["Priority"].ToString());
             toolAi.Quantity = int.Parse(reader["Quantity"].ToString());
@@ -204,6 +195,12 @@ namespace Database.TableTemplates
             toolAi.TargetStatConditions = reader["TargetStatConditions"].ToString();
             toolAi.TargetToolElement = int.Parse(reader["TargetToolElement"].ToString());
             ToolAIs.Add(toolAi);
+        }
+        protected override string[] OnReadCommands()
+        {
+            string select = HostDBTable + "_To_Tool JOIN BaseObject JOIN " + TargetToolTable;
+            string where = "BaseObject_ID = BaseObjectID AND " + TargetToolTable + "_ID = " + TargetToolTable + ".ToolID AND " + HostDBTable + "ID = " + HostId + " AND ToolTable = '" + TargetToolTable + "'";
+            return new string[] { select, where + " ORDER BY TableIndex" };
         }
 
         private void EditAI(object sender, RoutedEventArgs e)
