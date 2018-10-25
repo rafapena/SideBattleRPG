@@ -27,8 +27,7 @@ namespace Database.Classes
             Base.InitializeNew();
             ToolAttributes.InitializeNew();
             ToolStateRates.InitializeNew();
-            EquipBoosts.InitializeNew();
-            EquipBoosts.HostTableAttributeName = "EquipBoosts";
+            EquipBoosts.InitializeNew("EquipBoosts");
             WeaponTypeInput.SelectedIndex = 0;
             RangeInput.Text = "2";
             CollideRangeInput.IsChecked = true;

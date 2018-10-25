@@ -37,8 +37,7 @@ namespace Database.Classes
         protected override void OnInitializeNew()
         {
             Base.InitializeNew();
-            ScaledStats.InitializeNew(3);
-            ScaledStats.HostTableAttributeName = "ScaledStats";
+            ScaledStats.InitializeNew(3, "ScaledStats");
             UpgradedClass1Input.SelectedIndex = 0;
             UpgradedClass2Input.SelectedIndex = 0;
             UsableWeaponType1Input.SelectedIndex = 0;

@@ -10,11 +10,17 @@ namespace Database.ClassTemplates
     {
         protected string ClassTemplateTable { get; set; }
         public int ClassTemplateId { get; protected set; }
-        public string HostTableAttributeName { get; set; }  // The forirgn key attribute of the host table
+        public string HostTableAttributeName { get; protected set; }  // The foriegn key attribute of the host table
 
 
         protected abstract void SetupTableData();
+
         protected abstract void OnInitializeNew();
+        public void InitializeNew(string hostTableAttributeName)
+        {
+            HostTableAttributeName = hostTableAttributeName;
+            InitializeNew();
+        }
         public void InitializeNew()
         {
             if (HostTableAttributeName == null) HostTableAttributeName = ClassTemplateTable + "ID";
@@ -52,7 +58,6 @@ namespace Database.ClassTemplates
                 using (var reader = SQLDB.Read(conn, "SELECT * FROM " + ClassTemplateTable + " WHERE " + ClassTemplateTable + "_ID = " + ClassTemplateId + ";"))
                 {
                     reader.Read();
-                    ClassTemplateId = reader.GetInt32(0);
                     SetupTableData();
                     OnRead(reader);
                 }
@@ -76,6 +81,7 @@ namespace Database.ClassTemplates
         public void Delete(SQLiteConnection conn)
         {
             SQLDB.Write(conn, "DELETE FROM " + ClassTemplateTable + " WHERE " + ClassTemplateTable + "_ID = " + ClassTemplateId + ";");
+            OnDelete(conn);
         }
 
 
@@ -83,6 +89,7 @@ namespace Database.ClassTemplates
         public void Clone(SQLiteConnection conn)
         {
             ClassTemplateId = SQLDB.MaxIdPlusOne(ClassTemplateTable);
+            OnClone(conn);
         }
     }
 }

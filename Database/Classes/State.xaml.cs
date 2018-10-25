@@ -21,8 +21,7 @@ namespace Database.Classes
             Base.InitializeNew();
             PassiveEffectAttributes.InitializeNew();
             PassiveEffectRates.InitializeNew();
-            StatMods.InitializeNew(100);
-            StatMods.HostTableAttributeName = "StatModifiers";
+            StatMods.InitializeNew(100, "StatModifiers");
             MaxStackInput.Text = "1";
             StepsToRemoveInput.Text = "0";
             ContactSpreadRateInput.Text = "0";

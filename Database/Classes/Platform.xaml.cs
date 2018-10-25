@@ -44,7 +44,7 @@ namespace Database.Classes
         public override void ParameterizeAttributes()
         {
             SQLDB.ParameterizeAttribute("@BaseObjectID", Base.ClassTemplateId);
-            SQLDB.ParameterizeAttribute("@ForceDirection", ForceDirectionOptions[ForceDirectionInput.SelectedIndex].ToString());
+            SQLDB.ParameterizeAttribute("@ForceDirection", ForceDirectionInput.SelectedIndex);
             SQLDB.ParameterizeAttribute("@JumpDistance", JumpDistanceInput.Text);
             SQLDB.ParameterizeAttribute("@BounceVelocity", BounceVelocityInput.Text);
             SQLDB.ParameterizeAttribute("@Slipperiness", SlipperinessInput.Text);

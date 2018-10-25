@@ -21,10 +21,10 @@ namespace Database.ClassTemplates
 
         protected override void SetupTableData() { }
 
-        public void InitializeNew(int initial)
+        public void InitializeNew(int initial, string hostTableAttributeName)
         {
             Initial = initial;
-            InitializeNew();
+            InitializeNew(hostTableAttributeName);
         }
         protected override void OnInitializeNew()
         {

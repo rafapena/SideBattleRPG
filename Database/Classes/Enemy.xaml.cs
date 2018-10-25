@@ -34,8 +34,7 @@ namespace Database.Classes
         protected override void OnInitializeNew()
         {
             Base.InitializeNew();
-            ScaledStats.InitializeNew(0);
-            ScaledStats.HostTableAttributeName = "ScaledStats";
+            ScaledStats.InitializeNew(0, "ScaledStats");
             WidthInput.SelectedIndex = 0;
             HeightInput.SelectedIndex = 0;
             BossTypeInput.SelectedIndex = 0;

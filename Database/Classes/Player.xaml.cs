@@ -30,8 +30,7 @@ namespace Database.Classes
         protected override void OnInitializeNew()
         {
             Base.InitializeNew();
-            NatStats.InitializeNew();
-            NatStats.HostTableAttributeName = "NaturalStats";
+            NatStats.InitializeNew("NaturalStats");
             CompanionshipInput.Text = "100";
             SavePartnerRateInput.Text = "100";
             CounterattackRateInput.Text = "100";

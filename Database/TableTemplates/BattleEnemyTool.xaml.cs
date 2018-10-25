@@ -38,7 +38,7 @@ namespace Database.TableTemplates
         private ComboBoxInputData CBInputs;
         private List<ToolAI> ToolAIs;
         public string AttributeName { get; set; }   // The name of the fourth attribute on a many-to-many relationship table
-        private string BaseTableAttributeName { get; set; } // Name of the template in the base, that hosts this table table (i.e. Battle, Player, etc.)
+        private int BattleEnemyId { get; set; }
 
         public BattleEnemyTool()
         {
@@ -82,33 +82,18 @@ namespace Database.TableTemplates
             ToolAIs.RemoveAt(ToolAIs.Count - 1);
         }
 
-        public void Setup(string baseTableAttributeName, string hostDBTable, string targetDBTable, string title, List<string> columnNames, int scrollerHeight = 100)
+        public void Setup(int battleEnemyId, string targetDBTable, string title, List<string> columnNames, int scrollerHeight = 100)
         {
             ToolAIs = new List<ToolAI>();
-            BaseTableAttributeName = baseTableAttributeName;
+            BattleEnemyId = battleEnemyId;
             TargetToolTable = targetDBTable;
-            Setup(hostDBTable, "Tool", title, columnNames, scrollerHeight);
+            Setup("BattleEnemy", "Tool", title, columnNames, scrollerHeight);
         }
 
         // Helper method of Setup: Get Id of the host DB table that matches the current DB table the user is currently viewing
         protected override int GetHostId()
         {
-            if (SQLDB.CurrentTable == HostDBTable) return SQLDB.CurrentId;
-            int id;
-            using (var conn = AccessDB.Connect())
-            {
-                conn.Open();
-                string select = "SELECT  " + HostDBTable + "_ID FROM " + SQLDB.CurrentTable + " JOIN " + HostDBTable;
-                string where = "WHERE " + HostDBTable + "_ID = " + BaseTableAttributeName + " AND " + SQLDB.CurrentTable + "_ID = " + SQLDB.CurrentId;
-                using (var reader = SQLDB.Read(conn, select + " " + where + ";"))
-                {
-                    reader.Read();
-                    try { id = int.Parse(reader[HostDBTable + "_ID"].ToString()); }
-                    catch (InvalidOperationException) { id = SQLDB.CurrentId; }
-                }
-                conn.Close();
-            }
-            return id;
+            return BattleEnemyId;
         }
         
         protected override void OnInitializeNew()
@@ -116,9 +101,9 @@ namespace Database.TableTemplates
             Title.Text = TableTitle;
             Table = TableList;
             Scroller.Height = ScrollerHeight;
-            string tables = "BaseObject JOIN " + TargetToolTable;
-            string where = "BaseObject_ID = BaseObjectID ";
-            CBInputs = new ComboBoxInputData(TargetToolTable + "_ID", "Name", tables, where, TargetToolTable + "_ID");
+            string tables = "BaseObject JOIN Tool JOIN " + TargetToolTable;
+            string where = "BaseObject_ID = BaseObjectID AND Tool_ID = ToolID";
+            CBInputs = new ComboBoxInputData("Tool_ID", "Name", tables, where, "Tool_ID");
             AttributeName = "";
         }
 
@@ -132,10 +117,9 @@ namespace Database.TableTemplates
         // Same as DualInputTypesList
         protected override void OnParameterizeInputs(int i)
         {
-            SQLDB.ParameterizeAttribute("@HostID" + i, HostId);
+            SQLDB.ParameterizeAttribute("@BattleEnemyID" + i, HostId);
             SQLDB.ParameterizeAttribute("@ToolID" + i, CBInputs.SelectedIds[i]);
-            SQLDB.ParameterizeAttribute("@TableIndex" + i, i.ToString());
-            SQLDB.ParameterizeAttribute("@ToolTable" + i, TargetToolTable);
+            SQLDB.ParameterizeAttribute("@TableIndex" + i, i);
             SQLDB.ParameterizeAttribute("@Priority" + i, ToolAIs[i].Priority);
             SQLDB.ParameterizeAttribute("@Quantity" + i, ToolAIs[i].Quantity);
             SQLDB.ParameterizeAttribute("@HPLow" + i, ToolAIs[i].HPLow);
@@ -157,23 +141,27 @@ namespace Database.TableTemplates
 
         protected override string[] OnCreate()
         {
-            string connectorTable = HostDBTable + "_To_Tool";
-            string attributes = HostDBTable + "ID, ToolID, TableIndex, ToolTable, " +
-                "Priority, Quantity, HPLow, HPHigh, SPLow, SPHigh, ActiveState1, ActiveState2, InactiveState1, InactiveState2, " +
-                "AllyCondition, FoeCondition, UserCondition, TargetElementRate, TargetStateRates, TargetStatConditions, TargetToolElement";
-            return new string[] { connectorTable, attributes };
+            return new string[] { "BattleEnemy_To_Tool",
+                "BattleEnemyID, ToolID, TableIndex, Priority, Quantity, HPLow, HPHigh, SPLow, SPHigh, ActiveState1, ActiveState2, InactiveState1, InactiveState2, " +
+                "AllyCondition, FoeCondition, UserCondition, TargetElementRate, TargetStateRates, TargetStatConditions, TargetToolElement" };
         }
         protected override string OnCreateValues(int i)
         {
-            return "@HostID" + i + ", @ToolID" + i + ", @TableIndex" + i + ", @ToolTable" + i +
+            return "@BattleEnemyID" + i + ", @ToolID" + i + ", @TableIndex" + i +
                 ", @Priority" + i + ", @Quantity" + i + ", @HPLow" + i + ", @HPHigh" + i + ", @SPLow" + i + ", @SPHigh" + i + ", @ActiveState1" + i + ", @ActiveState2" + i +
                 ", @InactiveState2" + i + ", @InactiveState2" + i + ", @AllyCondition" + i + ", @FoeCondition" + i + ", @UserCondition" + i +
                 ", @TargetElementRate" + i + ", @TargetStateRates" + i + ", @TargetStatConditions" + i + ", @TargetToolElement" + i;
         }
 
+        protected override string[] OnReadCommands()
+        {
+            string tables = "BattleEnemy_To_Tool JOIN " + TargetToolTable;
+            string where = "BattleEnemyID = " + HostId + " AND " + TargetToolTable + ".ToolID = BattleEnemy_To_Tool.ToolID";
+            return new string[] { tables, where + " ORDER BY TableIndex" };
+        }
         protected override void OnRead(SQLiteDataReader reader)
         {
-            int landingIndex = CBInputs.FindIndex(reader[TargetToolTable + "_ID"]);
+            int landingIndex = CBInputs.FindIndex(reader["ToolID"]);
             Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, landingIndex));
             Elements[Count - 1].Add(Button("Edit", EditAI, "#CCCCCC", Count, Count, 2));
             ToolAI toolAi = new ToolAI();
@@ -196,11 +184,17 @@ namespace Database.TableTemplates
             toolAi.TargetToolElement = int.Parse(reader["TargetToolElement"].ToString());
             ToolAIs.Add(toolAi);
         }
-        protected override string[] OnReadCommands()
+
+        protected override string[] OnDelete()
         {
-            string select = HostDBTable + "_To_Tool JOIN BaseObject JOIN " + TargetToolTable;
-            string where = "BaseObject_ID = BaseObjectID AND " + TargetToolTable + "_ID = " + TargetToolTable + ".ToolID AND " + HostDBTable + "ID = " + HostId + " AND ToolTable = '" + TargetToolTable + "'";
-            return new string[] { select, where + " ORDER BY TableIndex" };
+            string toBeDeletedIds = "SELECT BattleEnemy_To_Tool.ToolID FROM BattleEnemy_To_Tool JOIN " + TargetToolTable + " WHERE " + TargetToolTable + ".ToolID = BattleEnemy_To_Tool.ToolID";
+            return new string[] { "BattleEnemy_To_Tool", "BattleEnemyID = " + HostId + " AND ToolID IN (" + toBeDeletedIds + ")"};
+        }
+
+        public new void Clone(SQLiteConnection conn) { }
+        public void Clone(SQLiteConnection conn, int BEId)
+        {
+            HostId = BEId;
         }
 
         private void EditAI(object sender, RoutedEventArgs e)

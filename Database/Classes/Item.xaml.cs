@@ -27,8 +27,7 @@ namespace Database.Classes
             Base.InitializeNew();
             ToolAttributes.InitializeNew();
             ToolStateRates.InitializeNew();
-            PermanentStatMods.InitializeNew();
-            PermanentStatMods.HostTableAttributeName = "PermStatMods";
+            PermanentStatMods.InitializeNew("PermStatMods");
             DefaultPriceInput.Text = "100";
             ConsumableInput.IsChecked = true;
             TurnsIntoInput.SelectedIndex = 0;

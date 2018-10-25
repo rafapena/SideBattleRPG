@@ -10,7 +10,7 @@ namespace Database.TableTemplates
 {
     public partial class DualInputTypeList : _TableTemplateOperations
     {
-        private ComboBoxInputData CBInputs;
+        private ComboBoxInputData TargetTypeListData;
         public string ListType { get; private set; }
         public string AttributeName { get; set; }
         public string StringList { get; private set; }
@@ -38,16 +38,16 @@ namespace Database.TableTemplates
 
         protected override string CheckAddability()
         {
-            return CBInputs.NoOptions() ? "The table '" + TargetDBTable + "' is currently empty" : "";
+            return TargetTypeListData.NoOptions() ? "The table '" + TargetDBTable + "' is currently empty" : "";
         }
         protected override void OnAddRow()
         {
-            Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, 0));
+            Elements[Count - 1].Add(TargetTypeListData.CreateInput(Count, 1, 0));
             if (isDual()) AddSecondInput("100");
         }
         protected override void OnRemoveRow()
         {
-            CBInputs.RemoveFromSelectedIds();
+            TargetTypeListData.RemoveFromSelectedIds();
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Database.TableTemplates
             Title.Text = TableTitle;
             Table = TableList;
             Scroller.Height = ScrollerHeight;
-            CBInputs = new ComboBoxInputData("List_ID", "Name", TargetDBTable, "List_Type = '" + ListType + "'", "List_ID");
+            TargetTypeListData = new ComboBoxInputData("List_ID", "Name", TargetDBTable, "List_Type = '" + ListType + "'", "List_ID");
             AttributeName = "";
             StringList = "";
         }
@@ -83,7 +83,7 @@ namespace Database.TableTemplates
                 err += "Input on row " + (i+1) + " for " + TableTitle + " must be a positive integer\n";
             for (int j = i + 1; j < Count; j++)
             {
-                if (CBInputs.SelectedIds[i] != CBInputs.SelectedIds[j]) continue;
+                if (TargetTypeListData.SelectedIds[i] != TargetTypeListData.SelectedIds[j]) continue;
                 err += "All rows in " + TableTitle + " must be unique\n";
                 break;
             }
@@ -107,7 +107,7 @@ namespace Database.TableTemplates
             for (int i = 0; i < Count; i++)
             {
                 string textInput = isDual() ? ((TextBox)Elements[i][2]).Text + "_" : "";
-                StringList += CBInputs.SelectedIds[i] + "_" + textInput;
+                StringList += TargetTypeListData.SelectedIds[i] + "_" + textInput;
             }
         }
 
@@ -133,9 +133,9 @@ namespace Database.TableTemplates
             for (int i = 1; i < items.Length; i += inc)
             {
                 int listId = int.Parse(items[i - 1]);
-                if (listId >= CBInputs.OptionsListNames.Count) continue;
+                if (listId >= TargetTypeListData.OptionsListNames.Count) continue;
                 AddRow(null, null);
-                Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, listId));
+                Elements[Count - 1].Add(TargetTypeListData.CreateInput(Count, 1, listId));
                 if (isDual()) AddSecondInput(int.Parse(items[i]).ToString());
                 AddRangeToTable();
             }

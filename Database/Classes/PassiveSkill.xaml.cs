@@ -39,8 +39,7 @@ namespace Database.Classes
             Base.InitializeNew();
             PassiveEffectAttributes.InitializeNew();
             PassiveEffectRates.InitializeNew();
-            StatMods.InitializeNew(100);
-            StatMods.HostTableAttributeName = "StatModifiers";
+            StatMods.InitializeNew(100, "StatModifiers");
             HPMinInput.Text = "0";
             HPMaxInput.Text = "100";
             SPMinInput.Text = "0";

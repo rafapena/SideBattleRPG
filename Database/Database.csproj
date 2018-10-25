@@ -140,9 +140,6 @@
     <Compile Include="BaseControls\TableList.xaml.cs">
       <DependentUpon>TableList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ClassTemplates\BattleEnemyUtilities.xaml.cs">
-      <DependentUpon>BattleEnemyUtilities.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ClassTemplates\PassiveEffectRates.xaml.cs">
       <DependentUpon>PassiveEffectRates.xaml</DependentUpon>
     </Compile>
@@ -159,8 +156,8 @@
     <Compile Include="ClassTemplates\PassiveEffectAttributes.xaml.cs">
       <DependentUpon>PassiveEffectAttributes.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ClassTemplates\BattleEnemyAttributes.xaml.cs">
-      <DependentUpon>BattleEnemyAttributes.xaml</DependentUpon>
+    <Compile Include="ClassTemplates\BattleEnemy.xaml.cs">
+      <DependentUpon>BattleEnemy.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClassTemplates\_GenericClassTemplate.xaml.cs">
       <DependentUpon>_GenericClassTemplate.xaml</DependentUpon>
@@ -243,10 +240,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ClassTemplates\BattleEnemyUtilities.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="ClassTemplates\PassiveEffectRates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -267,7 +260,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ClassTemplates\BattleEnemyAttributes.xaml">
+    <Page Include="ClassTemplates\BattleEnemy.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

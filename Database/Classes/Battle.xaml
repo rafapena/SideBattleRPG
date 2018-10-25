@@ -25,11 +25,11 @@
                         
                         <TabItem Header="Enemies">
                             <StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10 10 5 5">
-                                    <Button Content="Add" Click="AddBattleEnemy" Background="#6f6" Width="50" Height="20"/>
-                                    <Button Content="Remove" Click="RemoveBattleEnemy" Background="#f66" Width="50" Height="20" Margin="15 0 0 0"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10 10 0 15">
+                                    <Button Content="Add Enemy" Click="AddBattleEnemy" Background="#6f6" Width="100" Height="25"/>
+                                    <Button Content="Remove Enemy" Click="RemoveBattleEnemy" Background="#f66" Width="100" Height="25" Margin="15 0 0 0"/>
                                 </StackPanel>
-                                <ScrollViewer Height="250" Margin="0,5,5,5">
+                                <ScrollViewer Height="300" Margin="0,5,5,5">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>
@@ -43,18 +43,12 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <template:BattleEnemyAttributes x:Name="EnemyA1" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0"/>
-                                        <template:BattleEnemyAttributes x:Name="EnemyA2" Margin="5,5,5,5" Grid.Column="0" Grid.Row="1"/>
-                                        <template:BattleEnemyAttributes x:Name="EnemyA3" Margin="5,5,5,5" Grid.Column="0" Grid.Row="2"/>
-                                        <template:BattleEnemyAttributes x:Name="EnemyA4" Margin="5,5,5,5" Grid.Column="0" Grid.Row="3"/>
-                                        <template:BattleEnemyAttributes x:Name="EnemyA5" Margin="5,5,5,5" Grid.Column="0" Grid.Row="4"/>
-                                        <template:BattleEnemyAttributes x:Name="EnemyA6" Margin="5,5,5,5" Grid.Column="0" Grid.Row="5"/>
-                                        <template:BattleEnemyUtilities x:Name="EnemyU1" Margin="5,5,5,5" Grid.Column="1" Grid.Row="0"/>
-                                        <template:BattleEnemyUtilities x:Name="EnemyU2" Margin="5,5,5,5" Grid.Column="1" Grid.Row="1"/>
-                                        <template:BattleEnemyUtilities x:Name="EnemyU3" Margin="5,5,5,5" Grid.Column="1" Grid.Row="2"/>
-                                        <template:BattleEnemyUtilities x:Name="EnemyU4" Margin="5,5,5,5" Grid.Column="1" Grid.Row="3"/>
-                                        <template:BattleEnemyUtilities x:Name="EnemyU5" Margin="5,5,5,5" Grid.Column="1" Grid.Row="4"/>
-                                        <template:BattleEnemyUtilities x:Name="EnemyU6" Margin="5,5,5,5" Grid.Column="1" Grid.Row="5"/>
+                                        <template:BattleEnemy x:Name="Enemy1" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0"/>
+                                        <template:BattleEnemy x:Name="Enemy2" Margin="5,5,5,5" Grid.Column="0" Grid.Row="1"/>
+                                        <template:BattleEnemy x:Name="Enemy3" Margin="5,5,5,5" Grid.Column="0" Grid.Row="2"/>
+                                        <template:BattleEnemy x:Name="Enemy4" Margin="5,5,5,5" Grid.Column="0" Grid.Row="3"/>
+                                        <template:BattleEnemy x:Name="Enemy5" Margin="5,5,5,5" Grid.Column="0" Grid.Row="4"/>
+                                        <template:BattleEnemy x:Name="Enemy6" Margin="5,5,5,5" Grid.Column="0" Grid.Row="5"/>
                                     </Grid>
                                 </ScrollViewer>
                             </StackPanel>

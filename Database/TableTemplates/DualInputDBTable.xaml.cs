@@ -10,7 +10,7 @@ namespace Database.TableTemplates
 {
     public partial class DualInputDBTable : _TableTemplateOperations
     {
-        private ComboBoxInputData CBInputs;
+        private ComboBoxInputData TargetTableData;
         public string AttributeName { get; set; }   // That name of the fourth attribute on a many-to-many relationship table
 
         public DualInputDBTable()
@@ -36,16 +36,16 @@ namespace Database.TableTemplates
 
         protected override string CheckAddability()
         {
-            return CBInputs.NoOptions() ? "The table '" + TargetDBTable + "' is currently empty" : "";
+            return TargetTableData.NoOptions() ? "The table '" + TargetDBTable + "' is currently empty" : "";
         }
         protected override void OnAddRow()
         {
-            Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, 0));
+            Elements[Count - 1].Add(TargetTableData.CreateInput(Count, 1, 0));
             if (isDual()) AddSecondInput("100");
         }
         protected override void OnRemoveRow()
         {
-            CBInputs.RemoveFromSelectedIds();
+            TargetTableData.RemoveFromSelectedIds();
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Database.TableTemplates
             string tables = "BaseObject JOIN " + TargetDBTable;
             string dupCond = HostDBTable == TargetDBTable ? "AND " + HostDBTable + "_ID <> " + HostId : "";
             string where = "BaseObject_ID = BaseObjectID " + dupCond;
-            CBInputs = new ComboBoxInputData(TargetDBTable + "_ID", "Name", tables, where, "Name");
+            TargetTableData = new ComboBoxInputData(TargetDBTable + "_ID", "Name", tables, where, "Name");
             AttributeName = "";
         }
 
@@ -73,7 +73,7 @@ namespace Database.TableTemplates
                 err += "Input on row " + (i+1) + " for " + TableTitle + " must be a positive integer\n";
             for (int j = i + 1; j < Count; j++)
             {
-                if (CBInputs.SelectedIds[i] != CBInputs.SelectedIds[j]) continue;
+                if (TargetTableData.SelectedIds[i] != TargetTableData.SelectedIds[j]) continue;
                 err += "All rows in " + TableTitle + " must be unique\n";
                 break;
             }
@@ -84,7 +84,7 @@ namespace Database.TableTemplates
         protected override void OnParameterizeInputs(int i)
         {
             SQLDB.ParameterizeAttribute("@HostID" + i, HostId);
-            SQLDB.ParameterizeAttribute("@TargetID" + i, CBInputs.SelectedIds[i]);
+            SQLDB.ParameterizeAttribute("@TargetID" + i, TargetTableData.SelectedIds[i]);
             SQLDB.ParameterizeAttribute("@TableIndex" + i, i.ToString());
             if (isDual()) SQLDB.ParameterizeAttribute("@" + AttributeName + i, ((TextBox)Elements[i][2]).Text);
         }
@@ -105,8 +105,8 @@ namespace Database.TableTemplates
 
         protected override void OnRead(SQLiteDataReader reader)
         {
-            int landingIndex = CBInputs.FindIndex(reader[TargetDBTable + "_ID"]);
-            Elements[Count - 1].Add(CBInputs.CreateInput(Count, 1, landingIndex));
+            int landingIndex = TargetTableData.FindIndex(reader[TargetDBTable + "_ID"]);
+            Elements[Count - 1].Add(TargetTableData.CreateInput(Count, 1, landingIndex));
             if (isDual()) AddSecondInput(reader[AttributeName].ToString());
         }
     }
