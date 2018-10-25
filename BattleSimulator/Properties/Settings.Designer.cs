@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BattleSimluator.Properties
+namespace BattleSimulator.Properties
 {
 
 

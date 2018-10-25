@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EnemyBattleSimluator.Utilities
+namespace BattleSimulator.Utilities
 {
-    public static class PrtyInterpreter
+    class PrtyInterpreter
     {
     }
 }

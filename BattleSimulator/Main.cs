@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EnemyBattleSimluator.Templates
+namespace BattleSimulator
 {
-    public partial class Battlers : UserControl
+    public partial class Main : Form
     {
-        public Battlers()
+        public Main()
         {
             InitializeComponent();
         }

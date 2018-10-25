@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("EnemyBattleSimluator")]
+[assembly: AssemblyTitle("BattleSimulator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("EnemyBattleSimluator")]
+[assembly: AssemblyProduct("BattleSimulator")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d181033f-83a9-4d7e-a168-173b131ba95f")]
+[assembly: Guid("0d27aff3-fe29-4ad0-9517-63164b6af506")]
 
 // Version information for an assembly consists of the following four values:
 //

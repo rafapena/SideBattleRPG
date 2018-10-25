@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EnemyBattleSimluator.Sections
+namespace BattleSimulator.Templates
 {
-    public partial class Party : UserControl
+    public partial class TableList : Form
     {
-        public Party()
+        public TableList()
         {
             InitializeComponent();
         }
