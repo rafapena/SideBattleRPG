@@ -126,24 +126,14 @@ namespace Database.Classes
 
         private void AddBattleEnemy(object sender, RoutedEventArgs e)
         {
-            if (NumberOfEnemies >= 6)
-            {
-                MessageBox.Show("Battle must have no more than 6 enemies", "Could not add enemy");
-                return;
-            }
-            Enemies[NumberOfEnemies].Visibility = Visibility.Visible;
-            NumberOfEnemies++;
+            if (NumberOfEnemies >= 6) MessageBox.Show("6 enemies per battle is the maximum limit.", "Could not add enemy");
+            else Enemies[NumberOfEnemies++].Visibility = Visibility.Visible;
         }
 
         private void RemoveBattleEnemy(object sender, RoutedEventArgs e)
         {
-            if (NumberOfEnemies <= 1)
-            {
-                MessageBox.Show("Battle must have at least 1 enemy", "Could not remove enemy");
-                return;
-            }
-            NumberOfEnemies--;
-            Enemies[NumberOfEnemies].Visibility = Visibility.Collapsed;
+            if (NumberOfEnemies <= 1) MessageBox.Show("1 enemy per battle is the minimum limit", "Could not remove enemy");
+            else Enemies[--NumberOfEnemies].Visibility = Visibility.Collapsed;
         }
 
         private void CreateNewEnemies(SQLiteConnection conn, int initialIndex)

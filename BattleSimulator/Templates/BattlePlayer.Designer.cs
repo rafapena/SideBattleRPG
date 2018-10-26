@@ -35,7 +35,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.Class = new System.Windows.Forms.ComboBox();
-            this.Level = new System.Windows.Forms.TextBox();
+            this.LevelInput = new System.Windows.Forms.TextBox();
             this.ZFormation = new System.Windows.Forms.ComboBox();
             this.XFormation = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -64,6 +64,7 @@
             // 
             // Player
             // 
+            this.Player.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Player.FormattingEnabled = true;
             this.Player.Location = new System.Drawing.Point(190, 28);
             this.Player.Name = "Player";
@@ -73,7 +74,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(192, 68);
+            this.label1.Location = new System.Drawing.Point(192, 100);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(48, 20);
             this.label1.TabIndex = 2;
@@ -82,7 +83,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(192, 101);
+            this.label2.Location = new System.Drawing.Point(192, 66);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(46, 20);
             this.label2.TabIndex = 3;
@@ -108,21 +109,23 @@
             // 
             // Class
             // 
+            this.Class.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Class.FormattingEnabled = true;
-            this.Class.Location = new System.Drawing.Point(244, 63);
+            this.Class.Location = new System.Drawing.Point(244, 95);
             this.Class.Name = "Class";
             this.Class.Size = new System.Drawing.Size(146, 28);
             this.Class.TabIndex = 6;
             // 
-            // Level
+            // LevelInput
             // 
-            this.Level.Location = new System.Drawing.Point(244, 97);
-            this.Level.Name = "Level";
-            this.Level.Size = new System.Drawing.Size(54, 26);
-            this.Level.TabIndex = 7;
+            this.LevelInput.Location = new System.Drawing.Point(244, 62);
+            this.LevelInput.Name = "LevelInput";
+            this.LevelInput.Size = new System.Drawing.Size(54, 26);
+            this.LevelInput.TabIndex = 7;
             // 
             // ZFormation
             // 
+            this.ZFormation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ZFormation.FormattingEnabled = true;
             this.ZFormation.Location = new System.Drawing.Point(291, 130);
             this.ZFormation.Name = "ZFormation";
@@ -131,6 +134,7 @@
             // 
             // XFormation
             // 
+            this.XFormation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.XFormation.FormattingEnabled = true;
             this.XFormation.Location = new System.Drawing.Point(291, 164);
             this.XFormation.Name = "XFormation";
@@ -166,6 +170,7 @@
             // 
             // Weapon1
             // 
+            this.Weapon1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Weapon1.FormattingEnabled = true;
             this.Weapon1.Location = new System.Drawing.Point(604, 51);
             this.Weapon1.Name = "Weapon1";
@@ -174,6 +179,7 @@
             // 
             // Weapon2
             // 
+            this.Weapon2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Weapon2.FormattingEnabled = true;
             this.Weapon2.Location = new System.Drawing.Point(604, 85);
             this.Weapon2.Name = "Weapon2";
@@ -182,6 +188,7 @@
             // 
             // Weapon3
             // 
+            this.Weapon3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Weapon3.FormattingEnabled = true;
             this.Weapon3.Location = new System.Drawing.Point(604, 119);
             this.Weapon3.Name = "Weapon3";
@@ -190,6 +197,7 @@
             // 
             // Item3
             // 
+            this.Item3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Item3.FormattingEnabled = true;
             this.Item3.Location = new System.Drawing.Point(443, 119);
             this.Item3.Name = "Item3";
@@ -198,6 +206,7 @@
             // 
             // Item2
             // 
+            this.Item2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Item2.FormattingEnabled = true;
             this.Item2.Location = new System.Drawing.Point(443, 85);
             this.Item2.Name = "Item2";
@@ -206,6 +215,7 @@
             // 
             // Item1
             // 
+            this.Item1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Item1.FormattingEnabled = true;
             this.Item1.Location = new System.Drawing.Point(443, 51);
             this.Item1.Name = "Item1";
@@ -214,6 +224,7 @@
             // 
             // Item4
             // 
+            this.Item4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Item4.FormattingEnabled = true;
             this.Item4.Location = new System.Drawing.Point(443, 153);
             this.Item4.Name = "Item4";
@@ -222,6 +233,7 @@
             // 
             // PassiveSkill2
             // 
+            this.PassiveSkill2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PassiveSkill2.FormattingEnabled = true;
             this.PassiveSkill2.Location = new System.Drawing.Point(766, 85);
             this.PassiveSkill2.Name = "PassiveSkill2";
@@ -230,6 +242,7 @@
             // 
             // PassiveSkill1
             // 
+            this.PassiveSkill1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PassiveSkill1.FormattingEnabled = true;
             this.PassiveSkill1.Location = new System.Drawing.Point(766, 51);
             this.PassiveSkill1.Name = "PassiveSkill1";
@@ -254,7 +267,7 @@
             this.Controls.Add(this.label5);
             this.Controls.Add(this.XFormation);
             this.Controls.Add(this.ZFormation);
-            this.Controls.Add(this.Level);
+            this.Controls.Add(this.LevelInput);
             this.Controls.Add(this.Class);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -279,7 +292,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox Class;
-        private System.Windows.Forms.TextBox Level;
+        private System.Windows.Forms.TextBox LevelInput;
         private System.Windows.Forms.ComboBox ZFormation;
         private System.Windows.Forms.ComboBox XFormation;
         private System.Windows.Forms.Label label5;
