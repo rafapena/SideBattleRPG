@@ -15,6 +15,12 @@ namespace BattleSimulator.Sections
         public Party()
         {
             InitializeComponent();
+            PartyMembersPanel.AutoScroll = true;
+        }
+
+        private void AddButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace BattleSimulator.Templates
 {
-    public partial class BattlePlayer : UserControl
+    public partial class OneRelation : UserControl
     {
-        public BattlePlayer()
+        public OneRelation()
         {
             InitializeComponent();
         }

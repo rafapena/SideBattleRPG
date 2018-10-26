@@ -15,6 +15,7 @@ namespace BattleSimulator
         public Main()
         {
             InitializeComponent();
+            PartiesList.Setup();
         }
     }
 }

@@ -90,18 +90,27 @@
       <DependentUpon>Party.cs</DependentUpon>
     </Compile>
     <Compile Include="Templates\BattlePlayer.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Templates\BattlePlayer.Designer.cs">
       <DependentUpon>BattlePlayer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Templates\OneRelation.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Templates\OneRelation.Designer.cs">
+      <DependentUpon>OneRelation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Templates\TableList.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Templates\TableList.Designer.cs">
       <DependentUpon>TableList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\PrtyInterpreter.cs" />
+    <Compile Include="Utilities\File.cs" />
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -111,6 +120,18 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Sections\Party.resx">
+      <DependentUpon>Party.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Templates\BattlePlayer.resx">
+      <DependentUpon>BattlePlayer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Templates\OneRelation.resx">
+      <DependentUpon>OneRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Templates\TableList.resx">
+      <DependentUpon>TableList.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -134,7 +155,7 @@
   <ItemGroup>
     <Folder Include="Classes\" />
     <Folder Include="Pages\" />
-    <Folder Include="PartyFiles\" />
+    <Folder Include="PrtyFiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.109.2\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.109.2\build\net451\System.Data.SQLite.Core.targets')" />
