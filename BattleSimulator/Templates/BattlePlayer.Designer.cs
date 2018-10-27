@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.PlayerImage = new System.Windows.Forms.PictureBox();
             this.Player = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -50,17 +50,17 @@
             this.Item4 = new System.Windows.Forms.ComboBox();
             this.PassiveSkill2 = new System.Windows.Forms.ComboBox();
             this.PassiveSkill1 = new System.Windows.Forms.ComboBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PlayerImage)).BeginInit();
             this.SuspendLayout();
             // 
-            // pictureBox1
+            // PlayerImage
             // 
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(24, 28);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(160, 160);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.PlayerImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PlayerImage.Location = new System.Drawing.Point(24, 28);
+            this.PlayerImage.Name = "PlayerImage";
+            this.PlayerImage.Size = new System.Drawing.Size(160, 160);
+            this.PlayerImage.TabIndex = 0;
+            this.PlayerImage.TabStop = false;
             // 
             // Player
             // 
@@ -162,7 +162,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(762, 28);
+            this.label7.Location = new System.Drawing.Point(758, 28);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(103, 20);
             this.label7.TabIndex = 12;
@@ -235,7 +235,7 @@
             // 
             this.PassiveSkill2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PassiveSkill2.FormattingEnabled = true;
-            this.PassiveSkill2.Location = new System.Drawing.Point(766, 85);
+            this.PassiveSkill2.Location = new System.Drawing.Point(762, 85);
             this.PassiveSkill2.Name = "PassiveSkill2";
             this.PassiveSkill2.Size = new System.Drawing.Size(146, 28);
             this.PassiveSkill2.TabIndex = 22;
@@ -244,7 +244,7 @@
             // 
             this.PassiveSkill1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PassiveSkill1.FormattingEnabled = true;
-            this.PassiveSkill1.Location = new System.Drawing.Point(766, 51);
+            this.PassiveSkill1.Location = new System.Drawing.Point(762, 51);
             this.PassiveSkill1.Name = "PassiveSkill1";
             this.PassiveSkill1.Size = new System.Drawing.Size(146, 28);
             this.PassiveSkill1.TabIndex = 21;
@@ -274,10 +274,10 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Player);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.PlayerImage);
             this.Name = "BattlePlayer";
             this.Size = new System.Drawing.Size(947, 222);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PlayerImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -285,7 +285,7 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox PlayerImage;
         private System.Windows.Forms.ComboBox Player;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;

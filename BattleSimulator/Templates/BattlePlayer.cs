@@ -19,17 +19,27 @@ namespace BattleSimulator.Templates
         private string[] ZFormationOptions = new string[] { "Front", "Center", "Back" };
         private string[] XFormationOptions = new string[] { "Left", "Center", "Right" };
 
-
         public BattlePlayer()
         {
             InitializeComponent();
-            PlayerData = new ComboBoxInputData("Player_ID", "Name", "BaseObject JOIN Player", "BaseObjectID = BaseObject_ID", "Name");
-            BattlerClassData = new ComboBoxInputData("BattlerClass_ID", "Name", "BaseObject JOIN BattlerClass", "BaseObjectID = BaseObject_ID", "Name");
+        }
+
+        public string Position()
+        {
+            return ZFormation.SelectedIndex + "" + XFormation.SelectedIndex;
+        }
+        public bool InSamePositionAs(BattlePlayer other)
+        {
+            return Position() == other.Position();
+        }
+
+        public void SetupData()
+        {
+            PlayerData = new ComboBoxInputData("Player_ID", "Name", "BaseObject JOIN Player", "BaseObjectID = BaseObject_ID", "Player_ID");
             ItemData = new ComboBoxInputData("Item_ID", "Name", "BaseObject JOIN Item", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
             WeaponData = new ComboBoxInputData("Weapon_ID", "Name", "BaseObject JOIN Weapon", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
             PassiveSkillData = new ComboBoxInputData("PassiveSkill_ID", "Name", "BaseObject JOIN PassiveSkill", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
             Player.Items.AddRange(PlayerData.OptionsListNames.ToArray());
-            Class.Items.AddRange(BattlerClassData.OptionsListNames.ToArray());
             ZFormation.Items.AddRange(ZFormationOptions);
             XFormation.Items.AddRange(XFormationOptions);
             string[] items = ItemData.OptionsListNames.ToArray();
@@ -44,7 +54,38 @@ namespace BattleSimulator.Templates
             Weapon3.Items.AddRange(weapons);
             PassiveSkill1.Items.AddRange(passiveSkills);
             PassiveSkill2.Items.AddRange(passiveSkills);
+            Player.SelectedIndexChanged += new EventHandler(CBChangedPlayer);
         }
+
+        private void CBChangedPlayer(object sender, EventArgs e)
+        {
+            int playerId = PlayerData.OptionsListIds[Player.SelectedIndex];
+            using (var conn = Database.AccessDB.Connect())
+            {
+                conn.Open();
+                using (var reader = SQLDB.Read(conn, "SELECT Image FROM Player JOIN BaseObject " +
+                    "WHERE BaseObject_ID = BaseObjectID AND Player_ID = " + playerId + ";"))
+                {
+                    reader.Read();
+                    try { PlayerImage.Image = BytesToImage(ImageManager.BlobToBytes(reader, 0)); }
+                    catch (Exception) { PlayerImage.Image = null; }
+                }
+                conn.Close();
+            }
+            string where = "BaseObject_ID = BaseObjectID AND BattlerClass_ID = BattlerClassID AND PlayerID = " + playerId;
+            BattlerClassData = new ComboBoxInputData("BattlerClassID", "Name", "Player_To_BattlerClass JOIN BaseObject JOIN BattlerClass", where, "BattlerClass_ID");
+            Class.Items.AddRange(BattlerClassData.OptionsListNames.ToArray());
+        }
+        private Bitmap BytesToImage(byte[] blob)
+        {
+            MemoryStream mStream = new MemoryStream();
+            byte[] pData = blob;
+            mStream.Write(pData, 0, Convert.ToInt32(pData.Length));
+            Bitmap bm = new Bitmap(mStream, false);
+            mStream.Dispose();
+            return bm;
+        }
+
 
         public void Initialize()
         {
@@ -92,20 +133,20 @@ namespace BattleSimulator.Templates
 
         public bool UnsavedChanges(FileStream file)
         {
-            if (Player.SelectedIndex == PlayerData.FindIndex(ReadByte(file))) return true;
-            if (Class.SelectedIndex == BattlerClassData.FindIndex(ReadByte(file))) return true;
-            if (LevelInput.Text == ReadByte(file).ToString()) return true;
-            if (ZFormation.SelectedIndex == ReadByte(file)) return true;
-            if (XFormation.SelectedIndex == ReadByte(file)) return true;
-            if (Item1.SelectedIndex == ItemData.FindIndex(ReadShort(file))) return true;
-            if (Item2.SelectedIndex == ItemData.FindIndex(ReadShort(file))) return true;
-            if (Item3.SelectedIndex == ItemData.FindIndex(ReadShort(file))) return true;
-            if (Item4.SelectedIndex == ItemData.FindIndex(ReadShort(file))) return true;
-            if (Weapon1.SelectedIndex == WeaponData.FindIndex(ReadShort(file))) return true;
-            if (Weapon2.SelectedIndex == WeaponData.FindIndex(ReadShort(file))) return true;
-            if (Weapon3.SelectedIndex == WeaponData.FindIndex(ReadShort(file))) return true;
-            if (PassiveSkill1.SelectedIndex == PassiveSkillData.FindIndex(ReadShort(file))) return true;
-            if (PassiveSkill2.SelectedIndex == PassiveSkillData.FindIndex(ReadShort(file))) return true;
+            if (Player.SelectedIndex != PlayerData.FindIndex(ReadByte(file))) return true;
+            if (Class.SelectedIndex != BattlerClassData.FindIndex(ReadByte(file))) return true;
+            if (LevelInput.Text != ReadByte(file).ToString()) return true;
+            if (ZFormation.SelectedIndex != ReadByte(file)) return true;
+            if (XFormation.SelectedIndex != ReadByte(file)) return true;
+            if (Item1.SelectedIndex != ItemData.FindIndex(ReadShort(file))) return true;
+            if (Item2.SelectedIndex != ItemData.FindIndex(ReadShort(file))) return true;
+            if (Item3.SelectedIndex != ItemData.FindIndex(ReadShort(file))) return true;
+            if (Item4.SelectedIndex != ItemData.FindIndex(ReadShort(file))) return true;
+            if (Weapon1.SelectedIndex != WeaponData.FindIndex(ReadShort(file))) return true;
+            if (Weapon2.SelectedIndex != WeaponData.FindIndex(ReadShort(file))) return true;
+            if (Weapon3.SelectedIndex != WeaponData.FindIndex(ReadShort(file))) return true;
+            if (PassiveSkill1.SelectedIndex != PassiveSkillData.FindIndex(ReadShort(file))) return true;
+            if (PassiveSkill2.SelectedIndex != PassiveSkillData.FindIndex(ReadShort(file))) return true;
             return false;
         }
 

@@ -61,8 +61,7 @@ namespace BattleSimulator.Utilities
         public  static string ReadText(FileStream stream)
         {
             string value = "";
-            int length = stream.ReadByte();
-            while (length > 0) value += stream.ReadByte();
+            for (int i = stream.ReadByte(); i > 0; i--) value += (char)stream.ReadByte();
             return value;
         }
     }

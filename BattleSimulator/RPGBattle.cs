@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace BattleSimulator.Sections
+namespace BattleSimulator
 {
-    public partial class Battle : Form
+    public partial class RPGBattle : Form
     {
-        public Battle()
+        public RPGBattle()
         {
             InitializeComponent();
         }

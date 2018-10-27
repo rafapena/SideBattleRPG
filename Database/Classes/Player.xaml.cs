@@ -4,6 +4,8 @@ using Database.Utilities;
 
 namespace Database.Classes
 {
+    // PLAYER MUST HAVE AT LEAST ONE BATTLERCLASS
+
     public partial class Player : _ClassOperations
     {
         public Player()
@@ -42,6 +44,7 @@ namespace Database.Classes
             string err = Base.ValidateInputs();
             err += NatStats.ValidateInputs(-3, 3);
             err += ClassChoices.ValidateInputs();
+            if (ClassChoices.Count <= 0) err += "Player must have at least one BattlerClass/n";
             err += Skills.ValidateInputs();
             err += StateRates.ValidateInputs();
             err += ElementRates.ValidateInputs();

@@ -37,14 +37,9 @@ namespace Database.ClassTemplates
         {
             using (var conn = AccessDB.Connect())
             {
-                string enemyId = EnemyData.SelectedInput(EnemyInput);
-                if (enemyId == null)
-                {
-                    EnemyImage.Source = null;
-                    return;
-                }
                 conn.Open();
-                using (var reader = SQLDB.Read(conn, "SELECT Image FROM Enemy JOIN BaseObject WHERE BaseObject_ID = BaseObjectID AND Enemy_ID = " + enemyId + ";"))
+                using (var reader = SQLDB.Read(conn, "SELECT Image FROM Enemy JOIN BaseObject " +
+                    "WHERE BaseObject_ID = BaseObjectID AND Enemy_ID = " + EnemyData.SelectedInput(EnemyInput) + ";"))
                 {
                     reader.Read();
                     try { EnemyImage.Source = ImageManager.BytesToImage(ImageManager.BlobToBytes(reader, 0)); }

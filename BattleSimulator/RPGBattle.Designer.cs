@@ -1,6 +1,6 @@
-﻿namespace BattleSimulator.Sections
+﻿namespace BattleSimulator
 {
-    partial class Battle
+    partial class RPGBattle
     {
         /// <summary>
         /// Required designer variable.

@@ -37,6 +37,7 @@ namespace Database.Classes
             }
             PreviousNumberOfEnemies = 0;
             NumberOfEnemies = 1;
+            NumberOfEnemiesDisplay.Text = NumberOfEnemies.ToString();
             Enemies[0].Visibility = Visibility.Visible;
         }
 
@@ -74,6 +75,7 @@ namespace Database.Classes
             Base.Read(reader);
             PreviousNumberOfEnemies = int.Parse(reader["NumberOfEnemies"].ToString());
             NumberOfEnemies = PreviousNumberOfEnemies;
+            NumberOfEnemiesDisplay.Text = NumberOfEnemies.ToString();
             for (int i = 0; i < NumberOfEnemies; i++)
             {
                 Enemies[i].Visibility = Visibility.Visible;
@@ -128,12 +130,14 @@ namespace Database.Classes
         {
             if (NumberOfEnemies >= 6) MessageBox.Show("6 enemies per battle is the maximum limit.", "Could not add enemy");
             else Enemies[NumberOfEnemies++].Visibility = Visibility.Visible;
+            NumberOfEnemiesDisplay.Text = NumberOfEnemies.ToString();
         }
 
         private void RemoveBattleEnemy(object sender, RoutedEventArgs e)
         {
             if (NumberOfEnemies <= 1) MessageBox.Show("1 enemy per battle is the minimum limit", "Could not remove enemy");
             else Enemies[--NumberOfEnemies].Visibility = Visibility.Collapsed;
+            NumberOfEnemiesDisplay.Text = NumberOfEnemies.ToString();
         }
 
         private void CreateNewEnemies(SQLiteConnection conn, int initialIndex)

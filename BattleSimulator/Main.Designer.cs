@@ -45,9 +45,12 @@
             this.label8 = new System.Windows.Forms.Label();
             this.Relation5 = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.UpdatedText = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.NumberOfPlayersDisplay = new System.Windows.Forms.Label();
             this.BattlePlayer5 = new BattleSimulator.Templates.BattlePlayer();
-            this.BattlePlayer3 = new BattleSimulator.Templates.BattlePlayer();
             this.BattlePlayer4 = new BattleSimulator.Templates.BattlePlayer();
+            this.BattlePlayer3 = new BattleSimulator.Templates.BattlePlayer();
             this.BattlePlayer2 = new BattleSimulator.Templates.BattlePlayer();
             this.BattlePlayer1 = new BattleSimulator.Templates.BattlePlayer();
             this.PartyMembersPanel.SuspendLayout();
@@ -56,16 +59,16 @@
             // ListPanel
             // 
             this.ListPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ListPanel.Location = new System.Drawing.Point(25, 55);
+            this.ListPanel.Location = new System.Drawing.Point(10, 54);
             this.ListPanel.Name = "ListPanel";
-            this.ListPanel.Size = new System.Drawing.Size(249, 754);
+            this.ListPanel.Size = new System.Drawing.Size(260, 754);
             this.ListPanel.TabIndex = 4;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(72, 10);
+            this.label1.Location = new System.Drawing.Point(46, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(143, 29);
             this.label1.TabIndex = 3;
@@ -73,6 +76,7 @@
             // 
             // BattleInput
             // 
+            this.BattleInput.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.BattleInput.FormattingEnabled = true;
             this.BattleInput.Location = new System.Drawing.Point(785, 721);
             this.BattleInput.Name = "BattleInput";
@@ -131,13 +135,13 @@
             // 
             this.PartyMembersPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PartyMembersPanel.Controls.Add(this.BattlePlayer5);
-            this.PartyMembersPanel.Controls.Add(this.BattlePlayer3);
             this.PartyMembersPanel.Controls.Add(this.BattlePlayer4);
+            this.PartyMembersPanel.Controls.Add(this.BattlePlayer3);
             this.PartyMembersPanel.Controls.Add(this.BattlePlayer2);
             this.PartyMembersPanel.Controls.Add(this.BattlePlayer1);
             this.PartyMembersPanel.Location = new System.Drawing.Point(305, 151);
             this.PartyMembersPanel.Name = "PartyMembersPanel";
-            this.PartyMembersPanel.Size = new System.Drawing.Size(984, 440);
+            this.PartyMembersPanel.Size = new System.Drawing.Size(997, 440);
             this.PartyMembersPanel.TabIndex = 36;
             // 
             // RemoveButton
@@ -268,46 +272,79 @@
             this.label9.TabIndex = 51;
             this.label9.Text = "Members 2 and 4 relation";
             // 
+            // UpdatedText
+            // 
+            this.UpdatedText.AutoSize = true;
+            this.UpdatedText.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.UpdatedText.Location = new System.Drawing.Point(990, 631);
+            this.UpdatedText.Name = "UpdatedText";
+            this.UpdatedText.Size = new System.Drawing.Size(178, 20);
+            this.UpdatedText.TabIndex = 55;
+            this.UpdatedText.Text = "Party has been updated";
+            this.UpdatedText.Visible = false;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(1144, 125);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(142, 20);
+            this.label10.TabIndex = 56;
+            this.label10.Text = "Number of Players:";
+            // 
+            // NumberOfPlayersDisplay
+            // 
+            this.NumberOfPlayersDisplay.AutoSize = true;
+            this.NumberOfPlayersDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NumberOfPlayersDisplay.Location = new System.Drawing.Point(1283, 125);
+            this.NumberOfPlayersDisplay.Name = "NumberOfPlayersDisplay";
+            this.NumberOfPlayersDisplay.Size = new System.Drawing.Size(19, 20);
+            this.NumberOfPlayersDisplay.TabIndex = 57;
+            this.NumberOfPlayersDisplay.Text = "0";
+            // 
             // BattlePlayer5
             // 
-            this.BattlePlayer5.Location = new System.Drawing.Point(-1, 860);
+            this.BattlePlayer5.Location = new System.Drawing.Point(0, 860);
             this.BattlePlayer5.Name = "BattlePlayer5";
-            this.BattlePlayer5.Size = new System.Drawing.Size(938, 222);
-            this.BattlePlayer5.TabIndex = 8;
-            // 
-            // BattlePlayer3
-            // 
-            this.BattlePlayer3.Location = new System.Drawing.Point(-1, 430);
-            this.BattlePlayer3.Name = "BattlePlayer3";
-            this.BattlePlayer3.Size = new System.Drawing.Size(938, 222);
-            this.BattlePlayer3.TabIndex = 4;
+            this.BattlePlayer5.Size = new System.Drawing.Size(947, 222);
+            this.BattlePlayer5.TabIndex = 4;
             // 
             // BattlePlayer4
             // 
-            this.BattlePlayer4.Location = new System.Drawing.Point(-1, 645);
+            this.BattlePlayer4.Location = new System.Drawing.Point(0, 645);
             this.BattlePlayer4.Name = "BattlePlayer4";
-            this.BattlePlayer4.Size = new System.Drawing.Size(938, 222);
+            this.BattlePlayer4.Size = new System.Drawing.Size(947, 222);
             this.BattlePlayer4.TabIndex = 3;
+            // 
+            // BattlePlayer3
+            // 
+            this.BattlePlayer3.Location = new System.Drawing.Point(0, 430);
+            this.BattlePlayer3.Name = "BattlePlayer3";
+            this.BattlePlayer3.Size = new System.Drawing.Size(947, 222);
+            this.BattlePlayer3.TabIndex = 2;
             // 
             // BattlePlayer2
             // 
             this.BattlePlayer2.Location = new System.Drawing.Point(0, 215);
             this.BattlePlayer2.Name = "BattlePlayer2";
-            this.BattlePlayer2.Size = new System.Drawing.Size(938, 222);
-            this.BattlePlayer2.TabIndex = 2;
+            this.BattlePlayer2.Size = new System.Drawing.Size(947, 222);
+            this.BattlePlayer2.TabIndex = 1;
             // 
             // BattlePlayer1
             // 
-            this.BattlePlayer1.Location = new System.Drawing.Point(-1, 0);
+            this.BattlePlayer1.Location = new System.Drawing.Point(0, 0);
             this.BattlePlayer1.Name = "BattlePlayer1";
-            this.BattlePlayer1.Size = new System.Drawing.Size(938, 222);
-            this.BattlePlayer1.TabIndex = 1;
+            this.BattlePlayer1.Size = new System.Drawing.Size(947, 222);
+            this.BattlePlayer1.TabIndex = 0;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1314, 838);
+            this.Controls.Add(this.NumberOfPlayersDisplay);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.UpdatedText);
             this.Controls.Add(this.Relation6);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.Relation5);
@@ -348,11 +385,6 @@
         private System.Windows.Forms.TextBox NameInput;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel PartyMembersPanel;
-        private Templates.BattlePlayer BattlePlayer5;
-        private Templates.BattlePlayer BattlePlayer3;
-        private Templates.BattlePlayer BattlePlayer4;
-        private Templates.BattlePlayer BattlePlayer2;
-        private Templates.BattlePlayer BattlePlayer1;
         private System.Windows.Forms.Button RemoveButton;
         private System.Windows.Forms.Button AddButton;
         private System.Windows.Forms.Label label4;
@@ -367,6 +399,14 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox Relation5;
         private System.Windows.Forms.Label label9;
+        private Templates.BattlePlayer BattlePlayer5;
+        private Templates.BattlePlayer BattlePlayer4;
+        private Templates.BattlePlayer BattlePlayer3;
+        private Templates.BattlePlayer BattlePlayer2;
+        private Templates.BattlePlayer BattlePlayer1;
+        private System.Windows.Forms.Label UpdatedText;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label NumberOfPlayersDisplay;
     }
 }
 
