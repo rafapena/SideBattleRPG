@@ -31,6 +31,11 @@
             this.NameInput = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.PartyMembersPanel = new System.Windows.Forms.Panel();
+            this.BattlePlayer5 = new BattleSimulator.Templates.BattlePlayer();
+            this.BattlePlayer4 = new BattleSimulator.Templates.BattlePlayer();
+            this.BattlePlayer3 = new BattleSimulator.Templates.BattlePlayer();
+            this.BattlePlayer2 = new BattleSimulator.Templates.BattlePlayer();
+            this.BattlePlayer1 = new BattleSimulator.Templates.BattlePlayer();
             this.RemoveButton = new System.Windows.Forms.Button();
             this.AddButton = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
@@ -48,11 +53,6 @@
             this.UpdatedText = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.NumberOfPlayersDisplay = new System.Windows.Forms.Label();
-            this.BattlePlayer5 = new BattleSimulator.Templates.BattlePlayer();
-            this.BattlePlayer4 = new BattleSimulator.Templates.BattlePlayer();
-            this.BattlePlayer3 = new BattleSimulator.Templates.BattlePlayer();
-            this.BattlePlayer2 = new BattleSimulator.Templates.BattlePlayer();
-            this.BattlePlayer1 = new BattleSimulator.Templates.BattlePlayer();
             this.PartyMembersPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -143,6 +143,41 @@
             this.PartyMembersPanel.Name = "PartyMembersPanel";
             this.PartyMembersPanel.Size = new System.Drawing.Size(997, 440);
             this.PartyMembersPanel.TabIndex = 36;
+            // 
+            // BattlePlayer5
+            // 
+            this.BattlePlayer5.Location = new System.Drawing.Point(0, 860);
+            this.BattlePlayer5.Name = "BattlePlayer5";
+            this.BattlePlayer5.Size = new System.Drawing.Size(947, 222);
+            this.BattlePlayer5.TabIndex = 4;
+            // 
+            // BattlePlayer4
+            // 
+            this.BattlePlayer4.Location = new System.Drawing.Point(0, 645);
+            this.BattlePlayer4.Name = "BattlePlayer4";
+            this.BattlePlayer4.Size = new System.Drawing.Size(947, 222);
+            this.BattlePlayer4.TabIndex = 3;
+            // 
+            // BattlePlayer3
+            // 
+            this.BattlePlayer3.Location = new System.Drawing.Point(0, 430);
+            this.BattlePlayer3.Name = "BattlePlayer3";
+            this.BattlePlayer3.Size = new System.Drawing.Size(947, 222);
+            this.BattlePlayer3.TabIndex = 2;
+            // 
+            // BattlePlayer2
+            // 
+            this.BattlePlayer2.Location = new System.Drawing.Point(0, 215);
+            this.BattlePlayer2.Name = "BattlePlayer2";
+            this.BattlePlayer2.Size = new System.Drawing.Size(947, 222);
+            this.BattlePlayer2.TabIndex = 1;
+            // 
+            // BattlePlayer1
+            // 
+            this.BattlePlayer1.Location = new System.Drawing.Point(0, 0);
+            this.BattlePlayer1.Name = "BattlePlayer1";
+            this.BattlePlayer1.Size = new System.Drawing.Size(947, 222);
+            this.BattlePlayer1.TabIndex = 0;
             // 
             // RemoveButton
             // 
@@ -286,7 +321,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(1144, 125);
+            this.label10.Location = new System.Drawing.Point(612, 125);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(142, 20);
             this.label10.TabIndex = 56;
@@ -296,46 +331,11 @@
             // 
             this.NumberOfPlayersDisplay.AutoSize = true;
             this.NumberOfPlayersDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NumberOfPlayersDisplay.Location = new System.Drawing.Point(1283, 125);
+            this.NumberOfPlayersDisplay.Location = new System.Drawing.Point(751, 125);
             this.NumberOfPlayersDisplay.Name = "NumberOfPlayersDisplay";
             this.NumberOfPlayersDisplay.Size = new System.Drawing.Size(19, 20);
             this.NumberOfPlayersDisplay.TabIndex = 57;
             this.NumberOfPlayersDisplay.Text = "0";
-            // 
-            // BattlePlayer5
-            // 
-            this.BattlePlayer5.Location = new System.Drawing.Point(0, 860);
-            this.BattlePlayer5.Name = "BattlePlayer5";
-            this.BattlePlayer5.Size = new System.Drawing.Size(947, 222);
-            this.BattlePlayer5.TabIndex = 4;
-            // 
-            // BattlePlayer4
-            // 
-            this.BattlePlayer4.Location = new System.Drawing.Point(0, 645);
-            this.BattlePlayer4.Name = "BattlePlayer4";
-            this.BattlePlayer4.Size = new System.Drawing.Size(947, 222);
-            this.BattlePlayer4.TabIndex = 3;
-            // 
-            // BattlePlayer3
-            // 
-            this.BattlePlayer3.Location = new System.Drawing.Point(0, 430);
-            this.BattlePlayer3.Name = "BattlePlayer3";
-            this.BattlePlayer3.Size = new System.Drawing.Size(947, 222);
-            this.BattlePlayer3.TabIndex = 2;
-            // 
-            // BattlePlayer2
-            // 
-            this.BattlePlayer2.Location = new System.Drawing.Point(0, 215);
-            this.BattlePlayer2.Name = "BattlePlayer2";
-            this.BattlePlayer2.Size = new System.Drawing.Size(947, 222);
-            this.BattlePlayer2.TabIndex = 1;
-            // 
-            // BattlePlayer1
-            // 
-            this.BattlePlayer1.Location = new System.Drawing.Point(0, 0);
-            this.BattlePlayer1.Name = "BattlePlayer1";
-            this.BattlePlayer1.Size = new System.Drawing.Size(947, 222);
-            this.BattlePlayer1.TabIndex = 0;
             // 
             // Main
             // 

@@ -63,14 +63,14 @@ namespace BattleSimulator
             }
             CurrentSelection = 0;
             buttons[0].BackColor = HIGHLIGHTED_LIST_BUTTON_COLOR;
-            Read();
+            Read("Group" + (CurrentSelection + 1));
         }
 
         private string RetrieveNameByPrtyFile(int i)
         {
             string name = "";
             string filename = PRTY_FILES_PATH + "Group" + i + ".prty";
-            using (var file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite))  name = file.Length > 0 ? ReadText(file) : "Group " + i;
+            using (var file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite))  name = file.Length > 0 ? ReadText(file) : "Group" + i;
             return name;
         }
 
@@ -81,7 +81,7 @@ namespace BattleSimulator
             CurrentSelection = (int)btn.Tag;
             btn.BackColor = HIGHLIGHTED_LIST_BUTTON_COLOR;
             UpdatedText.Visible = false;
-            Read();
+            Read("Group" + (CurrentSelection + 1));
         }
 
 
@@ -115,9 +115,9 @@ namespace BattleSimulator
             BattleInput.SelectedIndex = 0;
         }
 
-        private void Read()
+        private void Read(string name)
         {
-            string filename = PRTY_FILES_PATH + "Group" + (CurrentSelection + 1) + ".prty";
+            string filename = PRTY_FILES_PATH + name + ".prty";
             using (var file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
             {
                 if (file.Length == 0) Initialize();
@@ -182,9 +182,9 @@ namespace BattleSimulator
             return false;
         }
 
-        private void Write()
+        private void Write(string name)
         {
-            string filename = PRTY_FILES_PATH + "Group" + (CurrentSelection + 1) + ".prty";
+            string filename = PRTY_FILES_PATH + name + ".prty";
             File.WriteAllText(filename, string.Empty);
             using (var file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Write))
             {
@@ -221,7 +221,7 @@ namespace BattleSimulator
         {
             string err = ValidateInputs();
             if (err != "") MessageBox.Show(err, "Could not update party");
-            else Write();
+            else Write("Group" + (CurrentSelection + 1));
         }
 
         private void BattleButton_Click(object sender, EventArgs e)

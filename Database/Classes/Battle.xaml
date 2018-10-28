@@ -28,8 +28,8 @@
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10 10 0 10">
                                     <Button Content="Add Enemy" Click="AddBattleEnemy" Background="#6f6" Width="100" Height="25"/>
                                     <Button Content="Remove Enemy" Click="RemoveBattleEnemy" Background="#f66" Width="100" Height="25" Margin="15 0 0 0"/>
-                                    <TextBlock Text="Number of Enemies: " Margin="390 0 0 0"/>
-                                    <TextBlock x:Name="NumberOfEnemiesDisplay" Text="0" FontWeight="Bold"/>
+                                    <TextBlock Text="Number of Enemies: " Margin="10 0 0 0" VerticalAlignment="Bottom"/>
+                                    <TextBlock x:Name="NumberOfEnemiesDisplay" Text="0" FontWeight="Bold" VerticalAlignment="Bottom"/>
                                 </StackPanel>
                                 <Border BorderThickness="0.5" BorderBrush="Black" Margin="5,5,5,5">
                                     <ScrollViewer Height="300">
