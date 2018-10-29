@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.SQLite;
 using Database.Utilities;
+using System.Windows;
 
 namespace Database.Classes
 {
@@ -81,7 +82,7 @@ namespace Database.Classes
             ScaledStats.Create(conn);
             SQLCreate(conn, "BaseObjectID, ScaledStats, UpgradedClass1, UpgradedClass2, UsableWeaponType1, UsableWeaponType2, " +
                 "PassiveSkill1, PassiveSkill2, PSkillLvlRequired1, PSkillLvlRequired2",
-                "@BaseObjectID, @ScaledStats, @UpgradedClass1, @UpgradedClass2, @UsableWeaponType1, @UsableWeaponType2" +
+                "@BaseObjectID, @ScaledStats, @UpgradedClass1, @UpgradedClass2, @UsableWeaponType1, @UsableWeaponType2," +
                 "@PassiveSkill1, @PassiveSkill2, @PSkillLvlRequired1, @PSkillLvlRequired2");
             Skills.Create(conn);
         }

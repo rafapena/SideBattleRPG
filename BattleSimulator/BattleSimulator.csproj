@@ -108,6 +108,12 @@
     <Compile Include="Templates\BattlePlayer.Designer.cs">
       <DependentUpon>BattlePlayer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Templates\RPGBattler.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Templates\RPGBattler.Designer.cs">
+      <DependentUpon>RPGBattler.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\FileHelper.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <EmbeddedResource Include="Main.resx">
@@ -124,6 +130,9 @@
     </Compile>
     <EmbeddedResource Include="Templates\BattlePlayer.resx">
       <DependentUpon>BattlePlayer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Templates\RPGBattler.resx">
+      <DependentUpon>RPGBattler.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

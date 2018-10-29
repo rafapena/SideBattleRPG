@@ -44,6 +44,7 @@ namespace Database.Classes
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();
+            if (SQLDB.MaxIdPlusOne("Enemy") <= 1) err += "Enemies must be added to the database\n";
             bool flag = false;
             for (int i = 0; i < NumberOfEnemies; i++)
             {

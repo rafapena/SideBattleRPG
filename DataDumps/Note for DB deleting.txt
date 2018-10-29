@@ -1,0 +1,6 @@
+Use this to wipe out database:
+
+DELETE FROM BaseObject WHERE BaseObject_ID > 30;
+DELETE FROM PassiveEffect WHERE PassiveEffect_ID > 2;
+DELETE FROM Stats WHERE Stats_ID > 27;
+DELETE FROM Tool WHERE Tool_ID > 4;

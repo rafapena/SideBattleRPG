@@ -33,11 +33,19 @@ namespace BattleSimulator
 
         public Main()
         {
+            CheckApplication();
             InitializeComponent();
             ListPanel.AutoScroll = true;
             PartyMembersPanel.AutoScroll = true;
             SetupData();
             SetupList();
+        }
+
+        public void CheckApplication()
+        {
+            if (SQLDB.MaxIdPlusOne("Player") > 1 && SQLDB.MaxIdPlusOne("Skill") > 2 && SQLDB.MaxIdPlusOne("Battle") > 1 && SQLDB.MaxIdPlusOne("State") > 1) return;
+            MessageBox.Show("Cannot start application\nSimulator requires the following from the database:\n\n1 player\n1 battle\n2 skills\n1 state");
+            Application.Exit();
         }
 
 
