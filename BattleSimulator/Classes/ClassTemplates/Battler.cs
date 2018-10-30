@@ -16,13 +16,13 @@ namespace BattleSimulator.Classes.ClassTemplates
         public int XPosition { get; private set; }
         public Stats Stats { get; private set; }
         public List<int> ElementRates { get; private set; }
-
+        public List<int> StateRates { get; private set; }
         public List<Skill> Skills { get; private set; }
         public List<Item> Items { get; private set; }
         public List<Weapon> Weapons { get; private set; }
-        public List<State> States { get; private set; }
         public List<PassiveSkill> PassiveSkills { get; private set; }
 
+        public List<State> States { get; private set; }
 
         protected Battler() { }
         public Battler(int id, string name, string description, Bitmap image=null) : base(id, name, description, image)

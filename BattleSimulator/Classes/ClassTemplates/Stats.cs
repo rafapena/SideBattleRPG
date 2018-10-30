@@ -16,16 +16,17 @@ namespace BattleSimulator.Classes.ClassTemplates
         public int Mar { get { return StatsList[4]; } }
         public int Spd { get { return StatsList[5]; } }
         public int Tec { get { return StatsList[6]; } }
-        public int Acc { get { return StatsList[7]; } }
-        public int Eva { get { return StatsList[8]; } }
-        public int Crt { get { return StatsList[9]; } }
-        public int Cev { get { return StatsList[10]; } }
+        public int Luk { get { return StatsList[7]; } }
+        public int Acc { get { return StatsList[8]; } }
+        public int Eva { get { return StatsList[9]; } }
+        public int Crt { get { return StatsList[10]; } }
+        public int Cev { get { return StatsList[11]; } }
 
 
         private Stats() { }
-        public Stats(int maxhp, int atk, int def, int map, int mar, int spd, int tec)
+        public Stats(int maxhp, int atk, int def, int map, int mar, int spd, int tec, int luk)
         {
-            StatsList = new int[11];
+            StatsList = new int[12];
             StatsList[0] = maxhp;
             StatsList[1] = atk;
             StatsList[2] = def;
@@ -33,17 +34,18 @@ namespace BattleSimulator.Classes.ClassTemplates
             StatsList[4] = mar;
             StatsList[5] = spd;
             StatsList[6] = tec;
-            StatsList[7] = 100;
+            StatsList[7] = luk;
             StatsList[8] = 100;
             StatsList[9] = 100;
             StatsList[10] = 100;
+            StatsList[11] = 100;
         }
         public void SetModifiables(int acc, int eva, int crt, int cev)
         {
-            StatsList[7] = acc;
-            StatsList[8] = eva;
-            StatsList[9] = crt;
-            StatsList[10] = cev;
+            StatsList[8] = acc;
+            StatsList[9] = eva;
+            StatsList[10] = crt;
+            StatsList[11] = cev;
         }
 
         public Stats(Stats original)
@@ -56,9 +58,10 @@ namespace BattleSimulator.Classes.ClassTemplates
             StatsList[5] = original.Spd;
             StatsList[6] = original.Tec;
             StatsList[7] = original.Acc;
-            StatsList[8] = original.Eva;
-            StatsList[9] = original.Crt;
-            StatsList[10] = original.Cev;
+            StatsList[8] = original.Luk;
+            StatsList[9] = original.Eva;
+            StatsList[10] = original.Crt;
+            StatsList[11] = original.Cev;
         }
 
         public Stats TranslatedBaseStat(Stats baseStats, Stats naturalStats)

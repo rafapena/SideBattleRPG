@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static BattleSimulator.Utilities.FileHelper;
+using BattleSimulator.Utilities;
 using Database.Utilities;
 using System.IO;
 
@@ -63,11 +64,10 @@ namespace BattleSimulator.Templates
             using (var conn = Database.AccessDB.Connect())
             {
                 conn.Open();
-                using (var reader = SQLDB.Read(conn, "SELECT Image FROM Player JOIN BaseObject " +
-                    "WHERE BaseObject_ID = BaseObjectID AND Player_ID = " + playerId + ";"))
+                using (var reader = SQLDB.Read(conn, "SELECT Image FROM Player JOIN BaseObject WHERE BaseObject_ID = BaseObjectID AND Player_ID = " + playerId + ";"))
                 {
                     reader.Read();
-                    try { PlayerImage.Image = BytesToImage(ImageManager.BlobToBytes(reader, 0)); }
+                    try { PlayerImage.Image = Utilities.Utils.BytesToImage(reader, 0); }
                     catch (Exception) { PlayerImage.Image = null; }
                 }
                 conn.Close();
@@ -75,15 +75,6 @@ namespace BattleSimulator.Templates
             string where = "BaseObject_ID = BaseObjectID AND BattlerClass_ID = BattlerClassID AND PlayerID = " + playerId;
             BattlerClassData = new ComboBoxInputData("BattlerClassID", "Name", "Player_To_BattlerClass JOIN BaseObject JOIN BattlerClass", where, "BattlerClass_ID");
             Class.Items.AddRange(BattlerClassData.OptionsListNames.ToArray());
-        }
-        private Bitmap BytesToImage(byte[] blob)
-        {
-            MemoryStream mStream = new MemoryStream();
-            byte[] pData = blob;
-            mStream.Write(pData, 0, Convert.ToInt32(pData.Length));
-            Bitmap bm = new Bitmap(mStream, false);
-            mStream.Dispose();
-            return bm;
         }
 
 
@@ -126,7 +117,8 @@ namespace BattleSimulator.Templates
         public string ValidateInputs()
         {
             string err = "";
-            if (!Utils.PosInt(LevelInput.Text) || int.Parse(LevelInput.Text) < 1 || int.Parse(LevelInput.Text) > 100) err += "Level must be a positive integer between 1 and 100\n";
+            if (!Database.Utilities.Utils.PosInt(LevelInput.Text) || int.Parse(LevelInput.Text) < 1 || int.Parse(LevelInput.Text) > 100)
+                err += "Level must be a positive integer between 1 and 100\n";
             if (PassiveSkill1.SelectedIndex == PassiveSkill2.SelectedIndex && PassiveSkill1.SelectedIndex > 0) err += "Passive skills must be unique\n";
             return err;
         }

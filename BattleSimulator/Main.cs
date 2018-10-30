@@ -236,7 +236,7 @@ namespace BattleSimulator
         {
             if (UnsavedChanges() && Utils.Confirm("Do you want to save changes before the battle?", "Unsaved changes")) UpdateButton_Click(null, null);
             UpdatedText.Visible = false;
-            RPGBattle battle = new RPGBattle();
+            RPGBattle battle = new RPGBattle(PRTY_FILES_PATH + "Group" + (CurrentSelection + 1) + ".prty");
             battle.Show();
         }
     }

@@ -118,9 +118,7 @@ namespace Database.TableTemplates
             using (var conn = AccessDB.Connect())
             {
                 conn.Open();
-                using (var reader = SQLDB.Read(conn,
-                    "SELECT " + AttributeName + " FROM " + HostDBTable + " " +
-                    "WHERE " + HostDBTable + "_ID = " + HostId + ";"))
+                using (var reader = SQLDB.Read(conn, "SELECT " + AttributeName + " FROM " + HostDBTable + " WHERE " + HostDBTable + "_ID = " + HostId + ";"))
                 {
                     reader.Read();
                     StringList = reader[AttributeName].ToString();
@@ -135,7 +133,7 @@ namespace Database.TableTemplates
                 int listId = int.Parse(items[i - 1]);
                 if (listId >= TargetTypeListData.OptionsListNames.Count) continue;
                 AddRow(null, null);
-                Elements[Count - 1].Add(TargetTypeListData.CreateInput(Count, 1, listId));
+                Elements[Count - 1].Add(TargetTypeListData.CreateInput(Count, 1, listId - 1));
                 if (isDual()) AddSecondInput(int.Parse(items[i]).ToString());
                 AddRangeToTable();
             }

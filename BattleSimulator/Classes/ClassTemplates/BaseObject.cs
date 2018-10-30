@@ -38,8 +38,9 @@ namespace BattleSimulator.Classes.ClassTemplates
 
         public List<T> ClonePrimitiveList<T>(List<T> original)
         {
+            if (original == null) return null;
             List<T> cloned = new List<T>();
-            for (int i = 0; i < original.Count; i++) cloned[i] = original[i];
+            for (int i = 0; i < original.Count; i++) cloned.Add(original[i]);
             return cloned;
         }
 

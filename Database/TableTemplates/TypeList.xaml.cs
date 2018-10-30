@@ -45,7 +45,7 @@ namespace Database.TableTemplates
         }
         protected override string OnCreateValues(int i)
         {
-            return "'" + TableTitle + "', " + i.ToString() + ", @Name" + i.ToString();
+            return "'" + TableTitle + "', " + (i + 1) + ", @Name" + i.ToString();
         }
 
         protected override string[] OnReadCommands()
@@ -66,12 +66,12 @@ namespace Database.TableTemplates
             {
                 for (int i = prevCount; i < Count; i++)
                 {
-                    string vals = "'" + TableTitle + "', " + i + ", @Name" + i;
+                    string vals = "'" + TableTitle + "', " + (i + 1) + ", @Name" + i;
                     SQLDB.Write(conn, "INSERT INTO " + TargetDBTable + " (List_Type, List_ID, Name) VALUES (" + vals + ");");
                 }
             }
-            else if (prevCount > Count) SQLDB.Write(conn, "DELETE FROM " + TargetDBTable + " WHERE List_ID >= " + Count + " AND List_Type = '" + TableTitle + "';");
-            for (int i = 0; i < Count; i++) SQLDB.Write(conn, "UPDATE " + TargetDBTable + " SET Name = @Name" + i + " WHERE List_ID = " + i + " AND List_Type = '" + TableTitle + "';");
+            else if (prevCount > Count) SQLDB.Write(conn, "DELETE FROM " + TargetDBTable + " WHERE List_ID >= " + (Count + 1) + " AND List_Type = '" + TableTitle + "';");
+            for (int i = 0; i < Count; i++) SQLDB.Write(conn, "UPDATE " + TargetDBTable + " SET Name = @Name" + i + " WHERE List_ID = " + (i + 1) + " AND List_Type = '" + TableTitle + "';");
         }
 
         protected override string[] OnDelete()

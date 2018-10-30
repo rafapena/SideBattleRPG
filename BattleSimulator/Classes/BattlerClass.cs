@@ -64,5 +64,10 @@ namespace BattleSimulator.Classes
             PassiveSkillLvlRequired1 = lvlReq1;
             PassiveSkillLvlrequired2 = lvlReq2;
         }
+        public void AddSkill(Skill skill, int levelReq)
+        {
+            SkillSet.Add(skill);
+            SkillSetLevels.Add(levelReq);
+        }
     }
 }
