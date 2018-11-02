@@ -36,7 +36,7 @@ namespace Database.Utilities
             string queryCondition, string sortAttributes, bool addNullInput=false)
         {
             SelectedIds = new List<int>();
-            OptionsListIds = addNullInput ? new List<int> { -1 } : new List<int>();
+            OptionsListIds = addNullInput ? new List<int> { 0 } : new List<int>();
             OptionsListNames = addNullInput ? new List<string> { "None" } : new List<string>();
             using (var conn = AccessDB.Connect())
             {

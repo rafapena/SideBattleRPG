@@ -220,7 +220,7 @@ namespace BattleSimulator
 
         private void RemoveButton_Click(object sender, EventArgs e)
         {
-            if (NumberOfPlayers <= 1) MessageBox.Show("1 players per battle is the minimum limit.", "Could not remove player");
+            if (NumberOfPlayers <= 1) MessageBox.Show("1 player per battle is the minimum limit.", "Could not remove player");
             else Players[--NumberOfPlayers].Visible = false;
             NumberOfPlayersDisplay.Text = NumberOfPlayers.ToString();
         }

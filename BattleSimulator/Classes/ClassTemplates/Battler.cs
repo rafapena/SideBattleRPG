@@ -4,59 +4,62 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using static BattleSimulator.Utilities.Utils;
 
 namespace BattleSimulator.Classes.ClassTemplates
 {
     public abstract class Battler : BaseObject
     {
-        public int HP { get; private set; }
-        public int SP { get; private set; }
-        public int Level { get; private set; }
-        public int ZPosition { get; private set; }
-        public int XPosition { get; private set; }
-        public Stats Stats { get; private set; }
-        public List<int> ElementRates { get; private set; }
-        public List<int> StateRates { get; private set; }
-        public List<Skill> Skills { get; private set; }
-        public List<Item> Items { get; private set; }
-        public List<Weapon> Weapons { get; private set; }
-        public List<PassiveSkill> PassiveSkills { get; private set; }
+        public List<int> ElementRates { get; protected set; }
+        public List<int> StateRates { get; protected set; }
 
-        public List<State> States { get; private set; }
+        public BattlerClass Class { get; protected set; }
+        public int HP { get; protected set; }
+        public int SP { get; protected set; }
+        public int Level { get; protected set; }
+        public int ZPosition { get; protected set; }
+        public int XPosition { get; protected set; }
+        public Stats Stats { get; protected set; }
+        public List<Skill> Skills { get; protected set; }
+        public List<Item> Items { get; protected set; }
+        public List<Weapon> Weapons { get; protected set; }
+        public List<PassiveSkill> PassiveSkills { get; protected set; }
+        public List<State> States { get; protected set; }
+        
 
-        protected Battler() { }
-        public Battler(int id, string name, string description, Bitmap image=null) : base(id, name, description, image)
+        public Battler() : base()
         {
-            ZPosition = 0;
-            XPosition = 0;
             ElementRates = new List<int>();
+            StateRates = new List<int>();
             Skills = new List<Skill>();
             Items = new List<Item>();
             Weapons = new List<Weapon>();
-            States = new List<State>();
             PassiveSkills = new List<PassiveSkill>();
+            States = new List<State>();
         }
+
         public Battler(Battler original) : base(original)
         {
+            Class = Clone(original.Class, o => new BattlerClass(o));
             HP = original.HP;
             SP = original.SP;
             Level = original.Level;
             ZPosition = original.ZPosition;
             XPosition = original.XPosition;
-            Stats = new Stats(original.Stats);
-            ElementRates = ClonePrimitiveList(original.ElementRates);
-            Skills = CloneObjectList(original.Skills, o => new Skill(o));
-            Items = CloneObjectList(original.Items, o => new Item(o));
-            Weapons = CloneObjectList(original.Weapons, o => new Weapon(o));
-            States = CloneObjectList(original.States, o => new State(o));
-            PassiveSkills = CloneObjectList(original.PassiveSkills, o => new PassiveSkill(o));
+            Stats = Clone(original.Stats, o => new Stats(o));
+            ElementRates = Clone(original.ElementRates);
+            StateRates = Clone(original.StateRates);
+            Skills = Clone(original.Skills, o => new Skill(o));
+            Items = Clone(original.Items, o => new Item(o));
+            Weapons = Clone(original.Weapons, o => new Weapon(o));
+            PassiveSkills = Clone(original.PassiveSkills, o => new PassiveSkill(o));
+            States = Clone(original.States, o => new State(o));
         }
-        public void SetStats(int level, Stats stats)
+
+
+        public void SetAllStats(int level)
         {
             Level = level;
-            Stats = stats;
-            HP = Stats.MaxHP;
-            SP = 100;
         }
 
         public string Position()
@@ -72,14 +75,9 @@ namespace BattleSimulator.Classes.ClassTemplates
             XPosition = xNew;
         }
 
-        public void SetElementRate(int element, int rate)
+        public void AddSkill(List<Skill> skillsList, int id)
         {
-            ElementRates[element] = rate;
-        }
-
-        public void AddSkill(int id)
-        {
-
+            if (id > 0 && id < skillsList.Count) Skills.Add(new Skill(skillsList[id]));
         }
 
         public void RemoveSkill(int id)
@@ -87,42 +85,38 @@ namespace BattleSimulator.Classes.ClassTemplates
 
         }
 
-        public void AddItem(int id)
+        public void AddItem(List<Item> itemsList, int id)
+        {
+            if (id > 0 && id < itemsList.Count) Items.Add(new Item(itemsList[id]));
+        }
+        public void RemoveItem(int index)
         {
 
         }
 
-        public void RemoveItem(int id)
+        public void AddWeapon(List<Weapon> weaponsList, int id)
         {
-
+            if (id > 0 && id < weaponsList.Count) Weapons.Add(new Weapon(weaponsList[id]));
         }
-
-        public void AddWeapon(int id)
-        {
-
-        }
-
         public void RemoveWeapon(int id)
         {
 
         }
 
-        public void AddState(int id)
+        public void AddPassiveSkill(List<PassiveSkill> pSkillsList, int id)
         {
-
+            if (id > 0 && id < pSkillsList.Count) PassiveSkills.Add(new PassiveSkill(pSkillsList[id]));
         }
-
-        public void RemoveState(int id)
-        {
-
-        }
-
-        public void AddPassiveSkill(int id)
-        {
-
-        }
-
         public void RemovePassiveSkill(int id)
+        {
+
+        }
+
+        public void AddState(List<State> statesList, int id)
+        {
+            if (id > 0 && id < statesList.Count) States.Add(new State(statesList[id]));
+        }
+        public void RemoveState(int id)
         {
 
         }

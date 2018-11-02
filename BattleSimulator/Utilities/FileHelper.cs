@@ -29,10 +29,9 @@ namespace BattleSimulator.Utilities
                 return;
             }
             int msb = 0;
-            int lsb = value % 255;
-            for (int i = value - lsb; i > 255; i /= 255) msb++;
+            for (int i = value; i >= 256; i /= 256) msb++;
             stream.WriteByte((byte)msb);
-            stream.WriteByte((byte)lsb);
+            stream.WriteByte((byte)(value % 256));
         }
 
         public static void WriteText(FileStream stream, string value)
@@ -55,7 +54,7 @@ namespace BattleSimulator.Utilities
 
         public static int ReadShort(FileStream stream)
         {
-            return stream.ReadByte() * 255 + stream.ReadByte();
+            return stream.ReadByte() * 256 + stream.ReadByte();
         }
 
         public  static string ReadText(FileStream stream)

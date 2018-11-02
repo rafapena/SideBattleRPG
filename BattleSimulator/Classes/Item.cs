@@ -3,30 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BattleSimulator.Classes.ClassTemplates;
 using System.Drawing;
+using BattleSimulator.Classes.ClassTemplates;
+using static BattleSimulator.Utilities.DataManager;
+using static BattleSimulator.Utilities.Utils;
 
 namespace BattleSimulator.Classes
 {
     public class Item : Tool
     {
         public Stats PermantentStatChanges { get; private set; }
+        public int DefaultPrice { get; private set; }
         public bool Consumable { get; private set; }
         public Item TurnsInto { get; private set; }
 
-        public Item() { }
-        public Item(int id, string name, string description, Bitmap image = null) : base(id, name, description, image) { }
+
+        public Item() : base() { }
+
+        public void Initialize(System.Data.SQLite.SQLiteDataReader data, List<BattlerClass> classesData, List<State> statesData, List<Item> itemsData)
+        {
+            Initialize(data);
+            Id = Int(data["Item_ID"]);
+            ReadTool(this, data["ToolID"], classesData, statesData);
+            PermantentStatChanges = ReadStats(data["PermStatMods"]);
+            DefaultPrice = Int(data["DefaultPrice"]);
+            Consumable = (bool)data["Consumable"];
+            TurnsInto = ReadObj(itemsData, data["TurnsInto"]);
+        }
+
         public Item(Item original) : base(original)
         {
-            PermantentStatChanges = new Stats(PermantentStatChanges);
+            PermantentStatChanges = Clone(original.PermantentStatChanges, o => new Stats(o));
+            DefaultPrice = original.DefaultPrice;
             Consumable = original.Consumable;
-            TurnsInto = new Item(TurnsInto);
-        }
-        public void SetOtherAttributes(Stats permanentStatChanges, bool consumable, Item turnsInto)
-        {
-            PermantentStatChanges = permanentStatChanges;
-            Consumable = consumable;
-            TurnsInto = turnsInto;
+            TurnsInto = Clone(original.TurnsInto, o => new Item(o));
         }
     }
 }

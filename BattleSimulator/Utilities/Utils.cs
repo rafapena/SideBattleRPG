@@ -13,6 +13,47 @@ namespace BattleSimulator.Utilities
     public static class Utils
     {
         private static readonly Random randomNumber = new Random();
+        public static bool Chance(int value)
+        {
+            return value > RandInt(0, 100);
+        }
+        public static int RandInt(int low, int high)
+        {
+            return randomNumber.Next(low, high);
+        }
+
+
+        public static int Int(object o)
+        {
+            string res = o.ToString();
+            return res == "" ? 0 : int.Parse(res);
+        }
+        public static double Dbl(object o)
+        {
+            return o.ToString() == "" ? 0 : (double)o;
+        }
+
+
+        public delegate T NewCaller<T>(T o);
+        public static T Clone<T>(T original, NewCaller<T> newObject) where T : class
+        {
+            return  original == null ? null : newObject(original);
+        }
+        public static List<T> Clone<T>(List<T> original, NewCaller<T> newObject) where T : class
+        {
+            if (original == null) return null;
+            List<T> cloned = new List<T>();
+            for (int i = 0; i < original.Count; i++) cloned.Add(newObject(original[i]));
+            return cloned;
+        }
+        public static List<T> Clone<T>(List<T> original)
+        {
+            if (original == null) return null;
+            List<T> cloned = new List<T>();
+            for (int i = 0; i < original.Count; i++) cloned.Add(original[i]);
+            return cloned;
+        }
+        
 
         public static Bitmap BytesToImage(SQLiteDataReader reader, int attributeIndex)
         {
@@ -24,16 +65,6 @@ namespace BattleSimulator.Utilities
             Bitmap bm = new Bitmap(mStream, false);
             mStream.Dispose();
             return bm;
-        }
-
-        public static bool Chance(int value)
-        {
-            return value > RandInt(0, 100);
-        }
-
-        public static int RandInt(int low, int high)
-        {
-            return randomNumber.Next(low, high);
         }
     }
 }

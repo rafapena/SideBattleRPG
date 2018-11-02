@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BattleSimulator.Classes.ClassTemplates;
 using System.Drawing;
+using BattleSimulator.Classes.ClassTemplates;
+using static BattleSimulator.Utilities.DataManager;
+using static BattleSimulator.Utilities.Utils;
 
 namespace BattleSimulator.Classes
 {
@@ -17,12 +19,50 @@ namespace BattleSimulator.Classes
         public int Warmup { get; private set; }
         public int Cooldown { get; private set; }
         public bool Steal { get; private set; }
+        private bool SummonEnemies;
+        private List<Battler> SummonedBattlers;
+        private List<int> SummonChances;
+        
 
-        public bool Disabled { get; private set; }
+        public Skill() : base()
+        {
+            SummonEnemies = true;
+            SummonedBattlers = new List<Battler>();
+            SummonChances = new List<int>();
+        }
 
+        public void Initialize(System.Data.SQLite.SQLiteDataReader data, List<BattlerClass> classesData, List<State> statesData, List<Player> playersData, List<Enemy> enemiesData)
+        {
+            Initialize(data);
+            Id = Int(data["Skill_ID"]);
+            ReadTool(this, data["ToolID"], classesData, statesData);
+            SPConsume = Int(data["SPConsume"]);
+            NumberOfUsers = Int(data["NumberOfUsers"]);
+            ShareTurns = (bool)data["ShareTurns"];
+            Charge = Int(data["Charge"]);
+            Warmup = Int(data["Warmup"]);
+            Cooldown = Int(data["CoolDown"]);
+            Steal = (bool)data["Steal"];
+            List<int> enemiesList = ReadDBList(data, "Skill", "Enemy", "Response");
+            List<int> playersList = ReadDBList(data, "Skill", "Player", "Response");
+            if (enemiesList.Count <= 0 && playersList.Count <= 0) return;
+            SummonEnemies = playersList.Count <= 0;
+            if (SummonEnemies)
+            {
+                for (int i = 0; i < enemiesList.Count;)
+                {
+                    SummonedBattlers.Add(ReadObj(enemiesData, enemiesList[i++]));
+                    SummonChances.Add(enemiesList[i++]);
+                }
+                return;
+            }
+            for (int i = 0; i < playersList.Count;)
+            {
+                SummonedBattlers.Add(ReadObj(playersData, playersList[i++]));
+                SummonChances.Add(playersList[i++]);
+            }
+        }
 
-        public Skill() { }
-        public Skill(int id, string name, string description, Bitmap image = null) : base(id, name, description, image) { }
         public Skill(Skill original) : base(original)
         {
             SPConsume = original.SPConsume;
@@ -32,24 +72,9 @@ namespace BattleSimulator.Classes
             Warmup = original.Warmup;
             Cooldown = original.Cooldown;
             Steal = original.Steal;
-            Disabled = original.Disabled;
-        }
-        
-        public void SetSpecial(int spConsume, bool steal = false)
-        {
-            SPConsume = spConsume;
-            Steal = steal;
-        }
-        public void SetTeamTraits(int numberOfUsers = 1, bool shareTurns = false)
-        {
-            NumberOfUsers = numberOfUsers;
-            ShareTurns = shareTurns;
-        }
-        public void SetLimitations(int charge, int warmup, int cooldown)
-        {
-            Charge = charge;
-            Warmup = warmup;
-            Cooldown = cooldown;
+            SummonEnemies = original.SummonEnemies;
+            //SummonedBattlers = CloneObjectList(original.SummonEnemies, o => new Enemy(o));
+            SummonChances = Clone(original.SummonChances);
         }
     }
 }

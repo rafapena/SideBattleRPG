@@ -50,7 +50,7 @@ namespace Database.Classes
             string scaledStats = "";
             if (EnemyClassInput.SelectedIndex == 0)
             {
-                scaledStats = ScaledStats.ValidateInputs(0, 8.5);
+                scaledStats = ScaledStats.ValidateInputs(0, 85);
                 if (scaledStats != "") scaledStats = "Class is set to 'None': " + scaledStats;
             } else {
                 scaledStats = ScaledStats.ValidateInputs(-3, 3);

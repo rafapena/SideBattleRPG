@@ -71,15 +71,17 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Simulator\DataManager.cs" />
-    <Compile Include="Simulator\Battle.cs" />
+    <Compile Include="Classes\Battle.cs" />
+    <Compile Include="Classes\ClassTemplates\BattleEnemy.cs" />
+    <Compile Include="Simulator\AllData.cs" />
+    <Compile Include="Simulator\BattleSession.cs" />
     <Compile Include="Classes\Item.cs" />
     <Compile Include="Classes\PassiveSkill.cs" />
     <Compile Include="Classes\State.cs" />
     <Compile Include="Classes\Skill.cs" />
     <Compile Include="Classes\Weapon.cs" />
     <Compile Include="Classes\Environment.cs" />
-    <Compile Include="Classes\EnemyToolAI.cs" />
+    <Compile Include="Classes\ClassTemplates\EnemyTool.cs" />
     <Compile Include="Classes\BattlerClass.cs" />
     <Compile Include="Classes\ClassTemplates\Stats.cs" />
     <Compile Include="Classes\ClassTemplates\PassiveEffect.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="Templates\RPGBattler.Designer.cs">
       <DependentUpon>RPGBattler.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\DataManager.cs" />
     <Compile Include="Utilities\FileHelper.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <EmbeddedResource Include="Main.resx">

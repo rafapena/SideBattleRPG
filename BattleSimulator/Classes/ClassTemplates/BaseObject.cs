@@ -4,23 +4,26 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static BattleSimulator.Utilities.DataManager;
+using static BattleSimulator.Utilities.Utils;
 
 namespace BattleSimulator.Classes.ClassTemplates
 {
     public abstract class BaseObject
     {
-        private int Id;
+        public int Id { get; protected set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
         public Bitmap Image { get; private set; }
+        
 
-        protected BaseObject() { }
-        public BaseObject(int id, string name, string description, Bitmap image = null)
+        public BaseObject() { }
+
+        public void Initialize(System.Data.SQLite.SQLiteDataReader data)
         {
-            Id = id;
-            Name = name;
-            Description = description;
-            Image = image;
+            Name = data["Name"].ToString();
+            Description = data["Description"].ToString();
+            Image = BytesToImage(data, 3);
         }
 
         public BaseObject(BaseObject original)
@@ -34,23 +37,6 @@ namespace BattleSimulator.Classes.ClassTemplates
         public bool Equals(BaseObject other)
         {
             return Id == other.Id;
-        }
-
-        public List<T> ClonePrimitiveList<T>(List<T> original)
-        {
-            if (original == null) return null;
-            List<T> cloned = new List<T>();
-            for (int i = 0; i < original.Count; i++) cloned.Add(original[i]);
-            return cloned;
-        }
-
-        public delegate T GenericFunction<T>(T o);
-        public List<T> CloneObjectList<T>(List<T> original, GenericFunction<T> newObject)
-        {
-            if (original == null) return null;
-            List<T> cloned = new List<T>();
-            for (int i = 0; i < original.Count; i++) cloned.Add(newObject(original[i]));
-            return cloned;
         }
     }
 }

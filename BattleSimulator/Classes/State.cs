@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BattleSimulator.Classes.ClassTemplates;
 using System.Drawing;
+using BattleSimulator.Classes.ClassTemplates;
+using static BattleSimulator.Utilities.DataManager;
+using static BattleSimulator.Utilities.Utils;
 
 namespace BattleSimulator.Classes
 {
@@ -16,8 +18,22 @@ namespace BattleSimulator.Classes
         public bool Petrify { get; private set; }
         public bool KO { get; private set; }
 
-        public State() { }
-        public State(int id, string name, string description, Bitmap image = null) : base(id, name, description, image) { }
+
+        public State() : base() { }
+
+        public void Initialize(System.Data.SQLite.SQLiteDataReader data, List<string> elementsData, List<State> statesData)
+        {
+            Initialize(data);
+            Id = Int(data["State_ID"]);
+            ReadPassiveEffect(this, data["PassiveEffectID"], elementsData, statesData);
+            StatModifiers = ReadStats(data["StatModifiers"]);
+            MaxStack = Int(data["MaxStack"]);
+            ContactSpreadRate = Int(data["ContactSpreadRate"]);
+            Stun = (bool)data["Stun"];
+            Petrify = (bool)data["Petrify"];
+            KO = (bool)data["KO"];
+        }
+
         public State(State original) : base(original)
         {
             MaxStack = original.MaxStack;
@@ -25,14 +41,6 @@ namespace BattleSimulator.Classes
             Stun = original.Stun;
             Petrify = original.Petrify;
             KO = original.KO;
-        }
-        public void SetMiscAttributes(int maxstack, int contactSpreadRate, bool stun, bool petrify, bool ko)
-        {
-            MaxStack = maxstack;
-            ContactSpreadRate = contactSpreadRate;
-            Stun = stun;
-            Petrify = petrify;
-            KO = ko;
         }
     }
 }

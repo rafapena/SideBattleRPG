@@ -38,7 +38,7 @@ namespace Database.Classes
         protected override void OnInitializeNew()
         {
             Base.InitializeNew();
-            ScaledStats.InitializeNew(3, "ScaledStats");
+            ScaledStats.InitializeNew(30, "ScaledStats");
             UpgradedClass1Input.SelectedIndex = 0;
             UpgradedClass2Input.SelectedIndex = 0;
             UsableWeaponType1Input.SelectedIndex = 0;
@@ -52,7 +52,7 @@ namespace Database.Classes
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();
-            err += ScaledStats.ValidateInputs(0, 8.5);
+            err += ScaledStats.ValidateInputs(0, 85);
             err += Skills.ValidateInputs();
             if (UpgradedClass1Input.SelectedIndex == UpgradedClass2Input.SelectedIndex && UpgradedClass1Input.SelectedIndex != 0) err += "Upgraded Classes cannot be the same\n";
             if (UsableWeaponType1Input.SelectedIndex == UsableWeaponType2Input.SelectedIndex && UsableWeaponType1Input.SelectedIndex != 0) err += "Usable Weapon Type cannot be the same\n";

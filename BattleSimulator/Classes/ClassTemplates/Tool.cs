@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using static BattleSimulator.Utilities.DataManager;
+using static BattleSimulator.Utilities.Utils;
 
 namespace BattleSimulator.Classes.ClassTemplates
 {
@@ -27,20 +29,41 @@ namespace BattleSimulator.Classes.ClassTemplates
         public int Priority { get; private set; }
         public BattlerClass ClassExclusive1 { get; private set; }
         public BattlerClass ClassExclusive2 { get; private set; }
-        private List<State> SRGiveState;
-        private List<State> SRReceiveState;
-        private List<int> SRGiveRate;
-        private List<int> SRReceiveRate;
+        private List<int> StateGiveRate;
+        private List<int> StateReceiveRate;
+
+        public bool Disabled { get; private set; }
 
 
-        protected Tool() { }
-        public Tool(int id, string name, string description, Bitmap image = null) : base(id, name, description, image)
+        public Tool() : base()
         {
-            SRGiveState = new List<State>();
-            SRReceiveState = new List<State>();
-            SRGiveRate = new List<int>();
-            SRReceiveRate = new List<int>();
+            StateGiveRate = new List<int>();
+            StateReceiveRate = new List<int>();
         }
+        public void Setup(System.Data.SQLite.SQLiteDataReader data, List<BattlerClass> classesData, List<State> statesData)
+        {
+            Type = Int(data["Type"]);
+            Formula = Int(data["Formula"]);
+            HPSPModType = Int(data["HPSPModType"]);
+            HPAmount = Int(data["HPAmount"]);
+            SPAmount = Int(data["SPAmount"]);
+            HPPercent = Int(data["HPPercent"]);
+            SPPecent = Int(data["SPPercent"]);
+            HPRecoil = Int(data["HPRecoil"]);
+            Scope = Int(data["Scope"]);
+            ConsecutiveActs = Int(data["ConsecutiveActs"]);
+            RandomActs = Int(data["RandomActs"]);
+            Element = Int(data["Element"]);
+            Power = Int(data["Power"]);
+            Accuracy = Int(data["Accuracy"]);
+            CritcalRate = Int(data["CriticalRate"]);
+            Priority = Int(data["Priority"]);
+            ClassExclusive1 = ReadObj(classesData, data["ClassExclusive1"]);
+            ClassExclusive2 = ReadObj(classesData, data["ClassExclusive2"]);
+            StateGiveRate = ReadRatesList(data, "Tool", statesData, "Chance", "Give");
+            StateReceiveRate = ReadRatesList(data, "Tool", statesData, "Chance", "Receive");
+        }
+
         public Tool(Tool original) : base(original)
         {
             Type = original.Type;
@@ -59,56 +82,10 @@ namespace BattleSimulator.Classes.ClassTemplates
             Accuracy = original.Accuracy;
             CritcalRate = original.CritcalRate;
             Priority = original.Priority;
-            ClassExclusive1 = new BattlerClass(original.ClassExclusive1);
-            ClassExclusive2 = new BattlerClass(original.ClassExclusive2);
-            SRGiveState = CloneObjectList(original.SRGiveState, o => new State(o));
-            SRReceiveState = CloneObjectList(original.SRReceiveState, o => new State(o));
-            SRGiveRate = ClonePrimitiveList(original.SRGiveRate);
-            SRReceiveRate = ClonePrimitiveList(original.SRReceiveRate);
-        }
-
-        public void SetTypes(int type, int formula)
-        {
-            Type = type;
-            Formula = formula;
-        }
-        public void SetHPSPValues(int hpspModType, int hpAmt, int spAmt, int hpPercent, int spPercent, int hpRec)
-        {
-            HPSPModType = hpspModType;
-            HPAmount = hpAmt;
-            SPAmount = spAmt;
-            HPPercent = hpPercent;
-            SPPecent = spPercent;
-            HPRecoil = HPRecoil;
-        }
-        public void SetTargets(int scope, int consecutiveActs, int randomActs)
-        {
-            Scope = scope;
-            ConsecutiveActs = consecutiveActs;
-            RandomActs = randomActs;
-        }
-        public void SetAmplifiers(int element, int power, int accuracy, int criticalRate, int priority)
-        {
-            Element = element;
-            Power = power;
-            Accuracy = accuracy;
-            CritcalRate = criticalRate;
-            Priority = priority;
-        }
-        public void SetExclusiveClasses(BattlerClass class1, BattlerClass class2)
-        {
-            ClassExclusive1 = class1;
-            ClassExclusive2 = class2;
-        }
-        public void AddStateRateGive(State state, int rate)
-        {
-            SRGiveState.Add(state);
-            SRGiveRate.Add(rate);
-        }
-        public void AddStateRateReceive(State state, int rate)
-        {
-            SRReceiveState.Add(state);
-            SRReceiveRate.Add(rate);
+            ClassExclusive1 = Clone(original.ClassExclusive1, o => new BattlerClass(o));
+            ClassExclusive2 = Clone(original.ClassExclusive2, o => new BattlerClass(o));
+            StateGiveRate = Clone(original.StateGiveRate);
+            StateReceiveRate = Clone(original.StateReceiveRate);
         }
     }
 }

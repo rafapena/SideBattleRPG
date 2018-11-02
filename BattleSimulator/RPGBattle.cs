@@ -15,13 +15,13 @@ namespace BattleSimulator
 {
     public partial class RPGBattle : Form
     {
-        private Battle Battle;
+        private BattleSession BattleSession;
 
         public RPGBattle(string filenameWithPath)
         {
             InitializeComponent();
-            DataManager.Setup();
-            Battle = new Battle(filenameWithPath);
+            AllData.Setup();
+            BattleSession = new BattleSession(filenameWithPath);
         }
     }
 }
