@@ -67,7 +67,7 @@ namespace Database.Utilities
         public string SelectedInput(ComboBox inputSource)
         {
             int chosen = OptionsListIds[inputSource.SelectedIndex];
-            return chosen < 0 ? null : chosen.ToString();
+            return ADD_NULL_INPUT && chosen == 0 ? null : chosen.ToString();
         }
 
 

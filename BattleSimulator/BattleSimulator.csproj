@@ -131,6 +131,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RPGBattle.resx">
+      <DependentUpon>RPGBattle.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Templates\BattlePlayer.resx">
       <DependentUpon>BattlePlayer.cs</DependentUpon>
     </EmbeddedResource>

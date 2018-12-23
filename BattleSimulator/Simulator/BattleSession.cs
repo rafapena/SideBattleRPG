@@ -45,6 +45,7 @@ namespace BattleSimulator.Simulator
                 }
                 for (int i = 0; i < 4; i++) for (int j = i + 1; j < 4; j++) PlayerSetRelationHelper(file, i, j);
                 AllData.SetupBattle(ReadShort(file));
+                Enemies = AllData.Battle.Enemies;
             }
         }
         private void PlayerSetRelationHelper(FileStream file, int i, int j)

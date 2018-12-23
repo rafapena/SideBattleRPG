@@ -7,13 +7,14 @@ using System.Drawing;
 using BattleSimulator.Classes.ClassTemplates;
 using static BattleSimulator.Utilities.DataManager;
 using static BattleSimulator.Utilities.Utils;
+using System.Windows.Forms;
 
 namespace BattleSimulator.Classes
 {
     public class Battle : BaseObject
     {
-        public Environment Environment;
-        public List<Enemy> Enemies;
+        public Environment Environment { get; private set; }
+        public List<Enemy> Enemies { get; private set; }
 
 
         public Battle() : base()
@@ -33,8 +34,8 @@ namespace BattleSimulator.Classes
                 Enemy enemyInBattle = b.Enemy;
                 enemyInBattle.SetAllStats(b.Level, b.HPMultiplier);
                 enemyInBattle.MoveToPosition(b.GridPositionZ, b.GridPositionX);
-                enemyInBattle.AddPassiveSkill(pSkillsData, b.PassiveSkill1.Id);
-                enemyInBattle.AddPassiveSkill(pSkillsData, b.PassiveSkill2.Id);
+                if (b.PassiveSkill1 != null) enemyInBattle.AddPassiveSkill(pSkillsData, b.PassiveSkill1.Id);
+                if (b.PassiveSkill2 != null) enemyInBattle.AddPassiveSkill(pSkillsData, b.PassiveSkill2.Id);
                 List<EnemyTool<Skill>> enemySkills = ReadEnemyTools(beId, skillsData, statesData);
                 List<EnemyTool<Item>> enemyItems = ReadEnemyTools(beId, itemsData, statesData);
                 List<EnemyTool<Weapon>> enemyWeapons = ReadEnemyTools(beId, weaponsData, statesData);

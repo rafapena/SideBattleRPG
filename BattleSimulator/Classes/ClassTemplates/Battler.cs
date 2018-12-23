@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using static BattleSimulator.Utilities.Utils;
+using System.Windows.Forms;
 
 namespace BattleSimulator.Classes.ClassTemplates
 {
@@ -70,7 +71,7 @@ namespace BattleSimulator.Classes.ClassTemplates
         {
             int zNew = ZPosition + z;
             int xNew = XPosition + x;
-            if (zNew > 0 || zNew > 2 || xNew < 0 || xNew > 2) return;
+            if (zNew < 0 || zNew > 2 || xNew < 0 || xNew > 2) return;
             ZPosition = zNew;
             XPosition = xNew;
         }
@@ -105,7 +106,7 @@ namespace BattleSimulator.Classes.ClassTemplates
 
         public void AddPassiveSkill(List<PassiveSkill> pSkillsList, int id)
         {
-            if (id > 0 && id < pSkillsList.Count) PassiveSkills.Add(new PassiveSkill(pSkillsList[id]));
+            if (pSkillsList[id] != null && id > 0 && id < pSkillsList.Count) PassiveSkills.Add(new PassiveSkill(pSkillsList[id]));
         }
         public void RemovePassiveSkill(int id)
         {

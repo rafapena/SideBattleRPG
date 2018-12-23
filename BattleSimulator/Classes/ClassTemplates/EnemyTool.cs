@@ -26,16 +26,14 @@ namespace BattleSimulator.Classes.ClassTemplates
         public int FoeCondition { get; private set; }
         public int UserCondition { get; private set; }
         private string TargetElementRate;
-        private string TargetStateRate1;
-        private string TargetStateRate2;
-        private string TargetStatCondition1;
-        private string TargetStatCondition2;
+        private string TargetStateRates;
+        private string TargetStatConditions;
         public int TargetToolElement { get; private set; }
 
 
         public EnemyTool(System.Data.SQLite.SQLiteDataReader data, List<T> toolsData, List<State> statesData)
         {
-            Tool = ReadToolObj(toolsData, data["Tool_ID"]);
+            Tool = ReadToolObj(toolsData, data["ToolID"]);
             Priority = Int(data["Priority"]);
             Quantity = Int(data["Quantity"]);
             HPLow = Int(data["HPLow"]);
@@ -50,10 +48,8 @@ namespace BattleSimulator.Classes.ClassTemplates
             FoeCondition = Int(data["FoeCondition"]);
             UserCondition = Int(data["UserCondition"]);
             TargetElementRate = data["TargetElementRate"].ToString();
-            TargetStateRate1 = data["TargetStateRate1"].ToString();
-            TargetStateRate2 = data["TargetStateRate2"].ToString();
-            TargetStatCondition1 = data["TargetStatCondition1"].ToString();
-            TargetStatCondition2 = data["TargetStatCondition2"].ToString();
+            TargetStateRates = data["TargetStateRates"].ToString();
+            TargetStatConditions = data["TargetStatConditions"].ToString();
             TargetToolElement = Int(data["TargetToolElement"]);
         }
 
@@ -73,10 +69,8 @@ namespace BattleSimulator.Classes.ClassTemplates
             FoeCondition = original.FoeCondition;
             UserCondition = original.UserCondition;
             TargetElementRate = original.TargetElementRate;
-            TargetStateRate1 = original.TargetStateRate1;
-            TargetStateRate2 = original.TargetStateRate2;
-            TargetStatCondition1 = original.TargetStatCondition1;
-            TargetStatCondition2 = original.TargetStatCondition2;
+            TargetStateRates = original.TargetStateRates;
+            TargetStatConditions = original.TargetStatConditions;
             TargetToolElement = original.TargetToolElement;
         }
     }

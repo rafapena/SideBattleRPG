@@ -148,6 +148,7 @@ namespace BattleSimulator.Utilities
             }
             return enemyTools;
         }
+
         public static T ReadToolObj<T>(List<T> toolList, object toolId) where T : Tool
         {
             T tool = null;
@@ -155,7 +156,11 @@ namespace BattleSimulator.Utilities
             {
                 conn1.Open();
                 string tbl = typeof(T).Name;
-                using (var data1 = Read(conn1, "SELECT * FROM Tool JOIN " + tbl + " WHERE Tool_ID = ToolID AND Tool_ID = " + toolId)) tool = ReadObj(toolList, data1[tbl + "_ID"]);
+                using (var data1 = Read(conn1, "SELECT * FROM Tool JOIN " + tbl + " WHERE Tool_ID = ToolID AND Tool_ID = " + toolId))
+                {
+                    data1.Read();
+                    tool = ReadObj(toolList, data1[tbl + "_ID"]);
+                }
                 conn1.Close();
             }
             return tool;

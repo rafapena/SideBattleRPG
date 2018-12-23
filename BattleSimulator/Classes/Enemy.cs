@@ -59,9 +59,9 @@ namespace BattleSimulator.Classes
         public void SetAllStats(int level, double hpMultiplier)
         {
             SetAllStats(level);
-            Stats.Multiply(0, hpMultiplier);
             if (Class != null) Stats = new Stats(level, Class.BaseStats, ScaledStats);
             else Stats = new Stats(level, ScaledStats, null);
+            Stats.Multiply(0, hpMultiplier);
         }
 
         public void AddSkillAI(EnemyTool<Skill> ai)
