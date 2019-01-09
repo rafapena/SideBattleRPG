@@ -60,24 +60,69 @@ namespace BattleSimulator.Classes.ClassTemplates
             StatsList[4] = original.Mar;
             StatsList[5] = original.Spd;
             StatsList[6] = original.Tec;
-            StatsList[7] = original.Acc;
-            StatsList[8] = original.Luk;
+            StatsList[7] = original.Luk;
+            StatsList[8] = original.Acc;
             StatsList[9] = original.Eva;
             StatsList[10] = original.Crt;
             StatsList[11] = original.Cev;
         }
-        
 
-        public Stats(int level, Stats baseStats, Stats NatMods)
+
+        public Stats(int level, Stats baseStats, Stats natMods=null)
         {
             StatsList = new int[NUMBER_OF_STATS];
-            if (baseStats == null || NatMods == null) return;
-            //return 0;
+            if (baseStats == null) return;
+            Stats natStats = natMods == null ? new Stats() : natMods;
+            StatsList[0] = StatTable.SetMHPNorms(level, baseStats.MaxHP, natStats.MaxHP);
+            StatsList[1] = StatTable.SetStatNorms(level, baseStats.Atk, natStats.Atk);
+            StatsList[2] = StatTable.SetStatNorms(level, baseStats.Def, natStats.Def);
+            StatsList[3] = StatTable.SetStatNorms(level, baseStats.Map, natStats.Map);
+            StatsList[4] = StatTable.SetStatNorms(level, baseStats.Mar, natStats.Mar);
+            StatsList[5] = StatTable.SetStatNorms(level, baseStats.Spd, natStats.Spd);
+            StatsList[6] = StatTable.SetStatNorms(level, baseStats.Tec, natStats.Tec);
+            StatsList[7] = StatTable.SetStatNorms(level, baseStats.Luk, natStats.Luk);
         }
-
+        
         public void Multiply(int index, double multiplier)
         {
             StatsList[index] = (int)(StatsList[index] * multiplier);
+        }
+    }
+
+
+    public static class StatTable
+    {
+        public static int[] MinMHP = { 10, 19, 22, 25, 28, 31, 37, 40, 49 };
+        public static int[] MaxMHPLow = { 45, 275, 375, 475, 600, 750, 950, 1100, 1500 };
+        public static int[] MaxMHPHigh = { 55, 325, 425, 525, 700, 850, 1050, 1300, 1700 };
+        public static int[] NatMHPMods = { -120, -80, -40, 0, 40, 80, 120 };
+
+        public static int[] MinStat = { 2, 4, 4, 5, 6, 6, 8, 8, 10 };
+        public static int[] MaxStatLow = { 45, 90, 115, 140, 175, 210, 240, 270, 320 };
+        public static int[] MaxStatHigh = { 55, 110, 135, 160, 195, 230, 260, 290, 340 };
+        public static int[] NatStatMods = { -60, -40, -20, 0, 20, 40, 60 };
+
+        public static int SetMHPNorms(int level, int baseStat, int natMod)
+        {
+            double actualBase = baseStat / 10.0;
+            int flooredBase = (int)actualBase;
+            int min = MinMHP[flooredBase] - natMod * 4;
+            int maxMhpLow = MaxMHPLow[flooredBase];
+            int maxMhpHigh = MaxMHPHigh[flooredBase];
+            double max = maxMhpLow + (actualBase - flooredBase) * (maxMhpHigh - maxMhpLow) + natMod * 40;
+            double result = min + (level - 1) * ((int)max - min) / 99;
+            return (int)(Math.Round(result));
+        }
+        public static int SetStatNorms(int level, int baseStat, int natMod)
+        {
+            double actualBase = baseStat / 10.0;
+            int flooredBase = (int)actualBase;
+            int min = MinStat[flooredBase] - natMod * 2;
+            int maxStatLow = MaxStatLow[flooredBase];
+            int maxStatHigh = MaxStatHigh[flooredBase];
+            double max = maxStatLow + (actualBase - flooredBase) * (maxStatHigh - maxStatLow) + natMod * 20;
+            double result = min + (level - 1) * ((int)max - min) / 99;
+            return (int)(Math.Round(result));
         }
     }
 }

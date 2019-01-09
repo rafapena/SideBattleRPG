@@ -60,7 +60,7 @@ namespace BattleSimulator.Classes
         {
             SetAllStats(level);
             if (Class != null) Stats = new Stats(level, Class.BaseStats, ScaledStats);
-            else Stats = new Stats(level, ScaledStats, null);
+            else Stats = new Stats(level, ScaledStats);
             Stats.Multiply(0, hpMultiplier);
         }
 

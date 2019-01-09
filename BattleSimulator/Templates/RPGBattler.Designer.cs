@@ -39,6 +39,8 @@
             this.State1 = new System.Windows.Forms.Label();
             this.State2 = new System.Windows.Forms.Label();
             this.State3 = new System.Windows.Forms.Label();
+            this.Damage = new System.Windows.Forms.Label();
+            this.Restore = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.BattlerImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,27 +74,27 @@
             // HP
             // 
             this.HP.AutoSize = true;
-            this.HP.Location = new System.Drawing.Point(59, 164);
+            this.HP.Location = new System.Drawing.Point(49, 164);
             this.HP.Name = "HP";
-            this.HP.Size = new System.Drawing.Size(36, 20);
+            this.HP.Size = new System.Drawing.Size(54, 20);
             this.HP.TabIndex = 3;
-            this.HP.Text = "100";
+            this.HP.Text = "10000";
             this.HP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // MaxHP
             // 
             this.MaxHP.AutoSize = true;
-            this.MaxHP.Location = new System.Drawing.Point(111, 164);
+            this.MaxHP.Location = new System.Drawing.Point(114, 164);
             this.MaxHP.Name = "MaxHP";
-            this.MaxHP.Size = new System.Drawing.Size(36, 20);
+            this.MaxHP.Size = new System.Drawing.Size(54, 20);
             this.MaxHP.TabIndex = 4;
-            this.MaxHP.Text = "100";
+            this.MaxHP.Text = "10000";
             this.MaxHP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // SlashText
             // 
             this.SlashText.AutoSize = true;
-            this.SlashText.Location = new System.Drawing.Point(98, 164);
+            this.SlashText.Location = new System.Drawing.Point(100, 164);
             this.SlashText.Name = "SlashText";
             this.SlashText.Size = new System.Drawing.Size(13, 20);
             this.SlashText.TabIndex = 5;
@@ -102,7 +104,7 @@
             // SP
             // 
             this.SP.AutoSize = true;
-            this.SP.Location = new System.Drawing.Point(60, 184);
+            this.SP.Location = new System.Drawing.Point(49, 184);
             this.SP.Name = "SP";
             this.SP.Size = new System.Drawing.Size(36, 20);
             this.SP.TabIndex = 6;
@@ -112,7 +114,7 @@
             // BattlerName
             // 
             this.BattlerName.AutoSize = true;
-            this.BattlerName.Location = new System.Drawing.Point(13, 144);
+            this.BattlerName.Location = new System.Drawing.Point(13, 137);
             this.BattlerName.Name = "BattlerName";
             this.BattlerName.Size = new System.Drawing.Size(98, 20);
             this.BattlerName.TabIndex = 7;
@@ -145,10 +147,34 @@
             this.State3.TabIndex = 10;
             this.State3.Text = "State3";
             // 
+            // Damage
+            // 
+            this.Damage.AutoSize = true;
+            this.Damage.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.Damage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Damage.Location = new System.Drawing.Point(22, 92);
+            this.Damage.Name = "Damage";
+            this.Damage.Size = new System.Drawing.Size(49, 20);
+            this.Damage.TabIndex = 11;
+            this.Damage.Text = "1000";
+            // 
+            // Restore
+            // 
+            this.Restore.AutoSize = true;
+            this.Restore.BackColor = System.Drawing.SystemColors.Desktop;
+            this.Restore.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Restore.Location = new System.Drawing.Point(22, 59);
+            this.Restore.Name = "Restore";
+            this.Restore.Size = new System.Drawing.Size(59, 20);
+            this.Restore.TabIndex = 12;
+            this.Restore.Text = "+1000";
+            // 
             // RPGBattler
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.Restore);
+            this.Controls.Add(this.Damage);
             this.Controls.Add(this.State3);
             this.Controls.Add(this.State2);
             this.Controls.Add(this.State1);
@@ -161,7 +187,7 @@
             this.Controls.Add(this.HPText);
             this.Controls.Add(this.BattlerImage);
             this.Name = "RPGBattler";
-            this.Size = new System.Drawing.Size(165, 274);
+            this.Size = new System.Drawing.Size(170, 274);
             ((System.ComponentModel.ISupportInitialize)(this.BattlerImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -181,5 +207,7 @@
         private System.Windows.Forms.Label State1;
         private System.Windows.Forms.Label State2;
         private System.Windows.Forms.Label State3;
+        private System.Windows.Forms.Label Damage;
+        private System.Windows.Forms.Label Restore;
     }
 }

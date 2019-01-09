@@ -41,6 +41,7 @@ namespace Database.TableTemplates
             Count++;
             Table.RowDefinitions.Add(new RowDefinition());
             TextBlock t = TextBlock(Count, Count, 0);
+            t.Margin = new Thickness(1, 1, 1, 1);
             t.HorizontalAlignment = HorizontalAlignment.Center;
             Elements.Add(new List<UIElement>() { t });
             Table.Children.Add(t);

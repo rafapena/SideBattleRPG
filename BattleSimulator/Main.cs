@@ -60,10 +60,11 @@ namespace BattleSimulator
             {
                 Button btn = new Button();
                 btn.Width = ListPanel.Width - 30;
-                btn.Height = 30;
+                btn.Height = 60;
                 btn.Location = new Point(0, i * btn.Height);
                 btn.Text = RetrieveNameByPrtyFile(i + 1);
                 btn.Tag = i;
+                btn.Font = new Font("Microsoft Sans Serif", 16F);
                 btn.BackColor = LIST_BUTTON_COLOR;
                 btn.Click += new EventHandler(PartyButton_Clicked);
                 buttons[i] = btn;
@@ -94,7 +95,7 @@ namespace BattleSimulator
 
 
         /// <summary>
-        /// I/ndividual party operations
+        /// Individual party operations
         /// </summary>
 
         private void SetupData()
@@ -235,7 +236,16 @@ namespace BattleSimulator
         private void BattleButton_Click(object sender, EventArgs e)
         {
             bool exists = (new FileInfo(PRTY_FILES_PATH + "Group" + (CurrentSelection + 1) + ".prty").Length != 0);
-            if (!exists || UnsavedChanges() && Utils.Confirm("Do you want to save changes before the battle?", "Unsaved changes")) UpdateButton_Click(null, null);
+            if (!exists || UnsavedChanges() && Utils.Confirm("Do you want to save changes before the battle?", "Unsaved changes"))
+            {
+                string err = ValidateInputs();
+                if (err != "")
+                {
+                    MessageBox.Show(err, "Could not save changes");
+                    return;
+                }
+                else UpdateButton_Click(null, null);
+            }
             UpdatedText.Visible = false;
             RPGBattle battle = new RPGBattle(PRTY_FILES_PATH + "Group" + (CurrentSelection + 1) + ".prty");
             battle.Show();
