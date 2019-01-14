@@ -28,45 +28,41 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Header = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.TurnNumber = new System.Windows.Forms.Label();
-            this.E20 = new BattleSimulator.Templates.RPGBattler();
-            this.E10 = new BattleSimulator.Templates.RPGBattler();
-            this.E00 = new BattleSimulator.Templates.RPGBattler();
-            this.E21 = new BattleSimulator.Templates.RPGBattler();
-            this.E11 = new BattleSimulator.Templates.RPGBattler();
-            this.E01 = new BattleSimulator.Templates.RPGBattler();
-            this.E22 = new BattleSimulator.Templates.RPGBattler();
-            this.E12 = new BattleSimulator.Templates.RPGBattler();
-            this.E02 = new BattleSimulator.Templates.RPGBattler();
-            this.P22 = new BattleSimulator.Templates.RPGBattler();
-            this.P12 = new BattleSimulator.Templates.RPGBattler();
-            this.P02 = new BattleSimulator.Templates.RPGBattler();
-            this.P21 = new BattleSimulator.Templates.RPGBattler();
-            this.P11 = new BattleSimulator.Templates.RPGBattler();
-            this.P01 = new BattleSimulator.Templates.RPGBattler();
-            this.P20 = new BattleSimulator.Templates.RPGBattler();
-            this.P10 = new BattleSimulator.Templates.RPGBattler();
-            this.P00 = new BattleSimulator.Templates.RPGBattler();
+            this.PlayersHeader = new System.Windows.Forms.Label();
+            this.EnemiesHeader = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.Commands = new System.Windows.Forms.Label();
+            this.FixedCommands = new System.Windows.Forms.Label();
+            this.CommandTracker = new System.Windows.Forms.Label();
+            this.ERF = new BattleSimulator.Templates.RPGBattler();
+            this.ECF = new BattleSimulator.Templates.RPGBattler();
+            this.ELF = new BattleSimulator.Templates.RPGBattler();
+            this.ERC = new BattleSimulator.Templates.RPGBattler();
+            this.ECC = new BattleSimulator.Templates.RPGBattler();
+            this.ELC = new BattleSimulator.Templates.RPGBattler();
+            this.ERB = new BattleSimulator.Templates.RPGBattler();
+            this.ECB = new BattleSimulator.Templates.RPGBattler();
+            this.ELB = new BattleSimulator.Templates.RPGBattler();
+            this.PRB = new BattleSimulator.Templates.RPGBattler();
+            this.PCB = new BattleSimulator.Templates.RPGBattler();
+            this.PLB = new BattleSimulator.Templates.RPGBattler();
+            this.PRC = new BattleSimulator.Templates.RPGBattler();
+            this.PCC = new BattleSimulator.Templates.RPGBattler();
+            this.PLC = new BattleSimulator.Templates.RPGBattler();
+            this.PRF = new BattleSimulator.Templates.RPGBattler();
+            this.PCF = new BattleSimulator.Templates.RPGBattler();
+            this.PLF = new BattleSimulator.Templates.RPGBattler();
+            this.ScopeCommand = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // Header
-            // 
-            this.Header.AutoSize = true;
-            this.Header.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Header.Location = new System.Drawing.Point(552, 9);
-            this.Header.Name = "Header";
-            this.Header.Size = new System.Drawing.Size(231, 29);
-            this.Header.TabIndex = 0;
-            this.Header.Text = "Players VS Enemies";
-            this.Header.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(595, 49);
+            this.label2.Location = new System.Drawing.Point(599, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(69, 29);
             this.label2.TabIndex = 19;
@@ -77,165 +73,253 @@
             // 
             this.TurnNumber.AutoSize = true;
             this.TurnNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TurnNumber.Location = new System.Drawing.Point(692, 49);
+            this.TurnNumber.Location = new System.Drawing.Point(696, 9);
             this.TurnNumber.Name = "TurnNumber";
             this.TurnNumber.Size = new System.Drawing.Size(26, 29);
             this.TurnNumber.TabIndex = 20;
             this.TurnNumber.Text = "0";
             this.TurnNumber.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // E20
+            // PlayersHeader
             // 
-            this.E20.Location = new System.Drawing.Point(776, 640);
-            this.E20.Name = "E20";
-            this.E20.Size = new System.Drawing.Size(165, 266);
-            this.E20.TabIndex = 18;
+            this.PlayersHeader.AutoSize = true;
+            this.PlayersHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PlayersHeader.Location = new System.Drawing.Point(246, 9);
+            this.PlayersHeader.Name = "PlayersHeader";
+            this.PlayersHeader.Size = new System.Drawing.Size(93, 29);
+            this.PlayersHeader.TabIndex = 21;
+            this.PlayersHeader.Text = "Players";
+            this.PlayersHeader.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // E10
+            // EnemiesHeader
             // 
-            this.E10.Location = new System.Drawing.Point(776, 369);
-            this.E10.Name = "E10";
-            this.E10.Size = new System.Drawing.Size(165, 266);
-            this.E10.TabIndex = 17;
+            this.EnemiesHeader.AutoSize = true;
+            this.EnemiesHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EnemiesHeader.Location = new System.Drawing.Point(969, 9);
+            this.EnemiesHeader.Name = "EnemiesHeader";
+            this.EnemiesHeader.Size = new System.Drawing.Size(108, 29);
+            this.EnemiesHeader.TabIndex = 22;
+            this.EnemiesHeader.Text = "Enemies";
+            this.EnemiesHeader.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // E00
+            // panel1
             // 
-            this.E00.Location = new System.Drawing.Point(776, 104);
-            this.E00.Name = "E00";
-            this.E00.Size = new System.Drawing.Size(165, 266);
-            this.E00.TabIndex = 16;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Location = new System.Drawing.Point(26, 95);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(527, 826);
+            this.panel1.TabIndex = 23;
             // 
-            // E21
+            // panel2
             // 
-            this.E21.Location = new System.Drawing.Point(947, 640);
-            this.E21.Name = "E21";
-            this.E21.Size = new System.Drawing.Size(165, 266);
-            this.E21.TabIndex = 15;
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Location = new System.Drawing.Point(765, 95);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(527, 826);
+            this.panel2.TabIndex = 24;
             // 
-            // E11
+            // Commands
             // 
-            this.E11.Location = new System.Drawing.Point(947, 369);
-            this.E11.Name = "E11";
-            this.E11.Size = new System.Drawing.Size(165, 266);
-            this.E11.TabIndex = 14;
+            this.Commands.AutoSize = true;
+            this.Commands.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Commands.Location = new System.Drawing.Point(34, 975);
+            this.Commands.Name = "Commands";
+            this.Commands.Size = new System.Drawing.Size(124, 29);
+            this.Commands.TabIndex = 26;
+            this.Commands.Text = "Command";
             // 
-            // E01
+            // FixedCommands
             // 
-            this.E01.Location = new System.Drawing.Point(947, 104);
-            this.E01.Name = "E01";
-            this.E01.Size = new System.Drawing.Size(165, 266);
-            this.E01.TabIndex = 13;
+            this.FixedCommands.AutoSize = true;
+            this.FixedCommands.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FixedCommands.Location = new System.Drawing.Point(1159, 975);
+            this.FixedCommands.Name = "FixedCommands";
+            this.FixedCommands.Size = new System.Drawing.Size(124, 29);
+            this.FixedCommands.TabIndex = 27;
+            this.FixedCommands.Text = "Command";
+            this.FixedCommands.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // E22
+            // CommandTracker
             // 
-            this.E22.Location = new System.Drawing.Point(1118, 640);
-            this.E22.Name = "E22";
-            this.E22.Size = new System.Drawing.Size(165, 266);
-            this.E22.TabIndex = 12;
+            this.CommandTracker.AutoSize = true;
+            this.CommandTracker.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CommandTracker.Location = new System.Drawing.Point(599, 104);
+            this.CommandTracker.Name = "CommandTracker";
+            this.CommandTracker.Size = new System.Drawing.Size(103, 25);
+            this.CommandTracker.TabIndex = 28;
+            this.CommandTracker.Text = "Command";
+            this.CommandTracker.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // E12
+            // ERF
             // 
-            this.E12.Location = new System.Drawing.Point(1118, 369);
-            this.E12.Name = "E12";
-            this.E12.Size = new System.Drawing.Size(165, 266);
-            this.E12.TabIndex = 11;
+            this.ERF.Location = new System.Drawing.Point(776, 640);
+            this.ERF.Name = "ERF";
+            this.ERF.Size = new System.Drawing.Size(165, 266);
+            this.ERF.TabIndex = 18;
             // 
-            // E02
+            // ECF
             // 
-            this.E02.Location = new System.Drawing.Point(1118, 104);
-            this.E02.Name = "E02";
-            this.E02.Size = new System.Drawing.Size(165, 266);
-            this.E02.TabIndex = 10;
+            this.ECF.Location = new System.Drawing.Point(776, 369);
+            this.ECF.Name = "ECF";
+            this.ECF.Size = new System.Drawing.Size(165, 266);
+            this.ECF.TabIndex = 17;
             // 
-            // P22
+            // ELF
             // 
-            this.P22.Location = new System.Drawing.Point(39, 640);
-            this.P22.Name = "P22";
-            this.P22.Size = new System.Drawing.Size(165, 273);
-            this.P22.TabIndex = 9;
+            this.ELF.Location = new System.Drawing.Point(776, 104);
+            this.ELF.Name = "ELF";
+            this.ELF.Size = new System.Drawing.Size(165, 266);
+            this.ELF.TabIndex = 16;
             // 
-            // P12
+            // ERC
             // 
-            this.P12.Location = new System.Drawing.Point(39, 369);
-            this.P12.Name = "P12";
-            this.P12.Size = new System.Drawing.Size(165, 277);
-            this.P12.TabIndex = 8;
+            this.ERC.Location = new System.Drawing.Point(947, 640);
+            this.ERC.Name = "ERC";
+            this.ERC.Size = new System.Drawing.Size(165, 266);
+            this.ERC.TabIndex = 15;
             // 
-            // P02
+            // ECC
             // 
-            this.P02.Location = new System.Drawing.Point(38, 104);
-            this.P02.Name = "P02";
-            this.P02.Size = new System.Drawing.Size(165, 268);
-            this.P02.TabIndex = 7;
+            this.ECC.Location = new System.Drawing.Point(947, 369);
+            this.ECC.Name = "ECC";
+            this.ECC.Size = new System.Drawing.Size(165, 266);
+            this.ECC.TabIndex = 14;
             // 
-            // P21
+            // ELC
             // 
-            this.P21.Location = new System.Drawing.Point(210, 640);
-            this.P21.Name = "P21";
-            this.P21.Size = new System.Drawing.Size(165, 273);
-            this.P21.TabIndex = 6;
+            this.ELC.Location = new System.Drawing.Point(947, 104);
+            this.ELC.Name = "ELC";
+            this.ELC.Size = new System.Drawing.Size(165, 266);
+            this.ELC.TabIndex = 13;
             // 
-            // P11
+            // ERB
             // 
-            this.P11.Location = new System.Drawing.Point(210, 369);
-            this.P11.Name = "P11";
-            this.P11.Size = new System.Drawing.Size(165, 277);
-            this.P11.TabIndex = 5;
+            this.ERB.Location = new System.Drawing.Point(1118, 640);
+            this.ERB.Name = "ERB";
+            this.ERB.Size = new System.Drawing.Size(165, 266);
+            this.ERB.TabIndex = 12;
             // 
-            // P01
+            // ECB
             // 
-            this.P01.Location = new System.Drawing.Point(210, 104);
-            this.P01.Name = "P01";
-            this.P01.Size = new System.Drawing.Size(165, 268);
-            this.P01.TabIndex = 4;
+            this.ECB.Location = new System.Drawing.Point(1118, 369);
+            this.ECB.Name = "ECB";
+            this.ECB.Size = new System.Drawing.Size(165, 266);
+            this.ECB.TabIndex = 11;
             // 
-            // P20
+            // ELB
             // 
-            this.P20.Location = new System.Drawing.Point(381, 640);
-            this.P20.Name = "P20";
-            this.P20.Size = new System.Drawing.Size(165, 273);
-            this.P20.TabIndex = 3;
+            this.ELB.Location = new System.Drawing.Point(1118, 104);
+            this.ELB.Name = "ELB";
+            this.ELB.Size = new System.Drawing.Size(165, 266);
+            this.ELB.TabIndex = 10;
             // 
-            // P10
+            // PRB
             // 
-            this.P10.Location = new System.Drawing.Point(381, 369);
-            this.P10.Name = "P10";
-            this.P10.Size = new System.Drawing.Size(165, 277);
-            this.P10.TabIndex = 2;
+            this.PRB.Location = new System.Drawing.Point(39, 640);
+            this.PRB.Name = "PRB";
+            this.PRB.Size = new System.Drawing.Size(165, 273);
+            this.PRB.TabIndex = 9;
             // 
-            // P00
+            // PCB
             // 
-            this.P00.Location = new System.Drawing.Point(381, 104);
-            this.P00.Name = "P00";
-            this.P00.Size = new System.Drawing.Size(165, 268);
-            this.P00.TabIndex = 1;
+            this.PCB.Location = new System.Drawing.Point(39, 369);
+            this.PCB.Name = "PCB";
+            this.PCB.Size = new System.Drawing.Size(165, 277);
+            this.PCB.TabIndex = 8;
+            // 
+            // PLB
+            // 
+            this.PLB.Location = new System.Drawing.Point(38, 104);
+            this.PLB.Name = "PLB";
+            this.PLB.Size = new System.Drawing.Size(165, 268);
+            this.PLB.TabIndex = 7;
+            // 
+            // PRC
+            // 
+            this.PRC.Location = new System.Drawing.Point(210, 640);
+            this.PRC.Name = "PRC";
+            this.PRC.Size = new System.Drawing.Size(165, 273);
+            this.PRC.TabIndex = 6;
+            // 
+            // PCC
+            // 
+            this.PCC.Location = new System.Drawing.Point(210, 369);
+            this.PCC.Name = "PCC";
+            this.PCC.Size = new System.Drawing.Size(165, 277);
+            this.PCC.TabIndex = 5;
+            // 
+            // PLC
+            // 
+            this.PLC.Location = new System.Drawing.Point(210, 104);
+            this.PLC.Name = "PLC";
+            this.PLC.Size = new System.Drawing.Size(165, 268);
+            this.PLC.TabIndex = 4;
+            // 
+            // PRF
+            // 
+            this.PRF.Location = new System.Drawing.Point(381, 640);
+            this.PRF.Name = "PRF";
+            this.PRF.Size = new System.Drawing.Size(165, 273);
+            this.PRF.TabIndex = 3;
+            // 
+            // PCF
+            // 
+            this.PCF.Location = new System.Drawing.Point(381, 369);
+            this.PCF.Name = "PCF";
+            this.PCF.Size = new System.Drawing.Size(165, 277);
+            this.PCF.TabIndex = 2;
+            // 
+            // PLF
+            // 
+            this.PLF.Location = new System.Drawing.Point(381, 104);
+            this.PLF.Name = "PLF";
+            this.PLF.Size = new System.Drawing.Size(165, 268);
+            this.PLF.TabIndex = 1;
+            // 
+            // ScopeCommand
+            // 
+            this.ScopeCommand.AutoSize = true;
+            this.ScopeCommand.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ScopeCommand.Location = new System.Drawing.Point(598, 975);
+            this.ScopeCommand.Name = "ScopeCommand";
+            this.ScopeCommand.Size = new System.Drawing.Size(124, 29);
+            this.ScopeCommand.TabIndex = 29;
+            this.ScopeCommand.Text = "Command";
+            this.ScopeCommand.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // RPGBattle
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1311, 921);
+            this.ClientSize = new System.Drawing.Size(1311, 1190);
+            this.Controls.Add(this.ScopeCommand);
+            this.Controls.Add(this.CommandTracker);
+            this.Controls.Add(this.FixedCommands);
+            this.Controls.Add(this.Commands);
+            this.Controls.Add(this.EnemiesHeader);
+            this.Controls.Add(this.PlayersHeader);
             this.Controls.Add(this.TurnNumber);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.E20);
-            this.Controls.Add(this.E10);
-            this.Controls.Add(this.E00);
-            this.Controls.Add(this.E21);
-            this.Controls.Add(this.E11);
-            this.Controls.Add(this.E01);
-            this.Controls.Add(this.E22);
-            this.Controls.Add(this.E12);
-            this.Controls.Add(this.E02);
-            this.Controls.Add(this.P22);
-            this.Controls.Add(this.P12);
-            this.Controls.Add(this.P02);
-            this.Controls.Add(this.P21);
-            this.Controls.Add(this.P11);
-            this.Controls.Add(this.P01);
-            this.Controls.Add(this.P20);
-            this.Controls.Add(this.P10);
-            this.Controls.Add(this.P00);
-            this.Controls.Add(this.Header);
+            this.Controls.Add(this.ERF);
+            this.Controls.Add(this.ECF);
+            this.Controls.Add(this.ELF);
+            this.Controls.Add(this.ERC);
+            this.Controls.Add(this.ECC);
+            this.Controls.Add(this.ELC);
+            this.Controls.Add(this.ERB);
+            this.Controls.Add(this.ECB);
+            this.Controls.Add(this.ELB);
+            this.Controls.Add(this.PRB);
+            this.Controls.Add(this.PCB);
+            this.Controls.Add(this.PLB);
+            this.Controls.Add(this.PRC);
+            this.Controls.Add(this.PCC);
+            this.Controls.Add(this.PLC);
+            this.Controls.Add(this.PRF);
+            this.Controls.Add(this.PCF);
+            this.Controls.Add(this.PLF);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel2);
             this.Name = "RPGBattle";
             this.Text = "Battle";
             this.ResumeLayout(false);
@@ -244,27 +328,33 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label Header;
-        private Templates.RPGBattler P10;
-        private Templates.RPGBattler P11;
-        private Templates.RPGBattler P12;
-        private Templates.RPGBattler P20;
-        private Templates.RPGBattler P21;
-        private Templates.RPGBattler P22;
-        private Templates.RPGBattler P00;
-        private Templates.RPGBattler P01;
-        private Templates.RPGBattler P02;
-        private Templates.RPGBattler E20;
-        private Templates.RPGBattler E10;
-        private Templates.RPGBattler E00;
-        private Templates.RPGBattler E21;
-        private Templates.RPGBattler E11;
-        private Templates.RPGBattler E01;
-        private Templates.RPGBattler E22;
-        private Templates.RPGBattler E12;
-        private Templates.RPGBattler E02;
+        private Templates.RPGBattler PCF;
+        private Templates.RPGBattler PCC;
+        private Templates.RPGBattler PCB;
+        private Templates.RPGBattler PRF;
+        private Templates.RPGBattler PRC;
+        private Templates.RPGBattler PRB;
+        private Templates.RPGBattler PLF;
+        private Templates.RPGBattler PLC;
+        private Templates.RPGBattler PLB;
+        private Templates.RPGBattler ERF;
+        private Templates.RPGBattler ECF;
+        private Templates.RPGBattler ELF;
+        private Templates.RPGBattler ERC;
+        private Templates.RPGBattler ECC;
+        private Templates.RPGBattler ELC;
+        private Templates.RPGBattler ERB;
+        private Templates.RPGBattler ECB;
+        private Templates.RPGBattler ELB;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label TurnNumber;
+        private System.Windows.Forms.Label PlayersHeader;
+        private System.Windows.Forms.Label EnemiesHeader;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label Commands;
+        private System.Windows.Forms.Label FixedCommands;
+        private System.Windows.Forms.Label CommandTracker;
+        private System.Windows.Forms.Label ScopeCommand;
     }
 }

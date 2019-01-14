@@ -32,7 +32,7 @@ namespace BattleSimulator.Classes.ClassTemplates
         private List<int> StateGiveRate;
         private List<int> StateReceiveRate;
 
-        public bool Disabled { get; private set; }
+        public bool Disabled { get; protected set; }
 
 
         public Tool() : base()
@@ -86,6 +86,7 @@ namespace BattleSimulator.Classes.ClassTemplates
             ClassExclusive2 = Clone(original.ClassExclusive2, o => new BattlerClass(o));
             StateGiveRate = Clone(original.StateGiveRate);
             StateReceiveRate = Clone(original.StateReceiveRate);
+            Disabled = original.Disabled;
         }
     }
 }

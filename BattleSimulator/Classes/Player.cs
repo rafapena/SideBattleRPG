@@ -23,6 +23,9 @@ namespace BattleSimulator.Classes
         private List<Skill> SkillSet;
         private List<int> SkillSetLevels;
 
+        public List<Skill> ComboSkills { get; private set; }
+        public List<Player> ComboPartners { get; set; }
+
 
         public Player() : base()
         {
@@ -30,6 +33,8 @@ namespace BattleSimulator.Classes
             PlayerCompanionships = new List<int>();
             SkillSet = new List<Skill>();
             SkillSetLevels = new List<int>();
+            ComboSkills = new List<Skill>();
+            ComboPartners = new List<Player>();
         }
 
         public void Initialize(System.Data.SQLite.SQLiteDataReader data, List<string> elementsData,
@@ -66,6 +71,8 @@ namespace BattleSimulator.Classes
             PlayerCompanionships = Clone(original.PlayerCompanionships);
             SkillSet = Clone(original.SkillSet, o => new Skill(o));
             SkillSetLevels = Clone(original.SkillSetLevels);
+            ComboSkills = Clone(original.ComboSkills, o => new Skill(o));
+            ComboPartners = Clone(original.ComboPartners, o => new Player(o));
         }
 
 
@@ -84,6 +91,16 @@ namespace BattleSimulator.Classes
         {
             PlayerCompanionships[id] = 0;
             for (int i = 1; i <= level; i++) PlayerCompanionships[id] += 10 * i;
+        }
+
+        public void AddSkillsFromLevel()
+        {
+            for (int i = 0; i < SkillSet.Count; i++)
+            {
+                if (Level < SkillSetLevels[i]) continue;
+                if (SkillSet[i].NumberOfUsers > 1) ComboSkills.Add(new Skill(SkillSet[i]));
+                else Skills.Add(new Skill(SkillSet[i]));
+            }
         }
     }
 }

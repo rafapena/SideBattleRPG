@@ -29,11 +29,7 @@
         private void InitializeComponent()
         {
             this.BattlerImage = new System.Windows.Forms.PictureBox();
-            this.HPText = new System.Windows.Forms.Label();
-            this.SPText = new System.Windows.Forms.Label();
             this.HP = new System.Windows.Forms.Label();
-            this.MaxHP = new System.Windows.Forms.Label();
-            this.SlashText = new System.Windows.Forms.Label();
             this.SP = new System.Windows.Forms.Label();
             this.BattlerName = new System.Windows.Forms.Label();
             this.State1 = new System.Windows.Forms.Label();
@@ -41,6 +37,9 @@
             this.State3 = new System.Windows.Forms.Label();
             this.Damage = new System.Windows.Forms.Label();
             this.Restore = new System.Windows.Forms.Label();
+            this.MaxHP = new System.Windows.Forms.Label();
+            this.SlashText = new System.Windows.Forms.Label();
+            this.LetterKey = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.BattlerImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -53,58 +52,20 @@
             this.BattlerImage.TabIndex = 0;
             this.BattlerImage.TabStop = false;
             // 
-            // HPText
-            // 
-            this.HPText.AutoSize = true;
-            this.HPText.Location = new System.Drawing.Point(13, 164);
-            this.HPText.Name = "HPText";
-            this.HPText.Size = new System.Drawing.Size(31, 20);
-            this.HPText.TabIndex = 1;
-            this.HPText.Text = "HP";
-            // 
-            // SPText
-            // 
-            this.SPText.AutoSize = true;
-            this.SPText.Location = new System.Drawing.Point(14, 184);
-            this.SPText.Name = "SPText";
-            this.SPText.Size = new System.Drawing.Size(30, 20);
-            this.SPText.TabIndex = 2;
-            this.SPText.Text = "SP";
-            // 
             // HP
             // 
             this.HP.AutoSize = true;
-            this.HP.Location = new System.Drawing.Point(49, 164);
+            this.HP.Location = new System.Drawing.Point(13, 160);
             this.HP.Name = "HP";
             this.HP.Size = new System.Drawing.Size(54, 20);
             this.HP.TabIndex = 3;
             this.HP.Text = "10000";
             this.HP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // MaxHP
-            // 
-            this.MaxHP.AutoSize = true;
-            this.MaxHP.Location = new System.Drawing.Point(114, 164);
-            this.MaxHP.Name = "MaxHP";
-            this.MaxHP.Size = new System.Drawing.Size(54, 20);
-            this.MaxHP.TabIndex = 4;
-            this.MaxHP.Text = "10000";
-            this.MaxHP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // SlashText
-            // 
-            this.SlashText.AutoSize = true;
-            this.SlashText.Location = new System.Drawing.Point(100, 164);
-            this.SlashText.Name = "SlashText";
-            this.SlashText.Size = new System.Drawing.Size(13, 20);
-            this.SlashText.TabIndex = 5;
-            this.SlashText.Text = "/";
-            this.SlashText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // SP
             // 
             this.SP.AutoSize = true;
-            this.SP.Location = new System.Drawing.Point(49, 184);
+            this.SP.Location = new System.Drawing.Point(14, 180);
             this.SP.Name = "SP";
             this.SP.Size = new System.Drawing.Size(36, 20);
             this.SP.TabIndex = 6;
@@ -169,10 +130,41 @@
             this.Restore.TabIndex = 12;
             this.Restore.Text = "+1000";
             // 
+            // MaxHP
+            // 
+            this.MaxHP.AutoSize = true;
+            this.MaxHP.Location = new System.Drawing.Point(85, 160);
+            this.MaxHP.Name = "MaxHP";
+            this.MaxHP.Size = new System.Drawing.Size(54, 20);
+            this.MaxHP.TabIndex = 4;
+            this.MaxHP.Text = "10000";
+            this.MaxHP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // SlashText
+            // 
+            this.SlashText.AutoSize = true;
+            this.SlashText.Location = new System.Drawing.Point(73, 160);
+            this.SlashText.Name = "SlashText";
+            this.SlashText.Size = new System.Drawing.Size(13, 20);
+            this.SlashText.TabIndex = 5;
+            this.SlashText.Text = "/";
+            this.SlashText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LetterKey
+            // 
+            this.LetterKey.AutoSize = true;
+            this.LetterKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LetterKey.Location = new System.Drawing.Point(108, 20);
+            this.LetterKey.Name = "LetterKey";
+            this.LetterKey.Size = new System.Drawing.Size(31, 32);
+            this.LetterKey.TabIndex = 13;
+            this.LetterKey.Text = "L";
+            // 
             // RPGBattler
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.LetterKey);
             this.Controls.Add(this.Restore);
             this.Controls.Add(this.Damage);
             this.Controls.Add(this.State3);
@@ -183,8 +175,6 @@
             this.Controls.Add(this.SlashText);
             this.Controls.Add(this.MaxHP);
             this.Controls.Add(this.HP);
-            this.Controls.Add(this.SPText);
-            this.Controls.Add(this.HPText);
             this.Controls.Add(this.BattlerImage);
             this.Name = "RPGBattler";
             this.Size = new System.Drawing.Size(170, 274);
@@ -197,11 +187,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox BattlerImage;
-        private System.Windows.Forms.Label HPText;
-        private System.Windows.Forms.Label SPText;
         private System.Windows.Forms.Label HP;
-        private System.Windows.Forms.Label MaxHP;
-        private System.Windows.Forms.Label SlashText;
         private System.Windows.Forms.Label SP;
         private System.Windows.Forms.Label BattlerName;
         private System.Windows.Forms.Label State1;
@@ -209,5 +195,8 @@
         private System.Windows.Forms.Label State3;
         private System.Windows.Forms.Label Damage;
         private System.Windows.Forms.Label Restore;
+        private System.Windows.Forms.Label MaxHP;
+        private System.Windows.Forms.Label SlashText;
+        private System.Windows.Forms.Label LetterKey;
     }
 }

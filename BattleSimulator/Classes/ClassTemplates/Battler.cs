@@ -26,7 +26,12 @@ namespace BattleSimulator.Classes.ClassTemplates
         public List<Weapon> Weapons { get; protected set; }
         public List<PassiveSkill> PassiveSkills { get; protected set; }
         public List<State> States { get; protected set; }
-        
+
+        public Skill SelectedSkill { get; set; }
+        public Item SelectedItem { get; set; }
+        public Weapon SelectedWeapon { get; set; }
+        public List<Battler> SelectedTargets { get; set; }
+
 
         public Battler() : base()
         {
@@ -37,6 +42,7 @@ namespace BattleSimulator.Classes.ClassTemplates
             Weapons = new List<Weapon>();
             PassiveSkills = new List<PassiveSkill>();
             States = new List<State>();
+            SelectedTargets = new List<Battler>();
         }
 
         public Battler(Battler original) : base(original)
@@ -55,12 +61,22 @@ namespace BattleSimulator.Classes.ClassTemplates
             Weapons = Clone(original.Weapons, o => new Weapon(o));
             PassiveSkills = Clone(original.PassiveSkills, o => new PassiveSkill(o));
             States = Clone(original.States, o => new State(o));
+            SelectedSkill = Clone(original.SelectedSkill, o => new Skill(o));
+            SelectedItem = Clone(original.SelectedItem, o => new Item(o));
+            SelectedWeapon = Clone(original.SelectedWeapon, o => new Weapon(o));
+            //SelectedTargets = Clone(original.SelectedTargets, o => new Battler(o));
         }
-
+        
 
         public void SetAllStats(int level)
         {
             Level = level;
+        }
+
+        public void MaxHPSP()
+        {
+            HP = Stats.MaxHP;
+            SP = 100;
         }
 
         public string Position()

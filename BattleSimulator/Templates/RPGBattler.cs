@@ -20,7 +20,9 @@ namespace BattleSimulator.Templates
 
         public void Initialize(Battler battler)
         {
+            BackColor = Color.White;
             Visible = true;
+            LetterKey.Visible = false;
             Damage.Visible = false;
             Restore.Visible = false;
             State1.Visible = false;
@@ -30,7 +32,33 @@ namespace BattleSimulator.Templates
             BattlerName.Text = battler.Name;
             HP.Text = battler.HP.ToString();
             MaxHP.Text = battler.Stats.MaxHP.ToString();
-            SP.Text = "100";
+            SP.Text = battler.SP.ToString();
+        }
+
+        public void SetLetterKey(char c)
+        {
+            LetterKey.Text = c.ToString();
+        }
+
+        public void HideLetterKey()
+        {
+            LetterKey.Visible = false;
+        }
+
+        public void ShowLetterKey()
+        {
+            LetterKey.Visible = true;
+        }
+
+        public void SelectBattler()
+        {
+            if (Visible == false) return;
+            BackColor = Color.LightGreen;
+        }
+
+        public void DeselectBattler()
+        {
+            BackColor = Color.White;
         }
     }
 }

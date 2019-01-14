@@ -24,7 +24,7 @@ namespace BattleSimulator.Classes.ClassTemplates
         public BattleEnemy(System.Data.SQLite.SQLiteDataReader data, List<Enemy> enemiesData, List<PassiveSkill> pSkillsData)
         {
             Id = Int(data["BattleEnemy_ID"]);
-            Enemy = ReadObj(enemiesData, data["EnemyID"]);
+            Enemy = new Enemy(ReadObj(enemiesData, data["EnemyID"]));
             Level = Int(data["Level"]);
             GridPositionZ = Int(data["GridPositionZ"]);
             GridPositionX = Int(data["GridPositionX"]);

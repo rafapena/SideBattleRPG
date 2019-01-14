@@ -42,6 +42,7 @@ namespace BattleSimulator.Classes
                 foreach (var et in enemySkills) enemyInBattle.AddSkill(skillsData, et.Tool.Id);
                 foreach (var et in enemyItems) enemyInBattle.AddItem(itemsData, et.Tool.Id);
                 foreach (var et in enemyWeapons) enemyInBattle.AddWeapon(weaponsData, et.Tool.Id);
+                enemyInBattle.MaxHPSP();
                 Enemies.Add(enemyInBattle);
             }
             Environment = ReadObj(environmentsData, data["EnvironmentID"]);

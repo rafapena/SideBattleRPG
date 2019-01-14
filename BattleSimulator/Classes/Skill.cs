@@ -7,6 +7,7 @@ using System.Drawing;
 using BattleSimulator.Classes.ClassTemplates;
 using static BattleSimulator.Utilities.DataManager;
 using static BattleSimulator.Utilities.Utils;
+using System.Windows.Forms;
 
 namespace BattleSimulator.Classes
 {
@@ -22,6 +23,9 @@ namespace BattleSimulator.Classes
         private bool SummonEnemies;
         private List<Battler> SummonedBattlers;
         private List<int> SummonChances;
+
+        public int DisabledCount { get; private set; }
+        public int ChargeCount { get; private set; }
         
 
         public Skill() : base()
@@ -37,7 +41,7 @@ namespace BattleSimulator.Classes
             Id = Int(data["Skill_ID"]);
             ReadTool(this, data["ToolID"], classesData, statesData);
             SPConsume = Int(data["SPConsume"]);
-            NumberOfUsers = Int(data["NumberOfUsers"]);
+            NumberOfUsers = Int(data["NumberOfUsers"]) + 1;
             ShareTurns = (bool)data["ShareTurns"];
             Charge = Int(data["Charge"]);
             Warmup = Int(data["Warmup"]);
@@ -75,6 +79,8 @@ namespace BattleSimulator.Classes
             SummonEnemies = original.SummonEnemies;
             //SummonedBattlers = CloneObjectList(original.SummonEnemies, o => new Enemy(o));
             SummonChances = Clone(original.SummonChances);
+            DisabledCount = original.DisabledCount;
+            ChargeCount = original.ChargeCount;
         }
     }
 }

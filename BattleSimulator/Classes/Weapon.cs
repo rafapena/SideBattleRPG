@@ -19,6 +19,8 @@ namespace BattleSimulator.Classes
         public int DefaultPrice { get; private set; }
         public int DefaultQuantity { get; private set; }
 
+        public int Quantity { get; set; }
+
 
         public Weapon() : base() { }
 
@@ -33,6 +35,7 @@ namespace BattleSimulator.Classes
             CollideRange = (bool)data["CollideRange"];
             DefaultPrice = Int(data["DefaultPrice"]);
             DefaultQuantity = Int(data["DefaultQuantity"]);
+            Quantity = DefaultQuantity;
         }
 
         public Weapon(Weapon original) : base(original)
@@ -43,6 +46,7 @@ namespace BattleSimulator.Classes
             CollideRange = original.CollideRange;
             DefaultPrice = original.DefaultPrice;
             DefaultQuantity = original.DefaultQuantity;
+            Quantity = original.Quantity;
         }
     }
 }
