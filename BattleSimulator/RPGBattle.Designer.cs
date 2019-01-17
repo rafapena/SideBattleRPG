@@ -37,6 +37,7 @@
             this.Commands = new System.Windows.Forms.Label();
             this.FixedCommands = new System.Windows.Forms.Label();
             this.CommandTracker = new System.Windows.Forms.Label();
+            this.ScopeCommand = new System.Windows.Forms.Label();
             this.ERF = new BattleSimulator.Templates.RPGBattler();
             this.ECF = new BattleSimulator.Templates.RPGBattler();
             this.ELF = new BattleSimulator.Templates.RPGBattler();
@@ -55,7 +56,6 @@
             this.PRF = new BattleSimulator.Templates.RPGBattler();
             this.PCF = new BattleSimulator.Templates.RPGBattler();
             this.PLF = new BattleSimulator.Templates.RPGBattler();
-            this.ScopeCommand = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label2
@@ -143,12 +143,22 @@
             // 
             this.CommandTracker.AutoSize = true;
             this.CommandTracker.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CommandTracker.Location = new System.Drawing.Point(599, 104);
+            this.CommandTracker.Location = new System.Drawing.Point(559, 95);
             this.CommandTracker.Name = "CommandTracker";
             this.CommandTracker.Size = new System.Drawing.Size(103, 25);
             this.CommandTracker.TabIndex = 28;
             this.CommandTracker.Text = "Command";
-            this.CommandTracker.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ScopeCommand
+            // 
+            this.ScopeCommand.AutoSize = true;
+            this.ScopeCommand.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ScopeCommand.Location = new System.Drawing.Point(598, 975);
+            this.ScopeCommand.Name = "ScopeCommand";
+            this.ScopeCommand.Size = new System.Drawing.Size(124, 29);
+            this.ScopeCommand.TabIndex = 29;
+            this.ScopeCommand.Text = "Command";
+            this.ScopeCommand.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // ERF
             // 
@@ -159,7 +169,7 @@
             // 
             // ECF
             // 
-            this.ECF.Location = new System.Drawing.Point(776, 369);
+            this.ECF.Location = new System.Drawing.Point(776, 372);
             this.ECF.Name = "ECF";
             this.ECF.Size = new System.Drawing.Size(165, 266);
             this.ECF.TabIndex = 17;
@@ -180,7 +190,7 @@
             // 
             // ECC
             // 
-            this.ECC.Location = new System.Drawing.Point(947, 369);
+            this.ECC.Location = new System.Drawing.Point(947, 372);
             this.ECC.Name = "ECC";
             this.ECC.Size = new System.Drawing.Size(165, 266);
             this.ECC.TabIndex = 14;
@@ -201,7 +211,7 @@
             // 
             // ECB
             // 
-            this.ECB.Location = new System.Drawing.Point(1118, 369);
+            this.ECB.Location = new System.Drawing.Point(1118, 372);
             this.ECB.Name = "ECB";
             this.ECB.Size = new System.Drawing.Size(165, 266);
             this.ECB.TabIndex = 11;
@@ -222,7 +232,7 @@
             // 
             // PCB
             // 
-            this.PCB.Location = new System.Drawing.Point(39, 369);
+            this.PCB.Location = new System.Drawing.Point(39, 367);
             this.PCB.Name = "PCB";
             this.PCB.Size = new System.Drawing.Size(165, 277);
             this.PCB.TabIndex = 8;
@@ -243,7 +253,7 @@
             // 
             // PCC
             // 
-            this.PCC.Location = new System.Drawing.Point(210, 369);
+            this.PCC.Location = new System.Drawing.Point(210, 367);
             this.PCC.Name = "PCC";
             this.PCC.Size = new System.Drawing.Size(165, 277);
             this.PCC.TabIndex = 5;
@@ -264,7 +274,7 @@
             // 
             // PCF
             // 
-            this.PCF.Location = new System.Drawing.Point(381, 369);
+            this.PCF.Location = new System.Drawing.Point(381, 367);
             this.PCF.Name = "PCF";
             this.PCF.Size = new System.Drawing.Size(165, 277);
             this.PCF.TabIndex = 2;
@@ -276,22 +286,11 @@
             this.PLF.Size = new System.Drawing.Size(165, 268);
             this.PLF.TabIndex = 1;
             // 
-            // ScopeCommand
-            // 
-            this.ScopeCommand.AutoSize = true;
-            this.ScopeCommand.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ScopeCommand.Location = new System.Drawing.Point(598, 975);
-            this.ScopeCommand.Name = "ScopeCommand";
-            this.ScopeCommand.Size = new System.Drawing.Size(124, 29);
-            this.ScopeCommand.TabIndex = 29;
-            this.ScopeCommand.Text = "Command";
-            this.ScopeCommand.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // RPGBattle
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1311, 1190);
+            this.ClientSize = new System.Drawing.Size(1311, 1205);
             this.Controls.Add(this.ScopeCommand);
             this.Controls.Add(this.CommandTracker);
             this.Controls.Add(this.FixedCommands);

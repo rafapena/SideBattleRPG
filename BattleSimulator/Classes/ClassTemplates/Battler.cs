@@ -31,6 +31,7 @@ namespace BattleSimulator.Classes.ClassTemplates
         public Item SelectedItem { get; set; }
         public Weapon SelectedWeapon { get; set; }
         public List<Battler> SelectedTargets { get; set; }
+        public int MovingLocation { get; set; }
 
 
         public Battler() : base()
@@ -64,7 +65,7 @@ namespace BattleSimulator.Classes.ClassTemplates
             SelectedSkill = Clone(original.SelectedSkill, o => new Skill(o));
             SelectedItem = Clone(original.SelectedItem, o => new Item(o));
             SelectedWeapon = Clone(original.SelectedWeapon, o => new Weapon(o));
-            //SelectedTargets = Clone(original.SelectedTargets, o => new Battler(o));
+            SelectedTargets = new List<Battler>(); //SelectedTargets = Clone(original.SelectedTargets, o => new Battler(o));
         }
         
 
@@ -78,11 +79,7 @@ namespace BattleSimulator.Classes.ClassTemplates
             HP = Stats.MaxHP;
             SP = 100;
         }
-
-        public string Position()
-        {
-            return ZPosition + "" + XPosition;
-        }
+        
         public void MoveToPosition(int z, int x)
         {
             int zNew = ZPosition + z;

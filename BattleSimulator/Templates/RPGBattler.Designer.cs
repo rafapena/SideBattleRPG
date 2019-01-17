@@ -154,7 +154,7 @@
             // 
             this.LetterKey.AutoSize = true;
             this.LetterKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LetterKey.Location = new System.Drawing.Point(108, 20);
+            this.LetterKey.Location = new System.Drawing.Point(90, 17);
             this.LetterKey.Name = "LetterKey";
             this.LetterKey.Size = new System.Drawing.Size(31, 32);
             this.LetterKey.TabIndex = 13;

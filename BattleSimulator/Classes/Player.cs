@@ -25,6 +25,8 @@ namespace BattleSimulator.Classes
 
         public List<Skill> ComboSkills { get; private set; }
         public List<Player> ComboPartners { get; set; }
+        public int SelectedLocationX { get; set; }
+        public int SelectedLocationZ { get; set; }
 
 
         public Player() : base()
