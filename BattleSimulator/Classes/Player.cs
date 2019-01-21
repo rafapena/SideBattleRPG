@@ -24,7 +24,6 @@ namespace BattleSimulator.Classes
         private List<int> SkillSetLevels;
 
         public List<Skill> ComboSkills { get; private set; }
-        public List<Player> ComboPartners { get; set; }
         public int SelectedLocationX { get; set; }
         public int SelectedLocationZ { get; set; }
 
@@ -36,7 +35,6 @@ namespace BattleSimulator.Classes
             SkillSet = new List<Skill>();
             SkillSetLevels = new List<int>();
             ComboSkills = new List<Skill>();
-            ComboPartners = new List<Player>();
         }
 
         public void Initialize(System.Data.SQLite.SQLiteDataReader data, List<string> elementsData,
@@ -74,7 +72,6 @@ namespace BattleSimulator.Classes
             SkillSet = Clone(original.SkillSet, o => new Skill(o));
             SkillSetLevels = Clone(original.SkillSetLevels);
             ComboSkills = Clone(original.ComboSkills, o => new Skill(o));
-            ComboPartners = Clone(original.ComboPartners, o => new Player(o));
         }
 
 

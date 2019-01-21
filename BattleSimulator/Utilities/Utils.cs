@@ -12,14 +12,14 @@ namespace BattleSimulator.Utilities
 {
     public static class Utils
     {
-        private static readonly Random randomNumber = new Random();
+        private static Random randomNumber = new Random();
         public static bool Chance(int value)
         {
             return value > RandInt(0, 100);
         }
         public static int RandInt(int low, int high)
         {
-            return randomNumber.Next(low, high);
+            return randomNumber.Next(low, high + 1);
         }
 
 

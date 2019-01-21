@@ -8,11 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BattleSimulator.Classes;
+using BattleSimulator.Classes.ClassTemplates;
 using BattleSimulator.Simulator;
 using BattleSimulator.Utilities;
 using BattleSimulator.Templates;
 using System.IO;
 using static BattleSimulator.Utilities.FileHelper;
+using System.Threading;
 
 namespace BattleSimulator
 {
@@ -26,9 +28,12 @@ namespace BattleSimulator
         public int NumberOfPlayers { get; private set; }
         public string InfoText { get; private set; }
         public int Turns { get; private set; }
-        public int CurrentPlayer { get; set; }
+        public int CurrentPlayer { get; private set; }
         public int BattleState { get; private set; }
         public string CommandTrackerHelper { get; private set; }
+        private List<int> TurnOrder;
+        public int actionWaitTime { get; private set; }
+        public Battler CurrentBattler { get; private set; }
 
         private Color DEFAULT_BATTLER_COLOR = Color.White;
         private Color USER_INDICATION_COLOR = Color.LightGreen;
@@ -89,6 +94,9 @@ namespace BattleSimulator
             EnemiesHeader.Text = AllData.Battle.Name;
             Turns = 0;
             NumberOfPlayers = Players.Count;
+            TurnOrder = new List<int>();
+            for (int i = 0; i < Players.Count; i++) TurnOrder.Add(i);
+            for (int i = 0; i < Enemies.Count; i++) TurnOrder.Add(i + 16);
             ScopeCommand.Text = "";
         }
         private void PlayerSetRelationHelper(FileStream file, int i, int j)
@@ -110,8 +118,33 @@ namespace BattleSimulator
                 PlayersUI[i].SetLetterKey(BattlerKeys[i].ToUpper());
                 EnemiesUI[i].SetLetterKey(BattlerKeys[i].ToUpper());
             }
+            SeparateEnemyDuplicates();
             for (int i = 0; i < Players.Count; i++) PlayersUI[GetPlayerLocation(i)].Initialize(Players[i], i);
             for (int i = 0; i < Enemies.Count; i++) EnemiesUI[GetEnemyLocation(i)].Initialize(Enemies[i], i);
+        }
+
+        private void SeparateEnemyDuplicates()
+        {
+            string[] originalNames = new string[Enemies.Count];
+            bool[] dupList = new bool[Enemies.Count];
+            for (int i = 0; i < Enemies.Count; i++) originalNames[i] = Enemies[i].Name;
+            for (int i = 0; i < Enemies.Count - 1; i++)
+            {
+                int numberOfDups = 0;
+                if (dupList[i]) continue;
+                for (int j = i + 1; j < Enemies.Count; j++)
+                {
+                    if (originalNames[i] != originalNames[j]) continue;
+                    if (!dupList[i])
+                    {
+                        Enemies[i].ClarifyName(65);
+                        dupList[i] = true;
+                    }
+                    numberOfDups++;
+                    Enemies[j].ClarifyName(65 + numberOfDups);
+                    dupList[j] = true;
+                }
+            }
         }
 
 
@@ -197,6 +230,7 @@ namespace BattleSimulator
 
         private void ResetTurnUI()
         {
+            CommandTracker.Text = "";
             for (int i = 0; i < PlayersUI.Length; i++)
             {
                 PlayersUI[i].HideLetterKey();
@@ -337,8 +371,8 @@ namespace BattleSimulator
             ResetTurnUI();
             PlayersUI[GetPlayerLocation(CurrentPlayer)].BackColor = USER_INDICATION_COLOR;
             Player p = Players[CurrentPlayer];
-            p.ComboPartners.RemoveRange(0, p.ComboPartners.Count);
-            p.SelectedTargets.RemoveRange(0, p.SelectedTargets.Count);
+            p.ComboPartners.Clear();
+            p.SelectedTargets.Clear();
             p.MovingLocation = -1;
             CommandTracker.Text = Players[CurrentPlayer].Name;
             Commands.Text = "Q: Skills   W: Items   E: Combo Skills\n\nSelect Action:\nA: Attack   S: Move   D: Defend" + (CurrentPlayer == 0 ? "\nZ: Auto     X: Run" : "");
@@ -552,7 +586,7 @@ namespace BattleSimulator
                 case 2:
                     if (!BattlerSelectable(EnemiesUI[pos])) break;
                     foreach (RPGBattler e in EnemiesUI) e.BackColor = DEFAULT_BATTLER_COLOR;
-                    p.SelectedTargets.RemoveRange(0, p.SelectedTargets.Count);
+                    p.SelectedTargets.Clear();
                     SelectEnemyTarget(pos, EnemiesUI[pos].BattlerIndex, SELECTED_TARGET_COLOR);
                     int[] target = ScopeSplash(pos);
                     for (int i = 0; i < target.Length; i++) SelectEnemyTarget(target[i], EnemiesUI[target[i]].BattlerIndex, LESS_SELECTED_TARGET_COLOR);
@@ -561,7 +595,7 @@ namespace BattleSimulator
                 case 4:
                     if (!BattlerSelectable(EnemiesUI[pos])) break;
                     foreach (RPGBattler e in EnemiesUI) e.BackColor = DEFAULT_BATTLER_COLOR;
-                    p.SelectedTargets.RemoveRange(0, p.SelectedTargets.Count);
+                    p.SelectedTargets.Clear();
                     int[] targets = scope == 3 ? ScopeRow(pos) : ScopeColumn(pos);
                     for (int i = 0; i < targets.Length; i++) SelectEnemyTarget(targets[i], EnemiesUI[targets[i]].BattlerIndex, SELECTED_TARGET_COLOR);
                     break;
@@ -580,13 +614,13 @@ namespace BattleSimulator
         private void FinishSelection()
         {
             CurrentPlayer++;
-            if (CurrentPlayer >= Players.Count) StartAction();
+            if (CurrentPlayer >= Players.Count) TurnActions();
             else ActionSelection();
         }
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// -- Action Executions --
+        /// -- Overall Action Executions --
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         private void AutoBattle()
@@ -602,32 +636,167 @@ namespace BattleSimulator
             double enemyAv = 0;
             foreach (Enemy e in Enemies) enemyAv += e.Stats.Spd;
             enemyAv /= Enemies.Count;
-            // double avgs = playerAv / enemyAv;
-            // USE RESULTS BASED ON AVG
+            MessageBox.Show("Ran away from battle: " + (50 + (playerAv - enemyAv) * 5) + "%");
+            Close();
         }
 
         private void StartTurn()
         {
             Turns++;
             TurnNumber.Text = Turns.ToString();
+            foreach (Player p in Players) p.ExecutedAction = false;
+            foreach (Enemy e in Enemies) e.ExecutedAction = false;
+            SortTurnOrder();
             CurrentPlayer = 0;
             ActionSelection();
         }
 
-        private void StartAction()
+        private void SortTurnOrder()
         {
-            ResetTurnUI();
-            EndAction();
+            for (int i = 1; i < TurnOrder.Count; i++)
+            {
+                int j = i;
+                bool flag = true;
+                while (j > 0 && flag)
+                {
+                    int curr = GetOrder(TurnOrder[j]);
+                    int after = GetOrder(TurnOrder[j - 1]);
+                    if (after > curr) flag = false;
+                    else if (after == curr && Utils.RandInt(1, 2) == 1) j -= 2;
+                    else
+                    {
+                        int tmp = TurnOrder[j];
+                        TurnOrder[j] = TurnOrder[j - 1];
+                        TurnOrder[j - 1] = tmp;
+                        j--;
+                    }
+                }
+            }
+        }
+        private int GetOrder(int id)
+        {
+            Battler b;
+            if (id >= 16) b = Enemies[id - 16];
+            else b = Players[id];
+            int priority = 0;
+            if (b.SelectedSkill != null) priority = b.SelectedSkill.Priority;
+            else if (b.SelectedItem != null) priority = b.SelectedItem.Priority;
+            return b.Stats.Spd + priority;
         }
 
-        private void EndAction()
+        private void TurnActions()
         {
+            ResetTurnUI();
+            foreach (int id in TurnOrder)
+            {
+                if (id >= 16)
+                {
+                    int eId = id - 16;
+                    Enemies[eId].DecideMove(Players, Enemies);
+                    CurrentBattler = Enemies[eId];
+                }
+                else CurrentBattler = Players[id];
+                if (!CurrentBattler.IsConscious() || CurrentBattler.ExecutedAction) continue;
+                StartAction();
+            }
             EndTurn();
         }
 
         private void EndTurn()
         {
             StartTurn();
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Battler Action Executions --
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private void StartAction()
+        {
+            Commands.Text = "";
+            DisplayMessage(CurrentBattler);
+            EndAction();
+        }
+
+        private void DisplayMessage(Battler user)
+        {
+            string selectedTool = "";
+            int scope = 0;
+            if (user.SelectedSkill != null)
+            {
+                selectedTool = "Does " + user.SelectedSkill.Name;
+                scope = user.SelectedSkill.Scope;
+                if (user.SelectedSkill.NumberOfUsers > 1)
+                {
+                    selectedTool += " with";
+                    foreach (Battler bt in user.ComboPartners) selectedTool += " " + bt.Name;
+                }
+            }
+            else if (user.SelectedItem != null)
+            {
+                selectedTool = "Uses " + user.SelectedItem.Name;
+                scope = user.SelectedItem.Scope;
+            }
+            else selectedTool = "Does Nothing...";
+            string selectedWeapon = (user.SelectedWeapon != null) ? " wielding " + user.SelectedWeapon.Name : "";
+            string targets = "";
+            switch (scope)
+            {
+                case 1:
+                case 2:
+                    targets += "\nagainst " + user.SelectedTargets[0].Name; break;
+                case 3:
+                    targets += "\nagainst the ";
+                    string[] rows = new string[] { "left", "center", "right" };
+                    targets += rows[user.SelectedTargets[0].XPosition] + " row";
+                    break;
+                case 4:
+                    targets += "\nagainst the ";
+                    string[] columns = new string[] { "front", "center", "back" };
+                    targets += columns[user.SelectedTargets[0].ZPosition] + " column";
+                    break;
+                case 5: targets += "\nagainst all of their enemies"; break;
+                case 6: targets += "\non themself"; break;
+                case 7: targets += "\non " + user.SelectedTargets[0].Name; break;
+                case 8: targets += "\non all of their allies"; break;
+                case 9: targets += "\nagainst everyone but themself"; break;
+                case 10: targets += "\naffecting everyone in battle"; break;
+            }
+            MessageBox.Show(selectedTool + selectedWeapon + targets, user.Name);
+        }
+
+        private void EndAction()
+        {
+            CurrentBattler.ExecutedAction = true;
+        }
+
+        private void CheckWinOrLose()
+        {
+            bool playersKOd = true;
+            foreach (Player p in Players) if (p.IsConscious()) { playersKOd = false; break; }
+            if (playersKOd) LoseBattle();
+            bool enemiesKOd = true;
+            foreach (Enemy e in Enemies) if (e.IsConscious()) { enemiesKOd = false; break; }
+            if (enemiesKOd) WinBattle();
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Battle End --
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private void WinBattle()
+        {
+            MessageBox.Show("YOU WIN");
+            // TALK ABOUT LEVEL UP STATISTICS
+            Close();
+        }
+
+        private void LoseBattle()
+        {
+            MessageBox.Show("GAME OVER");
+            Close();
         }
     }
 }

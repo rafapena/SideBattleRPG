@@ -27,11 +27,14 @@ namespace BattleSimulator.Classes.ClassTemplates
         public List<PassiveSkill> PassiveSkills { get; protected set; }
         public List<State> States { get; protected set; }
 
+        public List<Battler> ComboPartners { get; set; }
         public Skill SelectedSkill { get; set; }
         public Item SelectedItem { get; set; }
         public Weapon SelectedWeapon { get; set; }
         public List<Battler> SelectedTargets { get; set; }
         public int MovingLocation { get; set; }
+
+        public bool ExecutedAction { get; set; }
 
 
         public Battler() : base()
@@ -43,6 +46,7 @@ namespace BattleSimulator.Classes.ClassTemplates
             Weapons = new List<Weapon>();
             PassiveSkills = new List<PassiveSkill>();
             States = new List<State>();
+            ComboPartners = new List<Battler>();
             SelectedTargets = new List<Battler>();
         }
 
@@ -65,9 +69,14 @@ namespace BattleSimulator.Classes.ClassTemplates
             SelectedSkill = Clone(original.SelectedSkill, o => new Skill(o));
             SelectedItem = Clone(original.SelectedItem, o => new Item(o));
             SelectedWeapon = Clone(original.SelectedWeapon, o => new Weapon(o));
-            SelectedTargets = new List<Battler>(); //SelectedTargets = Clone(original.SelectedTargets, o => new Battler(o));
+            ComboPartners = new List<Battler>();   //Clone(original.ComboPartners, o => new Battler(o));
+            SelectedTargets = new List<Battler>(); //Clone(original.SelectedTargets, o => new Battler(o));
         }
         
+        public void ClarifyName(int asciiChar)
+        {
+            Name += " " + (char)asciiChar;
+        }
 
         public void SetAllStats(int level)
         {
@@ -133,6 +142,12 @@ namespace BattleSimulator.Classes.ClassTemplates
         public void RemoveState(int id)
         {
 
+        }
+
+        public bool IsConscious()
+        {
+            foreach (State s in States) if (s.KO || s.Petrify) return false;
+            return HP > 0;
         }
     }
 }

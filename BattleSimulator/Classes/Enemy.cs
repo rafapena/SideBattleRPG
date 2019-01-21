@@ -7,6 +7,7 @@ using System.Drawing;
 using BattleSimulator.Classes.ClassTemplates;
 using static BattleSimulator.Utilities.DataManager;
 using static BattleSimulator.Utilities.Utils;
+using BattleSimulator.Utilities;
 
 namespace BattleSimulator.Classes
 {
@@ -75,6 +76,15 @@ namespace BattleSimulator.Classes
         public void AddWeaponAI(EnemyTool<Item> ai)
         {
 
+        }
+
+        public void DecideMove(List<Player> players, List<Enemy> enemies)
+        {
+            SelectedTargets.Clear();
+            SelectedSkill = Skills.Count > 0 ? Skills[0] : null;
+            SelectedItem = null;
+            SelectedWeapon = Weapons.Count > 0 ? Weapons[0] : null;
+            SelectedTargets.Add(players[RandInt(0, players.Count - 1)]);
         }
     }
 }

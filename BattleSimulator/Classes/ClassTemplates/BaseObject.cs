@@ -12,9 +12,9 @@ namespace BattleSimulator.Classes.ClassTemplates
     public abstract class BaseObject
     {
         public int Id { get; protected set; }
-        public string Name { get; private set; }
-        public string Description { get; private set; }
-        public Bitmap Image { get; private set; }
+        public string Name { get; protected set; }
+        public string Description { get; protected set; }
+        public Bitmap Image { get; protected set; }
         
 
         public BaseObject() { }
