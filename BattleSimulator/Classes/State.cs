@@ -18,6 +18,8 @@ namespace BattleSimulator.Classes
         public bool Petrify { get; private set; }
         public bool KO { get; private set; }
 
+        public int Stack { get; set; }
+
 
         public State() : base() { }
 

@@ -15,7 +15,7 @@ namespace BattleSimulator.Utilities
         private static Random randomNumber = new Random();
         public static bool Chance(int value)
         {
-            return value > RandInt(0, 100);
+            return value >= RandInt(1, 100);
         }
         public static int RandInt(int low, int high)
         {
@@ -31,6 +31,12 @@ namespace BattleSimulator.Utilities
         public static double Dbl(object o)
         {
             return o.ToString() == "" ? 0 : (double)o;
+        }
+
+
+        public static bool ValidListInput<T>(List<T> objList, int i) where T : class
+        {
+            return objList != null && objList[i] != null && i >= 0 && i < objList.Count;
         }
 
 

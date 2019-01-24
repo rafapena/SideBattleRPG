@@ -82,5 +82,15 @@ namespace BattleSimulator.Classes
             DisabledCount = original.DisabledCount;
             ChargeCount = original.ChargeCount;
         }
+
+        public void DisableForWarmup()
+        {
+            DisabledCount = Warmup;
+        }
+
+        public void DisableForCooldown()
+        {
+            DisabledCount = Cooldown;
+        }
     }
 }

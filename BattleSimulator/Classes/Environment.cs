@@ -10,7 +10,7 @@ using static BattleSimulator.Utilities.Utils;
 
 namespace BattleSimulator.Classes
 {
-    public class Environment : BaseObject
+    public class Environment : PassiveEffect
     {
         public PassiveEffect Effects { get; private set; }
         public Bitmap MapForeground { get; private set; }
@@ -23,16 +23,13 @@ namespace BattleSimulator.Classes
         public int Cev { get; private set; }
 
 
-        public Environment() : base()
-        {
-            Effects = new PassiveEffect();
-        }
+        public Environment() : base() { }
 
         public void Initialize(System.Data.SQLite.SQLiteDataReader data, List<string> elementsData, List<State> statesData)
         {
             Initialize(data);
             Id = Int(data["Environment_ID"]);
-            Effects = ReadPassiveEffect(Effects, data["PassiveEffectID"], elementsData, statesData);
+            ReadPassiveEffect(Effects, data["PassiveEffectID"], elementsData, statesData);
             MapForeground = BytesToImage(data, 8);
             MapBackground = BytesToImage(data, 9);
             BattleForeground = BytesToImage(data, 10);

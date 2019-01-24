@@ -28,7 +28,9 @@ namespace BattleSimulator.Classes.ClassTemplates
         public int DisabledToolType1 { get; private set; }
         public int DisabledToolType2 { get; private set; }
         public int ExtraTurns { get; private set; }
-        private List<int> StateRates;
+        public List<int> StateRates { get; private set; }
+
+        public int TurnsLeft { get; set; }
 
         
         public PassiveEffect() : base()
@@ -77,6 +79,7 @@ namespace BattleSimulator.Classes.ClassTemplates
             DisabledToolType2 = original.DisabledToolType2;
             ExtraTurns = original.ExtraTurns;
             StateRates = Clone(original.StateRates);
+            TurnsLeft = original.TurnsLeft;
         }
     }
 }

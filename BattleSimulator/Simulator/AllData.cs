@@ -32,6 +32,7 @@ namespace BattleSimulator.Simulator
         public static List<Weapon> Weapons { get; private set; }
         public static Battle Battle { get; private set; }
 
+        private static bool Initializer = false;
         private delegate void SetupList(SQLiteDataReader data);
         private static readonly SetupList[] TblFuncsC = { BattlerClassC, EnemyC, EnvironmentC, ItemC, PassiveSkillC, PlayerC, SkillC, StateC, WeaponC };
         private static readonly SetupList[] TblFuncsU = { BattlerClassU, EnemyU, EnvironmentU, ItemU, PassiveSkillU, PlayerU, SkillU, StateU, WeaponU };
@@ -40,6 +41,12 @@ namespace BattleSimulator.Simulator
 
         public static void Setup()
         {
+            if (Initializer)
+            {
+                MessageBox.Show("All of the stored data has already been\nretrieved from the database.", "Setup() should not be called twice");
+                return;
+            }
+            Initializer = true;
             Classes = new List<BattlerClass>(new BattlerClass[MaxIdPlusOne(Tables[0])]);
             Enemies = new List<Enemy>(new Enemy[MaxIdPlusOne(Tables[1])]);
             Environments = new List<Classes.Environment>(new Classes.Environment[MaxIdPlusOne(Tables[2])]);

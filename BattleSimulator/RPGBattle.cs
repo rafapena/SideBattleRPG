@@ -687,14 +687,10 @@ namespace BattleSimulator
         private void TurnActions()
         {
             ResetTurnUI();
+            foreach (Enemy e in Enemies) e.DecideMove(Players, Enemies);
             foreach (int id in TurnOrder)
             {
-                if (id >= 16)
-                {
-                    int eId = id - 16;
-                    Enemies[eId].DecideMove(Players, Enemies);
-                    CurrentBattler = Enemies[eId];
-                }
+                if (id >= 16) CurrentBattler = Enemies[id - 16];
                 else CurrentBattler = Players[id];
                 if (!CurrentBattler.IsConscious() || CurrentBattler.ExecutedAction) continue;
                 StartAction();
@@ -704,6 +700,8 @@ namespace BattleSimulator
 
         private void EndTurn()
         {
+            foreach (Player p in Players) p.ApplyEndTurnEffects();
+            foreach (Enemy e in Enemies) e.ApplyEndTurnEffects();
             StartTurn();
         }
 
@@ -714,8 +712,10 @@ namespace BattleSimulator
 
         private void StartAction()
         {
+            CurrentBattler.ApplyStartActionEffects();
             Commands.Text = "";
             DisplayMessage(CurrentBattler);
+            CurrentBattler.ExecuteTool(Environment);
             EndAction();
         }
 
@@ -768,6 +768,7 @@ namespace BattleSimulator
 
         private void EndAction()
         {
+            CurrentBattler.ApplyEndActionEffects();
             CurrentBattler.ExecutedAction = true;
         }
 
