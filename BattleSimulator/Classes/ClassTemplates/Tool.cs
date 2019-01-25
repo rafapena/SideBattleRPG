@@ -93,40 +93,30 @@ namespace BattleSimulator.Classes.ClassTemplates
 
         public bool Hit(Battler u, Battler t, Environment e)
         {
-            double toolAcc = Accuracy * u.SelectedWeapon.Accuracy / 10000;
-            double off = (u.Stats.Tec + u.PartnerBoosts.Tec) * u.Effect.StatModifiers.Tec * toolAcc;
-            double def = (t.Stats.Spd + t.PartnerBoosts.Spd) * t.Effect.StatModifiers.Spd;
-            double rates = (u.Stats.Acc + u.PartnerBoosts.Acc + u.Effect.StatModifiers.Acc) * e.Acc / (t.Stats.Eva + t.PartnerBoosts.Eva + t.Effect.StatModifiers.Eva) * e.Eva;
-            double result = 95 * off / def * rates;
+            double toolAcc = Accuracy * (u.SelectedWeapon != null ? u.SelectedWeapon.Accuracy : 100) / 10000;
+            double result = 95 * u.Tec() * u.Acc() * e.Acc * toolAcc / (t.Spd() * t.Eva() * e.Eva);
             return Chance((int)result);
         }
 
         public int CriticalHitRatio(Battler u, Battler t, Environment e)
         {
-            double toolCrt = CritcalRate * u.SelectedWeapon.CritcalRate / 10000;
-            double off = (u.Stats.Tec + u.PartnerBoosts.Tec) * u.Effect.StatModifiers.Tec * toolCrt;
-            double def = (t.Stats.Tec + t.PartnerBoosts.Tec) * t.Effect.StatModifiers.Tec;
-            double rates = (u.Stats.Crt + u.PartnerBoosts.Crt + u.Effect.StatModifiers.Crt) * e.Crt / (t.Stats.Cev + t.PartnerBoosts.Cev + t.Effect.StatModifiers.Cev) * e.Cev;
-            double result = 2 * Math.Pow(off, 1.1) / def * rates;
+            double toolCrt = CritcalRate * (u.SelectedWeapon != null ? u.SelectedWeapon.CritcalRate : 100) / 10000;
+            double result = 2 * Math.Pow(u.Tec() * toolCrt, 1.1) * u.Crt() / (t.Tec() * t.Cev());
             return Chance((int)result) ? 3 : 1;
         }
 
         public int GetToolFormula(Battler u, Battler t, Environment e)
         {
             double total = 0;
+            double power = Power * (u.SelectedWeapon != null ? u.SelectedWeapon.Power : 10) / 100.0;
+            double rates = power * e.ElementRates[Element] * u.CriticalHitRatio * t.ElementRates[Element] / 10000.0;
             switch (Formula)
             {
                 case 1: // Physical standard
-                    double pOff = 1.5 * (u.Stats.Atk + u.PartnerBoosts.Atk + u.SelectedWeapon.Power) * u.Effect.StatModifiers.Atk;
-                    double pDef = 1.25 * (t.Stats.Def + t.PartnerBoosts.Def) * t.Effect.StatModifiers.Def;
-                    double pRates = e.ElementRates[Element] * Power * u.CriticalHitRatio * t.ElementRates[Element] / 100000;
-                    total = (pOff - pDef) * pRates;
+                    total = (1.5 * u.Atk() - 1.25 * t.Def()) * rates;
                     break;
                 case 2: // Magical standard
-                    double mOff = 1.5 * (u.Stats.Map + u.PartnerBoosts.Map + u.SelectedWeapon.Power) * u.Effect.StatModifiers.Map;
-                    double mDef = 1.25 * (t.Stats.Mar + t.PartnerBoosts.Mar) * t.Effect.StatModifiers.Mar;
-                    double mRates = e.ElementRates[Element] * Power * u.CriticalHitRatio * t.ElementRates[Element] / 100000;
-                    total = (mOff - mDef) * mRates;
+                    total = (1.5 * u.Map() - 1.25 * t.Mar()) * rates;
                     break;
                 case 3: // Mixed standard
                     break;

@@ -23,7 +23,7 @@ namespace BattleSimulator.Classes.ClassTemplates
         public int ZPosition { get; protected set; }
         public int XPosition { get; protected set; }
         public Stats Stats { get; protected set; }
-        public Stats PartnerBoosts { get; private set; }
+        public Stats StatBoosts { get; private set; }
         public List<Skill> Skills { get; protected set; }
         public List<Item> Items { get; protected set; }
         public List<Weapon> Weapons { get; protected set; }
@@ -48,6 +48,10 @@ namespace BattleSimulator.Classes.ClassTemplates
         public List<int>[] ContactSpread { get; private set; }
 
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Initializers --
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         public Battler() : base()
         {
             ElementRates = new List<int>();
@@ -71,7 +75,7 @@ namespace BattleSimulator.Classes.ClassTemplates
             ZPosition = original.ZPosition;
             XPosition = original.XPosition;
             Stats = Clone(original.Stats, o => new Stats(o));
-            PartnerBoosts = Clone(original.PartnerBoosts, o => new Stats(o));
+            StatBoosts = Clone(original.StatBoosts, o => new Stats(o));
             ElementRates = Clone(original.ElementRates);
             StateRates = Clone(original.StateRates);
             Skills = Clone(original.Skills, o => new Skill(o));
@@ -87,9 +91,8 @@ namespace BattleSimulator.Classes.ClassTemplates
             ExecutedAction = original.ExecutedAction;
             CriticalHitRatio = original.CriticalHitRatio;
             TargetResults = Clone(original.TargetResults, o => new List<int>(o));
-            Effect = new PassiveEffect(original.Effect);
+            Effect = Clone(original.Effect, o => new PassiveEffect(o));
         }
-        
 
         public void ClarifyName(int asciiChar)
         {
@@ -116,6 +119,10 @@ namespace BattleSimulator.Classes.ClassTemplates
             XPosition = xNew;
         }
 
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Add/Remove List Components --
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public int AddSkill(List<Skill> skillsList, int id)
         {
@@ -159,6 +166,10 @@ namespace BattleSimulator.Classes.ClassTemplates
             return toRemove.Id;
         }
 
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Add/Remove Passive Effect Components --
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public int AddPassiveSkill(List<PassiveSkill> pSkillsList, int id)
         {
@@ -223,6 +234,114 @@ namespace BattleSimulator.Classes.ClassTemplates
         }
 
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Tool Actions --
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void ExecuteTool(Environment e)
+        {
+            TargetResults.Clear();
+            if (SelectedSkill != null) ExecuteSkill(e);
+            else if (SelectedItem != null) ExecuteItem(e);
+        }
+
+        private void ExecuteSkill(Environment e)
+        {
+            Skill sk = SelectedSkill;
+            sk.StartCharge();
+            if (sk.ChargeCount > 0)
+            {
+                sk.Charge1Turn();
+                return;
+            }
+            sk.DisableForCooldown();
+            foreach (Battler p in ComboPartners)
+            {
+                p.ChangeSP(sk.SPConsume);
+                if (sk.ShareTurns) p.ExecutedAction = true;
+            }
+            sk.SummonPlayers();
+            sk.SummonEnemies();
+            if (sk.Scope == 2)
+            {
+                ApplyToolEffects(SelectedTargets[0], sk, e);
+                for (int i = 1; i < SelectedTargets.Count; i++)
+                {
+                    ApplyToolEffects(SelectedTargets[i], sk, e, 0.5);
+                    TargetResults.Last().Add(sk.Steal ? 1 : 0);
+                }
+                return;
+            }
+            foreach (Battler b in SelectedTargets)
+            {
+                ApplyToolEffects(b, sk, e);
+                TargetResults.Last().Add(sk.Steal ? 1 : 0);
+            }
+        }
+
+        private void ExecuteItem(Environment e)
+        {
+            Item it = SelectedItem;
+            if (it.Scope == 2)
+            {
+                ApplyToolEffects(SelectedTargets[0], it, e);
+                for (int i = 1; i < SelectedTargets.Count; i++) ApplyToolEffects(SelectedTargets[i], it, e, 0.5);
+            }
+            else foreach (Battler b in SelectedTargets) ApplyToolEffects(b, it, e);
+            Stats.Add(it.PermantentStatChanges);
+            if (it.TurnsInto != null) Items[Items.FindIndex(x => x.Id == it.Id)] = new Item(it.TurnsInto);
+            else if (it.Consumable) Items.Remove(it);
+        }
+        
+        private void ApplyToolEffects(Battler b, Tool t, Environment e, double effect=1.0)
+        {
+            List<int> resultForTarget = new List<int>();
+            if (!t.Hit(this, b, e))
+            {
+                resultForTarget.Add(-t.Type);
+                return;
+            }
+            CriticalHitRatio = t.CriticalHitRatio(this, b, e);
+            resultForTarget.Add(CriticalHitRatio);
+            resultForTarget.Add(t.GetToolFormula(this, b, e));
+            List<int>[] states = t.TriggeredStates(this, b, e);
+            resultForTarget.Add(states[0].Count);
+            foreach (int stateGiveId in states[0]) resultForTarget.Add(stateGiveId);
+            resultForTarget.Add(states[1].Count);
+            foreach (int stateReceiveId in states[1]) resultForTarget.Add(stateReceiveId);
+            TargetResults.Add(resultForTarget);
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- General HP/SP Management --
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void ChangeHP(int val)
+        {
+            HP += val;
+            if (HP < 0) HP = 0;
+            else if (HP > Stats.MaxHP) HP = Stats.MaxHP;
+        }
+
+        public void ChangeSP(int val)
+        {
+            SP += val;
+            if (SP < 0) SP = 0;
+            else if (SP > 100) SP = 100;
+        }
+
+        public bool IsConscious()
+        {
+            foreach (State s in States) if (s.KO || s.Petrify) return false;
+            return HP > 0;
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Applying Passive Effects --
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         public void ApplyStartActionEffects()
         {
             //foreach (State s in States) if (s.) ;
@@ -242,64 +361,6 @@ namespace BattleSimulator.Classes.ClassTemplates
 
         }
 
-
-        public bool IsConscious()
-        {
-            foreach (State s in States) if (s.KO || s.Petrify) return false;
-            return HP > 0;
-        }
-
-        public void ExecuteTool(Environment e)
-        {
-            TargetResults.Clear();
-            if (SelectedSkill != null) ExecuteSkill(e);
-            else if (SelectedItem != null) ExecuteItem(e);
-        }
-
-        private void ExecuteSkill(Environment e)
-        {
-            Skill sk = SelectedSkill;
-            foreach (Battler p in ComboPartners) p.ChangeSP(sk.SPConsume);
-            if (sk.Scope == 2)
-            {
-                ApplyToolEffects(SelectedTargets[0], e);
-                for (int i = 1; i < SelectedTargets.Count; i++) ApplyToolEffects(SelectedTargets[i], e, 0.5);
-            }
-            else foreach (Battler t in SelectedTargets) ApplyToolEffects(t, e);
-        }
-
-        private void ExecuteItem(Environment e)
-        {
-            Item it = SelectedItem;
-            if (it.Scope == 2)
-            {
-                ApplyToolEffects(SelectedTargets[0], e);
-                for (int i = 1; i < SelectedTargets.Count; i++) ApplyToolEffects(SelectedTargets[i], e, 0.5);
-            }
-            else foreach (Battler t in SelectedTargets) ApplyToolEffects(t, e);
-            if (it.Consumable) Items.Remove(it);
-        }
-
-        private void ApplyToolEffects(Battler t, Environment e, double effect=1.0)
-        {
-
-        }
-
-
-        public void ChangeHP(int val)
-        {
-            HP += val;
-            if (HP < 0) HP = 0;
-            else if (HP > Stats.MaxHP) HP = Stats.MaxHP;
-        }
-
-        public void ChangeSP(int val)
-        {
-            SP += val;
-            if (SP < 0) SP = 0;
-            else if (SP > 100) SP = 100;
-        }
-
         /*public double ElementRate(int elementId)
         {
             double eRate = ElementRates[elementId];
@@ -315,5 +376,24 @@ namespace BattleSimulator.Classes.ClassTemplates
             foreach (PassiveSkill p in PassiveSkills) sRate *= p.StateRates[stateId] / 100.0;
             return sRate;
         }*/
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Stat Management --
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public int MaxHP() { return (Stats.MaxHP + StatBoosts.MaxHP) * Effect.StatModifiers.MaxHP / 100; }
+        public int Atk() { return (Stats.Atk + StatBoosts.Atk) * Effect.StatModifiers.Atk / 100; }
+        public int Def() { return (Stats.Def + StatBoosts.Def) * Effect.StatModifiers.Def / 100; }
+        public int Map() { return (Stats.Map + StatBoosts.Map) * Effect.StatModifiers.Map / 100; }
+        public int Mar() { return (Stats.Mar + StatBoosts.Mar) * Effect.StatModifiers.Mar / 100; }
+        public int Spd() { return (Stats.Spd + StatBoosts.Spd) * Effect.StatModifiers.Spd / 100; }
+        public int Tec() { return (Stats.Tec + StatBoosts.Tec) * Effect.StatModifiers.Tec / 100; }
+        public int Luk() { return (Stats.Luk + StatBoosts.Luk) * Effect.StatModifiers.Luk / 100; }
+
+        public int Acc() { return (Stats.Acc + StatBoosts.Acc) * Effect.StatModifiers.Acc / 100; }
+        public int Eva() { return (Stats.Eva + StatBoosts.Eva) * Effect.StatModifiers.Eva / 100; }
+        public int Crt() { return (Stats.Crt + StatBoosts.Crt) * Effect.StatModifiers.Crt / 100; }
+        public int Cev() { return (Stats.Cev + StatBoosts.Cev) * Effect.StatModifiers.Cev / 100; }
     }
 }

@@ -32,13 +32,14 @@ namespace BattleSimulator
         public int BattleState { get; private set; }
         public string CommandTrackerHelper { get; private set; }
         private List<int> TurnOrder;
-        public int actionWaitTime { get; private set; }
+        public int ActionWaitTime { get; private set; }
         public Battler CurrentBattler { get; private set; }
 
         private Color DEFAULT_BATTLER_COLOR = Color.White;
         private Color USER_INDICATION_COLOR = Color.LightGreen;
         private Color SELECTED_TARGET_COLOR = Color.LightSkyBlue;
         private Color LESS_SELECTED_TARGET_COLOR = Color.LightBlue;
+        private Color RANDOM_TARGET_COLOR = Color.LightCyan;
         private Color PLAYER_KO_COLOR = Color.Red;
         
         private string[] BattlerKeys = new string[] { "q", "w", "e", "a", "s", "d", "z", "x", "c" };
@@ -119,8 +120,16 @@ namespace BattleSimulator
                 EnemiesUI[i].SetLetterKey(BattlerKeys[i].ToUpper());
             }
             SeparateEnemyDuplicates();
-            for (int i = 0; i < Players.Count; i++) PlayersUI[GetPlayerLocation(i)].Initialize(Players[i], i);
-            for (int i = 0; i < Enemies.Count; i++) EnemiesUI[GetEnemyLocation(i)].Initialize(Enemies[i], i);
+            for (int i = 0; i < Players.Count; i++)
+            {
+                PlayersUI[GetPlayerLocation(i)].Initialize(Players[i], i);
+                foreach (Skill s in Players[i].Skills) s.DisableForWarmup();
+            }
+            for (int i = 0; i < Enemies.Count; i++)
+            {
+                EnemiesUI[GetEnemyLocation(i)].Initialize(Enemies[i], i);
+                foreach (Skill s in Enemies[i].Skills) s.DisableForWarmup();
+            }
         }
 
         private void SeparateEnemyDuplicates()
@@ -272,6 +281,11 @@ namespace BattleSimulator
         {
             Player p = Players[CurrentPlayer];
             return p.SelectedSkill == null ? p.SelectedItem.Scope : p.SelectedSkill.Scope;
+        }
+        private int GetToolRandomActs()
+        {
+            Player p = Players[CurrentPlayer];
+            return p.SelectedSkill == null ? p.SelectedItem.RandomActs : p.SelectedSkill.RandomActs;
         }
 
         private bool BattlerSelectable(RPGBattler battlerUi)
@@ -429,31 +443,50 @@ namespace BattleSimulator
         {
             BattleState = 7;
             Commands.Text = "";
-            ScopeCommand.Text = ScopeText[GetToolScope()];
+            int randomActs = GetToolRandomActs();
+            int scope = GetToolScope();
+            ScopeCommand.Text = GetScopeCommandText(randomActs, scope);
             FixedCommands.Text = "P: Back\nL: Confirm";
-            TargetSelectionScopes();
+            TargetSelectionScopes(randomActs, scope);
         }
 
         private void WeaponAndTargetSelection()
         {
             BattleState = 8;
             List<Weapon> wp = Players[CurrentPlayer].Weapons;
+            Skill sk = Players[CurrentPlayer].SelectedSkill;
             CommandTrackerHelper = CommandTracker.Text;
             int selectedWpnId = -1;
             for (int i = 0; i < wp.Count; i++) if (!wp[i].Disabled) { selectedWpnId = i; break; }
             SelectWeapon(selectedWpnId);
             Commands.Text = "Select Weapon\nR: " + GetSelection(wp, 0) + "\nF: " + GetSelection(wp, 1) + "\nV: " + GetSelection(wp, 2);
-            ScopeCommand.Text = ScopeText[Players[CurrentPlayer].SelectedSkill.Scope];
+            ScopeCommand.Text = GetScopeCommandText(sk.RandomActs, sk.Scope);
             FixedCommands.Text = "P: Back\nO: Info\nL: Confirm";
             InfoText = "R: " + GetInfo(wp, 0) + "\n\nF: " + GetInfo(wp, 1) + "\n\nV: " + GetInfo(wp, 2);
-            TargetSelectionScopes();
+            TargetSelectionScopes(sk.RandomActs, sk.Scope);
         }
 
-        private void TargetSelectionScopes()
+        private string GetScopeCommandText(int randomActs, int scope)
+        {
+            if (randomActs > 0)
+            {
+                if (scope == 1 || scope == 2) return "Selects " + randomActs + "\nEnemy/Enemies\nby Random";
+                else if (scope == 3) return "Selects " + randomActs + " Row(s)\nof Enemies\nby Random";
+                else if (scope == 4) return "Selects " + randomActs + " Column(s)\nof Enemies\nby Random";
+                else if (scope == 7) return "Selects " + randomActs + "\nAlly/Allies\nby Random";
+            }
+            return ScopeText[GetToolScope()];
+        }
+
+        private void TargetSelectionScopes(int randomActs, int scope)
         {
             Player p = Players[CurrentPlayer];
-            int scope = GetToolScope();
             int firstEnemyLocation = GetEnemyLocation(0);
+            if (randomActs > 0)
+            {
+                for (int i = 0; i < EnemiesUI.Length; i++) SelectEnemyTarget(i, EnemiesUI[i].BattlerIndex, RANDOM_TARGET_COLOR);
+                return;
+            }
             switch (scope)
             {
                 case 1:
@@ -646,7 +679,6 @@ namespace BattleSimulator
             TurnNumber.Text = Turns.ToString();
             foreach (Player p in Players) p.ExecutedAction = false;
             foreach (Enemy e in Enemies) e.ExecutedAction = false;
-            SortTurnOrder();
             CurrentPlayer = 0;
             ActionSelection();
         }
@@ -681,13 +713,14 @@ namespace BattleSimulator
             int priority = 0;
             if (b.SelectedSkill != null) priority = b.SelectedSkill.Priority;
             else if (b.SelectedItem != null) priority = b.SelectedItem.Priority;
-            return b.Stats.Spd + priority;
+            return b.Spd() + priority;
         }
 
         private void TurnActions()
         {
             ResetTurnUI();
             foreach (Enemy e in Enemies) e.DecideMove(Players, Enemies);
+            SortTurnOrder();
             foreach (int id in TurnOrder)
             {
                 if (id >= 16) CurrentBattler = Enemies[id - 16];
@@ -712,6 +745,7 @@ namespace BattleSimulator
 
         private void StartAction()
         {
+            if (CurrentBattler.SelectedWeapon != null) CurrentBattler.StatBoosts.Add(CurrentBattler.SelectedWeapon.EquipBoosts);
             CurrentBattler.ApplyStartActionEffects();
             Commands.Text = "";
             DisplayMessage(CurrentBattler);
@@ -723,10 +757,12 @@ namespace BattleSimulator
         {
             string selectedTool = "";
             int scope = 0;
+            int randomActs = 0;
             if (user.SelectedSkill != null)
             {
                 selectedTool = "Does " + user.SelectedSkill.Name;
                 scope = user.SelectedSkill.Scope;
+                randomActs = user.SelectedSkill.RandomActs;
                 if (user.SelectedSkill.NumberOfUsers > 1)
                 {
                     selectedTool += " with";
@@ -737,10 +773,12 @@ namespace BattleSimulator
             {
                 selectedTool = "Uses " + user.SelectedItem.Name;
                 scope = user.SelectedItem.Scope;
+                randomActs = user.SelectedItem.RandomActs;
             }
             else selectedTool = "Does Nothing...";
             string selectedWeapon = (user.SelectedWeapon != null) ? " wielding " + user.SelectedWeapon.Name : "";
             string targets = "";
+            if (randomActs > 0 && (1 <= scope && scope <= 4 || scope == 7)) scope += 100;
             switch (scope)
             {
                 case 1:
@@ -759,9 +797,15 @@ namespace BattleSimulator
                 case 5: targets += "\nagainst all of their enemies"; break;
                 case 6: targets += "\non themself"; break;
                 case 7: targets += "\non " + user.SelectedTargets[0].Name; break;
-                case 8: targets += "\non all of their allies"; break;
+                case 8: targets += "\non themself and all of their allies"; break;
                 case 9: targets += "\nagainst everyone but themself"; break;
                 case 10: targets += "\naffecting everyone in battle"; break;
+                case 101:
+                case 102:
+                    targets += "\nagainst " + randomActs + " enemy/enemies"; break;
+                case 103: targets += "\nagainst " + randomActs + " row(s) of enemies by random"; break;
+                case 104: targets += "\nagainst " + randomActs + " column(s) of enemies by random"; break;
+                case 107: targets += "\non " + randomActs + " ally/allies by random"; break;
             }
             MessageBox.Show(selectedTool + selectedWeapon + targets, user.Name);
         }
@@ -769,6 +813,7 @@ namespace BattleSimulator
         private void EndAction()
         {
             CurrentBattler.ApplyEndActionEffects();
+            if (CurrentBattler.SelectedWeapon != null) CurrentBattler.StatBoosts.Subtract(CurrentBattler.SelectedWeapon.EquipBoosts);
             CurrentBattler.ExecutedAction = true;
         }
 

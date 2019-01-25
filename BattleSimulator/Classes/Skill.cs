@@ -20,9 +20,11 @@ namespace BattleSimulator.Classes
         public int Warmup { get; private set; }
         public int Cooldown { get; private set; }
         public bool Steal { get; private set; }
-        private bool SummonEnemies;
-        private List<Battler> SummonedBattlers;
-        private List<int> SummonChances;
+        private List<Player> SummonedPlayers;
+        private List<int> SummonPlayerChances;
+        private List<Enemy> SummonedEnemies;
+        private List<int> SummonEnemyChances;
+
 
         public int DisabledCount { get; private set; }
         public int ChargeCount { get; private set; }
@@ -30,9 +32,10 @@ namespace BattleSimulator.Classes
 
         public Skill() : base()
         {
-            SummonEnemies = true;
-            SummonedBattlers = new List<Battler>();
-            SummonChances = new List<int>();
+            SummonedPlayers = new List<Player>();
+            SummonPlayerChances = new List<int>();
+            SummonedEnemies = new List<Enemy>();
+            SummonEnemyChances = new List<int>();
         }
 
         public void Initialize(System.Data.SQLite.SQLiteDataReader data, List<BattlerClass> classesData, List<State> statesData, List<Player> playersData, List<Enemy> enemiesData)
@@ -49,21 +52,15 @@ namespace BattleSimulator.Classes
             Steal = (bool)data["Steal"];
             List<int> enemiesList = ReadDBList(data, "Skill", "Enemy", "Response");
             List<int> playersList = ReadDBList(data, "Skill", "Player", "Response");
-            if (enemiesList.Count <= 0 && playersList.Count <= 0) return;
-            SummonEnemies = playersList.Count <= 0;
-            if (SummonEnemies)
-            {
-                for (int i = 0; i < enemiesList.Count;)
-                {
-                    SummonedBattlers.Add(ReadObj(enemiesData, enemiesList[i++]));
-                    SummonChances.Add(enemiesList[i++]);
-                }
-                return;
-            }
             for (int i = 0; i < playersList.Count;)
             {
-                SummonedBattlers.Add(ReadObj(playersData, playersList[i++]));
-                SummonChances.Add(playersList[i++]);
+                SummonedPlayers.Add(ReadObj(playersData, playersList[i++]));
+                SummonPlayerChances.Add(playersList[i++]);
+            }
+            for (int i = 0; i < enemiesList.Count;)
+            {
+                SummonedEnemies.Add(ReadObj(enemiesData, enemiesList[i++]));
+                SummonEnemyChances.Add(enemiesList[i++]);
             }
         }
 
@@ -76,21 +73,44 @@ namespace BattleSimulator.Classes
             Warmup = original.Warmup;
             Cooldown = original.Cooldown;
             Steal = original.Steal;
-            SummonEnemies = original.SummonEnemies;
-            //SummonedBattlers = CloneObjectList(original.SummonEnemies, o => new Enemy(o));
-            SummonChances = Clone(original.SummonChances);
+            SummonedPlayers = Clone(original.SummonedPlayers, o => new Player(o));
+            SummonPlayerChances = Clone(original.SummonPlayerChances);
+            SummonedEnemies = Clone(original.SummonedEnemies, o => new Enemy(o)); 
+            SummonEnemyChances = Clone(original.SummonEnemyChances);
             DisabledCount = original.DisabledCount;
             ChargeCount = original.ChargeCount;
         }
+
 
         public void DisableForWarmup()
         {
             DisabledCount = Warmup;
         }
-
         public void DisableForCooldown()
         {
             DisabledCount = Cooldown;
+        }
+        public void StartCharge()
+        {
+            ChargeCount = Charge;
+        }
+        public void Charge1Turn()
+        {
+            ChargeCount--;
+        }
+
+
+        public List<int> SummonPlayers()
+        {
+            List<int> summonedIds = new List<int>();
+            for (int i = 0; i < SummonedPlayers.Count; i++) if (Chance(SummonPlayerChances[i])) summonedIds.Add(SummonedPlayers[i].Id);
+            return summonedIds;
+        }
+        public List<int> SummonEnemies()
+        {
+            List<int> summonedIds = new List<int>();
+            for (int i = 0; i < SummonedEnemies.Count; i++) if (Chance(SummonEnemyChances[i])) summonedIds.Add(SummonedEnemies[i].Id);
+            return summonedIds;
         }
     }
 }

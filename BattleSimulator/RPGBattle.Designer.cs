@@ -158,7 +158,7 @@
             this.ScopeCommand.Size = new System.Drawing.Size(124, 29);
             this.ScopeCommand.TabIndex = 29;
             this.ScopeCommand.Text = "Command";
-            this.ScopeCommand.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.ScopeCommand.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // ERF
             // 
