@@ -64,20 +64,15 @@
 
         <TextBlock Text="Counter Rate" Grid.Column="0" Grid.Row="4"/>
         <TextBox x:Name="CounterInput" Grid.Column="1" Grid.Row="4"/>
-        <TextBlock Text="Physical Damage Rate" Grid.Column="2" Grid.Row="4"/>
-        <TextBox x:Name="PhysicalDamageRateInput" Grid.Column="3" Grid.Row="4"/>
+        <TextBlock Text="Reflect Rate" Grid.Column="2" Grid.Row="4"/>
+        <TextBox x:Name="ReflectInput" Grid.Column="3" Grid.Row="4"/>
 
-        <TextBlock Text="Reflect Rate" Grid.Column="0" Grid.Row="5"/>
-        <TextBox x:Name="ReflectInput" Grid.Column="1" Grid.Row="5"/>
-        <TextBlock Text="Magical Damage Rate" Grid.Column="2" Grid.Row="5"/>
-        <TextBox x:Name="MagicalDamageRateInput" Grid.Column="3" Grid.Row="5"/>
+        <TextBlock Text="Disabled Tool Type 1" Grid.Column="0" Grid.Row="5"/>
+        <ComboBox x:Name="DisabledToolType1Input" Grid.Column="1" Grid.Row="5"/>
+        <TextBlock Text="Disabled Tool Type 2" Grid.Column="2" Grid.Row="5"/>
+        <ComboBox x:Name="DisabledToolType2Input" Grid.Column="3" Grid.Row="5"/>
 
-        <TextBlock Text="Disabled Tool Type 1" Grid.Column="0" Grid.Row="6"/>
-        <ComboBox x:Name="DisabledToolType1Input" Grid.Column="1" Grid.Row="6"/>
-        <TextBlock Text="Disabled Tool Type 2" Grid.Column="2" Grid.Row="6"/>
-        <ComboBox x:Name="DisabledToolType2Input" Grid.Column="3" Grid.Row="6"/>
-
-        <TextBlock Text="Extra Turns" Grid.Column="0" Grid.Row="7"/>
-        <TextBox x:Name="ExtraTurnsInput" Grid.Column="1" Grid.Row="7"/>
+        <TextBlock Text="Extra Turns" Grid.Column="0" Grid.Row="6"/>
+        <TextBox x:Name="ExtraTurnsInput" Grid.Column="1" Grid.Row="6"/>
     </Grid>
 </base:_ClassTemplateOperations>

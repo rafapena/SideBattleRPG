@@ -40,8 +40,6 @@ namespace Database.ClassTemplates
             TurnEnd2Input.Text = "0";
             TurnSequenceInput.SelectedIndex = 0;
             RemoveByHitInput.Text = "0";
-            PhysicalDamageRateInput.Text = "100";
-            MagicalDamageRateInput.Text = "100";
         }
 
         public override string ValidateInputs()
@@ -58,8 +56,6 @@ namespace Database.ClassTemplates
             if (!Utils.PosInt(TurnEnd1Input.Text)) err += "Turn End 1 must be a positive integer";
             if (!Utils.PosInt(TurnEnd2Input.Text)) err += "Turn End 2 must be a positive integer";
             if (!Utils.PosInt(RemoveByHitInput.Text)) err += "Remove by Hit % must be a positive integer";
-            if (!Utils.PosInt(PhysicalDamageRateInput.Text)) err += "Physical Damage Rate must be a positive integer";
-            if (!Utils.PosInt(MagicalDamageRateInput.Text)) err += "Magical Damage Rate must be a positive integer";
             return err;
         }
 
@@ -78,17 +74,15 @@ namespace Database.ClassTemplates
             SQLDB.ParameterizeAttribute("@TurnEnd2", TurnEnd2Input.Text);
             SQLDB.ParameterizeAttribute("@TurnSequence", TurnSequenceInput.SelectedIndex.ToString());
             SQLDB.ParameterizeAttribute("@RemoveByHit", RemoveByHitInput.Text);
-            SQLDB.ParameterizeAttribute("@PhysicalDamageRate", PhysicalDamageRateInput.Text);
-            SQLDB.ParameterizeAttribute("@MagicalDamageRate", MagicalDamageRateInput.Text);
         }
 
         protected override string[] OnCreate(SQLiteConnection conn)
         {
             return new string[] {
                 "HPRegen, SPRegen, SPConsumeRate, ComboDifficulty, Counter, Reflect, DisabledToolType1, DisabledToolType2, ExtraTurns, " +
-                "TurnEnd1, TurnEnd2, TurnSequence, RemoveByHit, PhysicalDamageRate, MagicalDamageRate",
+                "TurnEnd1, TurnEnd2, TurnSequence, RemoveByHit",
                 "@HPRegen, @SPRegen, @SPConsumeRate, @ComboDifficulty, @Counter, @Reflect, @DisabledToolType1, @DisabledToolType2, @ExtraTurns, " +
-                "@TurnEnd1, @TurnEnd2, @TurnSequence, @RemoveByHit, @PhysicalDamageRate, @MagicalDamageRate"
+                "@TurnEnd1, @TurnEnd2, @TurnSequence, @RemoveByHit"
             };
         }
 
@@ -107,15 +101,13 @@ namespace Database.ClassTemplates
             TurnEnd2Input.Text = reader["TurnEnd2"].ToString();
             TurnSequenceInput.SelectedIndex = int.Parse(reader["TurnSequence"].ToString());
             RemoveByHitInput.Text = reader["RemoveByHit"].ToString();
-            PhysicalDamageRateInput.Text = reader["PhysicalDamageRate"].ToString();
-            MagicalDamageRateInput.Text = reader["MagicalDamageRate"].ToString();
         }
 
         protected override string OnUpdate(SQLiteConnection conn)
         {
             return "HPRegen=@HPRegen, SPRegen=@SPRegen, SPConsumeRate=@SPConsumeRate, ComboDifficulty=@ComboDifficulty, Counter=@Counter, Reflect=@Reflect, " +
                 "DisabledToolType1=@DisabledToolType1, DisabledToolType2=@DisabledToolType2, ExtraTurns=@ExtraTurns, TurnEnd1=@TurnEnd1, TurnEnd2=@TurnEnd2, " +
-                "TurnSequence=@TurnSequence, RemoveByHit=@RemoveByHit, PhysicalDamageRate=@PhysicalDamageRate, MagicalDamageRate=@MagicalDamageRate";
+                "TurnSequence=@TurnSequence, RemoveByHit=@RemoveByHit";
         }
     }
 }
