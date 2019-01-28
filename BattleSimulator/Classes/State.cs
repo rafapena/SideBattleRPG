@@ -28,7 +28,7 @@ namespace BattleSimulator.Classes
             Initialize(data);
             Id = Int(data["State_ID"]);
             ReadPassiveEffect(this, data["PassiveEffectID"], elementsData, statesData);
-            StatModifiers = ReadStats(data["StatModifiers"]);
+            StatModifiers = ReadStats(data["StatModifiers"], true);
             MaxStack = Int(data["MaxStack"]);
             ContactSpreadRate = Int(data["ContactSpreadRate"]);
             Stun = (bool)data["Stun"];

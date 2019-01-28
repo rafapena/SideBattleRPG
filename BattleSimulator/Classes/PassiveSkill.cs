@@ -37,7 +37,7 @@ namespace BattleSimulator.Classes
             Initialize(data);
             Id = Int(data["PassiveSkill_ID"]);
             ReadPassiveEffect(this, data["PassiveEffectID"], elementsData, statesData);
-            StatModifiers = ReadStats(data["StatModifiers"]);
+            StatModifiers = ReadStats(data["StatModifiers"], true);
             HPMin = Int(data["HPMin"]);
             HPMax = Int(data["HPMax"]);
             SPMin = Int(data["SPMin"]);

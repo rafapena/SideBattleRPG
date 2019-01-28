@@ -38,7 +38,7 @@ namespace BattleSimulator.Classes
             Id = Int(data["Enemy_ID"]);
             ElementRates = ReadRatesList(data, "Enemy", elementsData, "ElementRates");
             StateRates = ReadRatesList(data, "Enemy", statesData, "Vulnerability");
-            ScaledStats = ReadStats(data["ScaledStats"]);
+            ScaledStats = ReadStats(data["ScaledStats"], false);
             Class = ReadObj(classesData, data["EnemyClass"]);
         }
 

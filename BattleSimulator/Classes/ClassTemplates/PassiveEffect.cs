@@ -51,8 +51,6 @@ namespace BattleSimulator.Classes.ClassTemplates
             RemoveByHit = Int(data["RemoveByHit"]);
             Counter = Int(data["Counter"]);
             Reflect = Int(data["Reflect"]);
-            PhysicalDamageRate = Int(data["PhysicalDamageRate"]);
-            MagicalDamageRate = Int(data["MagicalDamageRate"]);
             DisabledToolType1 = Int(data["DisabledToolType1"]);
             DisabledToolType2 = Int(data["DisabledToolType2"]);
             ExtraTurns = Int(data["ExtraTurns"]);
@@ -73,8 +71,6 @@ namespace BattleSimulator.Classes.ClassTemplates
             RemoveByHit = original.RemoveByHit;
             Counter = original.Counter;
             Reflect = original.Reflect;
-            PhysicalDamageRate = original.PhysicalDamageRate;
-            MagicalDamageRate = original.MagicalDamageRate;
             DisabledToolType1 = original.DisabledToolType1;
             DisabledToolType2 = original.DisabledToolType2;
             ExtraTurns = original.ExtraTurns;

@@ -44,9 +44,14 @@ namespace BattleSimulator.Classes.ClassTemplates
                 double result = min + (level - 1) * ((int)max - min) / 99;
                 return (int)(Math.Round(result));
             }
+            public static int SetOtherStatNorms(int baseStat, int natMod)
+            {
+                return baseStat * natMod / 10000;
+            }
         }
 
 
+        private const int NUMBER_OF_REGULAR_STATS = 8;
         private const int NUMBER_OF_STATS = 12;
 
         private int[] StatsList;
@@ -67,7 +72,8 @@ namespace BattleSimulator.Classes.ClassTemplates
         public Stats()
         {
             StatsList = new int[NUMBER_OF_STATS];
-            for (int i = 0; i < NUMBER_OF_STATS; i++) StatsList[i] = 0;
+            for (int i = 0; i < NUMBER_OF_REGULAR_STATS; i++) StatsList[i] = 0;
+            for (int i = NUMBER_OF_REGULAR_STATS; i < NUMBER_OF_STATS; i++) StatsList[i] = 100;
         }
 
         public Stats(System.Data.SQLite.SQLiteDataReader data)
@@ -117,70 +123,48 @@ namespace BattleSimulator.Classes.ClassTemplates
             StatsList[5] = StatTable.SetStatNorms(level, baseStats.Spd, natStats.Spd);
             StatsList[6] = StatTable.SetStatNorms(level, baseStats.Tec, natStats.Tec);
             StatsList[7] = StatTable.SetStatNorms(level, baseStats.Luk, natStats.Luk);
+            StatsList[8] = StatTable.SetOtherStatNorms(baseStats.Acc, natStats.Acc);
+            StatsList[9] = StatTable.SetOtherStatNorms(baseStats.Eva, natStats.Eva);
+            StatsList[10] = StatTable.SetOtherStatNorms(baseStats.Crt, natStats.Crt);
+            StatsList[11] = StatTable.SetOtherStatNorms(baseStats.Cev, natStats.Cev);
+        }
+        
+        
+        public void NormalizeRateTo0()
+        {
+            for (int i = 0; i < NUMBER_OF_STATS; i++) StatsList[i] -= 100;
         }
 
+        private delegate int DoOperation(int a, int b);
+        private List<int> ExecuteOperation(Stats other, DoOperation opFunc)
+        {
+            List<int> statsThatChanged = new List<int>();
+            int[] statChanges = new int[] { other.MaxHP, other.Atk, other.Def, other.Map, other.Mar,
+                    other.Spd, other.Tec, other.Luk, other.Acc, other.Crt, other.Eva, other.Cev };
+            for (int i = 0; i<statChanges.Length; i++)
+            {
+                if (statChanges[i] == 0) continue;
+                StatsList[i] = opFunc(StatsList[i], statChanges[i]);
+                statsThatChanged.Add(i);
+            }
+            return statsThatChanged;
+        }
+
+        private int Add(int a, int b) { return a + b; }
+        public List<int> Add(Stats other) { return ExecuteOperation(other, Add); }
+
+        private int Subtract(int a, int b) { return a - b; }
+        public List<int> Subtract(Stats other) { return ExecuteOperation(other, Subtract); }
+
+        private int Multiply(int a, int b) { return a * b; }
+        public List<int> Multiply(Stats other) { return ExecuteOperation(other, Multiply); }
+
+        private int Divide(int a, int b) { return a / b; }
+        public List<int> Divide(Stats other) { return ExecuteOperation(other, Divide); }
 
         public void Multiply(int index, double multiplier)
         {
             StatsList[index] = (int)(StatsList[index] * multiplier);
-        }
-
-        public List<int> Add(Stats other)
-        {
-            List<int> statsThatChanged = new List<int>();
-            int[] statChanges = new int[] { other.MaxHP, other.Atk, other.Def, other.Map, other.Mar,
-                other.Spd, other.Tec, other.Luk, other.Acc, other.Crt, other.Eva, other.Cev };
-            for (int i = 0; i < statChanges.Length; i++)
-            {
-                if (statChanges[i] == 0) continue;
-                StatsList[i] += statChanges[i];
-                statsThatChanged.Add(i);
-            }
-            return statsThatChanged;
-        }
-
-        public List<int> Subtract(Stats other)
-        {
-            List<int> statsThatChanged = new List<int>();
-            int[] statChanges = new int[] { other.MaxHP, other.Atk, other.Def, other.Map, other.Mar,
-                other.Spd, other.Tec, other.Luk, other.Acc, other.Crt, other.Eva, other.Cev };
-            for (int i = 0; i < statChanges.Length; i++)
-            {
-                if (statChanges[i] == 0) continue;
-                StatsList[i] -= statChanges[i];
-                statsThatChanged.Add(i);
-            }
-            return statsThatChanged;
-        }
-
-        public List<int> Multiply(Stats other, int defaultValue = 100)
-        {
-            List<int> statsThatChanged = new List<int>();
-            int[] statChanges = new int[] { other.MaxHP, other.Atk, other.Def, other.Map, other.Mar,
-                other.Spd, other.Tec, other.Luk, other.Acc, other.Crt, other.Eva, other.Cev };
-            for (int i = 0; i < statChanges.Length; i++)
-            {
-                if (statChanges[i] == defaultValue) continue;
-                StatsList[i] *= statChanges[i];
-                StatsList[i] /= defaultValue;
-                statsThatChanged.Add(i);
-            }
-            return statsThatChanged;
-        }
-
-        public List<int> Divide(Stats other, int defaultValue = 100)
-        {
-            List<int> statsThatChanged = new List<int>();
-            int[] statChanges = new int[] { other.MaxHP, other.Atk, other.Def, other.Map, other.Mar,
-                other.Spd, other.Tec, other.Luk, other.Acc, other.Crt, other.Eva, other.Cev };
-            for (int i = 0; i < statChanges.Length; i++)
-            {
-                if (statChanges[i] == 0) continue;
-                StatsList[i] /= statChanges[i];
-                StatsList[i] *= defaultValue;
-                statsThatChanged.Add(i);
-            }
-            return statsThatChanged;
         }
     }
 }

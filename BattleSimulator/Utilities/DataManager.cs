@@ -21,11 +21,10 @@ namespace BattleSimulator.Utilities
             return list == null || id == null ? null : list[Utils.Int(id)];
         }
 
-        public static List<int> ReadRatesList<T>(SQLiteDataReader data, string hostTable, List<T> targetTableList, string attribute, int defaultValue = 100, string tableNameExt = "")
+        public static List<int> ReadRatesList<T>(SQLiteDataReader data, string hostTable, List<T> targetTableList, string attribute, int normValue = 100, string tableNameExt = "")
         {
             if (targetTableList == null) return null;
             List<int> result = new List<int>(new int[targetTableList.Count]);
-            for (int i = 0; i < targetTableList.Count; i++) result[i] = defaultValue;
             string type = typeof(T).Name;
             if (type == "String")   
             {
@@ -35,12 +34,12 @@ namespace BattleSimulator.Utilities
                 {
                     int typeListNumber = int.Parse(typeList[i]);
                     if (typeListNumber >= result.Count) continue;
-                    result[typeListNumber] = int.Parse(typeList[i + 1]);
+                    result[typeListNumber] = int.Parse(typeList[i + 1]) - normValue;
                 }
                 return result;
             }
             List<int> listFromDB = ReadDBList(data, hostTable, type, attribute, tableNameExt);
-            for (int i = 0; i < listFromDB.Count;) result[listFromDB[i++]] = listFromDB[i++];
+            for (int i = 0; i < listFromDB.Count;) result[listFromDB[i++]] = listFromDB[i++] - normValue;
             return result;
         }
 
@@ -101,7 +100,7 @@ namespace BattleSimulator.Utilities
         }
 
 
-        public static Stats ReadStats(object statsId)
+        public static Stats ReadStats(object statsId, bool normalizeToZero)
         {
             Stats stats = null;
             if (statsId == null) return stats;
@@ -113,6 +112,7 @@ namespace BattleSimulator.Utilities
                 {
                     data0.Read();
                     stats = new Stats(data0);
+                    if (normalizeToZero) stats.NormalizeRateTo0();
                 }
                 conn0.Close();
             }

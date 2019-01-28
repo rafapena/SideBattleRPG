@@ -35,7 +35,7 @@ namespace BattleSimulator.Classes
         {
             Initialize(data);
             Id = Int(data["BattlerClass_ID"]);
-            BaseStats = ReadStats(data["ScaledStats"]);
+            BaseStats = ReadStats(data["ScaledStats"], false);
             UpgradedClass1 = ReadObj(classesData, data["UpgradedClass1"]);
             UpgradedClass2 = ReadObj(classesData, data["UpgradedClass2"]);
             UsableWeapon1Type = Int(data["UsableWeaponType1"]);

@@ -25,7 +25,7 @@ namespace BattleSimulator.Classes
             Initialize(data);
             Id = Int(data["Item_ID"]);
             ReadTool(this, data["ToolID"], classesData, statesData);
-            PermantentStatChanges = ReadStats(data["PermStatMods"]);
+            PermantentStatChanges = ReadStats(data["PermStatMods"], false);
             DefaultPrice = Int(data["DefaultPrice"]);
             Consumable = (bool)data["Consumable"];
             TurnsInto = ReadObj(itemsData, data["TurnsInto"]);

@@ -44,7 +44,7 @@ namespace BattleSimulator.Classes
             Id = Int(data["Player_ID"]);
             ElementRates = ReadRatesList(data, "Player", elementsData, "ElementRates");
             StateRates = ReadRatesList(data, "Player", statesData, "Vulnerability");
-            NaturalStats = ReadStats(data["NaturalStats"]);
+            NaturalStats = ReadStats(data["NaturalStats"], false);
             Companionship = Int(data["Companionship"]);
             SavePartnerRate = Int(data["SavePartnerRate"]);
             CounterattackRate = Int(data["CounterattackRate"]);

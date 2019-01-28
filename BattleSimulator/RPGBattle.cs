@@ -710,10 +710,9 @@ namespace BattleSimulator
             Battler b;
             if (id >= 16) b = Enemies[id - 16];
             else b = Players[id];
-            int priority = 0;
-            if (b.SelectedSkill != null) priority = b.SelectedSkill.Priority;
-            else if (b.SelectedItem != null) priority = b.SelectedItem.Priority;
-            return b.Spd() + priority;
+            if (b.SelectedSkill != null) return b.Spd() + b.SelectedSkill.Priority;
+            else if (b.SelectedItem != null) return b.Spd() + b.SelectedItem.Priority;
+            return b.Spd();
         }
 
         private void TurnActions()
@@ -725,7 +724,7 @@ namespace BattleSimulator
             {
                 if (id >= 16) CurrentBattler = Enemies[id - 16];
                 else CurrentBattler = Players[id];
-                if (!CurrentBattler.IsConscious() || CurrentBattler.ExecutedAction) continue;
+                if (!CurrentBattler.IsConscious || CurrentBattler.ExecutedAction) continue;
                 StartAction();
             }
             EndTurn();
@@ -784,16 +783,8 @@ namespace BattleSimulator
                 case 1:
                 case 2:
                     targets += "\nagainst " + user.SelectedTargets[0].Name; break;
-                case 3:
-                    targets += "\nagainst the ";
-                    string[] rows = new string[] { "left", "center", "right" };
-                    targets += rows[user.SelectedTargets[0].XPosition] + " row";
-                    break;
-                case 4:
-                    targets += "\nagainst the ";
-                    string[] columns = new string[] { "front", "center", "back" };
-                    targets += columns[user.SelectedTargets[0].ZPosition] + " column";
-                    break;
+                case 3: targets += "\nagainst the " + new string[] { "left", "center", "right" }[user.SelectedTargets[0].XPosition] + " row"; break;
+                case 4: targets += "\nagainst the " + new string[] { "front", "center", "back" }[user.SelectedTargets[0].ZPosition] + " column"; break;
                 case 5: targets += "\nagainst all of their enemies"; break;
                 case 6: targets += "\non themself"; break;
                 case 7: targets += "\non " + user.SelectedTargets[0].Name; break;
@@ -820,10 +811,10 @@ namespace BattleSimulator
         private void CheckWinOrLose()
         {
             bool playersKOd = true;
-            foreach (Player p in Players) if (p.IsConscious()) { playersKOd = false; break; }
+            foreach (Player p in Players) if (p.IsConscious) { playersKOd = false; break; }
             if (playersKOd) LoseBattle();
             bool enemiesKOd = true;
-            foreach (Enemy e in Enemies) if (e.IsConscious()) { enemiesKOd = false; break; }
+            foreach (Enemy e in Enemies) if (e.IsConscious) { enemiesKOd = false; break; }
             if (enemiesKOd) WinBattle();
         }
 
@@ -835,7 +826,9 @@ namespace BattleSimulator
         private void WinBattle()
         {
             MessageBox.Show("YOU WIN");
-            // TALK ABOUT LEVEL UP STATISTICS
+            // Talk about level-up statistics, etc.
+            // Manage non-overworld passive effects: traverse through list
+            // Get exp and gold rate
             Close();
         }
 

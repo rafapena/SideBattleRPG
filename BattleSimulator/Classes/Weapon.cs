@@ -29,7 +29,7 @@ namespace BattleSimulator.Classes
             Initialize(data);
             Id = Int(data["Weapon_ID"]);
             ReadTool(this, data["ToolID"], classesData, statesData);
-            EquipBoosts = ReadStats(data["EquipBoosts"]);
+            EquipBoosts = ReadStats(data["EquipBoosts"], false);
             WeaponType = Int(data["WeaponType"]);
             Range = Int(data["Range"]);
             CollideRange = (bool)data["CollideRange"];

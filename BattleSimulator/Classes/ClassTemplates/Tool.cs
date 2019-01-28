@@ -112,18 +112,11 @@ namespace BattleSimulator.Classes.ClassTemplates
             double rates = power * e.ElementRates[Element] * u.CriticalHitRatio * t.ElementRates[Element] / 10000.0;
             switch (Formula)
             {
-                case 1: // Physical standard
-                    total = (1.5 * u.Atk() - 1.25 * t.Def()) * rates;
-                    break;
-                case 2: // Magical standard
-                    total = (1.5 * u.Map() - 1.25 * t.Mar()) * rates;
-                    break;
-                case 3: // Mixed standard
-                    break;
-                case 4: // Physical gun
-                    break;
-                case 5: // Magical gun
-                    break;
+                case 1: total = (1.5 * u.Atk() - 1.25 * t.Def()) * rates; break;    // Physical standard
+                case 2: total = (1.5 * u.Map() - 1.25 * t.Mar()) * rates; break;    // Magical standard
+                case 3: break;  // Mixed standard
+                case 4: break;  // Physical gun
+                case 5: break;  // Magical gun
             }
             int intTotal = (int)total;
             int variance = intTotal / 10;
