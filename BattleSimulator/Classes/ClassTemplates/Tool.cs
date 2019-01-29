@@ -7,6 +7,7 @@ using System.Drawing;
 using static BattleSimulator.Utilities.DataManager;
 using static BattleSimulator.Utilities.Utils;
 using BattleSimulator.Utilities;
+using System.Windows.Forms;
 
 namespace BattleSimulator.Classes.ClassTemplates
 {
@@ -101,7 +102,7 @@ namespace BattleSimulator.Classes.ClassTemplates
         public int CriticalHitRatio(Battler u, Battler t, Environment e)
         {
             double toolCrt = CritcalRate * (u.SelectedWeapon != null ? u.SelectedWeapon.CritcalRate : 100) / 10000;
-            double result = 2 * Math.Pow(u.Tec() * toolCrt, 1.1) * u.Crt() / (t.Tec() * t.Cev());
+            double result = 2 * Math.Pow(u.Tec() * toolCrt, 1.1) * u.Crt() * e.Crt / (t.Tec() * t.Cev() * e.Cev);
             return Chance((int)result) ? 3 : 1;
         }
 

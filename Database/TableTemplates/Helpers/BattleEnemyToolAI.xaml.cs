@@ -87,7 +87,7 @@ namespace Database.TableTemplates.Helpers
         {
             string err = "";
             if (!Utils.PosInt(PriorityInput.Text)) err += "Priority must be a positive integer\n";
-            if (!Utils.PosInt(QuantityInput.Text)) err += "Quantity must be a positive integer\n";
+            if (!Utils.PosInt(QuantityInput.Text, 100)) err += "Quantity must be an integer between 0 and 100\n";
             if (!Utils.NumberBetween(HPLowInput.Text, 0, 100)) err += "HP Low must be a number between 0 and 100\n";
             if (!Utils.NumberBetween(HPHighInput.Text, 0, 100)) err += "HP High must be a number between 0 and 100\n";
             if (!Utils.NumberBetween(SPLowInput.Text, 0, 100)) err += "SP Low must be a number between 0 and 100\n";

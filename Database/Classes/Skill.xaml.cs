@@ -43,7 +43,7 @@ namespace Database.Classes
             string err = Base.ValidateInputs();
             err += ToolAttributes.ValidateInputs();
             err += ToolStateRates.ValidateInputs();
-            if (!Utils.NumberBetween(SPConsumeInput.Text, 0, 100)) err += "SP Consume must be a number between 0 and 100\n";
+            if (!Utils.PosInt(SPConsumeInput.Text, 100)) err += "SP Consume must be an integer between 0 and 100\n";
             if (!Utils.PosInt(ChargeInput.Text)) err += "Charge Turns must be a positive integer\n";
             if (!Utils.PosInt(WarmUpInput.Text)) err += "Warmup Turns must be a positive integer\n";
             if (!Utils.PosInt(CoolDownInput.Text)) err += "Cooldown Turns must be a positive integer\n";

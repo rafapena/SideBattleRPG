@@ -85,7 +85,7 @@ namespace Database.ClassTemplates
         public override string ValidateInputs()
         {
             string err = "";
-            if (!Utils.PosInt(LevelInput.Text) || int.Parse(LevelInput.Text) < 1 || int.Parse(LevelInput.Text) > 100) err += "Level must be a positive integer between 1 and 100\n";
+            if (!Utils.PosInt(LevelInput.Text, 100) || int.Parse(LevelInput.Text) == 0) err += "Level must be an integer between 1 and 100\n";
             if (!Utils.NumberBetween(HPMultiplierInput.Text, 0.1, 100)) err += "HP x must be a number between 0.1 and 100\n";
             err += EnemySkills.ValidateInputs();
             err += EnemyWeapons.ValidateInputs();

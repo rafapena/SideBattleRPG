@@ -30,7 +30,7 @@ namespace Database.TableTemplates
         {
             string input = ((TextBox)Elements[i][1]).Text;
             string text = "";
-            if (!Utils.InRequiredLength(Utils.CutSpaces(input), 20)) text += "Inputs in " + TableTitle + " must be in between 1 to 20 characters\n";
+            if (!Utils.InRequiredLength(Utils.CutSpaces(input), 20)) text += "Inputs in " + TableTitle + " must be in between 1 and 20 characters\n";
             return text;
         }
 

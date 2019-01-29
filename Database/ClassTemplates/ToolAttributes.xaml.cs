@@ -65,16 +65,16 @@ namespace Database.ClassTemplates
             string err = "";
             if (!Utils.PosInt(HPAmountInput.Text)) err += "HP Amount must be a positive integer\n";
             if (!Utils.PosInt(SPAmountInput.Text)) err += "SP Amount must be a positive integer\n";
-            if (!Utils.NumberBetween(HPPercentInput.Text, 0, 100)) err += "HP % must be a number within 0 and 100\n";
-            if (!Utils.NumberBetween(SPPercentInput.Text, 0, 100)) err += "SP % must be a number within 0 and 100\n";
-            if (!Utils.NumberBetween(HPRecoilInput.Text, 0, 100)) err += "HP Recoil % must be a number within 0 and 100\n";
+            if (!Utils.PosInt(HPPercentInput.Text, 100)) err += "HP % must be an integer between 0 and 100\n";
+            if (!Utils.PosInt(SPPercentInput.Text, 100)) err += "SP % must be an integer between 0 and 100\n";
+            if (!Utils.PosInt(HPRecoilInput.Text, 100)) err += "HP Recoil % must be an integer between 0 and 100\n";
             if (ClassExclusive1Input.SelectedIndex == ClassExclusive2Input.SelectedIndex && ClassExclusive1Input.SelectedIndex != 0) err += "Class Exclusives cannot be the same\n";
-            if (!Utils.PosInt(PowerInput.Text)) err += "Power must be a positive integer\n";
-            if (!Utils.PosInt(AccuracyInput.Text)) err += "Accuracy % must be a positive integer\n";
-            if (!Utils.PosInt(CriticalRateInput.Text)) err += "Critical Rate % must be a positive integer\n";
-            if (!Utils.NumberBetween(PriorityInput.Text, -3, 3)) err += "Priority must be a number within -3 and 3\n";
-            if (!Utils.PosInt(ConsecutiveActsInput.Text)) err += "Consecutive Acts must be a positive integer\n";
-            if (!Utils.PosInt(RandomActsInput.Text)) err += "Random Acts must be a positive integer\n";
+            if (!Utils.PosInt(PowerInput.Text, 1000)) err += "Power must be an integer between 0 and 1000\n";
+            if (!Utils.PosInt(AccuracyInput.Text, 1000)) err += "Accuracy % must be an integer between 0 and 1000\n";
+            if (!Utils.PosInt(CriticalRateInput.Text, 1000)) err += "Critical Rate % must be an integer between 0 and 1000\n";
+            if (!Utils.NumberBetween(PriorityInput.Text, -3, 3)) err += "Priority must be a number between -3 and 3\n";
+            if (!Utils.PosInt(ConsecutiveActsInput.Text, 100)) err += "Consecutive Acts must be an integer between 0 and 100\n";
+            if (!Utils.PosInt(RandomActsInput.Text, 10)) err += "Random Acts must be an integer between 0 and 10\n";
             return err;
         }
 

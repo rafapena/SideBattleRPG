@@ -57,8 +57,8 @@ namespace Database.Classes
             if (UpgradedClass1Input.SelectedIndex == UpgradedClass2Input.SelectedIndex && UpgradedClass1Input.SelectedIndex != 0) err += "Upgraded Classes cannot be the same\n";
             if (UsableWeaponType1Input.SelectedIndex == UsableWeaponType2Input.SelectedIndex && UsableWeaponType1Input.SelectedIndex != 0) err += "Usable Weapon Type cannot be the same\n";
             if (PassiveSkill1Input.SelectedIndex == PassiveSkill2Input.SelectedIndex && PassiveSkill1Input.SelectedIndex != 0) err += "Passive Skills cannot be the same\n";
-            if (!Utils.PosInt(PSkillLvlRequired1Input.Text)) err += "Level Required for Passive Skill 1 must be a positive integer\n";
-            if (!Utils.PosInt(PSkillLvlRequired2Input.Text)) err += "Level Required for Passive Skill 2 must be a positive integer\n";
+            if (!Utils.PosInt(PSkillLvlRequired1Input.Text, 100)) err += "Level Required for Passive Skill 1 must be an integer between 0 and 100\n";
+            if (!Utils.PosInt(PSkillLvlRequired2Input.Text, 100)) err += "Level Required for Passive Skill 2 must be an integer between 0 and 100\n";
             return err;
         }
 

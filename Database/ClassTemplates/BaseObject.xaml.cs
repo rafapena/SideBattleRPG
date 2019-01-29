@@ -28,10 +28,10 @@ namespace Database.ClassTemplates
         public override string ValidateInputs()
         {
             string err = "";
-            if (!Utils.InRequiredLength(Utils.CutSpaces(NameInput.Text), 30)) err += "Name must have 1 to 30 characters\n";
+            if (!Utils.InRequiredLength(Utils.CutSpaces(NameInput.Text), 30)) err += "Name must have between 1 and 30 characters\n";
             if (Utils.CutSpaces(DescriptionInput.Text) == "") DescriptionInput.Text = "N/A";
             int dLen = DescriptionInput.Text.Length;
-            if (dLen > 2500) err += "Description length must be 2500 characters or less (Input has " + dLen + " characters)";
+            if (dLen > 2500) err += "Description length must have 2500 characters or less (Input has " + dLen + " characters)";
             return err;
         }
 

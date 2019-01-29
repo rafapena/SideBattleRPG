@@ -38,7 +38,7 @@ namespace Database.Classes
             err += StatMods.ValidateInputs(0, 1000);
             if (!Utils.PosInt(MaxStackInput.Text)) err += "Max Stack must be a positive integer\n";
             if (!Utils.PosInt(StepsToRemoveInput.Text)) err += "Steps to Remove must be a positive integer\n";
-            if (!Utils.PosInt(ContactSpreadRateInput.Text)) err += "Contact Spread % must be a positive integer\n";
+            if (!Utils.PosInt(ContactSpreadRateInput.Text, 100)) err += "Contact Spread % must be an integer between 0 and 100\n";
             return err;
         }
 

@@ -50,11 +50,11 @@ namespace Database.Classes
             err += ElementRates.ValidateInputs();
             err += Relations.ValidateInputs();
             bool relationTabErrored = false;
-            if (!Utils.PosInt(CompanionshipInput.Text)) relationTabErrored = true;
-            if (!Utils.PosInt(SavePartnerRateInput.Text)) relationTabErrored = true;
-            if (!Utils.PosInt(CounterattackRateInput.Text)) relationTabErrored = true;
-            if (!Utils.PosInt(AssistDamageRateInput.Text)) relationTabErrored = true;
-            if (relationTabErrored) err += "All fillable inputs in 'Relations' must be positive integers\n";
+            if (!Utils.PosInt(CompanionshipInput.Text, 1000)) relationTabErrored = true;
+            if (!Utils.PosInt(SavePartnerRateInput.Text, 1000)) relationTabErrored = true;
+            if (!Utils.PosInt(CounterattackRateInput.Text, 1000)) relationTabErrored = true;
+            if (!Utils.PosInt(AssistDamageRateInput.Text, 1000)) relationTabErrored = true;
+            if (relationTabErrored) err += "All fillable inputs in 'Relations' must be integers between 0 and 1000\n";
             return err;
         }
 

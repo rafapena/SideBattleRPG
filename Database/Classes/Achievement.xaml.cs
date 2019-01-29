@@ -26,7 +26,7 @@ namespace Database.Classes
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();
-            if (!Utils.PosInt(LevelInput.Text)) err += "Level must be a positive integer\n";
+            if (!Utils.PosInt(LevelInput.Text, 10)) err += "Level must be an integer between 0 and 10\n";
             if (Utils.CutSpaces(HintInput.Text) == "") HintInput.Text = "N/A";
             return err;
         }

@@ -69,8 +69,8 @@ namespace Database.TableTemplates
         protected override string OnValidateInputs(int i)
         {
             string err = "";
-            if (isDual() && !Utils.PosInt(((TextBox)Elements[i][2]).Text))
-                err += "Input on row " + (i+1) + " for " + TableTitle + " must be a positive integer\n";
+            if (isDual() && !Utils.PosInt(((TextBox)Elements[i][2]).Text, 1000))
+                err += "Input on row " + (i+1) + " for " + TableTitle + " must be an integer between 0 and 1000\n";
             for (int j = i + 1; j < Count; j++)
             {
                 if (TargetTableData.SelectedIds[i] != TargetTableData.SelectedIds[j]) continue;

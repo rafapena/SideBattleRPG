@@ -66,8 +66,8 @@ namespace Database.ClassTemplates
             else if (!Utils.NumberBetween(EvaInput.Text, -100, 100)) err2 = true;
             else if (!Utils.NumberBetween(CrtInput.Text, -100, 100)) err2 = true;
             else if (!Utils.NumberBetween(CevInput.Text, -100, 100)) err2 = true;
-            if (err1) err += "All of the 8 stats, on top, must be within " + Low + " and " + High + "\n";
-            if (err2) err += "All of the 4 stats, at the bottom, be an integer within -100 and 100\n";
+            if (err1) err += "All of the 8 stats, on top, must be between " + Low + " and " + High + "\n";
+            if (err2) err += "All of the 4 stats, at the bottom, be an integer between -100 and 100\n";
             return err;
         }
 

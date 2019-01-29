@@ -45,17 +45,17 @@ namespace Database.ClassTemplates
         public override string ValidateInputs()
         {
             string err = "";
-            if (!Utils.NumberBetween(HPRegenInput.Text, -5000, 5000)) err += "HP Regenerate must be a number within -5000 and 5000\n";
-            if (!Utils.NumberBetween(SPRegenInput.Text, -100, 100)) err += "SP Regenerate must be a number within -100 and 100\n";
-            if (!Utils.PosInt(SPConsumeRateInput.Text)) err += "SP Consume Rate must be a positive integer";
-            if (!Utils.PosInt(ComboDifficultyInput.Text)) err += "Combo Difficulty must be a positive integer";
-            if (!Utils.PosInt(CounterInput.Text)) err += "Counter Rate must be a positive integer";
-            if (!Utils.PosInt(ReflectInput.Text)) err += "ReflectRate Difficulty must be a positive integer";
+            if (!Utils.NumberBetween(HPRegenInput.Text, -5000, 5000)) err += "HP Regenerate must be a number between -5000 and 5000\n";
+            if (!Utils.NumberBetween(SPRegenInput.Text, -100, 100)) err += "SP Regenerate must be a number between -100 and 100\n";
+            if (!Utils.PosInt(SPConsumeRateInput.Text, 1000)) err += "SP Consume Rate must be an integer between 0 and 1000";
+            if (!Utils.PosInt(ComboDifficultyInput.Text, 1000)) err += "Combo Difficulty must be an integer between 0 and 1000";
+            if (!Utils.PosInt(CounterInput.Text, 1000)) err += "Counter Rate must be an integer between 0 and 1000";
+            if (!Utils.PosInt(ReflectInput.Text, 1000)) err += "ReflectRate Difficulty must be an integer between 0 and 1000";
             if (DisabledToolType1Input.SelectedIndex == DisabledToolType2Input.SelectedIndex && DisabledToolType1Input.SelectedIndex != 0) err += "Disabled Tool Types cannot be the same\n";
-            if (!Utils.PosInt(ExtraTurnsInput.Text)) err += "Extra Turns must be a positive integer";
+            if (!Utils.PosInt(ExtraTurnsInput.Text, 10)) err += "Extra Turns must be an integer between 0 and 10";
             if (!Utils.PosInt(TurnEnd1Input.Text)) err += "Turn End 1 must be a positive integer";
             if (!Utils.PosInt(TurnEnd2Input.Text)) err += "Turn End 2 must be a positive integer";
-            if (!Utils.PosInt(RemoveByHitInput.Text)) err += "Remove by Hit % must be a positive integer";
+            if (!Utils.PosInt(RemoveByHitInput.Text, 100)) err += "Remove by Hit % must be a positive integer between 0 and 100";
             return err;
         }
 

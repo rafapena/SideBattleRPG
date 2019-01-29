@@ -63,10 +63,10 @@ namespace Database.Classes
             err += PassiveEffectAttributes.ValidateInputs();
             err += PassiveEffectRates.ValidateInputs();
             err += StatMods.ValidateInputs(0, 1000);
-            if (!Utils.PosInt(HPMinInput.Text)) err += "HP Min % must be a positive integer\n";
-            if (!Utils.PosInt(HPMaxInput.Text)) err += "HP Max % must be a positive integer\n";
-            if (!Utils.PosInt(SPMinInput.Text)) err += "SP Min % must be a positive integer\n";
-            if (!Utils.PosInt(SPMaxInput.Text)) err += "SP Max % must be a positive integer\n";
+            if (!Utils.PosInt(HPMinInput.Text, 100)) err += "HP Min % must be an integer between 0 and 100\n";
+            if (!Utils.PosInt(HPMaxInput.Text, 100)) err += "HP Max % must be an integer between 0 and 100\n";
+            if (!Utils.PosInt(SPMinInput.Text, 100)) err += "SP Min % must be an integer between 0 and 100\n";
+            if (!Utils.PosInt(SPMaxInput.Text, 100)) err += "SP Max % must be an integer between 0 and 100\n";
             bool identical = false;
             int s1 = StateActive1Input.SelectedIndex;
             int s2 = StateActive2Input.SelectedIndex;

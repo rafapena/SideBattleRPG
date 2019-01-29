@@ -34,9 +34,9 @@ namespace Database.Classes
         public override string ValidateInputs()
         {
             string err = Base.ValidateInputs();
-            if (!Utils.PosInt(JumpDistanceInput.Text)) err += "Jump Distance must be a positive integer\n";
-            if (!Utils.NumberBetween(BounceVelocityInput.Text, 0, 5)) err += "Bounce Velocity must be a number within 0 to 5\n";
-            if (!Utils.NumberBetween(SlipperinessInput.Text, 0, 5)) err += "Slipperiness must be a number within 0 to 5\n";
+            if (!Utils.PosInt(JumpDistanceInput.Text, 10)) err += "Jump Distance must be an integer between 0 and 10\n";
+            if (!Utils.NumberBetween(BounceVelocityInput.Text, 0, 5)) err += "Bounce Velocity must be a number between 0 and 5\n";
+            if (!Utils.NumberBetween(SlipperinessInput.Text, 0, 5)) err += "Slipperiness must be a number between 0 and 5\n";
             if (!Utils.PosInt(HPLossInput.Text)) err += "HP Loss must be a positive integer\n";
             return err;
         }

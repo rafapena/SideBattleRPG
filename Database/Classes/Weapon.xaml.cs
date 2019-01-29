@@ -41,7 +41,7 @@ namespace Database.Classes
             err += ToolAttributes.ValidateInputs();
             err += ToolStateRates.ValidateInputs();
             err += EquipBoosts.ValidateInputs(0, 500);
-            if (!Utils.PosInt(RangeInput.Text)) err += "Range must be a positive integer\n";
+            if (!Utils.PosInt(RangeInput.Text, 10)) err += "Range must be an integer betweem 0 and 10\n";
             if (!Utils.PosInt(DefaultPriceInput.Text)) err += "Default Price must be a positive integer\n";
             if (!Utils.PosInt(DefaultQuantityInput.Text)) err += "Default Quantity must be a positive integer\n";
             return err;

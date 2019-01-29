@@ -37,7 +37,7 @@ namespace Database.Utilities
 
         // Checks if a string input is a positive integer
         private static Regex isPosInt = new Regex(@"^(\d)+$", RegexOptions.IgnoreCase);
-        public static bool PosInt(string inputText)
+        public static bool PosInt(string inputText, int upperLimit = int.MaxValue)
         {
             if (!isPosInt.Match(inputText).Success) return false;
             int n;
@@ -47,7 +47,7 @@ namespace Database.Utilities
                 MessageBox.Show("Input overflow detected: This will not count as a positive integer");
                 return false;
             }
-            return n >= 0;
+            return 0 <= n && n <= upperLimit;
         }
 
         // Returns an empty string, if it only has spaces

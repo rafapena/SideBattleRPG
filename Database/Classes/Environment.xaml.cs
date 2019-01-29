@@ -38,10 +38,10 @@ namespace Database.Classes
             string err = Base.ValidateInputs();
             err += PassiveEffectAttributes.ValidateInputs();
             err += PassiveEffectRates.ValidateInputs();
-            if (!Utils.PosInt(AccuracyInput.Text)) err += "Accuracy must be a positive integer\n";
-            if (!Utils.PosInt(EvasionInput.Text)) err += "Evasion must be a positive integer\n";
-            if (!Utils.PosInt(CriticalRateInput.Text)) err += "Critical Rate must be a positive integer\n";
-            if (!Utils.PosInt(CritEvadeRateInput.Text)) err += "Crit Evade Rate must be a positive integer\n";
+            if (!Utils.PosInt(AccuracyInput.Text, 1000)) err += "Accuracy must be an integer between 0 to 1000\n";
+            if (!Utils.PosInt(EvasionInput.Text, 1000)) err += "Evasion must be an integer between 0 to 1000\n";
+            if (!Utils.PosInt(CriticalRateInput.Text, 1000)) err += "Critical Rate must be an integer between 0 and 1000\n";
+            if (!Utils.PosInt(CritEvadeRateInput.Text, 1000)) err += "Crit Evade Rate must be an integer between 0 and 1000\n";
             return err;
         }
 
