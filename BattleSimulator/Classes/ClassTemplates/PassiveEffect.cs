@@ -12,7 +12,7 @@ namespace BattleSimulator.Classes.ClassTemplates
     public class PassiveEffect : BaseObject
     {
         public Stats StatModifiers { get; protected set; }
-        public List<int> ElementRates { get; private set; }
+        public int[] ElementRates { get; private set; }
         public int HPRegen { get; private set; }
         public int SPRegen { get; private set; }
         public int SPConsumeRate { get; private set; }
@@ -28,16 +28,13 @@ namespace BattleSimulator.Classes.ClassTemplates
         public int DisabledToolType1 { get; private set; }
         public int DisabledToolType2 { get; private set; }
         public int ExtraTurns { get; private set; }
-        public List<int> StateRates { get; private set; }
+        public int[] StateRates { get; private set; }
 
         public int TurnsLeft { get; set; }
 
         
-        public PassiveEffect() : base()
-        {
-            ElementRates = new List<int>();
-            StateRates = new List<int>();
-        }
+        public PassiveEffect() : base() { }
+
         public void Setup(System.Data.SQLite.SQLiteDataReader data, List<string> elementsData, List<State> statesData)
         {
             ElementRates = ReadRatesList(data, "PassiveEffect", elementsData, "ElementRates");
@@ -59,7 +56,7 @@ namespace BattleSimulator.Classes.ClassTemplates
 
         public PassiveEffect(PassiveEffect original) : base(original)
         {
-            StatModifiers = new Stats(original.StatModifiers);
+            StatModifiers = Clone(original.StatModifiers, o => new Stats(o));
             ElementRates = Clone(original.ElementRates);
             HPRegen = original.HPRegen;
             SPRegen = original.SPRegen;

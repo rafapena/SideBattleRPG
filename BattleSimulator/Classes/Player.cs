@@ -19,7 +19,7 @@ namespace BattleSimulator.Classes
         public int CounterattackRate { get; private set; }
         public int AssistDamageRate { get; private set; }
         public List<BattlerClass> ClassSet { get; private set; }
-        public List<int> PlayerCompanionships { get; private set; }
+        public int[] PlayerCompanionships { get; private set; }
         private List<Skill> SkillSet;
         private List<int> SkillSetLevels;
 
@@ -31,7 +31,6 @@ namespace BattleSimulator.Classes
         public Player() : base()
         {
             ClassSet = new List<BattlerClass>();
-            PlayerCompanionships = new List<int>();
             SkillSet = new List<Skill>();
             SkillSetLevels = new List<int>();
             ComboSkills = new List<Skill>();

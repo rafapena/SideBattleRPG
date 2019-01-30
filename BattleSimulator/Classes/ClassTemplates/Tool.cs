@@ -31,17 +31,14 @@ namespace BattleSimulator.Classes.ClassTemplates
         public int Priority { get; private set; }
         public BattlerClass ClassExclusive1 { get; private set; }
         public BattlerClass ClassExclusive2 { get; private set; }
-        private List<int> StatesGiveRate;
-        private List<int> StatesReceiveRate;
+        private int[] StatesGiveRate;
+        private int[] StatesReceiveRate;
 
         public bool Disabled { get; protected set; }
 
 
-        public Tool() : base()
-        {
-            StatesGiveRate = new List<int>();
-            StatesReceiveRate = new List<int>();
-        }
+        public Tool() : base() { }
+
         public void Setup(System.Data.SQLite.SQLiteDataReader data, List<BattlerClass> classesData, List<State> statesData)
         {
             Type = Int(data["Type"]);
@@ -92,25 +89,27 @@ namespace BattleSimulator.Classes.ClassTemplates
         }
 
 
-        public bool Hit(Battler u, Battler t, Environment e)
+        public bool Hit(Battler u, Battler t)
         {
-            double toolAcc = Accuracy * (u.SelectedWeapon != null ? u.SelectedWeapon.Accuracy : 100) / 10000;
-            double result = 95 * u.Tec() * u.Acc() * e.Acc * toolAcc / (t.Spd() * t.Eva() * e.Eva);
+            double toolAcc = Accuracy * (u.SelectedWeapon != null ? u.SelectedWeapon.Accuracy : 100) / 10000.0;
+            double def = t.Spd() * t.Eva();
+            double result = 95 * toolAcc * u.Tec() * u.Acc() / (def != 0 ? def : 0.01);
             return Chance((int)result);
         }
 
-        public int CriticalHitRatio(Battler u, Battler t, Environment e)
+        public int CriticalHitRatio(Battler u, Battler t)
         {
-            double toolCrt = CritcalRate * (u.SelectedWeapon != null ? u.SelectedWeapon.CritcalRate : 100) / 10000;
-            double result = 2 * Math.Pow(u.Tec() * toolCrt, 1.1) * u.Crt() * e.Crt / (t.Tec() * t.Cev() * e.Cev);
+            double toolCrt = CritcalRate * (u.SelectedWeapon != null ? u.SelectedWeapon.CritcalRate : 100) / 10000.0;
+            double def = t.Tec() * t.Cev();
+            double result = 2 * Math.Pow(u.Tec() * toolCrt, 1.1) * u.Crt() / (def != 0 ? def : 0.01);
             return Chance((int)result) ? 3 : 1;
         }
 
-        public int GetToolFormula(Battler u, Battler t, Environment e)
+        public int GetToolFormula(Battler u, Battler t)
         {
             double total = 0;
             double power = Power * (u.SelectedWeapon != null ? u.SelectedWeapon.Power : 10) / 100.0;
-            double rates = power * e.ElementRates[Element] * u.CriticalHitRatio * t.ElementRates[Element] / 10000.0;
+            double rates = power * u.CriticalHitRatio * t.ElementRates[Element] / 1000.0;
             switch (Formula)
             {
                 case 1: total = (1.5 * u.Atk() - 1.25 * t.Def()) * rates; break;    // Physical standard
@@ -124,19 +123,20 @@ namespace BattleSimulator.Classes.ClassTemplates
             return intTotal + RandInt(-variance, variance);
         }
 
-        public List<int>[] TriggeredStates(Battler u, Battler t, Environment e)
+        public List<int>[] TriggeredStates(Battler u, Battler t)
         {
             List<int>[] stateIds = new List<int>[] { new List<int>(), new List<int>() };
-            for (int i = 0; i < StatesGiveRate.Count; i++)
+            for (int i = 0; i < StatesGiveRate.Length; i++)
             {
                 if (StatesGiveRate[i] <= 0) continue;
-                double result = StatesGiveRate[i] * t.StateRates[i] * e.StateRates[i] / 1000000;
+                double tAttr = t.StateRates[i] * u.Luk() / (100 * t.Luk());
+                double result = StatesGiveRate[i] * tAttr / 100.0;
                 if (Chance((int)result)) stateIds[0].Add(i);
             }
-            for (int i = 0; i < StatesReceiveRate.Count; i++)
+            for (int i = 0; i < StatesReceiveRate.Length; i++)
             {
                 if (StatesReceiveRate[i] <= 0) continue;
-                double result = StatesReceiveRate[i] * u.StateRates[i] * e.StateRates[i] / 1000000;
+                double result = StatesReceiveRate[i] * u.StateRates[i] / 10000.0;
                 if (Chance((int)result)) stateIds[1].Add(i);
             }
             return stateIds;

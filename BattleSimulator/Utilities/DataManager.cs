@@ -21,10 +21,10 @@ namespace BattleSimulator.Utilities
             return list == null || id == null ? null : list[Utils.Int(id)];
         }
 
-        public static List<int> ReadRatesList<T>(SQLiteDataReader data, string hostTable, List<T> targetTableList, string attribute, int normValue = 100, string tableNameExt = "")
+        public static int[] ReadRatesList<T>(SQLiteDataReader data, string hostTable, List<T> targetTableList, string attribute, int normValue = 100, string tableNameExt = "")
         {
             if (targetTableList == null) return null;
-            List<int> result = new List<int>(new int[targetTableList.Count]);
+            int[] result = new int[targetTableList.Count];
             string type = typeof(T).Name;
             if (type == "String")   
             {
@@ -33,7 +33,7 @@ namespace BattleSimulator.Utilities
                 for (int i = 0; i < typeList.Length; i += 2)
                 {
                     int typeListNumber = int.Parse(typeList[i]);
-                    if (typeListNumber >= result.Count) continue;
+                    if (typeListNumber >= result.Length) continue;
                     result[typeListNumber] = int.Parse(typeList[i + 1]) - normValue;
                 }
                 return result;

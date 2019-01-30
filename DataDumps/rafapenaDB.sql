@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.1 on Mon Jan 28 12:30:39 2019
+-- File generated with SQLiteStudio v3.1.1 on Tue Jan 29 13:08:33 2019
 --
 -- Text encoding used: System
 --
@@ -54,11 +54,12 @@ INSERT INTO BaseObject (BaseObject_ID, Name, Description, Image, Created, Update
 INSERT INTO BaseObject (BaseObject_ID, Name, Description, Image, Created, Updated) VALUES (38, 'Recover SP', 'Recovers 10 SP.', NULL, '2019-01-16 10:54:54', '2019-01-16 10:55:39');
 INSERT INTO BaseObject (BaseObject_ID, Name, Description, Image, Created, Updated) VALUES (39, 'Affects Everyone', 'Some attack that affects everyone.', NULL, '2019-01-16 10:56:20', '2019-01-16 11:11:07');
 INSERT INTO BaseObject (BaseObject_ID, Name, Description, Image, Created, Updated) VALUES (40, 'Jim Army', 'Test Battle', NULL, '2019-01-16 11:13:38', '2019-01-16 11:15:12');
+INSERT INTO BaseObject (BaseObject_ID, Name, Description, Image, Created, Updated) VALUES (41, 'Test Arena', 'N/A', NULL, '2019-01-29 12:05:45', '2019-01-29 12:05:45');
 
 -- Table: Battle
-CREATE TABLE Battle (Battle_ID INTEGER PRIMARY KEY NOT NULL UNIQUE, NumberOfEnemies INTEGER NOT NULL, BattleEnemy1 INTEGER, BattleEnemy2 INTEGER, BattleEnemy3 INTEGER, BattleEnemy4 INTEGER, BattleEnemy5 INTEGER, BattleEnemy6 INTEGER, EnvironmentID INTEGER, BaseObjectID INTEGER NOT NULL, FOREIGN KEY (BattleEnemy1) REFERENCES BattleEnemy ON DELETE SET NULL, FOREIGN KEY (BattleEnemy2) REFERENCES BattleEnemy ON DELETE SET NULL, FOREIGN KEY (BattleEnemy3) REFERENCES BattleEnemy ON DELETE SET NULL, FOREIGN KEY (BattleEnemy4) REFERENCES BattleEnemy ON DELETE SET NULL, FOREIGN KEY (BattleEnemy5) REFERENCES BattleEnemy ON DELETE SET NULL, FOREIGN KEY (BattleEnemy6) REFERENCES BattleEnemy ON DELETE SET NULL, FOREIGN KEY (EnvironmentID) REFERENCES Environment (Environment_ID) ON DELETE SET NULL, FOREIGN KEY (BaseObjectID) REFERENCES BaseObject (BaseObject_ID) ON DELETE CASCADE ON UPDATE CASCADE);
-INSERT INTO Battle (Battle_ID, NumberOfEnemies, BattleEnemy1, BattleEnemy2, BattleEnemy3, BattleEnemy4, BattleEnemy5, BattleEnemy6, EnvironmentID, BaseObjectID) VALUES (1, 3, 1, 2, 3, NULL, NULL, NULL, NULL, 27);
-INSERT INTO Battle (Battle_ID, NumberOfEnemies, BattleEnemy1, BattleEnemy2, BattleEnemy3, BattleEnemy4, BattleEnemy5, BattleEnemy6, EnvironmentID, BaseObjectID) VALUES (2, 6, 4, 5, 6, 7, 8, 9, NULL, 40);
+CREATE TABLE Battle (Battle_ID INTEGER PRIMARY KEY NOT NULL UNIQUE, NumberOfEnemies INTEGER NOT NULL, BattleEnemy1 INTEGER, BattleEnemy2 INTEGER, BattleEnemy3 INTEGER, BattleEnemy4 INTEGER, BattleEnemy5 INTEGER, BattleEnemy6 INTEGER, BaseObjectID INTEGER NOT NULL, FOREIGN KEY (BattleEnemy1) REFERENCES BattleEnemy ON DELETE SET NULL, FOREIGN KEY (BattleEnemy2) REFERENCES BattleEnemy ON DELETE SET NULL, FOREIGN KEY (BattleEnemy3) REFERENCES BattleEnemy ON DELETE SET NULL, FOREIGN KEY (BattleEnemy4) REFERENCES BattleEnemy ON DELETE SET NULL, FOREIGN KEY (BattleEnemy5) REFERENCES BattleEnemy ON DELETE SET NULL, FOREIGN KEY (BattleEnemy6) REFERENCES BattleEnemy ON DELETE SET NULL, FOREIGN KEY (BaseObjectID) REFERENCES BaseObject (BaseObject_ID) ON DELETE CASCADE ON UPDATE CASCADE);
+INSERT INTO Battle (Battle_ID, NumberOfEnemies, BattleEnemy1, BattleEnemy2, BattleEnemy3, BattleEnemy4, BattleEnemy5, BattleEnemy6, BaseObjectID) VALUES (1, 3, 1, 2, 3, NULL, NULL, NULL, 27);
+INSERT INTO Battle (Battle_ID, NumberOfEnemies, BattleEnemy1, BattleEnemy2, BattleEnemy3, BattleEnemy4, BattleEnemy5, BattleEnemy6, BaseObjectID) VALUES (2, 6, 4, 5, 6, 7, 8, 9, 40);
 
 -- Table: Battle_Scene
 CREATE TABLE Battle_Scene (SceneID INTEGER NOT NULL PRIMARY KEY, BattleID INTEGER NOT NULL, TableIndex INTEGER NOT NULL, TurnSequence INTEGER, TurnPattern INTERGER, TurnNumber INTEGER, FOREIGN KEY (SceneID) REFERENCES Scene (Scene_ID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (BattleID) REFERENCES Battle ON UPDATE CASCADE ON DELETE CASCADE);
@@ -146,6 +147,7 @@ CREATE TABLE Enemy_To_State(
 
 -- Table: Environment
 CREATE TABLE Environment (Environment_ID INTEGER NOT NULL PRIMARY KEY, BaseObjectID INTEGER NOT NULL, PassiveEffectID INTEGER NOT NULL, MapForeground BLOB, MapBackground BLOB, BattleForeground BLOB, BattleBackground BLOB, Accuracy INTEGER NOT NULL, Evasion INTEGER NOT NULL, CriticalRate INTEGER NOT NULL, CritEvadeRate INTEGER NOT NULL, FOREIGN KEY (PassiveEffectID) REFERENCES PassiveEffect (PassiveEffect_ID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (BaseObjectID) REFERENCES BaseObject (BaseObject_ID) ON UPDATE CASCADE ON DELETE CASCADE);
+INSERT INTO Environment (Environment_ID, BaseObjectID, PassiveEffectID, MapForeground, MapBackground, BattleForeground, BattleBackground, Accuracy, Evasion, CriticalRate, CritEvadeRate) VALUES (1, 41, 3, NULL, NULL, NULL, NULL, 100, 100, 100, 100);
 
 -- Table: Image
 CREATE TABLE Image (Image_Type TEXT NOT NULL, Image_ID INTEGER NOT NULL, Pixels BLOB, PRIMARY KEY (Image_ID, Image_Type));
@@ -192,6 +194,7 @@ CREATE TABLE Message (Message_ID INTEGER NOT NULL PRIMARY KEY, SceneID INTEGER N
 CREATE TABLE PassiveEffect (PassiveEffect_ID INTEGER PRIMARY KEY NOT NULL UNIQUE, ElementRates TEXT, HPRegen INTEGER NOT NULL DEFAULT 0, SPRegen INTEGER NOT NULL DEFAULT 0, SPConsumeRate INTEGER NOT NULL, ComboDifficulty INTEGER NOT NULL DEFAULT 100, TurnEnd1 INTEGER NOT NULL, TurnEnd2 INTEGER NOT NULL, TurnSequence INTEGER NOT NULL DEFAULT 0, RemoveByHit INTEGER NOT NULL DEFAULT 0, Counter INTEGER NOT NULL DEFAULT 0, Reflect INTEGER NOT NULL DEFAULT 0, DisabledToolType1 INTEGER, DisabledToolType2 INTEGER, ExtraTurns INTEGER NOT NULL DEFAULT 0);
 INSERT INTO PassiveEffect (PassiveEffect_ID, ElementRates, HPRegen, SPRegen, SPConsumeRate, ComboDifficulty, TurnEnd1, TurnEnd2, TurnSequence, RemoveByHit, Counter, Reflect, DisabledToolType1, DisabledToolType2, ExtraTurns) VALUES (1, '', 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, NULL, NULL, 0);
 INSERT INTO PassiveEffect (PassiveEffect_ID, ElementRates, HPRegen, SPRegen, SPConsumeRate, ComboDifficulty, TurnEnd1, TurnEnd2, TurnSequence, RemoveByHit, Counter, Reflect, DisabledToolType1, DisabledToolType2, ExtraTurns) VALUES (2, '', 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, NULL, NULL, 0);
+INSERT INTO PassiveEffect (PassiveEffect_ID, ElementRates, HPRegen, SPRegen, SPConsumeRate, ComboDifficulty, TurnEnd1, TurnEnd2, TurnSequence, RemoveByHit, Counter, Reflect, DisabledToolType1, DisabledToolType2, ExtraTurns) VALUES (3, '', 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, NULL, NULL, 0);
 
 -- Table: PassiveEffect_To_State
 CREATE TABLE PassiveEffect_To_State(

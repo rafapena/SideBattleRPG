@@ -13,7 +13,6 @@ namespace BattleSimulator.Classes
 {
     public class Battle : BaseObject
     {
-        public Environment Environment { get; private set; }
         public List<Enemy> Enemies { get; private set; }
 
 
@@ -45,12 +44,10 @@ namespace BattleSimulator.Classes
                 enemyInBattle.MaxHPSP();
                 Enemies.Add(enemyInBattle);
             }
-            Environment = ReadObj(environmentsData, data["EnvironmentID"]);
         }
 
         public Battle(Battle original) : base(original)
         {
-            Environment = new Environment(original.Environment);
             Enemies = Clone(original.Enemies, o => new Enemy(o));
         }
     }

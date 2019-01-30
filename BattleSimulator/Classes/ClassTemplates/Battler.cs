@@ -12,8 +12,8 @@ namespace BattleSimulator.Classes.ClassTemplates
     public abstract class Battler : BaseObject
     {
         // Retrieved from DB (Also PassiveEffect dependent)
-        public List<int> ElementRates { get; protected set; }
-        public List<int> StateRates { get; protected set; }
+        public int[] ElementRates { get; protected set; }
+        public int[] StateRates { get; protected set; }
 
         // Retrieved from battle simulator
         public BattlerClass Class { get; protected set; }
@@ -63,8 +63,6 @@ namespace BattleSimulator.Classes.ClassTemplates
 
         public Battler() : base()
         {
-            ElementRates = new List<int>();
-            StateRates = new List<int>();
             StatBoosts = new Stats();
             Skills = new List<Skill>();
             Items = new List<Item>();
@@ -247,10 +245,10 @@ namespace BattleSimulator.Classes.ClassTemplates
             return toRemove.Id;
         }
 
-        private void AddPassiveEffects(PassiveEffect pe)
+        public void AddPassiveEffects(PassiveEffect pe)
         {
-            for (int i = 0; i < ElementRates.Count; i++) ElementRates[i] += pe.ElementRates[i];
-            for (int i = 0; i < StateRates.Count; i++) StateRates[i] += pe.StateRates[i];
+            for (int i = 0; i < ElementRates.Length; i++) ElementRates[i] += pe.ElementRates[i];
+            for (int i = 0; i < StateRates.Length; i++) StateRates[i] += pe.StateRates[i];
             StatModifiers.Add(pe.StatModifiers);
             SPConsumeRate += pe.SPConsumeRate;
             ComboDifficulty += pe.ComboDifficulty;
@@ -261,11 +259,11 @@ namespace BattleSimulator.Classes.ClassTemplates
             if (pe.DisabledToolType2 > 0) DisabledToolTypes.Add(pe.DisabledToolType2);
             if (pe.RemoveByHit > 0) RemoveByHit.AddRange(new int[] { pe.Id, pe.RemoveByHit });
         }
-        private void RemovePassiveEffects(PassiveEffect pe)
+        public void RemovePassiveEffects(PassiveEffect pe)
         {
-            for (int i = 0; i < ElementRates.Count; i++) ElementRates[i] -= pe.ElementRates[i];
-            for (int i = 0; i < StateRates.Count; i++) StateRates[i] -= pe.StateRates[i];
-            StatModifiers.Subtract(pe.StatModifiers);
+            for (int i = 0; i < ElementRates.Length; i++) ElementRates[i] -= pe.ElementRates[i];
+            for (int i = 0; i < StateRates.Length; i++) StateRates[i] -= pe.StateRates[i];
+            if (pe.StatModifiers != null) StatModifiers.Subtract(pe.StatModifiers);
             SPConsumeRate -= pe.SPConsumeRate;
             ComboDifficulty -= pe.ComboDifficulty;
             Counter -= pe.Counter;
@@ -298,14 +296,14 @@ namespace BattleSimulator.Classes.ClassTemplates
         /// -- Tool Actions --
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public void ExecuteTool(Environment e)
+        public void ExecuteTool()
         {
             TargetResults.Clear();
-            if (SelectedSkill != null) ExecuteSkill(e);
-            else if (SelectedItem != null) ExecuteItem(e);
+            if (SelectedSkill != null) ExecuteSkill();
+            else if (SelectedItem != null) ExecuteItem();
         }
 
-        private void ExecuteSkill(Environment e)
+        private void ExecuteSkill()
         {
             Skill sk = SelectedSkill;
             sk.StartCharge();
@@ -324,47 +322,47 @@ namespace BattleSimulator.Classes.ClassTemplates
             sk.SummonEnemies();
             if (sk.Scope == 2)
             {
-                ApplyToolEffects(SelectedTargets[0], sk, e);
+                ApplyToolEffects(SelectedTargets[0], sk);
                 for (int i = 1; i < SelectedTargets.Count; i++)
                 {
-                    ApplyToolEffects(SelectedTargets[i], sk, e, 0.5);
-                    TargetResults.Last().Add(sk.Steal ? 1 : 0);
+                    ApplyToolEffects(SelectedTargets[i], sk, 0.5);
+                    //TargetResults.Last().Add(sk.Steal ? 1 : 0);
                 }
                 return;
             }
             foreach (Battler b in SelectedTargets)
             {
-                ApplyToolEffects(b, sk, e);
-                TargetResults.Last().Add(sk.Steal ? 1 : 0);
+                ApplyToolEffects(b, sk);
+                //TargetResults.Last().Add(sk.Steal ? 1 : 0);
             }
         }
 
-        private void ExecuteItem(Environment e)
+        private void ExecuteItem()
         {
             Item it = SelectedItem;
             if (it.Scope == 2)
             {
-                ApplyToolEffects(SelectedTargets[0], it, e);
-                for (int i = 1; i < SelectedTargets.Count; i++) ApplyToolEffects(SelectedTargets[i], it, e, 0.5);
+                ApplyToolEffects(SelectedTargets[0], it);
+                for (int i = 1; i < SelectedTargets.Count; i++) ApplyToolEffects(SelectedTargets[i], it, 0.5);
             }
-            else foreach (Battler b in SelectedTargets) ApplyToolEffects(b, it, e);
+            else foreach (Battler b in SelectedTargets) ApplyToolEffects(b, it);
             Stats.Add(it.PermantentStatChanges);
             if (it.TurnsInto != null) Items[Items.FindIndex(x => x.Id == it.Id)] = new Item(it.TurnsInto);
             else if (it.Consumable) Items.Remove(it);
         }
         
-        private void ApplyToolEffects(Battler b, Tool t, Environment e, double effect=1.0)
+        private void ApplyToolEffects(Battler b, Tool t, double effect=1.0)
         {
             List<int> resultForTarget = new List<int>();
-            if (!t.Hit(this, b, e))
+            if (!t.Hit(this, b))
             {
                 resultForTarget.Add(-t.Type);
                 return;
             }
-            CriticalHitRatio = t.CriticalHitRatio(this, b, e);
+            CriticalHitRatio = t.CriticalHitRatio(this, b);
             resultForTarget.Add(CriticalHitRatio);
-            resultForTarget.Add(t.GetToolFormula(this, b, e));
-            List<int>[] states = t.TriggeredStates(this, b, e);
+            resultForTarget.Add(t.GetToolFormula(this, b));
+            List<int>[] states = t.TriggeredStates(this, b);
             resultForTarget.Add(states[0].Count);
             foreach (int stateGiveId in states[0]) resultForTarget.Add(stateGiveId);
             resultForTarget.Add(states[1].Count);
@@ -425,18 +423,18 @@ namespace BattleSimulator.Classes.ClassTemplates
         /// -- Stat Management --
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public int MaxHP() { return (Stats.MaxHP + StatBoosts.MaxHP) * StatModifiers.MaxHP / 100; }
-        public int Atk() { return (Stats.Atk + StatBoosts.Atk) * StatModifiers.Atk / 100; }
-        public int Def() { return (Stats.Def + StatBoosts.Def) * StatModifiers.Def / 100; }
-        public int Map() { return (Stats.Map + StatBoosts.Map) * StatModifiers.Map / 100; }
-        public int Mar() { return (Stats.Mar + StatBoosts.Mar) * StatModifiers.Mar / 100; }
-        public int Spd() { return (Stats.Spd + StatBoosts.Spd) * StatModifiers.Spd / 100; }
-        public int Tec() { return (Stats.Tec + StatBoosts.Tec) * StatModifiers.Tec / 100; }
-        public int Luk() { return (Stats.Luk + StatBoosts.Luk) * StatModifiers.Luk / 100; }
+        public int MaxHP() { return NaturalNumber((Stats.MaxHP + StatBoosts.MaxHP) * (StatModifiers.MaxHP + 100) / 100); }
+        public int Atk() { return NaturalNumber((Stats.Atk + StatBoosts.Atk) * (StatModifiers.Atk + 100) / 100); }
+        public int Def() { return NaturalNumber((Stats.Def + StatBoosts.Def) * (StatModifiers.Def + 100) / 100); }
+        public int Map() { return NaturalNumber((Stats.Map + StatBoosts.Map) * (StatModifiers.Map + 100) / 100); }
+        public int Mar() { return NaturalNumber((Stats.Mar + StatBoosts.Mar) * (StatModifiers.Mar + 100) / 100); }
+        public int Spd() { return NaturalNumber((Stats.Spd + StatBoosts.Spd) * (StatModifiers.Spd + 100) / 100); }
+        public int Tec() { return NaturalNumber((Stats.Tec + StatBoosts.Tec) * (StatModifiers.Tec + 100) / 100); }
+        public int Luk() { return NaturalNumber((Stats.Luk + StatBoosts.Luk) * (StatModifiers.Luk + 100) / 100); }
 
-        public int Acc() { return (Stats.Acc + StatBoosts.Acc) * StatModifiers.Acc / 100; }
-        public int Eva() { return (Stats.Eva + StatBoosts.Eva) * StatModifiers.Eva / 100; }
-        public int Crt() { return (Stats.Crt + StatBoosts.Crt) * StatModifiers.Crt / 100; }
-        public int Cev() { return (Stats.Cev + StatBoosts.Cev) * StatModifiers.Cev / 100; }
+        public int Acc() { return NaturalNumber((Stats.Acc + StatBoosts.Acc) * (StatModifiers.Acc + 100) / 100); }
+        public int Eva() { return NaturalNumber((Stats.Eva + StatBoosts.Eva) * (StatModifiers.Eva + 100) / 100); }
+        public int Crt() { return NaturalNumber((Stats.Crt + StatBoosts.Crt) * (StatModifiers.Crt + 100) / 100); }
+        public int Cev() { return NaturalNumber((Stats.Cev + StatBoosts.Cev) * (StatModifiers.Cev + 100) / 100); }
     }
 }

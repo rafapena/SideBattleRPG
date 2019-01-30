@@ -12,15 +12,10 @@ namespace BattleSimulator.Classes
 {
     public class Environment : PassiveEffect
     {
-        public PassiveEffect Effects { get; private set; }
         public Bitmap MapForeground { get; private set; }
         public Bitmap MapBackground { get; private set; }
         public Bitmap BattleForeground { get; private set; }
         public Bitmap BattleBackground { get; private set; }
-        public int Acc { get; private set; }
-        public int Eva { get; private set; }
-        public int Crt { get; private set; }
-        public int Cev { get; private set; }
 
 
         public Environment() : base() { }
@@ -29,28 +24,24 @@ namespace BattleSimulator.Classes
         {
             Initialize(data);
             Id = Int(data["Environment_ID"]);
-            ReadPassiveEffect(Effects, data["PassiveEffectID"], elementsData, statesData);
+            ReadPassiveEffect(this, data["PassiveEffectID"], elementsData, statesData);
             MapForeground = BytesToImage(data, 8);
             MapBackground = BytesToImage(data, 9);
             BattleForeground = BytesToImage(data, 10);
             BattleBackground = BytesToImage(data, 11);
-            Acc = Int(data["Accuracy"]);
-            Eva = Int(data["Evasion"]);
-            Crt = Int(data["CriticalRate"]);
-            Cev = Int(data["CritEvadeRate"]);
+            StatModifiers = new Stats();
+            StatModifiers.Add(8, Int(data["Accuracy"]) - 100);
+            StatModifiers.Add(9, Int(data["Evasion"]) - 100);
+            StatModifiers.Add(10, Int(data["CriticalRate"]) - 100);
+            StatModifiers.Add(11, Int(data["CritEvadeRate"]) - 100);
         }
 
         public Environment(Environment original) : base(original)
         {
-            Effects = Clone(original.Effects, o => new PassiveEffect(o));
             MapForeground = original.MapForeground;
             MapBackground = original.MapBackground;
             BattleForeground = original.BattleForeground;
             BattleBackground = original.BattleBackground;
-            Acc = original.Acc;
-            Eva = original.Eva;
-            Crt = original.Crt;
-            Cev = original.Cev;
         }
     }
 }

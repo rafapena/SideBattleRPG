@@ -29,7 +29,7 @@ namespace BattleSimulator
         private ComboBox[] Relations;
         private string[] RelationsOptions = new string[] { "Allies", "Supporters", "Battle Buddies", "Super Team", "Elite Duo", "Perfect Unison"};
         private int NumberOfPlayers;
-        private ComboBoxInputData BattleData;
+        private ComboBoxInputData BattleData, EnvironmentData;
 
         public Main()
         {
@@ -43,8 +43,10 @@ namespace BattleSimulator
 
         public void CheckApplication()
         {
-            if (SQLDB.MaxIdPlusOne("Player") > 1 && SQLDB.MaxIdPlusOne("Skill") > 2 && SQLDB.MaxIdPlusOne("Battle") > 1 && SQLDB.MaxIdPlusOne("State") > 1) return;
-            MessageBox.Show("Cannot start application\nSimulator requires the following from the database:\n\n1 player\n1 battle\n2 skills\n1 state");
+            if (SQLDB.MaxIdPlusOne("Player") > 1 && SQLDB.MaxIdPlusOne("Skill") > 2 && 
+                SQLDB.MaxIdPlusOne("Battle") > 1 && SQLDB.MaxIdPlusOne("State") > 1 && SQLDB.MaxIdPlusOne("Environment") > 1) return;
+            MessageBox.Show("Cannot start application\nSimulator requires the following from the database:\n\n" +
+                "1 player\n1 battle\n2 skills\n1 state\n1 environment");
             Application.Exit();
         }
 
@@ -101,6 +103,8 @@ namespace BattleSimulator
         private void SetupData()
         {
             Players = new BattlePlayer[] { BattlePlayer1, BattlePlayer2, BattlePlayer3, BattlePlayer4, BattlePlayer5 };
+            EnvironmentData = new ComboBoxInputData("Environment_ID", "Name", "BaseObject JOIN Environment", "BaseObject_ID = BaseObjectID", "Name");
+            EnvironmentInput.Items.AddRange(EnvironmentData.OptionsListNames.ToArray());
             Relations = new ComboBox[] { Relation1, Relation2, Relation3, Relation4, Relation5, Relation6 };
             for (int i = 0; i < Players.Length; i++) Players[i].SetupData();
             for (int i = 0; i < Relations.Length; i++) Relations[i].Items.AddRange(RelationsOptions);
@@ -111,6 +115,7 @@ namespace BattleSimulator
         private void Initialize()
         {
             NameInput.Text = "Group" + (CurrentSelection + 1);
+            EnvironmentInput.SelectedIndex = 0;
             NumberOfPlayers = 1;
             NumberOfPlayersDisplay.Text = NumberOfPlayers.ToString();
             Players[0].Initialize();
@@ -133,6 +138,7 @@ namespace BattleSimulator
                 else
                 {
                     NameInput.Text = ReadText(file);
+                    EnvironmentInput.SelectedIndex = EnvironmentData.FindIndex(ReadShort(file));
                     NumberOfPlayers = ReadByte(file);
                     NumberOfPlayersDisplay.Text = NumberOfPlayers.ToString();
                     for (int i = 0; i < NumberOfPlayers; i++)
@@ -180,6 +186,7 @@ namespace BattleSimulator
                 if (file.Length > 0)
                 {
                     unsaved.Add(NameInput.Text != ReadText(file));
+                    unsaved.Add(EnvironmentInput.SelectedIndex != EnvironmentData.FindIndex(ReadShort(file)));
                     unsaved.Add(NumberOfPlayers != ReadByte(file));
                     for (int i = 0; i < NumberOfPlayers; i++) unsaved.Add(Players[i].UnsavedChanges(file));
                     for (int i = 0; i < 6; i++) unsaved.Add(Relations[i].SelectedIndex != ReadByte(file));
@@ -198,6 +205,7 @@ namespace BattleSimulator
             using (var file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 WriteText(file, NameInput.Text);
+                WriteShort(file, EnvironmentData.OptionsListIds[EnvironmentInput.SelectedIndex]);
                 WriteByte(file, NumberOfPlayers);
                 for (int i = 0; i < NumberOfPlayers; i++) Players[i].Write(file);
                 for (int i = 0; i < 6; i++) WriteByte(file, Relations[i].SelectedIndex);

@@ -16,6 +16,14 @@ using System.IO;
 using static BattleSimulator.Utilities.FileHelper;
 using System.Threading;
 
+
+/// <summary>
+/// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// -- ADD ENVIRONMENTAL PASSIVE EFFECTS --
+/// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// </summary>
+
+
 namespace BattleSimulator
 {
     public partial class RPGBattle : Form
@@ -71,6 +79,7 @@ namespace BattleSimulator
             using (var file = File.Open(prtyFilenameWithPath, FileMode.Open, FileAccess.Read))
             {
                 partyName = ReadText(file);
+                Environment = AllData.Environments[ReadShort(file)];
                 int numberOfPlayers = ReadByte(file);
                 for (int i = 0; i < numberOfPlayers; i++)
                 {
@@ -122,11 +131,13 @@ namespace BattleSimulator
             SeparateEnemyDuplicates();
             for (int i = 0; i < Players.Count; i++)
             {
+                Players[i].AddPassiveEffects(Environment);
                 PlayersUI[GetPlayerLocation(i)].Initialize(Players[i], i);
                 foreach (Skill s in Players[i].Skills) s.DisableForWarmup();
             }
             for (int i = 0; i < Enemies.Count; i++)
             {
+                Enemies[i].AddPassiveEffects(Environment);
                 EnemiesUI[GetEnemyLocation(i)].Initialize(Enemies[i], i);
                 foreach (Skill s in Enemies[i].Skills) s.DisableForWarmup();
             }
@@ -677,8 +688,6 @@ namespace BattleSimulator
         {
             Turns++;
             TurnNumber.Text = Turns.ToString();
-            foreach (Player p in Players) p.ExecutedAction = false;
-            foreach (Enemy e in Enemies) e.ExecutedAction = false;
             CurrentPlayer = 0;
             ActionSelection();
         }
@@ -732,8 +741,16 @@ namespace BattleSimulator
 
         private void EndTurn()
         {
-            foreach (Player p in Players) p.ApplyEndTurnEffects();
-            foreach (Enemy e in Enemies) e.ApplyEndTurnEffects();
+            foreach (Player p in Players)
+            {
+                p.ApplyEndTurnEffects();
+                p.ExecutedAction = false;
+            }
+            foreach (Enemy e in Enemies)
+            {
+                e.ApplyEndTurnEffects();
+                e.ExecutedAction = false;
+            }
             StartTurn();
         }
 
@@ -748,7 +765,7 @@ namespace BattleSimulator
             CurrentBattler.ApplyStartActionEffects();
             Commands.Text = "";
             DisplayMessage(CurrentBattler);
-            CurrentBattler.ExecuteTool(Environment);
+            CurrentBattler.ExecuteTool();
             EndAction();
         }
 

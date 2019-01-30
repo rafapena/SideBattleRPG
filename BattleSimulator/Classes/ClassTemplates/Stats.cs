@@ -162,9 +162,9 @@ namespace BattleSimulator.Classes.ClassTemplates
         private int Divide(int a, int b) { return a / b; }
         public List<int> Divide(Stats other) { return ExecuteOperation(other, Divide); }
 
-        public void Multiply(int index, double multiplier)
-        {
-            StatsList[index] = (int)(StatsList[index] * multiplier);
-        }
+        public void Add(int index, double multiplier) { StatsList[index] = (int)(StatsList[index] * multiplier); }
+        public void Subtract(int index, double multiplier) { StatsList[index] = (int)(StatsList[index] * multiplier); }
+        public void Multiply(int index, double multiplier) { StatsList[index] = (int)(StatsList[index] * multiplier); }
+        public void Divide(int index, double multiplier) { StatsList[index] = (int)(StatsList[index] * multiplier); }
     }
 }
