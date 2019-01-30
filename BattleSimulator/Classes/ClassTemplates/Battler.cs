@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-using static BattleSimulator.Utilities.Utils;
+using static BattleSimulator.Utilities.ListManager;
+using static BattleSimulator.Utilities.Conversion;
+using static BattleSimulator.Utilities.RNG;
 using System.Windows.Forms;
 
 namespace BattleSimulator.Classes.ClassTemplates
@@ -320,49 +322,46 @@ namespace BattleSimulator.Classes.ClassTemplates
             }
             sk.SummonPlayers();
             sk.SummonEnemies();
+            int i = 0;
+            double effectMagnitude = 0.5;
             if (sk.Scope == 2)
             {
-                ApplyToolEffects(SelectedTargets[0], sk);
-                for (int i = 1; i < SelectedTargets.Count; i++)
-                {
-                    ApplyToolEffects(SelectedTargets[i], sk, 0.5);
-                    //TargetResults.Last().Add(sk.Steal ? 1 : 0);
-                }
-                return;
+                ApplyToolEffects(SelectedTargets[i++], sk);
+                TargetResults.Last().Add(sk.Steal ? 1 : 0);
             }
-            foreach (Battler b in SelectedTargets)
+            else effectMagnitude = 1.0;
+            for (;  i < SelectedTargets.Count; i++)
             {
-                ApplyToolEffects(b, sk);
-                //TargetResults.Last().Add(sk.Steal ? 1 : 0);
+                ApplyToolEffects(SelectedTargets[i], sk, effectMagnitude);
+                TargetResults.Last().Add(sk.Steal ? 1 : 0);
             }
         }
 
         private void ExecuteItem()
         {
             Item it = SelectedItem;
-            if (it.Scope == 2)
-            {
-                ApplyToolEffects(SelectedTargets[0], it);
-                for (int i = 1; i < SelectedTargets.Count; i++) ApplyToolEffects(SelectedTargets[i], it, 0.5);
-            }
-            else foreach (Battler b in SelectedTargets) ApplyToolEffects(b, it);
+            int i = 0;
+            double effectMagnitude = 0.5;
+            if (it.Scope == 2) ApplyToolEffects(SelectedTargets[i++], it);
+            else effectMagnitude = 1.0;
+            for (; i < SelectedTargets.Count; i++) ApplyToolEffects(SelectedTargets[i], it, effectMagnitude);
             Stats.Add(it.PermantentStatChanges);
             if (it.TurnsInto != null) Items[Items.FindIndex(x => x.Id == it.Id)] = new Item(it.TurnsInto);
             else if (it.Consumable) Items.Remove(it);
         }
         
-        private void ApplyToolEffects(Battler b, Tool t, double effect=1.0)
+        private void ApplyToolEffects(Battler b, Tool t, double effectMagnitude = 1.0)
         {
             List<int> resultForTarget = new List<int>();
-            if (!t.Hit(this, b))
+            if (!t.Hit(this, b, effectMagnitude))
             {
                 resultForTarget.Add(-t.Type);
                 return;
             }
-            CriticalHitRatio = t.CriticalHitRatio(this, b);
+            CriticalHitRatio = t.CriticalHitRatio(this, b, effectMagnitude);
             resultForTarget.Add(CriticalHitRatio);
-            resultForTarget.Add(t.GetToolFormula(this, b));
-            List<int>[] states = t.TriggeredStates(this, b);
+            resultForTarget.Add(t.GetToolFormula(this, b, effectMagnitude));
+            List<int>[] states = t.TriggeredStates(this, b, effectMagnitude);
             resultForTarget.Add(states[0].Count);
             foreach (int stateGiveId in states[0]) resultForTarget.Add(stateGiveId);
             resultForTarget.Add(states[1].Count);
@@ -399,21 +398,21 @@ namespace BattleSimulator.Classes.ClassTemplates
             return CannotMove <= 0;
         }
 
-        public void ApplyStartActionEffects()
+        public void ApplyStartActionEffects(Environment e)
         {
             //foreach (State s in States) if (s.) ;
             //foreach (PassiveSkill p in PassiveSkills) if () ;
         }
-        public void ApplyEndActionEffects()
+        public void ApplyEndActionEffects(Environment e)
         {
 
         }
-        public void ApplyEndTurnEffects()
+        public void ApplyEndTurnEffects(Environment e)
         {
 
         }
 
-        private void ApplyEffects()
+        private void ApplyEffects(Environment e)
         {
 
         }

@@ -10,47 +10,8 @@ using Database.Utilities;
 
 namespace BattleSimulator.Utilities
 {
-    public static class Utils
+    public static class ListManager
     {
-        private static Random randomNumber = new Random();
-        public static bool Chance(int value)
-        {
-            return value >= RandInt(1, 100);
-        }
-        public static int RandInt(int low, int high)
-        {
-            return randomNumber.Next(low, high + 1);
-        }
-
-
-        public static int Int(object o)
-        {
-            string res = o.ToString();
-            return res == "" ? 0 : int.Parse(res);
-        }
-        public static double Dbl(object o)
-        {
-            return o.ToString() == "" ? 0 : (double)o;
-        }
-        
-        public static int NaturalNumber(int value)
-        {
-            return value > 0 ? value : 1;
-        }
-        
-        public static Bitmap BytesToImage(SQLiteDataReader reader, int attributeIndex)
-        {
-            byte[] blob = ImageManager.BlobToBytes(reader, attributeIndex);
-            if (blob == null) return null;
-            MemoryStream mStream = new MemoryStream();
-            byte[] pData = blob;
-            mStream.Write(pData, 0, Convert.ToInt32(pData.Length));
-            Bitmap bm = new Bitmap(mStream, false);
-            mStream.Dispose();
-            return bm;
-        }
-
-
         public static bool ValidListInput<T>(List<T> objList, int i) where T : class
         {
             return objList != null && objList[i] != null && i >= 0 && i < objList.Count;

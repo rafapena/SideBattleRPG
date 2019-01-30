@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using BattleSimulator.Classes;
 using BattleSimulator.Classes.ClassTemplates;
-using BattleSimulator.Utilities;
 using static Database.AccessDB;
 using static Database.Utilities.SQLDB;
 using System.Data.SQLite;
@@ -16,9 +15,19 @@ namespace BattleSimulator.Utilities
 {
     public static class DataManager
     {
+        public static int Int(object o)
+        {
+            string res = o.ToString();
+            return res == "" ? 0 : int.Parse(res);
+        }
+        public static double Dbl(object o)
+        {
+            return o.ToString() == "" ? 0 : (double)o;
+        }
+
         public static T ReadObj<T>(List<T> list, object id) where T : BaseObject
         {
-            return list == null || id == null ? null : list[Utils.Int(id)];
+            return list == null || id == null ? null : list[Int(id)];
         }
 
         public static int[] ReadRatesList<T>(SQLiteDataReader data, string hostTable, List<T> targetTableList, string attribute, int normValue = 100, string tableNameExt = "")
@@ -55,8 +64,8 @@ namespace BattleSimulator.Utilities
                 {
                     while (data0.Read())
                     {
-                        list.Add(Utils.Int(data0[targetTable + "ID"]));
-                        if (extraAttribute != "") list.Add(Utils.Int(data0[extraAttribute]));
+                        list.Add(Int(data0[targetTable + "ID"]));
+                        if (extraAttribute != "") list.Add(Int(data0[extraAttribute]));
                     }
                 }
                 conn0.Close();
@@ -68,7 +77,7 @@ namespace BattleSimulator.Utilities
         public static T ReadTool<T>(T tool, object toolId, List<BattlerClass> classesData, List<State> statesData) where T : Tool
         {
             if (toolId == null) return tool;
-            toolId = Utils.Int(toolId);
+            toolId = Int(toolId);
             using (var conn0 = Connect())
             {
                 conn0.Open();
@@ -85,7 +94,7 @@ namespace BattleSimulator.Utilities
         public static P ReadPassiveEffect<P>(P pEffect, object pEffectId, List<string> elementsData, List<State> statesData) where P : PassiveEffect
         {
             if (pEffectId == null) return pEffect;
-            pEffectId = Utils.Int(pEffectId);
+            pEffectId = Int(pEffectId);
             using (var conn0 = Connect())
             {
                 conn0.Open();
@@ -104,7 +113,7 @@ namespace BattleSimulator.Utilities
         {
             Stats stats = null;
             if (statsId == null) return stats;
-            else statsId = Utils.Int(statsId);
+            else statsId = Int(statsId);
             using (var conn0 = Connect())
             {
                 conn0.Open();

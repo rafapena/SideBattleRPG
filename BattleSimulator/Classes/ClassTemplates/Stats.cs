@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static BattleSimulator.Utilities.DataManager;
-using static BattleSimulator.Utilities.Utils;
+using static BattleSimulator.Utilities.ListManager;
 
 namespace BattleSimulator.Classes.ClassTemplates
 {

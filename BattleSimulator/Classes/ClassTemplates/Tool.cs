@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using static BattleSimulator.Utilities.DataManager;
-using static BattleSimulator.Utilities.Utils;
+using static BattleSimulator.Utilities.ListManager;
+using static BattleSimulator.Utilities.RNG;
 using BattleSimulator.Utilities;
 using System.Windows.Forms;
 
@@ -89,23 +90,23 @@ namespace BattleSimulator.Classes.ClassTemplates
         }
 
 
-        public bool Hit(Battler u, Battler t)
+        public bool Hit(Battler u, Battler t, double effectMagnitude = 1.0)
         {
             double toolAcc = Accuracy * (u.SelectedWeapon != null ? u.SelectedWeapon.Accuracy : 100) / 10000.0;
             double def = t.Spd() * t.Eva();
-            double result = 95 * toolAcc * u.Tec() * u.Acc() / (def != 0 ? def : 0.01);
+            double result = 95 * toolAcc * u.Tec() * u.Acc() / (def != 0 ? def : 0.01) * effectMagnitude;
             return Chance((int)result);
         }
 
-        public int CriticalHitRatio(Battler u, Battler t)
+        public int CriticalHitRatio(Battler u, Battler t, double effectMagnitude = 1.0)
         {
             double toolCrt = CritcalRate * (u.SelectedWeapon != null ? u.SelectedWeapon.CritcalRate : 100) / 10000.0;
             double def = t.Tec() * t.Cev();
-            double result = 2 * Math.Pow(u.Tec() * toolCrt, 1.1) * u.Crt() / (def != 0 ? def : 0.01);
+            double result = 2 * Math.Pow(u.Tec() * toolCrt, 1.1) * u.Crt() / (def != 0 ? def : 0.01) * effectMagnitude;
             return Chance((int)result) ? 3 : 1;
         }
 
-        public int GetToolFormula(Battler u, Battler t)
+        public int GetToolFormula(Battler u, Battler t, double effectMagnitude = 1.0)
         {
             double total = 0;
             double power = Power * (u.SelectedWeapon != null ? u.SelectedWeapon.Power : 10) / 100.0;
@@ -118,19 +119,19 @@ namespace BattleSimulator.Classes.ClassTemplates
                 case 4: break;  // Physical gun
                 case 5: break;  // Magical gun
             }
-            int intTotal = (int)total;
+            int intTotal = (int)(total * effectMagnitude);
             int variance = intTotal / 10;
             return intTotal + RandInt(-variance, variance);
         }
 
-        public List<int>[] TriggeredStates(Battler u, Battler t)
+        public List<int>[] TriggeredStates(Battler u, Battler t, double effectMagnitude = 1.0)
         {
             List<int>[] stateIds = new List<int>[] { new List<int>(), new List<int>() };
             for (int i = 0; i < StatesGiveRate.Length; i++)
             {
                 if (StatesGiveRate[i] <= 0) continue;
                 double tAttr = t.StateRates[i] * u.Luk() / (100 * t.Luk());
-                double result = StatesGiveRate[i] * tAttr / 100.0;
+                double result = StatesGiveRate[i] * tAttr / 100.0 * effectMagnitude;
                 if (Chance((int)result)) stateIds[0].Add(i);
             }
             for (int i = 0; i < StatesReceiveRate.Length; i++)

@@ -117,7 +117,9 @@
     </Compile>
     <Compile Include="Utilities\DataManager.cs" />
     <Compile Include="Utilities\FileHelper.cs" />
-    <Compile Include="Utilities\Utils.cs" />
+    <Compile Include="Utilities\RNG.cs" />
+    <Compile Include="Utilities\Conversion.cs" />
+    <Compile Include="Utilities\ListManager.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>

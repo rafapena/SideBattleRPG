@@ -67,7 +67,7 @@ namespace BattleSimulator.Templates
                 using (var reader = SQLDB.Read(conn, "SELECT Image FROM Player JOIN BaseObject WHERE BaseObject_ID = BaseObjectID AND Player_ID = " + playerId + ";"))
                 {
                     reader.Read();
-                    try { PlayerImage.Image = Utilities.Utils.BytesToImage(reader, 0); }
+                    try { PlayerImage.Image = Conversion.BytesToImage(reader, 0); }
                     catch (Exception) { PlayerImage.Image = null; }
                 }
                 conn.Close();

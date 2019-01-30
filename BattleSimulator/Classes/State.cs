@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using BattleSimulator.Classes.ClassTemplates;
 using static BattleSimulator.Utilities.DataManager;
-using static BattleSimulator.Utilities.Utils;
+using BattleSimulator.Utilities;
 
 namespace BattleSimulator.Classes
 {

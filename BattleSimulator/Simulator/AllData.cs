@@ -10,8 +10,8 @@ using static Database.AccessDB;
 using static Database.Utilities.SQLDB;
 using BattleSimulator.Classes;
 using BattleSimulator.Classes.ClassTemplates;
-using static BattleSimulator.Utilities.Utils;
-
+using BattleSimulator.Utilities;
+using static BattleSimulator.Utilities.DataManager;
 
 namespace BattleSimulator.Simulator
 {
@@ -41,11 +41,7 @@ namespace BattleSimulator.Simulator
 
         public static void Setup()
         {
-            if (Initializer)
-            {
-                MessageBox.Show("All of the stored data has already been\nretrieved from the database.", "Setup() should not be called twice");
-                return;
-            }
+            if (Initializer) return;
             Initializer = true;
             Classes = new List<BattlerClass>(new BattlerClass[MaxIdPlusOne(Tables[0])]);
             Enemies = new List<Enemy>(new Enemy[MaxIdPlusOne(Tables[1])]);

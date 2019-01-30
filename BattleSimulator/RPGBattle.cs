@@ -16,14 +16,6 @@ using System.IO;
 using static BattleSimulator.Utilities.FileHelper;
 using System.Threading;
 
-
-/// <summary>
-/// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// -- ADD ENVIRONMENTAL PASSIVE EFFECTS --
-/// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// </summary>
-
-
 namespace BattleSimulator
 {
     public partial class RPGBattle : Form
@@ -326,17 +318,17 @@ namespace BattleSimulator
             return new int[] { 2, 5, 8 };
         }
 
-        private void SelectPlayerTarget(int uiPos, int battlerIndex, Color c, bool koSelectable=false)
+        private void SelectPlayerTarget(int uiPos, int battlerIndex, Color c, bool koSelectable = false, bool addToList = true)
         {
             if (!BattlerSelectable(PlayersUI[uiPos]) || PlayersUI[uiPos].BackColor == PLAYER_KO_COLOR && !koSelectable) return;
             PlayersUI[uiPos].BackColor = c;
-            Players[CurrentPlayer].SelectedTargets.Add(Players[battlerIndex]);
+            if (addToList) Players[CurrentPlayer].SelectedTargets.Add(Players[battlerIndex]);
         }
-        private void SelectEnemyTarget(int uiPos, int battlerIndex, Color c, bool koSelectable = false)
+        private void SelectEnemyTarget(int uiPos, int battlerIndex, Color c, bool koSelectable = false, bool addToList = true)
         {
             if (!BattlerSelectable(EnemiesUI[uiPos]) || PlayersUI[uiPos].BackColor == PLAYER_KO_COLOR && !koSelectable) return;
             EnemiesUI[uiPos].BackColor = c;
-            Players[CurrentPlayer].SelectedTargets.Add(Enemies[battlerIndex]);
+            if (addToList) Players[CurrentPlayer].SelectedTargets.Add(Enemies[battlerIndex]);
         }
 
 
@@ -489,13 +481,15 @@ namespace BattleSimulator
             return ScopeText[GetToolScope()];
         }
 
+        // Helper function for TargetSelection and WeaponAndTargetSelection
         private void TargetSelectionScopes(int randomActs, int scope)
         {
             Player p = Players[CurrentPlayer];
             int firstEnemyLocation = GetEnemyLocation(0);
             if (randomActs > 0)
             {
-                for (int i = 0; i < EnemiesUI.Length; i++) SelectEnemyTarget(i, EnemiesUI[i].BattlerIndex, RANDOM_TARGET_COLOR);
+                if (scope == 7) RandomTargetSelectionScope(randomActs, PlayersUI, Players, SelectPlayerTarget, true);
+                else RandomTargetSelectionScope(randomActs, EnemiesUI, Enemies, SelectEnemyTarget, true);
                 return;
             }
             switch (scope)
@@ -536,6 +530,16 @@ namespace BattleSimulator
                     for (int i = 0; i < EnemiesUI.Length; i++) SelectEnemyTarget(i, EnemiesUI[i].BattlerIndex, SELECTED_TARGET_COLOR);
                     break;
             }
+        }
+
+        // Helper delegate and function for TargetSelectionScopes
+        private delegate void SelectTargetFunc(int uiPos, int battlerIndex, Color c, bool koSelectable, bool addToList);
+        private void RandomTargetSelectionScope<T>(int randomActs, RPGBattler[] battlerUIList, List<T> battlerList,
+            SelectTargetFunc selectFunc, bool koSelectable) where T : Battler
+        {
+            for (int i = 0; i < battlerUIList.Length; i++) selectFunc(i, battlerUIList[i].BattlerIndex, RANDOM_TARGET_COLOR, koSelectable, false);
+            int listSize = battlerList.Count - 1;
+            while (randomActs-- > 0) Players[CurrentPlayer].SelectedTargets.Add(RNG.RandList(battlerList));
         }
 
         private void GoToLastPlayer()
@@ -675,10 +679,10 @@ namespace BattleSimulator
         private void RunAway()
         {
             double playerAv = 0;
-            foreach (Player p in Players) playerAv += p.Stats.Spd;
+            foreach (Player p in Players) playerAv += p.Spd();
             playerAv /= Players.Count;
             double enemyAv = 0;
-            foreach (Enemy e in Enemies) enemyAv += e.Stats.Spd;
+            foreach (Enemy e in Enemies) enemyAv += e.Spd();
             enemyAv /= Enemies.Count;
             MessageBox.Show("Ran away from battle: " + (50 + (playerAv - enemyAv) * 5) + "%");
             Close();
@@ -703,7 +707,7 @@ namespace BattleSimulator
                     int curr = GetOrder(TurnOrder[j]);
                     int after = GetOrder(TurnOrder[j - 1]);
                     if (after > curr) flag = false;
-                    else if (after == curr && Utils.RandInt(1, 2) == 1) j -= 2;
+                    else if (after == curr && RNG.RandInt(1, 2) == 1) j -= 2;
                     else
                     {
                         int tmp = TurnOrder[j];
@@ -743,12 +747,14 @@ namespace BattleSimulator
         {
             foreach (Player p in Players)
             {
-                p.ApplyEndTurnEffects();
+                p.ApplyEndTurnEffects(Environment);
+                p.SelectedTargets.Clear();
                 p.ExecutedAction = false;
             }
             foreach (Enemy e in Enemies)
             {
-                e.ApplyEndTurnEffects();
+                e.ApplyEndTurnEffects(Environment);
+                e.SelectedTargets.Clear();
                 e.ExecutedAction = false;
             }
             StartTurn();
@@ -761,12 +767,18 @@ namespace BattleSimulator
 
         private void StartAction()
         {
-            if (CurrentBattler.SelectedWeapon != null) CurrentBattler.StatBoosts.Add(CurrentBattler.SelectedWeapon.EquipBoosts);
-            CurrentBattler.ApplyStartActionEffects();
+            int consecutiveActs = 0;
+            if (CurrentBattler.SelectedWeapon != null)
+            {
+                CurrentBattler.StatBoosts.Add(CurrentBattler.SelectedWeapon.EquipBoosts);
+                consecutiveActs = CurrentBattler.SelectedWeapon.ConsecutiveActs;
+            }
+            CurrentBattler.ApplyStartActionEffects(Environment);
             Commands.Text = "";
             DisplayMessage(CurrentBattler);
-            CurrentBattler.ExecuteTool();
-            EndAction();
+            if (CurrentBattler.SelectedSkill != null) consecutiveActs *= CurrentBattler.SelectedSkill.ConsecutiveActs;
+            else if (CurrentBattler.SelectedItem != null) consecutiveActs *= CurrentBattler.SelectedItem.ConsecutiveActs;
+            while (consecutiveActs-- > 0) ExecuteAction();
         }
 
         private void DisplayMessage(Battler user)
@@ -818,9 +830,19 @@ namespace BattleSimulator
             MessageBox.Show(selectedTool + selectedWeapon + targets, user.Name);
         }
 
+        private void ExecuteAction()
+        {
+            CurrentBattler.ExecuteTool();
+            foreach (Battler t in CurrentBattler.SelectedTargets)
+            {
+
+            }
+            EndAction();
+        }
+
         private void EndAction()
         {
-            CurrentBattler.ApplyEndActionEffects();
+            CurrentBattler.ApplyEndActionEffects(Environment);
             if (CurrentBattler.SelectedWeapon != null) CurrentBattler.StatBoosts.Subtract(CurrentBattler.SelectedWeapon.EquipBoosts);
             CurrentBattler.ExecutedAction = true;
         }

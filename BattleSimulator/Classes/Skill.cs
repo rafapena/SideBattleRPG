@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using System.Drawing;
 using BattleSimulator.Classes.ClassTemplates;
 using static BattleSimulator.Utilities.DataManager;
-using static BattleSimulator.Utilities.Utils;
+using static BattleSimulator.Utilities.ListManager;
+using static BattleSimulator.Utilities.RNG;
 using System.Windows.Forms;
 
 namespace BattleSimulator.Classes
