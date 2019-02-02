@@ -39,11 +39,11 @@ namespace BattleSimulator.Utilities
             {
                 string[] typeList = data[attribute].ToString().Split('_');
                 if (typeList[0] == "") return result;
-                for (int i = 0; i < typeList.Length; i += 2)
+                for (int i = 1; i < typeList.Length; i += 2)
                 {
-                    int typeListNumber = int.Parse(typeList[i]);
+                    int typeListNumber = int.Parse(typeList[i - 1]);
                     if (typeListNumber >= result.Length) continue;
-                    result[typeListNumber] = int.Parse(typeList[i + 1]) - normValue;
+                    result[typeListNumber] = int.Parse(typeList[i]) - normValue;
                 }
                 return result;
             }

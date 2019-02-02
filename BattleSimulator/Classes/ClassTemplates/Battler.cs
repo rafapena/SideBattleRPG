@@ -32,6 +32,7 @@ namespace BattleSimulator.Classes.ClassTemplates
         public List<PassiveSkill> PassiveSkills { get; protected set; }
 
         // Overall battle info
+        public int Type { get; private set; }             // 0=Player, 1=Enemy, 2=Ally, 3=PlayerSummon
         public List<Battler> ComboPartners { get; set; }
         public Skill SelectedSkill { get; set; }
         public Item SelectedItem { get; set; }
@@ -42,8 +43,9 @@ namespace BattleSimulator.Classes.ClassTemplates
 
         // Action execution info
         public bool ExecutedAction { get; set; }
-        public int CriticalHitRatio { get; set; }
-        public List<List<int>> TargetResults { get; private set; }
+        public int CriticalHitRatio { get; private set; }
+        public List<List<List<int>>> TargetResults { get; private set; }    // For every target, for every consecutive act, list traits
+        public List<int> EffectResults { get; private set; }
 
         // PassiveEffect dependent info
         public Stats StatModifiers { get; protected set; }
@@ -73,7 +75,8 @@ namespace BattleSimulator.Classes.ClassTemplates
             States = new List<State>();
             ComboPartners = new List<Battler>();
             SelectedTargets = new List<Battler>();
-            TargetResults = new List<List<int>>();
+            TargetResults = new List<List<List<int>>>();
+            EffectResults = new List<int>();
             StatModifiers = new Stats();
             DisabledToolTypes = new List<int>();
             RemoveByHit = new List<int>();
@@ -96,15 +99,18 @@ namespace BattleSimulator.Classes.ClassTemplates
             Items = Clone(original.Items, o => new Item(o));
             Weapons = Clone(original.Weapons, o => new Weapon(o));
             PassiveSkills = Clone(original.PassiveSkills, o => new PassiveSkill(o));
-            States = Clone(original.States, o => new State(o));
+            Type = original.Type;
+            ComboPartners = original.ComboPartners;
             SelectedSkill = Clone(original.SelectedSkill, o => new Skill(o));
             SelectedItem = Clone(original.SelectedItem, o => new Item(o));
             SelectedWeapon = Clone(original.SelectedWeapon, o => new Weapon(o));
-            ComboPartners = new List<Battler>();   //Clone(original.ComboPartners, o => new Battler(o));
-            SelectedTargets = new List<Battler>(); //Clone(original.SelectedTargets, o => new Battler(o));
+            SelectedTargets = original.SelectedTargets;
+            States = Clone(original.States, o => new State(o));
+            MovingLocation = original.MovingLocation;
             ExecutedAction = original.ExecutedAction;
             CriticalHitRatio = original.CriticalHitRatio;
-            TargetResults = Clone(original.TargetResults, o => new List<int>(o));
+            TargetResults = Clone(original.TargetResults, o => new List<List<int>>(o));
+            EffectResults = Clone(original.EffectResults);
             StatModifiers = Clone(original.StatModifiers, o => new Stats(o));
             IsConscious = original.IsConscious;
             CannotMove = original.CannotMove;
@@ -127,13 +133,6 @@ namespace BattleSimulator.Classes.ClassTemplates
         {
             Level = level;
         }
-
-        public void MaxHPSP()
-        {
-            IsConscious = true;
-            HP = Stats.MaxHP;
-            SP = 100;
-        }
         
         public void MoveToPosition(int z, int x)
         {
@@ -143,6 +142,34 @@ namespace BattleSimulator.Classes.ClassTemplates
             ZPosition = zNew;
             XPosition = xNew;
         }
+
+        public void ClearTurnChoices()
+        {
+            ComboPartners.Clear();
+            SelectedSkill = null;
+            SelectedItem = null;
+            SelectedWeapon = null;
+            SelectedTargets.Clear();
+            MovingLocation = -1;
+            CriticalHitRatio = 1;
+            TargetResults.Clear();
+            EffectResults.Clear();
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Manage Types --
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void SetAsPlayer() { Type = 0; }
+        public void SetAsEnemy() { Type = 1; }
+        public void SetAsAlly() { Type = 2; }
+        public void SetAsPlayerSummon() { Type = 3; }
+
+        public bool IsPlayer() { return Type == 0; }
+        public bool IsEnemy() { return Type == 1; }
+        public bool IsAlly() { return Type == 2; }
+        public bool IsPlayerSummon() { return Type == 3; }
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -215,23 +242,23 @@ namespace BattleSimulator.Classes.ClassTemplates
         public int AddState(List<State> statesList, int id)
         {
             if (!ValidListInput(statesList, id)) return -1;
-            State newS = new State(statesList[id]);
+            State toAdd = new State(statesList[id]);
             foreach (State existingState in States)
             {
-                if (newS.Id != existingState.Id) continue;
+                if (toAdd.Id != existingState.Id) continue;
                 if (existingState.Stack >= existingState.MaxStack) return -1;
                 existingState.Stack++;
                 existingState.TurnsLeft++;
-                AddStateStackEffect(existingState);
+                AddPassiveEffects(existingState);
                 return existingState.Id;
             }
-            newS.TurnsLeft = newS.TurnEnd2 > 0 ? RandInt(newS.TurnEnd1, newS.TurnEnd2) : -1;
-            if (newS.KO || newS.Petrify) IsConscious = false;
-            if (newS.Stun) CannotMove++;
-            if (newS.ContactSpreadRate > 0) ContactSpread.AddRange(new int[] { newS.Id, newS.ContactSpreadRate });
-            AddPassiveEffects(newS);
-            States.Add(newS);
-            return newS.Id;
+            toAdd.TurnsLeft = toAdd.TurnEnd2 > toAdd.TurnEnd1 ? RandInt(toAdd.TurnEnd1, toAdd.TurnEnd2) : -1;
+            if (toAdd.KO || toAdd.Petrify) IsConscious = false;
+            if (toAdd.Stun) CannotMove++;
+            if (toAdd.ContactSpreadRate > 0) ContactSpread.AddRange(new int[] { toAdd.Id, toAdd.ContactSpreadRate });
+            AddPassiveEffects(toAdd);
+            States.Add(toAdd);
+            return toAdd.Id;
         }
         public int RemoveState(int listIndex)
         {
@@ -241,13 +268,12 @@ namespace BattleSimulator.Classes.ClassTemplates
             if (toRemove.Stun) CannotMove--;
             for (int i = 0; i < ContactSpread.Count; i += 2)
                 if (toRemove.Id == ContactSpread[i] && toRemove.ContactSpreadRate == ContactSpread[i + 1]) ContactSpread.RemoveRange(i, 2);
-            RemoveStateStackEffect(toRemove);
-            RemovePassiveEffects(toRemove);
+            for (int i = 0; i < States[listIndex].Stack; i++) RemovePassiveEffects(toRemove);
             States.RemoveAt(listIndex);
             return toRemove.Id;
         }
 
-        public void AddPassiveEffects(PassiveEffect pe)
+        public int AddPassiveEffects(PassiveEffect pe)
         {
             for (int i = 0; i < ElementRates.Length; i++) ElementRates[i] += pe.ElementRates[i];
             for (int i = 0; i < StateRates.Length; i++) StateRates[i] += pe.StateRates[i];
@@ -260,8 +286,9 @@ namespace BattleSimulator.Classes.ClassTemplates
             if (pe.DisabledToolType1 > 0) DisabledToolTypes.Add(pe.DisabledToolType1);
             if (pe.DisabledToolType2 > 0) DisabledToolTypes.Add(pe.DisabledToolType2);
             if (pe.RemoveByHit > 0) RemoveByHit.AddRange(new int[] { pe.Id, pe.RemoveByHit });
+            return pe.Id;
         }
-        public void RemovePassiveEffects(PassiveEffect pe)
+        public int RemovePassiveEffects(PassiveEffect pe)
         {
             for (int i = 0; i < ElementRates.Length; i++) ElementRates[i] -= pe.ElementRates[i];
             for (int i = 0; i < StateRates.Length; i++) StateRates[i] -= pe.StateRates[i];
@@ -280,17 +307,7 @@ namespace BattleSimulator.Classes.ClassTemplates
             }
             List<int> rbh = RemoveByHit;
             for (int i = 0; i < rbh.Count; i += 2) if (pe.Id == rbh[i] && pe.RemoveByHit == rbh[i + 1]) rbh.RemoveRange(i, 2);
-        }
-
-        private void AddStateStackEffect(State s)
-        {
-            //for (int i = 0; i < ElementRates.Count; i++) ElementRates[i] += s.ElementRates[i] / 2;
-            //for (int i = 0; i < StateRates.Count; i++) StateRates[i] += s.StateRates[i] / 2;
-            ExtraTurns += s.ExtraTurns;
-        }
-        private void RemoveStateStackEffect(State s)
-        {
-            ExtraTurns -= s.ExtraTurns;
+            return pe.Id;
         }
 
 
@@ -298,21 +315,22 @@ namespace BattleSimulator.Classes.ClassTemplates
         /// -- Tool Actions --
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public void ExecuteTool()
+        public Tool ExecuteTool()
         {
             TargetResults.Clear();
-            if (SelectedSkill != null) ExecuteSkill();
-            else if (SelectedItem != null) ExecuteItem();
+            if (SelectedSkill != null) return ExecuteSkill();
+            else if (SelectedItem != null) return ExecuteItem();
+            return null;
         }
 
-        private void ExecuteSkill()
+        private Skill ExecuteSkill()
         {
             Skill sk = SelectedSkill;
             sk.StartCharge();
             if (sk.ChargeCount > 0)
             {
                 sk.Charge1Turn();
-                return;
+                return sk;
             }
             sk.DisableForCooldown();
             foreach (Battler p in ComboPartners)
@@ -324,20 +342,19 @@ namespace BattleSimulator.Classes.ClassTemplates
             sk.SummonEnemies();
             int i = 0;
             double effectMagnitude = 0.5;
-            if (sk.Scope == 2)
-            {
-                ApplyToolEffects(SelectedTargets[i++], sk);
-                TargetResults.Last().Add(sk.Steal ? 1 : 0);
-            }
+            if (sk.Scope == 2) ApplyToolEffects(SelectedTargets[i++], sk, 1.0, ExecuteSteal);
             else effectMagnitude = 1.0;
-            for (;  i < SelectedTargets.Count; i++)
-            {
-                ApplyToolEffects(SelectedTargets[i], sk, effectMagnitude);
-                TargetResults.Last().Add(sk.Steal ? 1 : 0);
-            }
+            for (;  i < SelectedTargets.Count; i++) ApplyToolEffects(SelectedTargets[i], sk, effectMagnitude, ExecuteSteal);
+            return sk;
+        }
+        private List<int> ExecuteSteal(List<int> oneActResult, Battler target, double effectMagnitude)
+        {
+            double willSteal = effectMagnitude * 100 * Luk() / target.Luk();
+            oneActResult.Add(SelectedSkill.Steal && Chance((int)willSteal) ? 1 : 0);
+            return oneActResult;
         }
 
-        private void ExecuteItem()
+        private Item ExecuteItem()
         {
             Item it = SelectedItem;
             int i = 0;
@@ -348,24 +365,33 @@ namespace BattleSimulator.Classes.ClassTemplates
             Stats.Add(it.PermantentStatChanges);
             if (it.TurnsInto != null) Items[Items.FindIndex(x => x.Id == it.Id)] = new Item(it.TurnsInto);
             else if (it.Consumable) Items.Remove(it);
+            return it;
         }
-        
-        private void ApplyToolEffects(Battler b, Tool t, double effectMagnitude = 1.0)
+
+        private delegate List<int> ApplyExtra(List<int> extraResults, Battler b, double effectMagnitude);
+        private void ApplyToolEffects(Battler b, Tool t, double effectMagnitude = 1.0, ApplyExtra extraFunc = null)
         {
-            List<int> resultForTarget = new List<int>();
-            if (!t.Hit(this, b, effectMagnitude))
+            List<List<int>> resultForTarget = new List<List<int>>();
+            for (int i = 0; i < t.ConsecutiveActs; i++)
             {
-                resultForTarget.Add(-t.Type);
-                return;
+                List<int> oneAct = new List<int>();
+                if (!t.Hit(this, b, effectMagnitude))
+                {
+                    oneAct.Add(-t.Type);
+                    continue;
+                }
+                CriticalHitRatio = t.CriticalHitRatio(this, b, effectMagnitude);
+                oneAct.Add(CriticalHitRatio);
+                oneAct.Add(t.ElementMagnitude(b));
+                oneAct.Add(t.GetToolFormula(this, b, effectMagnitude));
+                List<int>[] states = t.TriggeredStates(this, b, effectMagnitude);
+                oneAct.Add(states[0].Count);
+                foreach (int stateGiveId in states[0]) oneAct.Add(stateGiveId);
+                oneAct.Add(states[1].Count);
+                foreach (int stateReceiveId in states[1]) oneAct.Add(stateReceiveId);
+                if (extraFunc != null) oneAct = extraFunc(oneAct, b, effectMagnitude);
+                resultForTarget.Add(oneAct);
             }
-            CriticalHitRatio = t.CriticalHitRatio(this, b, effectMagnitude);
-            resultForTarget.Add(CriticalHitRatio);
-            resultForTarget.Add(t.GetToolFormula(this, b, effectMagnitude));
-            List<int>[] states = t.TriggeredStates(this, b, effectMagnitude);
-            resultForTarget.Add(states[0].Count);
-            foreach (int stateGiveId in states[0]) resultForTarget.Add(stateGiveId);
-            resultForTarget.Add(states[1].Count);
-            foreach (int stateReceiveId in states[1]) resultForTarget.Add(stateReceiveId);
             TargetResults.Add(resultForTarget);
         }
 
@@ -373,6 +399,13 @@ namespace BattleSimulator.Classes.ClassTemplates
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// -- General HP/SP Management --
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void MaxHPSP()
+        {
+            IsConscious = true;
+            HP = Stats.MaxHP;
+            SP = 100;
+        }
 
         public void ChangeHP(int val)
         {
@@ -431,9 +464,9 @@ namespace BattleSimulator.Classes.ClassTemplates
         public int Tec() { return NaturalNumber((Stats.Tec + StatBoosts.Tec) * (StatModifiers.Tec + 100) / 100); }
         public int Luk() { return NaturalNumber((Stats.Luk + StatBoosts.Luk) * (StatModifiers.Luk + 100) / 100); }
 
-        public int Acc() { return NaturalNumber((Stats.Acc + StatBoosts.Acc) * (StatModifiers.Acc + 100) / 100); }
-        public int Eva() { return NaturalNumber((Stats.Eva + StatBoosts.Eva) * (StatModifiers.Eva + 100) / 100); }
-        public int Crt() { return NaturalNumber((Stats.Crt + StatBoosts.Crt) * (StatModifiers.Crt + 100) / 100); }
-        public int Cev() { return NaturalNumber((Stats.Cev + StatBoosts.Cev) * (StatModifiers.Cev + 100) / 100); }
+        public int Acc() { return (Stats.Acc + StatBoosts.Acc) * (StatModifiers.Acc + 100) / 100; }
+        public int Eva() { return (Stats.Eva + StatBoosts.Eva) * (StatModifiers.Eva + 100) / 100; }
+        public int Crt() { return (Stats.Crt + StatBoosts.Crt) * (StatModifiers.Crt + 100) / 100; }
+        public int Cev() { return (Stats.Cev + StatBoosts.Cev) * (StatModifiers.Cev + 100) / 100; }
     }
 }

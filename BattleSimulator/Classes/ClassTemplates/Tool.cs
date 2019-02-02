@@ -90,6 +90,11 @@ namespace BattleSimulator.Classes.ClassTemplates
         }
 
 
+        public bool IsOffense()
+        {
+            return Type % 2 == 1;
+        }
+
         public bool Hit(Battler u, Battler t, double effectMagnitude = 1.0)
         {
             double toolAcc = Accuracy * (u.SelectedWeapon != null ? u.SelectedWeapon.Accuracy : 100) / 10000.0;
@@ -100,10 +105,21 @@ namespace BattleSimulator.Classes.ClassTemplates
 
         public int CriticalHitRatio(Battler u, Battler t, double effectMagnitude = 1.0)
         {
+            if (effectMagnitude < 0.5) return 1; 
             double toolCrt = CritcalRate * (u.SelectedWeapon != null ? u.SelectedWeapon.CritcalRate : 100) / 10000.0;
             double def = t.Tec() * t.Cev();
             double result = 2 * Math.Pow(u.Tec() * toolCrt, 1.1) * u.Crt() / (def != 0 ? def : 0.01) * effectMagnitude;
             return Chance((int)result) ? 3 : 1;
+        }
+
+        public int ElementMagnitude(Battler b)
+        {
+            int rate = b.ElementRates[Element];
+            if (rate == 0) return 0;
+            if (rate < 100) return 1;
+            if (rate >= 100) return 2;
+            if (rate > -100) return -1;
+            return -2;
         }
 
         public int GetToolFormula(Battler u, Battler t, double effectMagnitude = 1.0)
@@ -115,9 +131,9 @@ namespace BattleSimulator.Classes.ClassTemplates
             {
                 case 1: total = (1.5 * u.Atk() - 1.25 * t.Def()) * rates; break;    // Physical standard
                 case 2: total = (1.5 * u.Map() - 1.25 * t.Mar()) * rates; break;    // Magical standard
-                case 3: break;  // Mixed standard
-                case 4: break;  // Physical gun
-                case 5: break;  // Magical gun
+                case 3: total = (1.5 * (u.Atk() + u.Map()) / 2 - 1.25 * (t.Def() + t.Mar()) / 2) * rates; break;    // Mixed standard
+                case 4: total = (1.5 * (u.Atk()/4 + u.Tec()*3/4) - 1.25 * t.Def()) * rates; break;                  // Physical gun
+                case 5: total = (1.5 * (u.Map()/4 + u.Tec()*3/4) - 1.25 * t.Mar()) * rates; break;                  // Magical gun
             }
             int intTotal = (int)(total * effectMagnitude);
             int variance = intTotal / 10;

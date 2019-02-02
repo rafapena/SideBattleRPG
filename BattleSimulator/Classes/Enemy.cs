@@ -84,7 +84,7 @@ namespace BattleSimulator.Classes
             SelectedTargets.Clear();
             SelectedSkill = Skills.Count > 0 ? Skills[RandInt(0, Skills.Count - 1)] : null;
             SelectedItem = null;
-            SelectedWeapon = Weapons.Count > 0 ? Weapons[RandInt(0, Weapons.Count - 1)] : null;
+            SelectedWeapon = Weapons.Count > 0 && SelectedSkill != null && SelectedSkill.IsOffense() ? Weapons[RandInt(0, Weapons.Count - 1)] : null;
             SelectedTargets.Add(players[RandInt(0, players.Count - 1)]);
         }
     }

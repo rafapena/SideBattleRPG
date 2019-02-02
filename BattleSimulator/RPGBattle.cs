@@ -76,7 +76,7 @@ namespace BattleSimulator
                 for (int i = 0; i < numberOfPlayers; i++)
                 {
                     Player battlePlayer = new Player(AllData.Players[ReadByte(file)]);
-                    battlePlayer.SetCurrentClass(ReadByte(file));
+                    battlePlayer.SetCurrentClass(AllData.Classes, ReadByte(file));
                     battlePlayer.SetAllStats(ReadByte(file));
                     battlePlayer.MoveToPosition(ReadByte(file), ReadByte(file));
                     int[] Ids = new int[9];
@@ -123,12 +123,14 @@ namespace BattleSimulator
             SeparateEnemyDuplicates();
             for (int i = 0; i < Players.Count; i++)
             {
+                Players[i].SetAsPlayer();
                 Players[i].AddPassiveEffects(Environment);
                 PlayersUI[GetPlayerLocation(i)].Initialize(Players[i], i);
                 foreach (Skill s in Players[i].Skills) s.DisableForWarmup();
             }
             for (int i = 0; i < Enemies.Count; i++)
             {
+                Enemies[i].SetAsEnemy();
                 Enemies[i].AddPassiveEffects(Environment);
                 EnemiesUI[GetEnemyLocation(i)].Initialize(Enemies[i], i);
                 foreach (Skill s in Enemies[i].Skills) s.DisableForWarmup();
@@ -175,9 +177,18 @@ namespace BattleSimulator
                     if (o == 'q') SoloSkillSelection();
                     else if (o == 'w') ItemSelection();
                     else if (o == 'e') ComboSkillSelection();
-                    else if (o == 'a') { p.SelectedSkill = AllData.Skills[1]; WeaponAndTargetSelection(); }
+                    else if (o == 'a')
+                    {
+                        p.SelectedSkill = AllData.Skills[1];
+                        WeaponAndTargetSelection();
+                    }
                     else if (o == 's') MoveSelection();
-                    else if (o == 'd') { p.SelectedSkill = AllData.Skills[2]; FinishSelection(); }
+                    else if (o == 'd')
+                    {
+                        p.SelectedSkill = AllData.Skills[2];
+                        p.SelectedTargets.Add(p);
+                        FinishSelection();
+                    }
                     else if (o == 'z' && CurrentPlayer == 0) AutoBattle();
                     else if (o == 'x' && CurrentPlayer == 0) RunAway();
                     else if (o == 'p' && CurrentPlayer != 0) GoToLastPlayer();
@@ -566,7 +577,7 @@ namespace BattleSimulator
                 CommandTracker.Text += "\nwith...";
                 PartnerSelection();
             }
-            else if (p.SelectedSkill.Type % 2 == 1) WeaponAndTargetSelection();
+            else if (p.SelectedSkill.IsOffense()) WeaponAndTargetSelection();
             else TargetSelection();
         }
 
@@ -723,8 +734,8 @@ namespace BattleSimulator
             Battler b;
             if (id >= 16) b = Enemies[id - 16];
             else b = Players[id];
-            if (b.SelectedSkill != null) return b.Spd() + b.SelectedSkill.Priority;
-            else if (b.SelectedItem != null) return b.Spd() + b.SelectedItem.Priority;
+            if (b.SelectedSkill != null) return b.Spd() + b.SelectedSkill.Priority * 1000;
+            else if (b.SelectedItem != null) return b.Spd() + b.SelectedItem.Priority * 1000;
             return b.Spd();
         }
 
@@ -748,13 +759,13 @@ namespace BattleSimulator
             foreach (Player p in Players)
             {
                 p.ApplyEndTurnEffects(Environment);
-                p.SelectedTargets.Clear();
+                p.ClearTurnChoices();
                 p.ExecutedAction = false;
             }
             foreach (Enemy e in Enemies)
             {
                 e.ApplyEndTurnEffects(Environment);
-                e.SelectedTargets.Clear();
+                e.ClearTurnChoices();
                 e.ExecutedAction = false;
             }
             StartTurn();
@@ -830,14 +841,98 @@ namespace BattleSimulator
             MessageBox.Show(selectedTool + selectedWeapon + targets, user.Name);
         }
 
+        // oneAct = { missed/critical, elementMagnitude, formulaResult, giveStatesCount, {giveStates}, receiveStatesCount, {receiveStates}, steal }
         private void ExecuteAction()
         {
-            CurrentBattler.ExecuteTool();
-            foreach (Battler t in CurrentBattler.SelectedTargets)
+            Tool actionTool = CurrentBattler.ExecuteTool();
+            for (int i = 0; i < CurrentBattler.TargetResults.Count; i++)
             {
-
+                List<List<int>> resultsForTarget = CurrentBattler.TargetResults[i];
+                foreach (List<int> oneAct in resultsForTarget)
+                {
+                    if (MissedOrFailed(actionTool, i, oneAct[0])) continue;
+                    ActionDamageIndicators(actionTool, i, oneAct[0], oneAct[1]);
+                    ActionHPSPChange(actionTool, i, oneAct[2]);
+                    int givenStates = oneAct[3];
+                    int receivedStates = oneAct[3 + givenStates];
+                    if (receivedStates + 1 <= oneAct.Count) ActionSteal(i);
+                    ActionStates(actionTool, i, givenStates, receivedStates);
+                    Thread.Sleep(500);
+                }
             }
+            for (int i = 0; i < CurrentBattler.SelectedTargets.Count; i++) KOResult(i);
             EndAction();
+        }
+
+        // Helper method for ExecuteAction
+        private bool MissedOrFailed(Tool actionTool, int currTarget, int noHitType)
+        {
+            if (noHitType > 0) return false;
+            Battler t = CurrentBattler.SelectedTargets[currTarget];
+            // Indicate miss/fail onto GUI
+            Thread.Sleep(500);
+            return true;
+        }
+
+        // Helper method for ExecuteAction
+        private void ActionDamageIndicators(Tool actionTool, int currTarget, int criticalHitRatio, int elementMagnitude)
+        {
+            Battler t = CurrentBattler.SelectedTargets[currTarget];
+            //if (criticalHitRatio > 1) ;     // Display "CRITICAL" onto GUI
+            //if (elementMagnitude != 0) ;    // Display the element's icon onto GUI
+            // Display size/shape/color of magnitude sign onto GUI
+            switch (elementMagnitude)
+            {
+                case 0: break;
+                case -2: break;
+                case -1: break;
+                case 1: break;
+                case 2: break;
+            }
+        }
+
+        // Helper method for ExecuteAction
+        private void ActionHPSPChange(Tool actionTool, int currTarget, int formulaResult)
+        {
+            Battler t = CurrentBattler.SelectedTargets[currTarget];
+            switch (actionTool.HPSPModType)
+            {
+                case 0:
+                    t.ChangeHP(-formulaResult);
+                    break;
+                case 1:
+                    t.ChangeSP(-formulaResult);
+                    break;
+                case 2:
+                    t.ChangeHP(formulaResult);
+                    break;
+                case 3:
+                    t.ChangeSP(formulaResult);
+                    break;
+                case 4:
+                    t.ChangeHP(-formulaResult);
+                    CurrentBattler.ChangeHP(formulaResult);
+                    break;
+                case 5:
+                    t.ChangeSP(-formulaResult);
+                    CurrentBattler.ChangeSP(formulaResult);
+                    break;
+            }
+            // Change HP/SP for the user and that one target on the GUI
+        }
+
+        // Helper method for ExecuteAction
+        private void ActionStates(Tool actionTool, int currTarget, int numberOfGivenStates, int numberOfReceivedStates)
+        {
+            Battler t = CurrentBattler.SelectedTargets[currTarget];
+            // Inidicate and add/remove states onto GUI
+        }
+
+        // Helper method for ExecuteAction
+        private void ActionSteal(int currTarget)
+        {
+            Battler t = CurrentBattler.SelectedTargets[currTarget];
+            // Inidicate stolen item/weapon onto GUI
         }
 
         private void EndAction()
@@ -845,6 +940,20 @@ namespace BattleSimulator
             CurrentBattler.ApplyEndActionEffects(Environment);
             if (CurrentBattler.SelectedWeapon != null) CurrentBattler.StatBoosts.Subtract(CurrentBattler.SelectedWeapon.EquipBoosts);
             CurrentBattler.ExecutedAction = true;
+        }
+        
+        private void KOResult(int currTarget)
+        {
+            Battler t = CurrentBattler.SelectedTargets[currTarget];
+            if (t.HP <= 0)
+            {
+                while (t.States.Count > 0) t.RemoveState(0);
+                t.AddState(AllData.States, 1);
+            }
+            if (!t.IsConscious) return;
+            // Inidicate KO onto GUI
+            int sleepTime = 1000;
+            Thread.Sleep(sleepTime);
         }
 
         private void CheckWinOrLose()

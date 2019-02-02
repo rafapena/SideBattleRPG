@@ -38,24 +38,20 @@ namespace BattleSimulator.Templates
         {
             PlayerData = new ComboBoxInputData("Player_ID", "Name", "BaseObject JOIN Player", "BaseObjectID = BaseObject_ID", "Player_ID");
             ItemData = new ComboBoxInputData("Item_ID", "Name", "BaseObject JOIN Item", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
-            WeaponData = new ComboBoxInputData("Weapon_ID", "Name", "BaseObject JOIN Weapon", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
             PassiveSkillData = new ComboBoxInputData("PassiveSkill_ID", "Name", "BaseObject JOIN PassiveSkill", "BaseObjectID = BaseObject_ID", "Name", ComboBoxInputData.ADD_NULL_INPUT);
             Player.Items.AddRange(PlayerData.OptionsListNames.ToArray());
             ZFormation.Items.AddRange(ZFormationOptions);
             XFormation.Items.AddRange(XFormationOptions);
             string[] items = ItemData.OptionsListNames.ToArray();
-            string[] weapons = WeaponData.OptionsListNames.ToArray();
             string[] passiveSkills = PassiveSkillData.OptionsListNames.ToArray();
             Item1.Items.AddRange(items);
             Item2.Items.AddRange(items);
             Item3.Items.AddRange(items);
             Item4.Items.AddRange(items);
-            Weapon1.Items.AddRange(weapons);
-            Weapon2.Items.AddRange(weapons);
-            Weapon3.Items.AddRange(weapons);
             PassiveSkill1.Items.AddRange(passiveSkills);
             PassiveSkill2.Items.AddRange(passiveSkills);
             Player.SelectedIndexChanged += new EventHandler(CBChangedPlayer);
+            Class.SelectedIndexChanged += new EventHandler(CBChangedClass);
         }
 
         private void CBChangedPlayer(object sender, EventArgs e)
@@ -74,7 +70,24 @@ namespace BattleSimulator.Templates
             }
             string where = "BaseObject_ID = BaseObjectID AND BattlerClass_ID = BattlerClassID AND PlayerID = " + playerId;
             BattlerClassData = new ComboBoxInputData("BattlerClassID", "Name", "Player_To_BattlerClass JOIN BaseObject JOIN BattlerClass", where, "BattlerClass_ID");
+            Class.Items.Clear();
             Class.Items.AddRange(BattlerClassData.OptionsListNames.ToArray());
+            Class.SelectedIndex = 0;
+        }
+
+        private void CBChangedClass(object sender, EventArgs e)
+        {
+            int classId = BattlerClassData.OptionsListIds[Class.SelectedIndex];
+            string where = "BaseObject_ID = Weapon.BaseObjectID AND (UsableWeaponType1 = WeaponType OR UsableWeaponType2 = WeaponType) AND BattlerClass_ID = " + classId;
+            WeaponData = new ComboBoxInputData("Weapon_ID", "Name", "BaseObject JOIN Weapon JOIN BattlerClass", where, "Name", ComboBoxInputData.ADD_NULL_INPUT);
+            string[] weapons = WeaponData.OptionsListNames.ToArray();
+            ComboBox[] Weapons = new ComboBox[] { Weapon1, Weapon2, Weapon3 };
+            foreach (ComboBox w in Weapons)
+            {
+                w.Items.Clear();
+                w.Items.AddRange(weapons);
+                w.SelectedIndex = 0;
+            }
         }
 
 

@@ -7,7 +7,7 @@ using System.Drawing;
 using BattleSimulator.Classes.ClassTemplates;
 using static BattleSimulator.Utilities.DataManager;
 using static BattleSimulator.Utilities.ListManager;
-
+using System.Windows.Forms;
 
 namespace BattleSimulator.Classes
 {
@@ -80,9 +80,9 @@ namespace BattleSimulator.Classes
             if (Class != null) Stats = new Stats(level, Class.BaseStats, NaturalStats);
         }
 
-        public void SetCurrentClass(int classSetId)
+        public void SetCurrentClass(List<BattlerClass> classesData, int classId)
         {
-            Class = ClassSet[classSetId];
+            if (ValidListInput(classesData, classId)) Class = classesData[classId];
         }
 
         public void SetRelation(int id, int level)
