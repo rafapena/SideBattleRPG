@@ -81,6 +81,7 @@ namespace BattleSimulator.Classes
 
         public void DecideMove(List<Player> players, List<Enemy> enemies)
         {
+            if (!IsConscious) return;
             SelectedTargets.Clear();
             SelectedSkill = Skills.Count > 0 ? Skills[RandInt(0, Skills.Count - 1)] : null;
             SelectedItem = null;

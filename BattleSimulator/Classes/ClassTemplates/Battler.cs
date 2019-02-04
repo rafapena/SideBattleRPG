@@ -428,7 +428,7 @@ namespace BattleSimulator.Classes.ClassTemplates
 
         public bool CanMove()
         {
-            return CannotMove <= 0;
+            return CannotMove <= 0 && IsConscious;
         }
 
         public void ApplyStartActionEffects(Environment e)

@@ -24,6 +24,8 @@ namespace BattleSimulator
         public List<Player> Players { get; private set; }
         public List<Enemy> Enemies { get; private set; }
         private RPGBattler[] PlayersUI, EnemiesUI;
+        private RPGBattler UserUI, TargetUI;
+        private Label[] PosUIs;
 
         public int NumberOfPlayers { get; private set; }
         public string InfoText { get; private set; }
@@ -113,6 +115,8 @@ namespace BattleSimulator
         {
             PlayersUI = new RPGBattler[] { PLB, PLC, PLF, PCB, PCC, PCF, PRB, PRC, PRF };
             EnemiesUI = new RPGBattler[] { ELF, ELC, ELB, ECF, ECC, ECB, ERF, ERC, ERB };
+            PosUIs = new Label[] { Pos1, Pos2, Pos3, Pos4, Pos5, Pos6, Pos7, Pos8, Pos9 };
+            HidePosUIs();
             for (int i = 0; i < 9; i++)
             {
                 PlayersUI[i].Visible = false;
@@ -125,14 +129,14 @@ namespace BattleSimulator
             {
                 Players[i].SetAsPlayer();
                 Players[i].AddPassiveEffects(Environment);
-                PlayersUI[GetPlayerLocation(i)].Initialize(Players[i], i);
+                PlayersUI[GetPlayerLocation(Players[i])].Initialize(Players[i], i);
                 foreach (Skill s in Players[i].Skills) s.DisableForWarmup();
             }
             for (int i = 0; i < Enemies.Count; i++)
             {
                 Enemies[i].SetAsEnemy();
                 Enemies[i].AddPassiveEffects(Environment);
-                EnemiesUI[GetEnemyLocation(i)].Initialize(Enemies[i], i);
+                EnemiesUI[GetEnemyLocation(Enemies[i])].Initialize(Enemies[i], i);
                 foreach (Skill s in Enemies[i].Skills) s.DisableForWarmup();
             }
         }
@@ -224,7 +228,7 @@ namespace BattleSimulator
                     break;
                 case 5: // Move
                     for (int i = 0; i < BattlerKeys.Length; i++) if (o.ToString() == BattlerKeys[i]) { SelectLocation(i); break; }
-                    if (o == 'p') { HideAllInactiveRPGBattlers(); ActionSelection(); }
+                    if (o == 'p') { HidePosUIs(); ActionSelection(); }
                     break;
                 case 6: // Partner
                     for (int i = 0; i < BattlerKeys.Length; i++) if (o.ToString() == BattlerKeys[i]) { SelectPartner(i); break; }
@@ -273,22 +277,18 @@ namespace BattleSimulator
             foreach (RPGBattler e in EnemiesUI) if (e.Visible) e.ShowLetterKey();
         }
 
-        private void HideAllInactiveRPGBattlers()
+        private void HidePosUIs()
         {
-            for (int i = 0; i < PlayersUI.Length; i++)
-            {
-                if (PlayersUI[i].OnlyShowingLetterKey) PlayersUI[i].ResetFromOnlyShowingLetterKey();
-                if (EnemiesUI[i].OnlyShowingLetterKey) EnemiesUI[i].ResetFromOnlyShowingLetterKey();
-            }
+            foreach (Label pos in PosUIs) pos.Visible = false;
         }
 
-        private int GetPlayerLocation(int i)
+        private int GetPlayerLocation(Battler p)
         {
-            return Players[i].XPosition * 3 + 2 - Players[i].ZPosition;
+            return p.XPosition * 3 + 2 - p.ZPosition;
         }
-        private int GetEnemyLocation(int i)
+        private int GetEnemyLocation(Battler e)
         {
-            return Enemies[i].XPosition * 3 + Enemies[i].ZPosition;
+            return e.XPosition * 3 + e.ZPosition;
         }
 
         private int GetToolScope()
@@ -397,8 +397,8 @@ namespace BattleSimulator
         {
             BattleState = 1;
             ResetTurnUI();
-            PlayersUI[GetPlayerLocation(CurrentPlayer)].BackColor = USER_INDICATION_COLOR;
             Player p = Players[CurrentPlayer];
+            PlayersUI[GetPlayerLocation(p)].BackColor = USER_INDICATION_COLOR;
             p.ComboPartners.Clear();
             p.SelectedTargets.Clear();
             p.MovingLocation = -1;
@@ -439,7 +439,7 @@ namespace BattleSimulator
         private void MoveSelection()
         {
             BattleState = 5;
-            foreach (RPGBattler p in PlayersUI) if (!p.Visible) p.OnlyDisplayLetterKey();
+            for (int i = 0; i < PlayersUI.Length; i++) if (!PlayersUI[i].Visible) PosUIs[i].Visible = true;
             Commands.Text = "Select New Location";
             FixedCommands.Text = "P: Back";
         }
@@ -448,7 +448,7 @@ namespace BattleSimulator
         {
             BattleState = 6;
             ShowPlayerKeys();
-            PlayersUI[GetPlayerLocation(CurrentPlayer)].HideLetterKey();
+            PlayersUI[GetPlayerLocation(Players[CurrentPlayer])].HideLetterKey();
             Commands.Text = "Select " + (Players[CurrentPlayer].SelectedSkill.NumberOfUsers == 2 ? "Ally" : "Allies");
             FixedCommands.Text = "P: Back";
         }
@@ -496,7 +496,7 @@ namespace BattleSimulator
         private void TargetSelectionScopes(int randomActs, int scope)
         {
             Player p = Players[CurrentPlayer];
-            int firstEnemyLocation = GetEnemyLocation(0);
+            int firstEnemyLocation = GetEnemyLocation(Enemies[0]);
             if (randomActs > 0)
             {
                 if (scope == 7) RandomTargetSelectionScope(randomActs, PlayersUI, Players, SelectPlayerTarget, true);
@@ -529,7 +529,7 @@ namespace BattleSimulator
                 case 6:
                 case 7:
                     if (scope == 7) ShowPlayerKeys();
-                    SelectPlayerTarget(GetPlayerLocation(CurrentPlayer), CurrentPlayer, SELECTED_TARGET_COLOR, true);
+                    SelectPlayerTarget(GetPlayerLocation(p), CurrentPlayer, SELECTED_TARGET_COLOR, true);
                     break;
                 case 8:
                     for (int i = 0; i < PlayersUI.Length; i++) SelectPlayerTarget(i, PlayersUI[i].BattlerIndex, SELECTED_TARGET_COLOR, true);
@@ -556,6 +556,7 @@ namespace BattleSimulator
         private void GoToLastPlayer()
         {
             CurrentPlayer--;
+            while (CurrentPlayer >= 0 && !Players[CurrentPlayer].CanMove()) CurrentPlayer--;
             ActionSelection();
         }
 
@@ -595,9 +596,9 @@ namespace BattleSimulator
         private void SelectLocation(int pos)
         {
             if (!PlayersUI[pos].OnlyShowingLetterKey) return;
-            int prevPos = GetPlayerLocation(CurrentPlayer);
+            int prevPos = GetPlayerLocation(Players[CurrentPlayer]);
             Players[CurrentPlayer].MovingLocation = pos;
-            HideAllInactiveRPGBattlers();
+            HidePosUIs();
             FinishSelection();
         }
 
@@ -661,7 +662,7 @@ namespace BattleSimulator
                 case 7:
                     if (!BattlerSelectable(PlayersUI[pos])) break;
                     prevLocation = p.SelectedTargets[0].XPosition * 3 + 2 - p.SelectedTargets[0].ZPosition;
-                    if (prevLocation == GetPlayerLocation(CurrentPlayer)) PlayersUI[prevLocation].BackColor = USER_INDICATION_COLOR;
+                    if (prevLocation == GetPlayerLocation(p)) PlayersUI[prevLocation].BackColor = USER_INDICATION_COLOR;
                     else if (Players[PlayersUI[prevLocation].BattlerIndex].HP <= 0) PlayersUI[prevLocation].BackColor = PLAYER_KO_COLOR;
                     else PlayersUI[prevLocation].BackColor = DEFAULT_BATTLER_COLOR;
                     p.SelectedTargets.RemoveRange(0, 1);
@@ -673,6 +674,7 @@ namespace BattleSimulator
         private void FinishSelection()
         {
             CurrentPlayer++;
+            while (CurrentPlayer < Players.Count && !Players[CurrentPlayer].CanMove()) CurrentPlayer++;
             if (CurrentPlayer >= Players.Count) TurnActions();
             else ActionSelection();
         }
@@ -748,6 +750,7 @@ namespace BattleSimulator
             {
                 if (id >= 16) CurrentBattler = Enemies[id - 16];
                 else CurrentBattler = Players[id];
+                UserUI = CurrentBattler.IsEnemy() ? EnemiesUI[GetEnemyLocation(CurrentBattler)] : PlayersUI[GetPlayerLocation(CurrentBattler)];
                 if (!CurrentBattler.IsConscious || CurrentBattler.ExecutedAction) continue;
                 StartAction();
             }
@@ -778,7 +781,7 @@ namespace BattleSimulator
 
         private void StartAction()
         {
-            int consecutiveActs = 0;
+            int consecutiveActs = 1;
             if (CurrentBattler.SelectedWeapon != null)
             {
                 CurrentBattler.StatBoosts.Add(CurrentBattler.SelectedWeapon.EquipBoosts);
@@ -841,14 +844,17 @@ namespace BattleSimulator
             MessageBox.Show(selectedTool + selectedWeapon + targets, user.Name);
         }
 
+        // TargetResults = { oneTarget, secondTarget, ... }
+        // oneTarget = { oneAct, secondAct, ... }
         // oneAct = { missed/critical, elementMagnitude, formulaResult, giveStatesCount, {giveStates}, receiveStatesCount, {receiveStates}, steal }
         private void ExecuteAction()
         {
             Tool actionTool = CurrentBattler.ExecuteTool();
             for (int i = 0; i < CurrentBattler.TargetResults.Count; i++)
             {
-                List<List<int>> resultsForTarget = CurrentBattler.TargetResults[i];
-                foreach (List<int> oneAct in resultsForTarget)
+                Battler t = CurrentBattler.SelectedTargets[i];
+                TargetUI = t.IsEnemy() ? EnemiesUI[GetEnemyLocation(t)] : PlayersUI[GetPlayerLocation(t)];
+                foreach (List<int> oneAct in CurrentBattler.TargetResults[i])
                 {
                     if (MissedOrFailed(actionTool, i, oneAct[0])) continue;
                     ActionDamageIndicators(actionTool, i, oneAct[0], oneAct[1]);
@@ -856,8 +862,8 @@ namespace BattleSimulator
                     int givenStates = oneAct[3];
                     int receivedStates = oneAct[3 + givenStates];
                     if (receivedStates + 1 <= oneAct.Count) ActionSteal(i);
-                    ActionStates(actionTool, i, givenStates, receivedStates);
-                    Thread.Sleep(500);
+                    ActionStates(actionTool, i, oneAct, givenStates, receivedStates);
+                    TargetUI.RemovePopups();
                 }
             }
             for (int i = 0; i < CurrentBattler.SelectedTargets.Count; i++) KOResult(i);
@@ -868,9 +874,7 @@ namespace BattleSimulator
         private bool MissedOrFailed(Tool actionTool, int currTarget, int noHitType)
         {
             if (noHitType > 0) return false;
-            Battler t = CurrentBattler.SelectedTargets[currTarget];
-            // Indicate miss/fail onto GUI
-            Thread.Sleep(500);
+            TargetUI.DisplayMissedOrFailed(actionTool.IsOffense() ? "Missed" : "Failed");
             return true;
         }
 
@@ -878,9 +882,8 @@ namespace BattleSimulator
         private void ActionDamageIndicators(Tool actionTool, int currTarget, int criticalHitRatio, int elementMagnitude)
         {
             Battler t = CurrentBattler.SelectedTargets[currTarget];
-            //if (criticalHitRatio > 1) ;     // Display "CRITICAL" onto GUI
-            //if (elementMagnitude != 0) ;    // Display the element's icon onto GUI
-            // Display size/shape/color of magnitude sign onto GUI
+            if (criticalHitRatio > 1) TargetUI.DisplayActionDamageCritical();
+            if (elementMagnitude != 0) TargetUI.DisplayActionDamageElemental(actionTool.Element, elementMagnitude);
             switch (elementMagnitude)
             {
                 case 0: break;
@@ -899,33 +902,57 @@ namespace BattleSimulator
             {
                 case 0:
                     t.ChangeHP(-formulaResult);
+                    TargetUI.DisplayHPDamage(formulaResult);
                     break;
                 case 1:
                     t.ChangeSP(-formulaResult);
+                    TargetUI.DisplaySPDamage(formulaResult);
                     break;
                 case 2:
                     t.ChangeHP(formulaResult);
+                    TargetUI.DisplayHPRecover(formulaResult);
                     break;
                 case 3:
                     t.ChangeSP(formulaResult);
+                    TargetUI.DisplaySPRecover(formulaResult);
                     break;
                 case 4:
                     t.ChangeHP(-formulaResult);
                     CurrentBattler.ChangeHP(formulaResult);
+                    TargetUI.DisplayHPDamage(formulaResult);
+                    UserUI.DisplayHPRecover(formulaResult);
                     break;
                 case 5:
                     t.ChangeSP(-formulaResult);
                     CurrentBattler.ChangeSP(formulaResult);
+                    TargetUI.DisplaySPDamage(formulaResult);
+                    UserUI.DisplaySPRecover(formulaResult);
                     break;
             }
-            // Change HP/SP for the user and that one target on the GUI
+            UserUI.UpdateHP(CurrentBattler.HP);
+            UserUI.UpdateSP(CurrentBattler.SP);
+            //if (CurrentBattler.IsPlayer()) foreach (Battler comboPartner in CurrentBattler.ComboPartners) PlayersUI[GetPlayerLocation(comboPartner)].UpdateSP(comboPartner.SP);
+            //else foreach (Battler comboPartner in CurrentBattler.ComboPartners) EnemiesUI[GetEnemyLocation(comboPartner)].UpdateSP(comboPartner.SP);
+            TargetUI.UpdateHP(t.HP);
+            TargetUI.UpdateSP(t.SP);
         }
 
         // Helper method for ExecuteAction
-        private void ActionStates(Tool actionTool, int currTarget, int numberOfGivenStates, int numberOfReceivedStates)
+        private void ActionStates(Tool actionTool, int currTarget, List<int> oneAct, int numberOfGivenStates, int numberOfReceivedStates)
         {
             Battler t = CurrentBattler.SelectedTargets[currTarget];
-            // Inidicate and add/remove states onto GUI
+            for (int i = 0; i < numberOfGivenStates; i++)
+            {
+                int stateId = oneAct[4 + i];
+                t.AddState(AllData.States, stateId);
+                TargetUI.DisplayActionStates(AllData.States[stateId].Name);
+            }
+            for (int i = 0; i < numberOfReceivedStates; i++)
+            {
+                int stateId = oneAct[4 + numberOfGivenStates + i];
+                CurrentBattler.AddState(AllData.States, stateId);
+                UserUI.DisplayActionStates(AllData.States[stateId].Name);
+            }
         }
 
         // Helper method for ExecuteAction
@@ -945,15 +972,18 @@ namespace BattleSimulator
         private void KOResult(int currTarget)
         {
             Battler t = CurrentBattler.SelectedTargets[currTarget];
-            if (t.HP <= 0)
+            if (t.HP > 0) return;
             {
                 while (t.States.Count > 0) t.RemoveState(0);
+                TargetUI.ClearStates();
                 t.AddState(AllData.States, 1);
             }
-            if (!t.IsConscious) return;
-            // Inidicate KO onto GUI
-            int sleepTime = 1000;
+            if (t.IsConscious) return;
+            if (t.IsPlayer() || t.IsAlly()) TargetUI.KOBattler(PLAYER_KO_COLOR);
+            else TargetUI.Visible = false;
+            int sleepTime = 500;
             Thread.Sleep(sleepTime);
+            CheckWinOrLose();
         }
 
         private void CheckWinOrLose()

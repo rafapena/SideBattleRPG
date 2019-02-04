@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BattleSimulator.Classes.ClassTemplates;
+using System.Threading;
 
 namespace BattleSimulator.Templates
 {
@@ -24,14 +25,15 @@ namespace BattleSimulator.Templates
         public void Initialize(Battler battler, int battlerIndex)
         {
             BattlerIndex = battlerIndex;
-            BackColor = Color.White;
+            BackColor = RPGBattlerHelper.DEFAULT_COLOR;
             Visible = true;
+            Hit.Visible = false;
             LetterKey.Visible = false;
             Damage.Visible = false;
             Restore.Visible = false;
+            ElementMag.Visible = false;
             State1.Visible = false;
             State2.Visible = false;
-            State3.Visible = false;
             BattlerImage.Image = battler.Image;
             BattlerName.Text = battler.Name;
             HP.Text = battler.HP.ToString();
@@ -41,14 +43,14 @@ namespace BattleSimulator.Templates
 
         public void Transfer(RPGBattler original)
         {
-
+            // IMPLEMENT LATER
         }
 
         public void SetLetterKey(string c)
         {
             LetterKey.Text = c;
         }
-
+        
         public void HideLetterKey()
         {
             LetterKey.Visible = false;
@@ -60,53 +62,105 @@ namespace BattleSimulator.Templates
             LetterKey.Visible = true;
         }
 
-        public void OnlyDisplayLetterKey()
+        public void DisplayMissedOrFailed(string missedOrFailed)
         {
-            if (OnlyShowingLetterKey) return;
-            Visible = true;
-            LetterKey.Visible = true;
-            OnlyShowingLetterKey = true;
+            Hit.Text = missedOrFailed;
+            Hit.BackColor = RPGBattlerHelper.MISSED_COLOR;
+        }
+
+        public void DisplayActionDamageCritical()
+        {
+            Hit.Text = "Critical";
+            Hit.BackColor = RPGBattlerHelper.CRITICAL_COLOR;
+        }
+
+        public void DisplayActionDamageElemental(int elementType, int mag)
+        {
+            if (elementType < 0 || elementType >= RPGBattlerHelper.ELEMENTS.Length || mag > 2 || mag < -2) return;
+            ElementMag.Text = RPGBattlerHelper.ELEMENTS[elementType];
+            ElementMag.BackColor = RPGBattlerHelper.E_MAG[mag + 2];
+        }
+
+        public void DisplayHPDamage(int val)
+        {
+            Damage.Text = val.ToString();
+            Damage.BackColor = RPGBattlerHelper.HP_DAMAGE_COLOR;
+        }
+        public void DisplayHPRecover(int val)
+        {
+            Restore.Text = val.ToString();
+            Restore.BackColor = RPGBattlerHelper.HP_RECOVER_COLOR;
+        }
+        public void DisplaySPDamage(int val)
+        {
+            Damage.Text = val.ToString();
+            Damage.BackColor = RPGBattlerHelper.SP_DAMAGE_COLOR;
+        }
+        public void DisplaySPRecover(int val)
+        {
+            Restore.Text = val.ToString();
+            Restore.BackColor = RPGBattlerHelper.SP_RECOVER_COLOR;
+        }
+
+        public void DisplayActionSteal(int val)
+        {
+            // IMPLEMENT LATER
+        }
+
+        public void DisplayActionStates(string stateName)
+        {
+            if (State1.Text != "") State2.Text = State1.Text;
+            State1.Text = stateName;
+        }
+
+        public void ClearStates()
+        {
+            State1.Text = "";
+            State2.Text = "";
+            State1.BackColor = RPGBattlerHelper.DEFAULT_COLOR;
+            State2.BackColor = RPGBattlerHelper.DEFAULT_COLOR;
+        }
+
+        public void UpdateHP(int val)
+        {
+            HP.Text = val.ToString();
+        }
+        public void UpdateSP(int val)
+        {
+            SP.Text = val.ToString();
+        }
+
+        public void RemovePopups()
+        {
+            Hit.Visible = false;
             Damage.Visible = false;
             Restore.Visible = false;
-            State1.Visible = false;
-            State2.Visible = false;
-            State3.Visible = false;
-            BattlerImage.Visible = false;
-            BattlerName.Visible = false;
-            HP.Visible = false;
-            SlashText.Visible = false;
-            MaxHP.Visible = false;
-            SP.Visible = false;
+            ElementMag.Visible = false;
+            State1.BackColor = RPGBattlerHelper.DEFAULT_COLOR;
+            State2.BackColor = RPGBattlerHelper.DEFAULT_COLOR;
         }
 
-        public void ResetFromOnlyShowingLetterKey()
+        public void KOBattler(Color koColor)
         {
-            if (!OnlyShowingLetterKey) return;
-            Visible = false;
-            LetterKey.Visible = false;
-            OnlyShowingLetterKey = false;
-            Damage.Visible = true;
-            Restore.Visible = true;
-            State1.Visible = true;
-            State2.Visible = true;
-            State3.Visible = true;
-            BattlerImage.Visible = true;
-            BattlerName.Visible = true;
-            HP.Visible = true;
-            SlashText.Visible = true;
-            MaxHP.Visible = true;
-            SP.Visible = true;
+            RemovePopups();
+            ClearStates();
+            BackColor = koColor;
         }
 
-        public void SelectBattler()
-        {
-            if (Visible == false) return;
-            BackColor = Color.LightGreen;
-        }
 
-        public void DeselectBattler()
+        public static class RPGBattlerHelper
         {
-            BackColor = Color.White;
+            public static Color DEFAULT_COLOR = Color.White;
+            public static Color MISSED_COLOR = Color.Gray;
+            public static Color CRITICAL_COLOR = Color.LightYellow;
+            public static Color NEW_STATE_COLOR = Color.LightBlue;
+            public static Color HP_DAMAGE_COLOR = Color.LightGoldenrodYellow;
+            public static Color SP_DAMAGE_COLOR = Color.BlueViolet;
+            public static Color HP_RECOVER_COLOR = Color.LightGreen;
+            public static Color SP_RECOVER_COLOR = Color.LightBlue;
+
+            public static Color[] E_MAG = new Color[] { Color.DarkViolet, Color.Violet, DEFAULT_COLOR, Color.Orange, Color.OrangeRed };
+            public static string[] ELEMENTS = new string[] { "N", "F", "I", "E", "W", "T", "L", "D" };
         }
     }
 }

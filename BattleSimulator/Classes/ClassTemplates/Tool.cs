@@ -126,7 +126,7 @@ namespace BattleSimulator.Classes.ClassTemplates
         {
             double total = 0;
             double power = Power * (u.SelectedWeapon != null ? u.SelectedWeapon.Power : 10) / 100.0;
-            double rates = power * u.CriticalHitRatio * t.ElementRates[Element] / 1000.0;
+            double rates = power * u.CriticalHitRatio * (t.ElementRates[Element] + 100) / 100.0;
             switch (Formula)
             {
                 case 1: total = (1.5 * u.Atk() - 1.25 * t.Def()) * rates; break;    // Physical standard
@@ -135,7 +135,7 @@ namespace BattleSimulator.Classes.ClassTemplates
                 case 4: total = (1.5 * (u.Atk()/4 + u.Tec()*3/4) - 1.25 * t.Def()) * rates; break;                  // Physical gun
                 case 5: total = (1.5 * (u.Map()/4 + u.Tec()*3/4) - 1.25 * t.Mar()) * rates; break;                  // Magical gun
             }
-            int intTotal = (int)(total * effectMagnitude);
+            int intTotal = (int)((total > 0 ? total : 1) * effectMagnitude);
             int variance = intTotal / 10;
             return intTotal + RandInt(-variance, variance);
         }
@@ -146,14 +146,14 @@ namespace BattleSimulator.Classes.ClassTemplates
             for (int i = 0; i < StatesGiveRate.Length; i++)
             {
                 if (StatesGiveRate[i] <= 0) continue;
-                double tAttr = t.StateRates[i] * u.Luk() / (100 * t.Luk());
-                double result = StatesGiveRate[i] * tAttr / 100.0 * effectMagnitude;
+                double tAttr = (t.StateRates[i] + 100) * u.Luk() / (100 * t.Luk());
+                double result = (StatesGiveRate[i] + 100) * tAttr / 100.0 * effectMagnitude;
                 if (Chance((int)result)) stateIds[0].Add(i);
             }
             for (int i = 0; i < StatesReceiveRate.Length; i++)
             {
                 if (StatesReceiveRate[i] <= 0) continue;
-                double result = StatesReceiveRate[i] * u.StateRates[i] / 10000.0;
+                double result = (StatesReceiveRate[i] + 100) * (u.StateRates[i] + 100) / 10000.0;
                 if (Chance((int)result)) stateIds[1].Add(i);
             }
             return stateIds;
