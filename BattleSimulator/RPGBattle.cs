@@ -20,22 +20,22 @@ namespace BattleSimulator
 {
     public partial class RPGBattle : Form
     {
-        public Classes.Environment Environment { get; private set; }
-        public List<Player> Players { get; private set; }
-        public List<Enemy> Enemies { get; private set; }
+        private Classes.Environment Environment;
+        private List<Player> Players;
+        private List<Enemy> Enemies;
         private RPGBattler[] PlayersUI, EnemiesUI;
         private RPGBattler UserUI, TargetUI;
         private Label[] PosUIs;
-
-        public int NumberOfPlayers { get; private set; }
-        public string InfoText { get; private set; }
-        public int Turns { get; private set; }
-        public int CurrentPlayer { get; private set; }
-        public int BattleState { get; private set; }
-        public string CommandTrackerHelper { get; private set; }
+        private int ActivePlayers, ActiveEnemies;
+        
+        private string InfoText;
+        private int Turns;
+        private int CurrentPlayer;
+        private int BattleState;
+        private string CommandTrackerHelper;
         private List<int> TurnOrder;
-        public int ActionWaitTime { get; private set; }
-        public Battler CurrentBattler { get; private set; }
+        public Battler CurrentBattler;
+        public bool InBattle;
 
         private Color DEFAULT_BATTLER_COLOR = Color.White;
         private Color USER_INDICATION_COLOR = Color.LightGreen;
@@ -97,11 +97,13 @@ namespace BattleSimulator
             PlayersHeader.Text = partyName;
             EnemiesHeader.Text = AllData.Battle.Name;
             Turns = 0;
-            NumberOfPlayers = Players.Count;
+            ActivePlayers = Players.Count;
+            ActiveEnemies = Enemies.Count;
             TurnOrder = new List<int>();
             for (int i = 0; i < Players.Count; i++) TurnOrder.Add(i);
             for (int i = 0; i < Enemies.Count; i++) TurnOrder.Add(i + 16);
             ScopeCommand.Text = "";
+            InBattle = true;
         }
         private void PlayerSetRelationHelper(FileStream file, int i, int j)
         {
@@ -496,18 +498,20 @@ namespace BattleSimulator
         private void TargetSelectionScopes(int randomActs, int scope)
         {
             Player p = Players[CurrentPlayer];
-            int firstEnemyLocation = GetEnemyLocation(Enemies[0]);
-            if (randomActs > 0)
-            {
-                if (scope == 7) RandomTargetSelectionScope(randomActs, PlayersUI, Players, SelectPlayerTarget, true);
-                else RandomTargetSelectionScope(randomActs, EnemiesUI, Enemies, SelectEnemyTarget, true);
-                return;
-            }
+            int firstI = 0;
+            while (firstI < Enemies.Count && !Enemies[firstI].IsConscious) firstI++;
+            if (firstI >= Enemies.Count) return;
+            int firstEnemyLocation = GetEnemyLocation(Enemies[firstI]);
             switch (scope)
             {
                 case 1:
                     ShowEnemyKeys();
-                    SelectEnemyTarget(firstEnemyLocation, 0, SELECTED_TARGET_COLOR);
+                    if (randomActs == 0) SelectEnemyTarget(firstEnemyLocation, 0, SELECTED_TARGET_COLOR);
+                    else
+                    {
+                        for (int i = 0; i < EnemiesUI.Length; i++) SelectEnemyTarget(i, EnemiesUI[i].BattlerIndex, RANDOM_TARGET_COLOR, false, false);
+                        while (randomActs-- > 0) Players[CurrentPlayer].SelectedTargets.Add(RNG.RandList(Enemies));
+                    }
                     break;
                 case 2:
                     ShowEnemyKeys();
@@ -541,16 +545,6 @@ namespace BattleSimulator
                     for (int i = 0; i < EnemiesUI.Length; i++) SelectEnemyTarget(i, EnemiesUI[i].BattlerIndex, SELECTED_TARGET_COLOR);
                     break;
             }
-        }
-
-        // Helper delegate and function for TargetSelectionScopes
-        private delegate void SelectTargetFunc(int uiPos, int battlerIndex, Color c, bool koSelectable, bool addToList);
-        private void RandomTargetSelectionScope<T>(int randomActs, RPGBattler[] battlerUIList, List<T> battlerList,
-            SelectTargetFunc selectFunc, bool koSelectable) where T : Battler
-        {
-            for (int i = 0; i < battlerUIList.Length; i++) selectFunc(i, battlerUIList[i].BattlerIndex, RANDOM_TARGET_COLOR, koSelectable, false);
-            int listSize = battlerList.Count - 1;
-            while (randomActs-- > 0) Players[CurrentPlayer].SelectedTargets.Add(RNG.RandList(battlerList));
         }
 
         private void GoToLastPlayer()
@@ -706,6 +700,7 @@ namespace BattleSimulator
             Turns++;
             TurnNumber.Text = Turns.ToString();
             CurrentPlayer = 0;
+            while (CurrentPlayer < Players.Count && !Players[CurrentPlayer].CanMove()) CurrentPlayer++;
             ActionSelection();
         }
 
@@ -748,11 +743,23 @@ namespace BattleSimulator
             SortTurnOrder();
             foreach (int id in TurnOrder)
             {
-                if (id >= 16) CurrentBattler = Enemies[id - 16];
-                else CurrentBattler = Players[id];
-                UserUI = CurrentBattler.IsEnemy() ? EnemiesUI[GetEnemyLocation(CurrentBattler)] : PlayersUI[GetPlayerLocation(CurrentBattler)];
-                if (!CurrentBattler.IsConscious || CurrentBattler.ExecutedAction) continue;
+                bool checkRedirection;
+                if (id >= 16)
+                {
+                    CurrentBattler = Enemies[id - 16];
+                    UserUI = EnemiesUI[GetEnemyLocation(CurrentBattler)];
+                    checkRedirection = CurrentBattler.RedirectUnconsciousTarget(Players);
+                } else
+                {
+                    CurrentBattler = Players[id];
+                    UserUI = PlayersUI[GetPlayerLocation(CurrentBattler)];
+                    checkRedirection = CurrentBattler.RedirectUnconsciousTarget(Enemies);
+                }
+                if (!CurrentBattler.IsConscious || CurrentBattler.ExecutedAction || !checkRedirection) continue;
                 StartAction();
+                ExecuteAction();
+                EndAction();
+                if (!InBattle) return;
             }
             EndTurn();
         }
@@ -771,6 +778,10 @@ namespace BattleSimulator
                 e.ClearTurnChoices();
                 e.ExecutedAction = false;
             }
+            DetermineKOResults(Players, PlayersUI, GetPlayerLocation);
+            DetermineKOResults(Enemies, EnemiesUI, GetEnemyLocation);
+            CheckWinOrLose();
+            if (!InBattle) return;
             StartTurn();
         }
 
@@ -781,18 +792,10 @@ namespace BattleSimulator
 
         private void StartAction()
         {
-            int consecutiveActs = 1;
-            if (CurrentBattler.SelectedWeapon != null)
-            {
-                CurrentBattler.StatBoosts.Add(CurrentBattler.SelectedWeapon.EquipBoosts);
-                consecutiveActs = CurrentBattler.SelectedWeapon.ConsecutiveActs;
-            }
+            if (CurrentBattler.SelectedWeapon != null) CurrentBattler.StatBoosts.Add(CurrentBattler.SelectedWeapon.EquipBoosts);
             CurrentBattler.ApplyStartActionEffects(Environment);
             Commands.Text = "";
             DisplayMessage(CurrentBattler);
-            if (CurrentBattler.SelectedSkill != null) consecutiveActs *= CurrentBattler.SelectedSkill.ConsecutiveActs;
-            else if (CurrentBattler.SelectedItem != null) consecutiveActs *= CurrentBattler.SelectedItem.ConsecutiveActs;
-            while (consecutiveActs-- > 0) ExecuteAction();
         }
 
         private void DisplayMessage(Battler user)
@@ -844,30 +847,27 @@ namespace BattleSimulator
             MessageBox.Show(selectedTool + selectedWeapon + targets, user.Name);
         }
 
-        // TargetResults = { oneTarget, secondTarget, ... }
-        // oneTarget = { oneAct, secondAct, ... }
-        // oneAct = { missed/critical, elementMagnitude, formulaResult, giveStatesCount, {giveStates}, receiveStatesCount, {receiveStates}, steal }
+        // TargetResults = { oneAct, secondAct, ... }
+        // oneAct = { oneTarget, secondTarget, ... }
+        // oneTarget = { missed/critical, elementMagnitude, formulaResult, giveStatesCount, {giveStates}, receiveStatesCount, {receiveStates}, steal }
         private void ExecuteAction()
         {
             Tool actionTool = CurrentBattler.ExecuteTool();
             for (int i = 0; i < CurrentBattler.TargetResults.Count; i++)
             {
-                Battler t = CurrentBattler.SelectedTargets[i];
-                TargetUI = t.IsEnemy() ? EnemiesUI[GetEnemyLocation(t)] : PlayersUI[GetPlayerLocation(t)];
-                foreach (List<int> oneAct in CurrentBattler.TargetResults[i])
+                foreach (List<int> oneTarget in CurrentBattler.TargetResults[i])
                 {
-                    if (MissedOrFailed(actionTool, i, oneAct[0])) continue;
-                    ActionDamageIndicators(actionTool, i, oneAct[0], oneAct[1]);
-                    ActionHPSPChange(actionTool, i, oneAct[2]);
-                    int givenStates = oneAct[3];
-                    int receivedStates = oneAct[3 + givenStates];
-                    if (receivedStates + 1 <= oneAct.Count) ActionSteal(i);
-                    ActionStates(actionTool, i, oneAct, givenStates, receivedStates);
-                    TargetUI.RemovePopups();
+                    Battler t = CurrentBattler.SelectedTargets[i];
+                    TargetUI = t.IsEnemy() ? EnemiesUI[GetEnemyLocation(t)] : PlayersUI[GetPlayerLocation(t)];
+                    if (MissedOrFailed(actionTool, i, oneTarget[0])) continue;
+                    ActionDamageIndicators(actionTool, i, oneTarget[0], oneTarget[1]);
+                    ActionHPSPChange(actionTool, i, oneTarget[2]);
+                    int givenStates = oneTarget[3];
+                    int receivedStates = oneTarget[3 + givenStates];
+                    if (receivedStates + 1 <= oneTarget.Count) ActionSteal(i);
+                    ActionStates(actionTool, i, oneTarget, givenStates, receivedStates);
                 }
             }
-            for (int i = 0; i < CurrentBattler.SelectedTargets.Count; i++) KOResult(i);
-            EndAction();
         }
 
         // Helper method for ExecuteAction
@@ -898,31 +898,34 @@ namespace BattleSimulator
         private void ActionHPSPChange(Tool actionTool, int currTarget, int formulaResult)
         {
             Battler t = CurrentBattler.SelectedTargets[currTarget];
-            switch (actionTool.HPSPModType)
+            switch (actionTool.HPModType)
             {
-                case 0:
+                case 1:
                     t.ChangeHP(-formulaResult);
                     TargetUI.DisplayHPDamage(formulaResult);
-                    break;
-                case 1:
-                    t.ChangeSP(-formulaResult);
-                    TargetUI.DisplaySPDamage(formulaResult);
                     break;
                 case 2:
                     t.ChangeHP(formulaResult);
                     TargetUI.DisplayHPRecover(formulaResult);
                     break;
                 case 3:
-                    t.ChangeSP(formulaResult);
-                    TargetUI.DisplaySPRecover(formulaResult);
-                    break;
-                case 4:
                     t.ChangeHP(-formulaResult);
                     CurrentBattler.ChangeHP(formulaResult);
                     TargetUI.DisplayHPDamage(formulaResult);
                     UserUI.DisplayHPRecover(formulaResult);
                     break;
-                case 5:
+            }
+            switch (actionTool.SPModType)
+            {
+                case 1:
+                    t.ChangeSP(-formulaResult);
+                    TargetUI.DisplaySPDamage(formulaResult);
+                    break;
+                case 2:
+                    t.ChangeSP(formulaResult);
+                    TargetUI.DisplaySPRecover(formulaResult);
+                    break;
+                case 3:
                     t.ChangeSP(-formulaResult);
                     CurrentBattler.ChangeSP(formulaResult);
                     TargetUI.DisplaySPDamage(formulaResult);
@@ -967,33 +970,40 @@ namespace BattleSimulator
             CurrentBattler.ApplyEndActionEffects(Environment);
             if (CurrentBattler.SelectedWeapon != null) CurrentBattler.StatBoosts.Subtract(CurrentBattler.SelectedWeapon.EquipBoosts);
             CurrentBattler.ExecutedAction = true;
-        }
-        
-        private void KOResult(int currTarget)
-        {
-            Battler t = CurrentBattler.SelectedTargets[currTarget];
-            if (t.HP > 0) return;
-            {
-                while (t.States.Count > 0) t.RemoveState(0);
-                TargetUI.ClearStates();
-                t.AddState(AllData.States, 1);
-            }
-            if (t.IsConscious) return;
-            if (t.IsPlayer() || t.IsAlly()) TargetUI.KOBattler(PLAYER_KO_COLOR);
-            else TargetUI.Visible = false;
-            int sleepTime = 500;
-            Thread.Sleep(sleepTime);
+            DetermineKOResults(Players, PlayersUI, GetPlayerLocation);
+            DetermineKOResults(Enemies, EnemiesUI, GetEnemyLocation);
             CheckWinOrLose();
         }
 
-        private void CheckWinOrLose()
+        private delegate int UILoc<T>(T b) where T : Battler;
+        private void DetermineKOResults<T>(List<T> battlers, RPGBattler[] battlersUI, UILoc<T> getBattlerLocation) where T : Battler
+        {
+            foreach (T b in battlers)
+            {
+                if (!b.IsConscious) continue;
+                RPGBattler battlerUI = battlersUI[getBattlerLocation(b)];
+                if (b.HP > 0)
+                {
+                    battlerUI.BackColor = DEFAULT_BATTLER_COLOR;
+                    continue;
+                }
+                while (b.States.Count > 0) b.RemoveState(0);
+                battlerUI.ClearStates();
+                if (b.IsEnemy() || b.IsPlayerSummon()) battlerUI.Visible = false;
+                else battlerUI.KOBattler(PLAYER_KO_COLOR);
+                b.AddState(AllData.States, 1);
+            }
+        }
+
+        private bool CheckWinOrLose()
         {
             bool playersKOd = true;
             foreach (Player p in Players) if (p.IsConscious) { playersKOd = false; break; }
-            if (playersKOd) LoseBattle();
+            if (playersKOd) return LoseBattle();
             bool enemiesKOd = true;
             foreach (Enemy e in Enemies) if (e.IsConscious) { enemiesKOd = false; break; }
-            if (enemiesKOd) WinBattle();
+            if (enemiesKOd) return WinBattle();
+            return false;
         }
 
 
@@ -1001,19 +1011,23 @@ namespace BattleSimulator
         /// -- Battle End --
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private void WinBattle()
+        private bool WinBattle()
         {
             MessageBox.Show("YOU WIN");
             // Talk about level-up statistics, etc.
             // Manage non-overworld passive effects: traverse through list
             // Get exp and gold rate
+            InBattle = false;
             Close();
+            return true;
         }
 
-        private void LoseBattle()
+        private bool LoseBattle()
         {
             MessageBox.Show("GAME OVER");
+            InBattle = false;
             Close();
+            return true;
         }
     }
 }

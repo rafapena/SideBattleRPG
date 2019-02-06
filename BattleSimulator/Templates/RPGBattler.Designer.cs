@@ -34,13 +34,14 @@
             this.BattlerName = new System.Windows.Forms.Label();
             this.State1 = new System.Windows.Forms.Label();
             this.State2 = new System.Windows.Forms.Label();
-            this.Damage = new System.Windows.Forms.Label();
-            this.Restore = new System.Windows.Forms.Label();
+            this.HPMod = new System.Windows.Forms.Label();
+            this.SPMod = new System.Windows.Forms.Label();
             this.MaxHP = new System.Windows.Forms.Label();
             this.SlashText = new System.Windows.Forms.Label();
             this.LetterKey = new System.Windows.Forms.Label();
             this.Hit = new System.Windows.Forms.Label();
             this.ElementMag = new System.Windows.Forms.Label();
+            this.SPConsume = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.BattlerImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -88,7 +89,7 @@
             // State1
             // 
             this.State1.AutoSize = true;
-            this.State1.Location = new System.Drawing.Point(14, 274);
+            this.State1.Location = new System.Drawing.Point(14, 279);
             this.State1.Name = "State1";
             this.State1.Size = new System.Drawing.Size(57, 20);
             this.State1.TabIndex = 8;
@@ -97,33 +98,33 @@
             // State2
             // 
             this.State2.AutoSize = true;
-            this.State2.Location = new System.Drawing.Point(14, 296);
+            this.State2.Location = new System.Drawing.Point(14, 301);
             this.State2.Name = "State2";
             this.State2.Size = new System.Drawing.Size(57, 20);
             this.State2.TabIndex = 9;
             this.State2.Text = "State2";
             // 
-            // Damage
+            // HPMod
             // 
-            this.Damage.AutoSize = true;
-            this.Damage.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.Damage.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Damage.Location = new System.Drawing.Point(25, 127);
-            this.Damage.Name = "Damage";
-            this.Damage.Size = new System.Drawing.Size(60, 25);
-            this.Damage.TabIndex = 11;
-            this.Damage.Text = "1000";
+            this.HPMod.AutoSize = true;
+            this.HPMod.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.HPMod.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HPMod.Location = new System.Drawing.Point(25, 127);
+            this.HPMod.Name = "HPMod";
+            this.HPMod.Size = new System.Drawing.Size(60, 25);
+            this.HPMod.TabIndex = 11;
+            this.HPMod.Text = "1000";
             // 
-            // Restore
+            // SPMod
             // 
-            this.Restore.AutoSize = true;
-            this.Restore.BackColor = System.Drawing.SystemColors.Desktop;
-            this.Restore.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Restore.Location = new System.Drawing.Point(25, 93);
-            this.Restore.Name = "Restore";
-            this.Restore.Size = new System.Drawing.Size(73, 25);
-            this.Restore.TabIndex = 12;
-            this.Restore.Text = "+1000";
+            this.SPMod.AutoSize = true;
+            this.SPMod.BackColor = System.Drawing.SystemColors.Desktop;
+            this.SPMod.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SPMod.Location = new System.Drawing.Point(25, 93);
+            this.SPMod.Name = "SPMod";
+            this.SPMod.Size = new System.Drawing.Size(48, 25);
+            this.SPMod.TabIndex = 12;
+            this.SPMod.Text = "100";
             // 
             // MaxHP
             // 
@@ -177,15 +178,27 @@
             this.ElementMag.TabIndex = 15;
             this.ElementMag.Text = "E";
             // 
+            // SPConsume
+            // 
+            this.SPConsume.AutoSize = true;
+            this.SPConsume.BackColor = System.Drawing.SystemColors.Desktop;
+            this.SPConsume.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SPConsume.Location = new System.Drawing.Point(98, 242);
+            this.SPConsume.Name = "SPConsume";
+            this.SPConsume.Size = new System.Drawing.Size(56, 25);
+            this.SPConsume.TabIndex = 16;
+            this.SPConsume.Text = "-100";
+            // 
             // RPGBattler
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.SPConsume);
             this.Controls.Add(this.ElementMag);
             this.Controls.Add(this.Hit);
             this.Controls.Add(this.LetterKey);
-            this.Controls.Add(this.Restore);
-            this.Controls.Add(this.Damage);
+            this.Controls.Add(this.SPMod);
+            this.Controls.Add(this.HPMod);
             this.Controls.Add(this.State2);
             this.Controls.Add(this.State1);
             this.Controls.Add(this.BattlerName);
@@ -210,12 +223,13 @@
         private System.Windows.Forms.Label BattlerName;
         private System.Windows.Forms.Label State1;
         private System.Windows.Forms.Label State2;
-        private System.Windows.Forms.Label Damage;
-        private System.Windows.Forms.Label Restore;
+        private System.Windows.Forms.Label HPMod;
+        private System.Windows.Forms.Label SPMod;
         private System.Windows.Forms.Label MaxHP;
         private System.Windows.Forms.Label SlashText;
         private System.Windows.Forms.Label LetterKey;
         private System.Windows.Forms.Label Hit;
         private System.Windows.Forms.Label ElementMag;
+        private System.Windows.Forms.Label SPConsume;
     }
 }

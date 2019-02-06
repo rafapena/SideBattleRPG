@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -50,6 +51,19 @@ namespace BattleSimulator.Utilities
             T[] cloned = new T[original.Length];
             for (int i = 0; i < original.Length; i++) cloned[i] = original[i];
             return cloned;
+        }
+
+        public static void Print<T>(List<T> list)
+        {
+            string listValues = "";
+            foreach (T elmnt in list) listValues += elmnt + " ";
+            MessageBox.Show(listValues);
+        }
+        public static void Print<T>(T[] list)
+        {
+            string listValues = "";
+            foreach (T elmnt in list) listValues += elmnt + " ";
+            MessageBox.Show(listValues);
         }
     }
 }

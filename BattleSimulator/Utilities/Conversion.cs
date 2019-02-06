@@ -14,7 +14,7 @@ namespace BattleSimulator.Utilities
     {
         public static int NaturalNumber(int value)
         {
-            return value > 0 ? value : 1;
+            return value >= 1 ? value : 1;
         }
         
         public static Bitmap BytesToImage(SQLiteDataReader reader, int attributeIndex)

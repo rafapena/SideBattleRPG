@@ -27,11 +27,8 @@ namespace BattleSimulator.Templates
             BattlerIndex = battlerIndex;
             BackColor = RPGBattlerHelper.DEFAULT_COLOR;
             Visible = true;
-            Hit.Visible = false;
             LetterKey.Visible = false;
-            Damage.Visible = false;
-            Restore.Visible = false;
-            ElementMag.Visible = false;
+            RemovePopups();
             State1.Visible = false;
             State2.Visible = false;
             BattlerImage.Image = battler.Image;
@@ -64,12 +61,14 @@ namespace BattleSimulator.Templates
 
         public void DisplayMissedOrFailed(string missedOrFailed)
         {
+            Hit.Visible = true;
             Hit.Text = missedOrFailed;
             Hit.BackColor = RPGBattlerHelper.MISSED_COLOR;
         }
 
         public void DisplayActionDamageCritical()
         {
+            Hit.Visible = true;
             Hit.Text = "Critical";
             Hit.BackColor = RPGBattlerHelper.CRITICAL_COLOR;
         }
@@ -77,29 +76,40 @@ namespace BattleSimulator.Templates
         public void DisplayActionDamageElemental(int elementType, int mag)
         {
             if (elementType < 0 || elementType >= RPGBattlerHelper.ELEMENTS.Length || mag > 2 || mag < -2) return;
+            ElementMag.Visible = true;
             ElementMag.Text = RPGBattlerHelper.ELEMENTS[elementType];
             ElementMag.BackColor = RPGBattlerHelper.E_MAG[mag + 2];
         }
 
+        public void DisplaySPConsume(int val)
+        {
+            SPConsume.Visible = true;
+            SPConsume.Text = "-" + val;
+            SPMod.BackColor = RPGBattlerHelper.SP_CONSUME_COLOR;
+        }
         public void DisplayHPDamage(int val)
         {
-            Damage.Text = val.ToString();
-            Damage.BackColor = RPGBattlerHelper.HP_DAMAGE_COLOR;
+            HPMod.Visible = true;
+            HPMod.Text = val.ToString();
+            HPMod.BackColor = RPGBattlerHelper.HP_DAMAGE_COLOR;
         }
         public void DisplayHPRecover(int val)
         {
-            Restore.Text = val.ToString();
-            Restore.BackColor = RPGBattlerHelper.HP_RECOVER_COLOR;
+            HPMod.Visible = true;
+            HPMod.Text = val.ToString();
+            HPMod.BackColor = RPGBattlerHelper.HP_RECOVER_COLOR;
         }
         public void DisplaySPDamage(int val)
         {
-            Damage.Text = val.ToString();
-            Damage.BackColor = RPGBattlerHelper.SP_DAMAGE_COLOR;
+            SPMod.Visible = true;
+            SPMod.Text = val.ToString();
+            SPMod.BackColor = RPGBattlerHelper.SP_DAMAGE_COLOR;
         }
         public void DisplaySPRecover(int val)
         {
-            Restore.Text = val.ToString();
-            Restore.BackColor = RPGBattlerHelper.SP_RECOVER_COLOR;
+            SPMod.Visible = true;
+            SPMod.Text = val.ToString();
+            SPMod.BackColor = RPGBattlerHelper.SP_RECOVER_COLOR;
         }
 
         public void DisplayActionSteal(int val)
@@ -109,7 +119,12 @@ namespace BattleSimulator.Templates
 
         public void DisplayActionStates(string stateName)
         {
-            if (State1.Text != "") State2.Text = State1.Text;
+            if (State1.Text != "")
+            {
+                State2.Visible = true;
+                State2.Text = State1.Text;
+            }
+            State1.Visible = true;
             State1.Text = stateName;
         }
 
@@ -119,6 +134,8 @@ namespace BattleSimulator.Templates
             State2.Text = "";
             State1.BackColor = RPGBattlerHelper.DEFAULT_COLOR;
             State2.BackColor = RPGBattlerHelper.DEFAULT_COLOR;
+            State1.Visible = false;
+            State2.Visible = false;
         }
 
         public void UpdateHP(int val)
@@ -132,9 +149,10 @@ namespace BattleSimulator.Templates
 
         public void RemovePopups()
         {
+            SPConsume.Visible = false;
             Hit.Visible = false;
-            Damage.Visible = false;
-            Restore.Visible = false;
+            HPMod.Visible = false;
+            SPMod.Visible = false;
             ElementMag.Visible = false;
             State1.BackColor = RPGBattlerHelper.DEFAULT_COLOR;
             State2.BackColor = RPGBattlerHelper.DEFAULT_COLOR;
@@ -154,6 +172,7 @@ namespace BattleSimulator.Templates
             public static Color MISSED_COLOR = Color.Gray;
             public static Color CRITICAL_COLOR = Color.LightYellow;
             public static Color NEW_STATE_COLOR = Color.LightBlue;
+            public static Color SP_CONSUME_COLOR = Color.Blue;
             public static Color HP_DAMAGE_COLOR = Color.LightGoldenrodYellow;
             public static Color SP_DAMAGE_COLOR = Color.BlueViolet;
             public static Color HP_RECOVER_COLOR = Color.LightGreen;

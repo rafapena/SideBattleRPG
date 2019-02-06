@@ -44,8 +44,8 @@ namespace BattleSimulator.Classes.ClassTemplates
         // Action execution info
         public bool ExecutedAction { get; set; }
         public int CriticalHitRatio { get; private set; }
-        public List<List<List<int>>> TargetResults { get; private set; }    // For every target, for every consecutive act, list traits
-        public List<int> EffectResults { get; private set; }
+        public List<List<List<int>>> TargetResults { get; private set; }    // For every consecutive act, for every target, list traits
+        public List<List<int>> EffectResults { get; private set; }          // For every target, list traits
 
         // PassiveEffect dependent info
         public Stats StatModifiers { get; protected set; }
@@ -76,7 +76,7 @@ namespace BattleSimulator.Classes.ClassTemplates
             ComboPartners = new List<Battler>();
             SelectedTargets = new List<Battler>();
             TargetResults = new List<List<List<int>>>();
-            EffectResults = new List<int>();
+            EffectResults = new List<List<int>>();
             StatModifiers = new Stats();
             DisabledToolTypes = new List<int>();
             RemoveByHit = new List<int>();
@@ -110,7 +110,7 @@ namespace BattleSimulator.Classes.ClassTemplates
             ExecutedAction = original.ExecutedAction;
             CriticalHitRatio = original.CriticalHitRatio;
             TargetResults = Clone(original.TargetResults, o => new List<List<int>>(o));
-            EffectResults = Clone(original.EffectResults);
+            EffectResults = Clone(original.EffectResults, o => new List<int>(o));
             StatModifiers = Clone(original.StatModifiers, o => new Stats(o));
             IsConscious = original.IsConscious;
             CannotMove = original.CannotMove;
@@ -312,6 +312,83 @@ namespace BattleSimulator.Classes.ClassTemplates
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// -- Tool Pre-Actions --
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public bool RedirectUnconsciousTarget<T>(List<T> opponents) where T : Battler
+        {
+            int i;
+            int removed = 0;
+            bool removedMain = false;
+            for (i = 0; i < SelectedTargets.Count; i++)
+            {
+                if (SelectedTargets[i].IsConscious) continue;
+                SelectedTargets.RemoveAt(i);
+                removed++;
+                if (i == 0) removedMain = true;
+            }
+            if (SelectedTargets.Count > 0) return true;
+            i = 0;
+            int scope = 0;
+            int randomActs = 0;
+            if (SelectedSkill != null) scope = SelectedSkill.Scope;
+            else if (SelectedItem != null) scope = SelectedItem.Scope;
+            if (SelectedSkill != null) randomActs = SelectedSkill.RandomActs;
+            else if (SelectedItem != null) randomActs = SelectedItem.RandomActs;
+            switch (scope)
+            {
+                case 1:
+                case 2:
+                    while (i < opponents.Count && !opponents[i].IsConscious) i++;
+                    if (i == opponents.Count) return false;
+                    if (scope == 1 && randomActs > 0) RedirectRandomScope(opponents, removed);
+                    else if (scope == 2 && removedMain) RedirectScopeSplash(opponents, i);
+                    else SelectedTargets.Add(opponents[i]);
+                    break;
+                case 3:
+                case 4:
+                    int redirected = -1;
+                    for (i = 0; i < opponents.Count; i++)
+                    {
+                        int pos = scope == 3 ? opponents[i].XPosition : opponents[i].ZPosition;
+                        if (!opponents[i].IsConscious || redirected >= 0 && redirected != pos) continue;
+                        SelectedTargets.Add(opponents[i]);
+                        redirected = pos;
+                    }
+                    break;
+            }
+            return true;
+        }
+
+        // Helper function for RedirectUnconsciousTarget
+        private void RedirectRandomScope<T>(List<T> opponents, int toReplace) where T : Battler
+        {
+            while (toReplace > 0)
+            {
+                T newTarget = RandList(opponents);
+                if (!newTarget.IsConscious) continue;
+                SelectedTargets.Add(newTarget);
+                toReplace--;
+            }
+        }
+
+        // Helper function for RedirectUnconsciousTarget
+        private void RedirectScopeSplash<T>(List<T> opponents, int i) where T : Battler
+        {
+            T newTarget = opponents[i];
+            SelectedTargets.Clear();
+            SelectedTargets.Add(newTarget);
+            foreach (T oneTarget in opponents)
+            {
+                int xDist = Math.Abs(oneTarget.XPosition - newTarget.XPosition);
+                int zDist = Math.Abs(oneTarget.ZPosition - newTarget.ZPosition);
+                if (xDist > 1 && zDist > 1) continue;
+                if (xDist != 0 || zDist != 0) SelectedTargets.Add(newTarget);
+            }
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// -- Tool Actions --
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -340,11 +417,7 @@ namespace BattleSimulator.Classes.ClassTemplates
             }
             sk.SummonPlayers();
             sk.SummonEnemies();
-            int i = 0;
-            double effectMagnitude = 0.5;
-            if (sk.Scope == 2) ApplyToolEffects(SelectedTargets[i++], sk, 1.0, ExecuteSteal);
-            else effectMagnitude = 1.0;
-            for (;  i < SelectedTargets.Count; i++) ApplyToolEffects(SelectedTargets[i], sk, effectMagnitude, ExecuteSteal);
+            ApplyToolEffectsPerTarget(sk, ExecuteSteal);
             return sk;
         }
         private List<int> ExecuteSteal(List<int> oneActResult, Battler target, double effectMagnitude)
@@ -357,42 +430,59 @@ namespace BattleSimulator.Classes.ClassTemplates
         private Item ExecuteItem()
         {
             Item it = SelectedItem;
-            int i = 0;
-            double effectMagnitude = 0.5;
-            if (it.Scope == 2) ApplyToolEffects(SelectedTargets[i++], it);
-            else effectMagnitude = 1.0;
-            for (; i < SelectedTargets.Count; i++) ApplyToolEffects(SelectedTargets[i], it, effectMagnitude);
+            ApplyToolEffectsPerTarget(it);
             Stats.Add(it.PermantentStatChanges);
             if (it.TurnsInto != null) Items[Items.FindIndex(x => x.Id == it.Id)] = new Item(it.TurnsInto);
             else if (it.Consumable) Items.Remove(it);
             return it;
         }
 
+
         private delegate List<int> ApplyExtra(List<int> extraResults, Battler b, double effectMagnitude);
-        private void ApplyToolEffects(Battler b, Tool t, double effectMagnitude = 1.0, ApplyExtra extraFunc = null)
+
+        private void ApplyToolEffectsPerTarget(Tool selectedTool, ApplyExtra extraFunc = null)
         {
-            List<List<int>> resultForTarget = new List<List<int>>();
-            for (int i = 0; i < t.ConsecutiveActs; i++)
+            int consecutiveActs = selectedTool.ConsecutiveActs;
+            double decliningTimes = (selectedTool.Scope != 1 ? selectedTool.RandomActs : 0) + 1.0;
+            if (SelectedWeapon != null)
             {
-                List<int> oneAct = new List<int>();
-                if (!t.Hit(this, b, effectMagnitude))
-                {
-                    oneAct.Add(-t.Type);
-                    continue;
-                }
-                CriticalHitRatio = t.CriticalHitRatio(this, b, effectMagnitude);
-                oneAct.Add(CriticalHitRatio);
-                oneAct.Add(t.ElementMagnitude(b));
-                oneAct.Add(t.GetToolFormula(this, b, effectMagnitude));
-                List<int>[] states = t.TriggeredStates(this, b, effectMagnitude);
-                oneAct.Add(states[0].Count);
-                foreach (int stateGiveId in states[0]) oneAct.Add(stateGiveId);
-                oneAct.Add(states[1].Count);
-                foreach (int stateReceiveId in states[1]) oneAct.Add(stateReceiveId);
-                if (extraFunc != null) oneAct = extraFunc(oneAct, b, effectMagnitude);
-                resultForTarget.Add(oneAct);
+                consecutiveActs *= SelectedWeapon.ConsecutiveActs;
+                decliningTimes *= (SelectedWeapon.Scope != 1 ? SelectedWeapon.RandomActs : 0) + 1.0;
             }
-            TargetResults.Add(resultForTarget);
+            for (int times = 1; times <= decliningTimes; times++)
+            {
+                if (!Chance(100 / times)) continue;
+                double eMag = 1.0 / times;
+                double eMag0 = eMag / (selectedTool.Scope != 2 ? 1.0 : 2.0);
+                for (int i = 0; i < consecutiveActs; i++)
+                {
+                    List<List<int>> resultForOneAct = new List<List<int>>();
+                    int j = 0;
+                    resultForOneAct.Add(ApplyToolEffects(SelectedTargets[j++], selectedTool, eMag, extraFunc));
+                    while (j < SelectedTargets.Count) resultForOneAct.Add(ApplyToolEffects(SelectedTargets[j++], selectedTool, eMag0, extraFunc));
+                    TargetResults.Add(resultForOneAct);
+                }
+            }
+        }
+        
+        private List<int> ApplyToolEffects(Battler b, Tool t, double effectMagnitude = 1.0, ApplyExtra extraFunc = null)
+        {
+            List<int> oneTarget = new List<int>();
+            if (t.Hit(this, b, effectMagnitude))
+            {
+                CriticalHitRatio = t.CriticalHitRatio(this, b, effectMagnitude);
+                oneTarget.Add(CriticalHitRatio);
+                oneTarget.Add(t.ElementMagnitude(b));
+                oneTarget.Add(t.GetToolFormula(this, b, effectMagnitude));
+                List<int>[] states = t.TriggeredStates(this, b, effectMagnitude);
+                oneTarget.Add(states[0].Count);
+                foreach (int stateGiveId in states[0]) oneTarget.Add(stateGiveId);
+                oneTarget.Add(states[1].Count);
+                foreach (int stateReceiveId in states[1]) oneTarget.Add(stateReceiveId);
+                if (extraFunc != null) oneTarget = extraFunc(oneTarget, b, effectMagnitude);
+            }
+            else oneTarget.Add(-t.Type);
+            return oneTarget;
         }
 
 

@@ -16,9 +16,9 @@ namespace BattleSimulator.Classes.ClassTemplates
     {
         public int Type { get; private set; }
         public int Formula { get; private set; }
-        public int HPSPModType { get; private set; }
+        public int HPModType { get; private set; }
+        public int SPModType { get; private set; }
         public int HPAmount { get; private set; }
-        public int SPAmount { get; private set; }
         public int HPPercent { get; private set; }
         public int SPPecent { get; private set; }
         public int HPRecoil { get; private set; }
@@ -44,9 +44,9 @@ namespace BattleSimulator.Classes.ClassTemplates
         {
             Type = Int(data["Type"]);
             Formula = Int(data["Formula"]);
-            HPSPModType = Int(data["HPSPModType"]);
+            HPModType = Int(data["HPModType"]);
+            SPModType = Int(data["SPModType"]);
             HPAmount = Int(data["HPAmount"]);
-            SPAmount = Int(data["SPAmount"]);
             HPPercent = Int(data["HPPercent"]);
             SPPecent = Int(data["SPPercent"]);
             HPRecoil = Int(data["HPRecoil"]);
@@ -68,9 +68,9 @@ namespace BattleSimulator.Classes.ClassTemplates
         {
             Type = original.Type;
             Formula = original.Formula;
-            HPSPModType = original.HPSPModType;
+            HPModType = original.HPModType;
+            SPModType = original.SPModType;
             HPAmount = original.HPAmount;
-            SPAmount = original.SPAmount;
             HPPercent = original.HPPercent;
             SPPecent = original.SPPecent;
             HPRecoil = original.HPRecoil;
@@ -135,9 +135,10 @@ namespace BattleSimulator.Classes.ClassTemplates
                 case 4: total = (1.5 * (u.Atk()/4 + u.Tec()*3/4) - 1.25 * t.Def()) * rates; break;                  // Physical gun
                 case 5: total = (1.5 * (u.Map()/4 + u.Tec()*3/4) - 1.25 * t.Mar()) * rates; break;                  // Magical gun
             }
-            int intTotal = (int)((total > 0 ? total : 1) * effectMagnitude);
-            int variance = intTotal / 10;
-            return intTotal + RandInt(-variance, variance);
+            int intTotal = (int)(total * effectMagnitude);
+            int variance = Conversion.NaturalNumber(intTotal) / 10;
+            int formulaValue = intTotal + RandInt(-variance, variance);
+            return Formula > 0 ? Conversion.NaturalNumber(formulaValue) : formulaValue;
         }
 
         public List<int>[] TriggeredStates(Battler u, Battler t, double effectMagnitude = 1.0)
